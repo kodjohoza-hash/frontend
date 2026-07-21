@@ -159,15 +159,6 @@ export const WHY_CHOOSE = [
   { id: 6, icon: 'bi-headset', title: 'Support disponible', description: 'Notre équipe accompagne les voyageurs avant, pendant et après leur réservation.' },
 ];
 
-export const DESTINATIONS = [
-  { id: 1, name: 'Douala', image: 'https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?w=800&h=600&fit=crop&q=80', trips: 180, price: 2500 },
-  { id: 2, name: 'Yaoundé', image: 'https://images.unsplash.com/photo-1597212618440-806262de4f6b?w=800&h=600&fit=crop&q=80', trips: 165, price: 3000 },
-  { id: 3, name: 'Bafoussam', image: 'https://images.unsplash.com/photo-1548018560-c7196e4f220b?w=800&h=600&fit=crop&q=80', trips: 90, price: 4000 },
-  { id: 4, name: 'Kribi', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop&q=80', trips: 75, price: 3500 },
-  { id: 5, name: 'Limbe', image: 'https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=800&h=600&fit=crop&q=80', trips: 60, price: 2000 },
-  { id: 6, name: 'Bamenda', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=600&fit=crop&q=80', trips: 85, price: 5000 },
-];
-
 export const STEPS = [
   { id: 1, number: 1, icon: 'bi-search', title: 'Rechercher un trajet', description: 'Choisissez votre ville de départ, votre destination, la date de voyage et lancez la recherche.' },
   { id: 2, number: 2, icon: 'bi-bus-front', title: 'Choisir une compagnie', description: 'Comparez les différentes compagnies de transport disponibles et sélectionnez celle qui vous convient.' },
@@ -175,23 +166,6 @@ export const STEPS = [
   { id: 4, number: 4, icon: 'bi-credit-card', title: 'Effectuer le paiement', description: 'Payez votre réservation en toute sécurité grâce aux moyens de paiement pris en charge.' },
   { id: 5, number: 5, icon: 'bi-ticket-perforated', title: 'Recevoir votre billet', description: 'Votre billet électronique est généré automatiquement avec toutes les informations du voyage.' },
   { id: 6, number: 6, icon: 'bi-bag-check', title: 'Voyager sereinement', description: 'Présentez simplement votre billet lors de l\'embarquement et profitez de votre voyage.' },
-];
-
-export const TESTIMONIALS = [
-  { id: 1, name: 'Marie Ngo Biyick', city: 'Yaoundé', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop&crop=face', comment: 'Incroyable ! J\'ai réservé Yaoundé-Douala en 2 minutes. Le billet numérique est super pratique. Je recommande à 100%.', rating: 5, date: 'Juin 2026' },
-  { id: 2, name: 'Paul Nkou Mvondo', city: 'Douala', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face', comment: 'Le meilleur service de réservation en ligne au Cameroun. Les compagnies sont fiables et le support est très réactif.', rating: 5, date: 'Mai 2026' },
-  { id: 3, name: 'Cécile Fouda', city: 'Bafoussam', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop&crop=face', comment: 'Interface moderne, paiement par Mobile Money sécurisé et notifications très utiles. Bravo Bus Tix Connect !', rating: 4, date: 'Juin 2026' },
-  { id: 4, name: 'Jean-Pierre Kamga', city: 'Bamenda', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face', comment: 'Pratique et fiable. Je l\'utilise chaque mois pour Bamenda-Douala. Je ne peux plus m\'en passer.', rating: 5, date: 'Avril 2026' },
-  { id: 5, name: 'Aimée Tchidjou', city: 'Garoua', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=120&fit=crop&crop=face', comment: 'Magnifique design et expérience fluide. Les prix sont très compétitifs par rapport aux guichets.', rating: 4, date: 'Mai 2026' },
-];
-
-export const FAQ_ITEMS = [
-  { id: 1, question: 'Comment réserver un billet ?', answer: 'Sélectionnez votre ville de départ et destination, choisissez la date et le nombre de voyageurs, puis sélectionnez le voyage. Payez et recevez votre billet numérique par email et SMS.', category: 'Réservation' },
-  { id: 2, question: 'Quels moyens de paiement acceptez-vous ?', answer: 'Nous acceptons le Mobile Money (MTN MoMo, Orange Money), les cartes bancaires (Visa, Mastercard) et le paiement à l\'embarquement pour certaines compagnies.', category: 'Paiement' },
-  { id: 3, question: 'Puis-je annuler ma réservation ?', answer: 'Oui, vous pouvez annuler jusqu\'à 2 heures avant le départ. Les conditions varient selon la compagnie. Consultez nos conditions générales.', category: 'Annulation' },
-  { id: 4, question: 'Comment recevoir mon billet ?', answer: 'Votre billet est envoyé instantanément par email et SMS après le paiement. Vous pouvez aussi le télécharger depuis votre espace personnel.', category: 'Billet' },
-  { id: 5, question: 'Le service est disponible 24h/24 ?', answer: 'Oui, la plateforme est disponible 24h/24, 7j/7. Notre support client est également disponible en cas de besoin.', category: 'Service' },
-  { id: 6, question: 'Comment contacter le support ?', answer: 'Via le chat en direct, par email à support@bustixconnect.com, ou par téléphone au +237 6 XX XXX XXX.', category: 'Support' },
 ];
 
 export const CITIES = [
