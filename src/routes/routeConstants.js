@@ -12,6 +12,8 @@ export const ROUTES = {
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
+  VERIFY_EMAIL: '/verify-email',
+  SESSION_EXPIRED: '/session-expired',
 
   /* ================================================
      CLIENT
@@ -91,6 +93,8 @@ export const ROUTE_NAMES = {
   [ROUTES.REGISTER]: 'Inscription',
   [ROUTES.FORGOT_PASSWORD]: 'Mot de passe oublié',
   [ROUTES.RESET_PASSWORD]: 'Réinitialiser le mot de passe',
+  [ROUTES.VERIFY_EMAIL]: 'Vérification de l\'email',
+  [ROUTES.SESSION_EXPIRED]: 'Session expirée',
   [ROUTES.CLIENT_DASHBOARD]: 'Mon espace',
   [ROUTES.CLIENT_BOOKINGS]: 'Mes réservations',
   [ROUTES.CLIENT_TICKETS]: 'Mes billets',

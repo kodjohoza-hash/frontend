@@ -1,37 +1,27 @@
 import { Outlet } from 'react-router-dom';
+import AuthIllustration from '@components/auth/AuthIllustration';
 
 /**
- * AuthLayout — Layout pour les pages d'authentification
- * Split: Branding (desktop) | Form
+ * AuthLayout — Split-screen layout for auth pages
+ * Left: Premium branding panel with illustration
+ * Right: Form panel with Outlet
  */
-const AuthLayout = () => {
-  return (
-    <div className="auth-layout d-flex min-vh-100">
-      {/* Branding Panel */}
-      <div className="auth-sidebar d-none d-lg-flex flex-column justify-content-center align-items-center text-white flex-grow-1">
-        <div className="text-center px-5">
-          <div className="navbar-logo-icon mx-auto mb-4" style={{ width: 64, height: 64, fontSize: '1.75rem' }}>
+const AuthLayout = () => (
+  <div className="auth-layout d-flex min-vh-100">
+    <AuthIllustration />
+
+    <div className="auth-layout__content">
+      <div className="auth-layout__content-inner">
+        <div className="auth-mobile-logo">
+          <div className="auth-mobile-logo__icon">
             <i className="bi bi-bus-front-fill" />
           </div>
-          <h1 className="display-5 fw-bold mb-3">Bus Tix Connect</h1>
-          <p className="lead opacity-75">Plateforme de réservation de billets de transport</p>
+          <div className="auth-mobile-logo__text">Bus Tix Connect</div>
         </div>
-      </div>
-
-      {/* Form Panel */}
-      <div className="auth-content d-flex flex-column justify-content-center align-items-center flex-grow-1 bg-white">
-        <div className="w-100" style={{ maxWidth: '420px' }}>
-          <div className="text-center mb-4 d-lg-none">
-            <div className="navbar-logo-icon mx-auto mb-3">
-              <i className="bi bi-bus-front-fill" />
-            </div>
-            <h2 className="fw-bold text-primary">Bus Tix Connect</h2>
-          </div>
-          <Outlet />
-        </div>
+        <Outlet />
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 export default AuthLayout;

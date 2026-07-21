@@ -2,6 +2,9 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ROUTES } from './routeConstants';
 import PublicRoute from './PublicRoute';
+import ProtectedRoute from './ProtectedRoute';
+import RoleGuard from './RoleGuard';
+import { ROLES } from './permissions';
 import GuestLayout from '@layouts/GuestLayout';
 import AuthLayout from '@layouts/AuthLayout';
 import ClientLayout from '@layouts/ClientLayout';
@@ -14,10 +17,11 @@ const Login = lazy(() => import('@pages/Auth/Login'));
 const Register = lazy(() => import('@pages/Auth/Register'));
 const ForgotPassword = lazy(() => import('@pages/Auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('@pages/Auth/ResetPassword'));
+const VerifyEmail = lazy(() => import('@pages/Auth/VerifyEmail'));
+const SessionExpired = lazy(() => import('@pages/Auth/SessionExpired'));
 
 /* Guest Pages */
 const HomePage = lazy(() => import('@pages/Home/HomePage'));
-const Home = lazy(() => import('@pages/Home'));
 
 /* Role Dashboards */
 const ClientDashboard = lazy(() => import('@pages/Client/Dashboard'));
@@ -30,11 +34,11 @@ const NotFound = lazy(() => import('@pages/Errors/NotFound'));
 const Unauthorized = lazy(() => import('@pages/Errors/Unauthorized'));
 const ServerError = lazy(() => import('@pages/Errors/ServerError'));
 
-/* Loading fallback */
+/* Loading fallback — skeleton-based */
 const LoadingFallback = () => (
   <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '50vh' }}>
     <div className="text-center">
-      <div className="spinner-border text-primary" role="status">
+      <div className="spinner-border spinner-border-sm text-primary" role="status">
         <span className="visually-hidden">Chargement...</span>
       </div>
     </div>
@@ -46,7 +50,7 @@ const AppRouter = () => {
     <Suspense fallback={<LoadingFallback />}>
       <Routes>
         {/* ================================================
-            HOME — Landing page (its own navbar + footer)
+            HOME — Landing page (standalone)
             ================================================ */}
         <Route path={ROUTES.HOME} element={<HomePage />} />
 
@@ -54,7 +58,7 @@ const AppRouter = () => {
             GUEST — Public pages (Navbar + Footer)
             ================================================ */}
         <Route element={<GuestLayout />}>
-          <Route path="booking" element={
+          <Route path={ROUTES.BOOKING} element={
             <PublicRoute>
               <div className="container py-5 text-center">
                 <h1>Réservation</h1>
@@ -80,42 +84,56 @@ const AppRouter = () => {
           <Route path={ROUTES.RESET_PASSWORD} element={
             <PublicRoute><ResetPassword /></PublicRoute>
           } />
+          <Route path={ROUTES.VERIFY_EMAIL} element={
+            <PublicRoute restricted><VerifyEmail /></PublicRoute>
+          } />
+          <Route path={ROUTES.SESSION_EXPIRED} element={
+            <SessionExpired />
+          } />
         </Route>
 
         {/* ================================================
             CLIENT — Espace client (Sidebar + Navbar)
             ================================================ */}
-        <Route element={<ClientLayout />}>
-          <Route path="/client/dashboard" element={
-            <ClientDashboard />
-          } />
+        <Route element={
+          <RoleGuard allowedRoles={[ROLES.CLIENT]}>
+            <ClientLayout />
+          </RoleGuard>
+        }>
+          <Route path="/client/dashboard" element={<ClientDashboard />} />
         </Route>
 
         {/* ================================================
             COMPANY — Espace compagnie (Sidebar + Navbar)
             ================================================ */}
-        <Route element={<CompanyLayout />}>
-          <Route path="/company/dashboard" element={
-            <CompanyDashboard />
-          } />
+        <Route element={
+          <RoleGuard allowedRoles={[ROLES.COMPANY_ADMIN]}>
+            <CompanyLayout />
+          </RoleGuard>
+        }>
+          <Route path="/company/dashboard" element={<CompanyDashboard />} />
         </Route>
 
         {/* ================================================
             COUNTER — Espace guichet (Sidebar + Navbar)
             ================================================ */}
-        <Route element={<CounterLayout />}>
-          <Route path="/counter/dashboard" element={
-            <CounterDashboard />
-          } />
+        <Route element={
+          <RoleGuard allowedRoles={[ROLES.COUNTER_AGENT]}>
+            <CounterLayout />
+          </RoleGuard>
+        }>
+          <Route path="/counter/dashboard" element={<CounterDashboard />} />
         </Route>
 
         {/* ================================================
             SUPER ADMIN — Administration (Sidebar + Navbar)
             ================================================ */}
-        <Route element={<SuperAdminLayout />}>
-          <Route path="/super-admin/dashboard" element={
-            <SuperAdminDashboard />
-          } />
+        <Route element={
+          <RoleGuard allowedRoles={[ROLES.SUPER_ADMIN]}>
+            <SuperAdminLayout />
+          </RoleGuard>
+        }>
+          <Route path="/super-admin/dashboard" element={<SuperAdminDashboard />} />
         </Route>
 
         {/* ================================================
