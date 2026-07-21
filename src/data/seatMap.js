@@ -1,57 +1,110 @@
-/**
- * BUS TIX CONNECT — Seat Map Mock Data
- * Configurable for different bus types (30, 45, 70 seats)
- */
-
 export const BUS_LAYOUTS = {
-  vip: {
-    id: 'layout_vip',
-    type: 'vip',
-    label: 'VIP',
-    rows: 9,
+  mini: {
+    label: 'Mini Bus',
+    rows: 7,
     leftSeats: 2,
     rightSeats: 2,
-    lastRowLeft: 2,
-    lastRowRight: 2,
-    hasToilet: true,
-    legroom: 'extended',
-    seatWidth: 'large',
+    hasToilet: false,
+    hasDoor: 'front',
+    seatWidth: 36,
+    seatHeight: 32,
+    rowGap: 6,
+    legroom: 'compact',
+    totalSeats: 28,
   },
-  business: {
-    id: 'layout_business',
-    type: 'business',
-    label: 'Business',
+  standard: {
+    label: 'Bus Standard',
     rows: 11,
     leftSeats: 2,
     rightSeats: 2,
-    lastRowLeft: 2,
-    lastRowRight: 1,
     hasToilet: true,
+    hasDoor: 'front',
+    seatWidth: 38,
+    seatHeight: 34,
+    rowGap: 7,
     legroom: 'standard',
-    seatWidth: 'standard',
+    totalSeats: 44,
   },
-  economy: {
-    id: 'layout_economy',
-    type: 'economy',
-    label: 'Économique',
+  vip: {
+    label: 'Bus VIP',
+    rows: 9,
+    leftSeats: 2,
+    rightSeats: 2,
+    hasToilet: true,
+    hasDoor: 'front',
+    seatWidth: 42,
+    seatHeight: 38,
+    rowGap: 10,
+    legroom: 'extended',
+    totalSeats: 36,
+  },
+  premium: {
+    label: 'Bus Premium',
     rows: 13,
     leftSeats: 2,
     rightSeats: 2,
-    lastRowLeft: 2,
-    lastRowRight: 1,
-    hasToilet: false,
-    legroom: 'compact',
-    seatWidth: 'standard',
+    hasToilet: true,
+    hasDoor: 'front',
+    seatWidth: 38,
+    seatHeight: 34,
+    rowGap: 7,
+    legroom: 'standard',
+    totalSeats: 52,
+  },
+};
+
+export const SERVICES_CONFIG = {
+  wifi: {
+    icon: 'bi-wifi',
+    label: 'WiFi',
+    description: 'Accès internet sans fil pendant le trajet',
+  },
+  usb: {
+    icon: 'bi-usb-symbol',
+    label: 'Ports USB',
+    description: 'Recharge de vos appareils électroniques',
+  },
+  ac: {
+    icon: 'bi-snow',
+    label: 'Climatisation',
+    description: 'Température confortable tout au long du trajet',
+  },
+  tv: {
+    icon: 'bi-tv',
+    label: 'Écran TV',
+    description: 'Divertissement vidéo pendant le voyage',
+  },
+  toilet: {
+    icon: 'bi-droplet-half',
+    label: 'Toilettes',
+    description: 'Toilettes embarquées accessibles',
+  },
+  charger: {
+    icon: 'bi-lightning-charge',
+    label: 'Chargeur 220V',
+    description: 'Prises électriques pour ordinateurs',
+  },
+  water: {
+    icon: 'bi-cup-straw',
+    label: 'Eau offerte',
+    description: 'Bouteille d\'eau offerte pendant le trajet',
+  },
+  luggage: {
+    icon: 'bi-bag',
+    label: 'Bagages',
+    description: 'Espace bagages généreux sous le bus',
   },
 };
 
 export const mockTripInfo = {
-  id: 'trp_001',
-  companyId: 'comp_001',
+  id: 'trip_001',
   companyName: 'GRAND LITTORAL',
-  companyLogo: null,
+  companyInitial: 'GL',
+  companyColor: '#0B1D51',
   tripNumber: 'GL-2026-0824-001',
+  busNumber: 'GL-BUS-042',
   busType: 'vip',
+  busPhoto: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=400&h=250&fit=crop&q=80',
   departureCity: 'Douala',
   arrivalCity: 'Yaoundé',
   departureDate: '2026-08-24',
@@ -61,71 +114,71 @@ export const mockTripInfo = {
   distance: '243 km',
   pricePerSeat: 4500,
   currency: 'FCFA',
-  status: 'available',
-  services: ['wifi', 'usb', 'ac', 'tv', 'toilet', 'charger'],
-  baggagePolicy: '1 bagage en soute (23 kg) + 1 bagage à main (7 kg) inclus',
+  services: ['wifi', 'usb', 'ac', 'tv', 'toilet', 'charger', 'water', 'luggage'],
+  baggagePolicy: '2 bagages inclus (23 kg + 7 kg)',
+  departurePoint: 'Gare Routière Bonabéri',
+  arrivalPoint: 'Gare Routière Mokolo',
 };
 
-export const generateSeats = (layout) => {
+export function generateSeats(layout) {
+  const config = BUS_LAYOUTS[layout];
+  if (!config) return [];
+
   const seats = [];
   let seatNumber = 1;
 
-  for (let row = 1; row <= layout.rows; row++) {
-    const isLastRow = row === layout.rows;
-    const leftCount = isLastRow ? layout.lastRowLeft : layout.leftSeats;
-    const rightCount = isLastRow ? layout.lastRowRight : layout.rightSeats;
+  for (let row = 1; row <= config.rows; row++) {
+    for (let i = 0; i < config.leftSeats; i++) {
+      const position = i === 0 ? 'window' : 'aisle';
+      const state = getMockState(seatNumber);
+      const isPMR = row === 1 && position === 'aisle';
+      const isVIP = layout === 'vip' && row <= 2;
 
-    for (let pos = 0; pos < leftCount; pos++) {
       seats.push({
-        id: `seat_${String(seatNumber).padStart(2, '0')}`,
+        id: `${layout}_${String(seatNumber).padStart(3, '0')}`,
         number: seatNumber,
         row,
-        position: pos === 0 ? 'window' : 'aisle',
+        position,
         side: 'left',
-        state: getMockState(seatNumber),
-        type: layout.type,
-        price: layout.type === 'vip' ? 4500 : layout.type === 'business' ? 3500 : 2500,
-        isPMR: seatNumber === 3,
-        isVIP: layout.type === 'vip',
-        legroom: layout.legroom,
+        state,
+        price: config.pricePerSeat || 4500 + (isVIP ? 500 : 0),
+        isPMR,
+        isVIP,
+        legroom: config.legroom,
       });
       seatNumber++;
     }
 
-    for (let pos = 0; pos < rightCount; pos++) {
+    for (let i = 0; i < config.rightSeats; i++) {
+      const position = i === 0 ? 'aisle' : 'window';
+      const state = getMockState(seatNumber);
+      const isPMR = row === 1 && position === 'aisle';
+      const isVIP = layout === 'vip' && row <= 2;
+
       seats.push({
-        id: `seat_${String(seatNumber).padStart(2, '0')}`,
+        id: `${layout}_${String(seatNumber).padStart(3, '0')}`,
         number: seatNumber,
         row,
-        position: pos === 0 ? 'aisle' : 'window',
+        position,
         side: 'right',
-        state: getMockState(seatNumber),
-        type: layout.type,
-        price: layout.type === 'vip' ? 4500 : layout.type === 'business' ? 3500 : 2500,
-        isPMR: false,
-        isVIP: layout.type === 'vip',
-        legroom: layout.legroom,
+        state,
+        price: 4500 + (isVIP ? 500 : 0),
+        isPMR,
+        isVIP,
+        legroom: config.legroom,
       });
       seatNumber++;
     }
   }
 
   return seats;
-};
-
-function getMockState(seatNumber) {
-  const occupied = [5, 6, 11, 12, 17, 18, 23, 24, 29, 30, 35];
-  const reserved = [7, 8, 19, 20];
-  if (occupied.includes(seatNumber)) return 'occupied';
-  if (reserved.includes(seatNumber)) return 'reserved';
-  return 'available';
 }
 
-export const SERVICES_CONFIG = [
-  { id: 'wifi', label: 'Wi-Fi', icon: 'bi-wifi', included: true },
-  { id: 'usb', label: 'Ports USB', icon: 'bi-usb-plug-fill', included: true },
-  { id: 'ac', label: 'Climatisation', icon: 'bi-snow', included: true },
-  { id: 'tv', label: 'TV individuelle', icon: 'bi-tv', included: true },
-  { id: 'toilet', label: 'Toilettes', icon: 'bi-droplet-fill', included: true },
-  { id: 'charger', label: 'Recharge phone', icon: 'bi-battery-charging', included: true },
-];
+export function getMockState(seatNumber) {
+  const occupiedSeats = [3, 7, 11, 14, 19, 22, 25, 30, 33, 38, 41, 45];
+  const reservedSeats = [5, 10, 16, 28, 35, 42];
+
+  if (occupiedSeats.includes(seatNumber)) return 'occupied';
+  if (reservedSeats.includes(seatNumber)) return 'reserved';
+  return 'available';
+}

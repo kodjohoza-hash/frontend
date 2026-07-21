@@ -1,106 +1,159 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ROUTES } from '@routes/routeConstants';
-import { SeatMap, SeatLegend, TripInfoCard, BookingSummary } from '@components/seats';
-import { BUS_LAYOUTS, mockTripInfo, generateSeats } from '@data/seatMap';
+import {
+  SeatMap,
+  SeatLegend,
+  JourneyInfoCard,
+  ReservationSummary,
+  CountdownCard,
+  BusServicesCard,
+  SeatSkeleton,
+} from '@components/seats';
+import { BUS_LAYOUTS, mockTripInfo, generateSeats, SERVICES_CONFIG } from '@data/seatMap';
 import '@assets/styles/seats.css';
 
 const SeatSelection = () => {
   const navigate = useNavigate();
   const trip = mockTripInfo;
-  const layout = BUS_LAYOUTS[trip.busType] || BUS_LAYOUTS.vip;
+  const layoutKey = trip.busType || 'vip';
+  const layout = BUS_LAYOUTS[layoutKey] || BUS_LAYOUTS.vip;
 
-  const allSeats = useMemo(() => generateSeats(layout), [layout]);
+  const allSeats = useMemo(() => generateSeats(layoutKey), [layoutKey]);
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [isLoading] = useState(false);
 
   const availableCount = useMemo(
-    () => allSeats.filter((s) => s.state === 'available' || s.state === 'reserved').length,
+    () => allSeats.filter((s) => s.state === 'available').length,
     [allSeats]
   );
 
   const handleSeatToggle = useCallback((seat) => {
     if (seat.state === 'occupied' || seat.state === 'reserved') return;
     setSelectedSeats((prev) =>
-      prev.includes(seat.id) ? prev.filter((id) => id !== seat.id) : [...prev, seat.id]
+      prev.includes(seat.number)
+        ? prev.filter((n) => n !== seat.number)
+        : [...prev, seat.number]
     );
   }, []);
 
   const handleContinue = useCallback(() => {
-    navigate('/booking/passenger', { state: { selectedSeats, tripId: trip.id } });
-  }, [navigate, selectedSeats, trip.id]);
+    const selectedObjects = allSeats.filter((s) => selectedSeats.includes(s.number));
+    navigate(ROUTES.BOOKING_PASSENGER, {
+      state: {
+        selectedSeats: selectedObjects.map((s) => ({
+          id: s.id,
+          number: s.number,
+          row: s.row,
+          position: s.position,
+          side: s.side,
+          price: s.price,
+          isVIP: s.isVIP,
+        })),
+        tripId: trip.id,
+        trip,
+      },
+    });
+  }, [navigate, selectedSeats, allSeats, trip]);
 
   const handleBack = useCallback(() => {
-    navigate('/booking/search');
+    navigate(ROUTES.BOOKING_SEARCH);
   }, [navigate]);
 
+  const handleExpired = useCallback(() => {
+    setSelectedSeats([]);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="btc-seat-page">
+        <div className="btc-seat-container">
+          <SeatSkeleton />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="btc-seat-selection-page">
-      <div className="container py-4">
-        {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="mb-4">
-          <ol className="breadcrumb" style={{ fontSize: 'var(--font-size-xs)' }}>
-            <li className="breadcrumb-item"><Link to={ROUTES.HOME} className="text-decoration-none" style={{ color: 'var(--text-muted)' }}>Accueil</Link></li>
-            <li className="breadcrumb-item"><Link to={ROUTES.BOOKING_SEARCH} className="text-decoration-none" style={{ color: 'var(--text-muted)' }}>Recherche</Link></li>
-            <li className="breadcrumb-item"><Link to={ROUTES.BOOKING_SEARCH} className="text-decoration-none" style={{ color: 'var(--text-muted)' }}>Resultats</Link></li>
-            <li className="breadcrumb-item active" style={{ color: 'var(--text-primary)' }}>Choix des sieges</li>
+    <div className="btc-seat-page">
+      <div className="btc-seat-container">
+        <nav aria-label="Fil d'Ariane" style={{ marginBottom: 20, animation: 'btcFadeInUp 0.3s ease both' }}>
+          <ol style={{ listStyle: 'none', display: 'flex', alignItems: 'center', gap: 6, margin: 0, padding: 0, fontSize: 'var(--font-size-xs)' }}>
+            <li>
+              <Link to={ROUTES.HOME} style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.15s' }}>
+                Accueil
+              </Link>
+            </li>
+            <li style={{ color: 'var(--text-muted)', fontSize: '0.6rem' }}>
+              <i className="bi bi-chevron-right" />
+            </li>
+            <li>
+              <Link to={ROUTES.BOOKING_SEARCH} style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.15s' }}>
+                Recherche
+              </Link>
+            </li>
+            <li style={{ color: 'var(--text-muted)', fontSize: '0.6rem' }}>
+              <i className="bi bi-chevron-right" />
+            </li>
+            <li>
+              <Link to={ROUTES.BOOKING_TRIPS || ROUTES.BOOKING_SEARCH} style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.15s' }}>
+                Résultats
+              </Link>
+            </li>
+            <li style={{ color: 'var(--text-muted)', fontSize: '0.6rem' }}>
+              <i className="bi bi-chevron-right" />
+            </li>
+            <li style={{ color: 'var(--text-primary)', fontWeight: 600 }}>
+              Choix des sièges
+            </li>
           </ol>
         </nav>
 
-        {/* Trip Info Card */}
-        <TripInfoCard trip={trip} />
+        <div className="btc-seat-layout">
+          {/* Left Column — Journey Info (Sticky) */}
+          <div>
+            <JourneyInfoCard trip={trip} availableSeats={availableCount} />
+          </div>
 
-        {/* Two Column Layout */}
-        <div className="row g-4">
-          {/* Left: Seat Map */}
-          <div className="col-12 col-lg-7">
-            <div className="card border-0" style={{ borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-sm)' }}>
-              <div className="card-body p-4">
-                <div className="d-flex align-items-center justify-content-between mb-3">
-                  <h6 className="fw-bold mb-0" style={{ fontSize: 'var(--font-size-base)', color: 'var(--text-primary)' }}>
-                    <i className="bi bi-bus-front-fill me-2" style={{ color: 'var(--color-accent)' }} />
-                    Plan du bus
-                  </h6>
-                  <span
-                    className="d-inline-flex align-items-center gap-1 px-2 py-1 rounded-pill"
-                    style={{
-                      fontSize: 'var(--font-size-2xs)',
-                      fontWeight: 'var(--font-weight-semibold)',
-                      background: 'var(--color-primary-50)',
-                      color: 'var(--color-primary)',
-                    }}
-                  >
-                    {layout.label} · {allSeats.length} places
+          {/* Center Column — Bus Visualization */}
+          <div>
+            <div style={{ background: '#FFFFFF', borderRadius: 16, border: '1px solid var(--color-gray-200, #E5E7EB)', overflow: 'hidden', animation: 'btcFadeInUp 0.5s ease both', animationDelay: '0.1s' }}>
+              <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--color-gray-100, #F3F4F6)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h3 style={{ fontSize: 'var(--font-size-sm)', fontWeight: 700, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--color-accent, #FF6B35)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12 }}>
+                    <i className="bi bi-bus-front-fill" />
                   </span>
-                </div>
-
+                  Plan du bus
+                </h3>
+                <span style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 600, color: 'var(--color-primary, #0B1D51)', background: 'var(--color-primary-50, #EEF2FF)', padding: '3px 10px', borderRadius: 20 }}>
+                  {layout.label} · {allSeats.length} places
+                </span>
+              </div>
+              <div style={{ padding: '8px 16px 20px' }}>
                 <SeatMap
                   layout={layout}
                   seats={allSeats}
                   selectedSeats={selectedSeats}
                   onSeatToggle={handleSeatToggle}
                 />
-
-                <div className="mt-3">
-                  <SeatLegend
-                    availableCount={availableCount}
-                    totalCount={allSeats.length}
-                  />
-                </div>
               </div>
+            </div>
+            <div style={{ marginTop: 16 }}>
+              <SeatLegend availableCount={availableCount} totalCount={allSeats.length} />
             </div>
           </div>
 
-          {/* Right: Summary */}
-          <div className="col-12 col-lg-5">
-            <div className="btc-summary-sticky">
-              <BookingSummary
-                trip={trip}
-                selectedSeats={selectedSeats}
-                seats={allSeats}
-                onContinue={handleContinue}
-                onBack={handleBack}
-              />
-            </div>
+          {/* Right Column — Reservation Summary (Sticky) */}
+          <div>
+            <ReservationSummary
+              trip={trip}
+              selectedSeats={selectedSeats}
+              allSeats={allSeats}
+              onContinue={handleContinue}
+              onBack={handleBack}
+            />
+            <CountdownCard durationMinutes={10} onExpired={handleExpired} />
+            <BusServicesCard services={trip.services} servicesConfig={SERVICES_CONFIG} />
           </div>
         </div>
       </div>

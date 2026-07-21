@@ -1,5 +1,9 @@
+export { default as BusSeat } from './BusSeat';
 export { default as SeatMap } from './SeatMap';
-export { default as SeatTooltip } from './SeatTooltip';
 export { default as SeatLegend } from './SeatLegend';
-export { default as TripInfoCard } from './TripInfoCard';
-export { default as BookingSummary } from './BookingSummary';
+export { default as SeatTooltip } from './SeatTooltip';
+export { default as JourneyInfoCard } from './JourneyInfoCard';
+export { default as ReservationSummary } from './ReservationSummary';
+export { default as CountdownCard } from './CountdownCard';
+export { default as BusServicesCard } from './BusServicesCard';
+export { default as SeatSkeleton } from './SeatSkeleton';
