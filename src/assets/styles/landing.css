@@ -2060,34 +2060,166 @@ select.btc-search-input {
 }
 
 /* ================================================
-   TESTIMONIALS — Premium Grid
+   TESTIMONIALS — Premium Carousel
    ================================================ */
 .btc-testimonials {
+  position: relative;
   padding: 5rem 0;
-  background: var(--bg-secondary);
+  overflow: hidden;
 }
 
-.btc-testimonials-grid {
+.btc-t-deco {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.btc-t-deco-orb {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.btc-t-deco-orb--1 {
+  width: 400px;
+  height: 400px;
+  top: -150px;
+  right: -120px;
+  background: rgba(var(--color-primary-rgb), 0.03);
+}
+
+.btc-t-deco-orb--2 {
+  width: 300px;
+  height: 300px;
+  bottom: -120px;
+  left: -100px;
+  background: rgba(var(--color-accent-rgb), 0.04);
+}
+
+/* Stats Row */
+.btc-t-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
-}
-
-.btc-testimonials-item {
+  margin-bottom: 2rem;
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(16px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.btc-testimonials-item.is-visible {
+.btc-t-stats.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Card */
-.btc-testimonial-card {
+.btc-t-stat {
+  text-align: center;
+  padding: 1.5rem 1rem;
   background: var(--color-white);
-  border-radius: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border-subtle);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btc-t-stat:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+}
+
+.btc-t-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(var(--color-primary-rgb), 0.08);
+  color: var(--color-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.btc-t-stat-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 0.375rem;
+}
+
+.btc-t-stat-label {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Rating Bar */
+.btc-t-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease 0.15s, transform 0.5s ease 0.15s;
+}
+
+.btc-t-rating.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.btc-t-rating-stars {
+  display: flex;
+  gap: 2px;
+  color: var(--color-warning);
+  font-size: 1rem;
+}
+
+.btc-t-rating-score {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.btc-t-rating-count {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* Carousel */
+.btc-t-carousel {
+  position: relative;
+}
+
+.btc-t-carousel-track {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.btc-t-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.btc-t-carousel-inner {
+  display: flex;
+  gap: 24px;
+  padding: 0.5rem 0;
+}
+
+.btc-t-carousel-slide {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  height: 100%;
+}
+
+/* Card */
+.btc-t-card {
+  background: var(--color-white);
+  border-radius: 24px;
   padding: 2rem;
   border: 1px solid var(--border-subtle);
   transition: transform 0.35s ease, box-shadow 0.35s ease;
@@ -2097,75 +2229,44 @@ select.btc-search-input {
   flex-direction: column;
 }
 
-.btc-testimonial-card:hover {
+.btc-t-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.08);
 }
 
-.btc-testimonial-card--featured {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-600) 100%);
-  border-color: transparent;
-  color: var(--color-white);
+.btc-t-card:focus-visible {
+  box-shadow: 0 0 0 3px var(--color-primary), 0 0 0 5px rgba(var(--color-primary-rgb), 0.3);
+  outline: none;
 }
 
-.btc-testimonial-card--featured .btc-testimonial-quote-icon {
-  color: rgba(255, 255, 255, 0.2);
+.btc-t-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
-.btc-testimonial-card--featured .btc-testimonial-quote p {
-  color: rgba(255, 255, 255, 0.95);
-}
-
-.btc-testimonial-card--featured .btc-testimonial-quote p::before {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-.btc-testimonial-card--featured .btc-testimonial-name {
-  color: var(--color-white);
-}
-
-.btc-testimonial-card--featured .btc-testimonial-city {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.btc-testimonial-card--featured .btc-testimonial-city i {
-  color: var(--color-accent);
-}
-
-.btc-testimonial-card--featured .btc-testimonial-stars {
-  color: var(--color-warning);
-}
-
-.btc-testimonial-card--featured .btc-testimonial-date {
-  border-top-color: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.btc-testimonial-card--featured .btc-testimonial-date i {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.btc-testimonial-card--featured:hover {
-  box-shadow: 0 20px 56px rgba(11, 29, 81, 0.25);
-}
-
-/* Quote icon */
-.btc-testimonial-quote-icon {
+.btc-t-card-quote-icon {
   font-size: 2.5rem;
   color: var(--color-primary-200);
   line-height: 1;
-  margin-bottom: 0.75rem;
 }
 
-/* Quote */
-.btc-testimonial-quote {
-  margin: 0 0 1.5rem;
+.btc-t-card-stars {
+  display: flex;
+  gap: 2px;
+  color: var(--color-warning);
+  font-size: 0.875rem;
+}
+
+.btc-t-card-quote {
+  margin: 0 0 1.25rem;
   padding: 0;
   border: none;
   flex: 1;
 }
 
-.btc-testimonial-quote p {
+.btc-t-card-quote p {
   font-size: 0.9375rem;
   color: var(--text-secondary);
   line-height: 1.7;
@@ -2175,7 +2276,7 @@ select.btc-search-input {
   position: relative;
 }
 
-.btc-testimonial-quote p::before {
+.btc-t-card-quote p::before {
   content: '\201C';
   position: absolute;
   left: 0;
@@ -2187,15 +2288,31 @@ select.btc-search-input {
   font-family: Georgia, serif;
 }
 
-/* Footer: avatar + info + stars */
-.btc-testimonial-footer {
+.btc-t-card-route {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  padding: 0.5rem 0.875rem;
+  background: rgba(var(--color-primary-rgb), 0.05);
+  border-radius: 10px;
+  margin-bottom: 1.25rem;
+}
+
+.btc-t-card-route i {
+  font-size: 0.75rem;
+}
+
+.btc-t-card-footer {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
 }
 
-.btc-testimonial-avatar {
+.btc-t-card-avatar {
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -2204,18 +2321,18 @@ select.btc-search-input {
   flex-shrink: 0;
 }
 
-.btc-testimonial-meta {
+.btc-t-card-meta {
   flex: 1;
   min-width: 0;
 }
 
-.btc-testimonial-name {
+.btc-t-card-name {
   font-size: 0.875rem;
   font-weight: 700;
   color: var(--text-primary);
 }
 
-.btc-testimonial-city {
+.btc-t-card-city {
   display: flex;
   align-items: center;
   gap: 3px;
@@ -2223,33 +2340,110 @@ select.btc-search-input {
   color: var(--text-muted);
 }
 
-.btc-testimonial-city i {
+.btc-t-card-city i {
   font-size: 0.6rem;
   color: var(--color-accent);
 }
 
-.btc-testimonial-stars {
-  display: flex;
-  gap: 2px;
-  color: var(--color-warning);
-  font-size: 0.75rem;
+.btc-t-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0.25rem 0.5rem;
+  background: rgba(var(--color-success-rgb), 0.1);
+  color: var(--color-success);
+  border-radius: 8px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  white-space: nowrap;
   flex-shrink: 0;
 }
 
-/* Date */
-.btc-testimonial-date {
+.btc-t-card-badge i {
+  font-size: 0.7rem;
+}
+
+.btc-t-card-details {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 1rem;
   font-size: 0.7rem;
   color: var(--text-muted);
   padding-top: 0.75rem;
   border-top: 1px solid var(--border-subtle);
 }
 
-.btc-testimonial-date i {
-  font-size: 0.6rem;
+.btc-t-card-details i {
+  font-size: 0.65rem;
   color: var(--color-primary);
+  margin-right: 2px;
+}
+
+/* Carousel Buttons */
+.btc-t-carousel-btn {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-white);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 5;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
+}
+
+.btc-t-carousel-btn:hover {
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+.btc-t-carousel-btn.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btc-t-carousel-btn--left {
+  left: -8px;
+}
+
+.btc-t-carousel-btn--right {
+  right: -8px;
+}
+
+/* Dots */
+.btc-t-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 2rem;
+}
+
+.btc-t-carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-gray-200);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s, width 0.3s;
+}
+
+.btc-t-carousel-dot.is-active {
+  background: var(--color-primary);
+  width: 24px;
+  border-radius: 4px;
+}
+
+.btc-t-carousel-dot:hover:not(.is-active) {
+  background: var(--color-gray-400);
 }
 
 /* ================================================
@@ -2988,7 +3182,7 @@ select.btc-search-input {
   .btc-dest-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
   .btc-how-timeline { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
   .btc-how-line { display: none; }
-  .btc-testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+  .btc-t-stats { grid-template-columns: repeat(2, 1fr); }
   .btc-mobile-app-card { flex-direction: column; gap: 2.5rem; padding: 3rem 2rem; }
   .btc-mobile-app-visual { order: -1; }
   .btc-mobile-app-features { grid-template-columns: 1fr 1fr; }
@@ -3050,8 +3244,10 @@ select.btc-search-input {
   .btc-how-card-icon { width: 48px; height: 48px; font-size: 1.15rem; }
   .btc-how-card-title { font-size: 0.875rem; }
   .btc-how-card-desc { font-size: 0.75rem; }
-  .btc-testimonials-grid { grid-template-columns: 1fr; }
-  .btc-testimonial-card { padding: 1.5rem; }
+  .btc-t-stats { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .btc-t-stat { padding: 1rem; }
+  .btc-t-stat-value { font-size: 1.375rem; }
+  .btc-t-carousel-btn { display: none; }
   .btc-mobile-app-card { padding: 2rem 1.25rem; }
   .btc-mobile-app-features { grid-template-columns: 1fr; }
   .btc-mobile-app-buttons { flex-direction: column; }
