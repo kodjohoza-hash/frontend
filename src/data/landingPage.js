@@ -169,11 +169,12 @@ export const DESTINATIONS = [
 ];
 
 export const STEPS = [
-  { id: 1, number: 1, icon: 'bi-search', title: 'Recherchez', description: 'Indiquez votre départ et destination pour voir les voyages disponibles.' },
-  { id: 2, number: 2, icon: 'bi-bus-front', title: 'Comparez', description: 'Consultez les horaires, prix et avis pour chaque compagnie.' },
-  { id: 3, number: 3, icon: 'bi-check2-square', title: 'Réservez', description: 'Choisissez votre place et confirmez votre réservation en ligne.' },
-  { id: 4, number: 4, icon: 'bi-wallet2', title: 'Payez', description: 'Mobile Money, carte bancaire ou payez à l\'embarquement.' },
-  { id: 5, number: 5, icon: 'bi-ticket-perforated', title: 'Voyagez', description: 'Votre billet numérique est envoyé instantanément. Prêt à partir !' },
+  { id: 1, number: 1, icon: 'bi-search', title: 'Rechercher un trajet', description: 'Choisissez votre ville de départ, votre destination, la date de voyage et lancez la recherche.' },
+  { id: 2, number: 2, icon: 'bi-bus-front', title: 'Choisir une compagnie', description: 'Comparez les différentes compagnies de transport disponibles et sélectionnez celle qui vous convient.' },
+  { id: 3, number: 3, icon: 'bi-grid-3x3-gap', title: 'Sélectionner un siège', description: 'Visualisez les sièges disponibles et choisissez votre place selon vos préférences.' },
+  { id: 4, number: 4, icon: 'bi-credit-card', title: 'Effectuer le paiement', description: 'Payez votre réservation en toute sécurité grâce aux moyens de paiement pris en charge.' },
+  { id: 5, number: 5, icon: 'bi-ticket-perforated', title: 'Recevoir votre billet', description: 'Votre billet électronique est généré automatiquement avec toutes les informations du voyage.' },
+  { id: 6, number: 6, icon: 'bi-bag-check', title: 'Voyager sereinement', description: 'Présentez simplement votre billet lors de l\'embarquement et profitez de votre voyage.' },
 ];
 
 export const TESTIMONIALS = [

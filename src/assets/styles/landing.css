@@ -1508,24 +1508,55 @@ select.btc-search-input {
 .btc-dest-card:hover .btc-dest-cta-btn i { transform: translateX(3px); }
 
 /* ================================================
-   HOW IT WORKS
+   HOW IT WORKS — Premium Timeline
    ================================================ */
 .btc-how {
+  position: relative;
   padding: 5rem 0;
+  overflow: hidden;
+}
+
+.btc-how-deco {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.btc-how-deco-orb {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.btc-how-deco-orb--1 {
+  width: 350px;
+  height: 350px;
+  top: -120px;
+  left: -100px;
+  background: rgba(var(--color-primary-rgb), 0.03);
+}
+
+.btc-how-deco-orb--2 {
+  width: 280px;
+  height: 280px;
+  bottom: -100px;
+  right: -80px;
+  background: rgba(var(--color-accent-rgb), 0.04);
 }
 
 .btc-how-timeline {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.25rem;
   position: relative;
-  padding-top: var(--space-4);
+  z-index: 1;
+  padding-top: 2rem;
 }
 
 .btc-how-line {
   position: absolute;
-  top: calc(var(--space-4) + 24px);
-  left: 10%;
-  right: 10%;
+  top: calc(2rem + 28px);
+  left: 8%;
+  right: 8%;
   height: 3px;
   background: linear-gradient(90deg, var(--color-primary-100) 0%, var(--color-primary) 50%, var(--color-primary-100) 100%);
   border-radius: 2px;
@@ -1533,14 +1564,11 @@ select.btc-search-input {
 }
 
 .btc-how-step {
-  flex: 1;
-  text-align: center;
-  padding: 0 var(--space-3);
   position: relative;
   z-index: 1;
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.5s, transform 0.5s;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .btc-how-step.is-visible {
@@ -1548,65 +1576,78 @@ select.btc-search-input {
   transform: translateY(0);
 }
 
-.btc-how-number {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+/* Step Card */
+.btc-how-card {
+  text-align: center;
+  padding: 2rem 1.25rem;
+  border-radius: 20px;
   background: var(--color-white);
-  border: 2px solid var(--color-primary);
-  display: inline-flex;
+  border: 1px solid var(--border-subtle);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin-bottom: var(--space-4);
-  position: relative;
-  z-index: 2;
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  font-size: var(--font-size-base);
-  transition: background 0.2s, color 0.2s, transform 0.2s;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
-.btc-how-step:hover .btc-how-number {
+.btc-how-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+}
+
+.btc-how-card-number {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
   background: var(--color-primary);
   color: var(--color-white);
-  transform: scale(1.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.3s ease;
 }
 
-.btc-how-icon {
-  width: 64px;
-  height: 64px;
+.btc-how-card:hover .btc-how-card-number {
+  transform: scale(1.15);
+}
+
+.btc-how-card-icon {
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-600) 100%);
   color: var(--color-white);
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  margin-bottom: var(--space-4);
-  box-shadow: 0 4px 16px rgba(11, 29, 81, 0.2);
-  transition: transform 0.3s, box-shadow 0.3s;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 16px rgba(var(--color-primary-rgb), 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.btc-how-step:hover .btc-how-icon {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 8px 24px rgba(11, 29, 81, 0.3);
+.btc-how-card:hover .btc-how-card-icon {
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 8px 24px rgba(var(--color-primary-rgb), 0.3);
 }
 
-.btc-how-title {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
+.btc-how-card-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: var(--space-2);
+  margin-bottom: 0.5rem;
 }
 
-.btc-how-desc {
-  font-size: var(--font-size-sm);
+.btc-how-card-desc {
+  font-size: 0.8125rem;
   color: var(--text-secondary);
   line-height: 1.65;
   margin: 0;
-  max-width: 200px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 /* ================================================
@@ -2662,13 +2703,8 @@ select.btc-search-input {
   .btc-why-choose-grid { grid-template-columns: repeat(2, 1fr); }
   .btc-companies-grid { grid-template-columns: repeat(2, 1fr); }
   .btc-dest-grid { grid-template-columns: repeat(2, 1fr); }
-  .btc-how-timeline { flex-direction: column; padding-left: 2.5rem; gap: 0; }
-  .btc-how-line { top: 1rem; bottom: 1rem; left: calc(2.5rem - 1px); width: 3px; height: auto; right: auto; }
-  .btc-how-step { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; gap: 0 1rem; text-align: left; padding: 1rem 0; }
-  .btc-how-number { grid-column: 1; grid-row: 1 / -1; width: 40px; height: 40px; font-size: var(--font-size-sm); align-self: start; margin-bottom: 0; }
-  .btc-how-icon { display: none; }
-  .btc-how-title { grid-column: 2; grid-row: 1; margin-bottom: 0.25rem; }
-  .btc-how-desc { grid-column: 2; grid-row: 2; max-width: none; margin: 0; }
+  .btc-how-timeline { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .btc-how-line { display: none; }
   .btc-footer-top { grid-template-columns: 1fr 1fr; }
 }
 
@@ -2722,6 +2758,11 @@ select.btc-search-input {
   .btc-companies-grid { grid-template-columns: 1fr; }
   .btc-dest-grid { grid-template-columns: 1fr; }
   .btc-dest-card { height: 260px; }
+  .btc-how-timeline { grid-template-columns: repeat(2, 1fr); }
+  .btc-how-card { padding: 1.5rem 1rem; }
+  .btc-how-card-icon { width: 48px; height: 48px; font-size: 1.15rem; }
+  .btc-how-card-title { font-size: 0.875rem; }
+  .btc-how-card-desc { font-size: 0.75rem; }
   .btc-company-card { border-radius: 16px; }
   .btc-mobile-app-card { padding: 2rem 1.5rem; }
   .btc-newsletter-card { padding: 2rem 1.5rem; }
@@ -2762,4 +2803,6 @@ select.btc-search-input {
   .btc-hero-float {
     padding: 0.5rem 0.75rem;
   }
+  .btc-how-timeline { grid-template-columns: 1fr; }
+  .btc-how-card { padding: 1.5rem; }
 }

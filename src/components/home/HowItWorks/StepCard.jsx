@@ -1,37 +1,17 @@
 import { memo } from 'react';
-import clsx from 'clsx';
 
-/**
- * StepCard — Single step in the timeline
- * Desktop: horizontal with connector line
- * Mobile: vertical with dot connector
- * Memoized for performance
- */
-const StepCard = memo(({ step, index, total }) => {
-  const isLast = index === total - 1;
-
+const StepCard = memo(({ step, index }) => {
   return (
-    <div className={clsx('timeline-step', `reveal reveal-delay-${(index % 5) + 1}`)}>
-      {/* Step number badge */}
-      <div className="timeline-step-number">
-        <span className="timeline-step-number-text">{step.number}</span>
-      </div>
-
-      {/* Connector line (desktop only, not on last) */}
-      {!isLast && <div className="timeline-step-connector" />}
-
-      {/* Icon circle */}
-      <div className="timeline-step-icon">
+    <div className="btc-how-card">
+      <div className="btc-how-card-number">{step.number}</div>
+      <div className="btc-how-card-icon">
         <i className={`bi ${step.icon}`} />
       </div>
-
-      {/* Content */}
-      <h4 className="timeline-step-title">{step.title}</h4>
-      <p className="timeline-step-description">{step.description}</p>
+      <h3 className="btc-how-card-title">{step.title}</h3>
+      <p className="btc-how-card-desc">{step.description}</p>
     </div>
   );
 });
 
 StepCard.displayName = 'StepCard';
-
 export default StepCard;
