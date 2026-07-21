@@ -1,0 +1,396 @@
+/* ================================================
+   BUS TIX CONNECT — UI Component Styles
+   ================================================ */
+
+/* ================================================
+   Button
+   ================================================ */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.1em;
+}
+
+.btn-loading {
+  pointer-events: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+}
+.btn-ghost:hover {
+  background: var(--bg-muted);
+  color: var(--text-primary);
+}
+
+.btn-link {
+  background: transparent;
+  color: var(--color-primary);
+  padding-left: 0;
+  padding-right: 0;
+  text-decoration: none;
+}
+.btn-link:hover {
+  text-decoration: underline;
+  background: transparent;
+  color: var(--color-primary-hover);
+  transform: none;
+}
+
+/* ================================================
+   Input
+   ================================================ */
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.input-icon-left {
+  left: 0.875rem;
+}
+
+.input-icon-right {
+  right: 0.875rem;
+}
+
+.input-field .form-control.is-invalid,
+.input-field .form-select.is-invalid {
+  border-color: var(--color-danger);
+}
+
+.input-field .form-control.is-valid,
+.input-field .form-select.is-valid {
+  border-color: var(--color-success);
+}
+
+.input-field .invalid-feedback {
+  font-size: var(--font-size-xs);
+  color: var(--color-danger);
+  margin-top: var(--space-1);
+}
+
+/* Password toggle */
+.password-toggle-btn {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: var(--space-1);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-default);
+}
+.password-toggle-btn:hover {
+  color: var(--text-primary);
+}
+
+/* ================================================
+   Form Check custom (Checkbox/Radio/Switch)
+   ================================================ */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.form-check-input {
+  width: 1.125em;
+  height: 1.125em;
+  margin-top: 0.15em;
+  border-color: var(--border-default);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.form-check-input:checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.15);
+  border-color: var(--color-primary);
+}
+
+.form-check-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.form-switch .form-check-input {
+  width: 2.5em;
+  height: 1.25em;
+}
+
+/* ================================================
+   Badge
+   ================================================ */
+.badge-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-circle);
+  margin-right: var(--space-1-5);
+}
+
+.badge-sm {
+  font-size: 0.65em;
+  padding: 0.2em 0.55em;
+}
+
+.badge-lg {
+  font-size: 0.8em;
+  padding: 0.35em 0.8em;
+}
+
+/* ================================================
+   Card
+   ================================================ */
+.card-hoverable {
+  transition: box-shadow var(--duration-normal) var(--ease-default),
+              transform var(--duration-normal) var(--ease-default);
+  cursor: pointer;
+}
+.card-hoverable:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+.card-no-padding .card-body {
+  padding: 0;
+}
+
+/* ================================================
+   Modal
+   ================================================ */
+.btc-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  animation: fadeIn var(--duration-fast) var(--ease-out);
+  backdrop-filter: blur(4px);
+}
+
+.btc-modal-overlay .modal {
+  width: 100%;
+  max-width: 100%;
+}
+
+.btc-modal-overlay .modal-content {
+  animation: modalZoomIn var(--duration-slow) var(--ease-bounce);
+  max-height: calc(100vh - var(--space-8));
+  overflow-y: auto;
+}
+
+/* ================================================
+   Tooltip
+   ================================================ */
+.tooltip-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.btc-tooltip {
+  position: absolute;
+  z-index: var(--z-tooltip);
+  padding: var(--space-1-5) var(--space-3);
+  background-color: var(--color-gray-800);
+  color: var(--color-white);
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: fadeIn var(--duration-fast) var(--ease-out);
+  box-shadow: var(--shadow-lg);
+}
+
+.tooltip-top {
+  bottom: calc(100% + var(--space-2));
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-bottom {
+  top: calc(100% + var(--space-2));
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-left {
+  right: calc(100% + var(--space-2));
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tooltip-right {
+  left: calc(100% + var(--space-2));
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ================================================
+   Spinner
+   ================================================ */
+.spinner-lg {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.spinner-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.85);
+  z-index: var(--z-raised);
+  border-radius: inherit;
+  animation: fadeIn var(--duration-fast) var(--ease-out);
+}
+
+/* ================================================
+   EmptyState
+   ================================================ */
+.empty-state-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-circle);
+  background-color: var(--bg-muted);
+  color: var(--text-muted);
+}
+.empty-state-icon i {
+  font-size: var(--font-size-4xl);
+}
+
+.empty-state-title {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.empty-state-description {
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ================================================
+   ErrorState
+   ================================================ */
+.error-state-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-circle);
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+}
+.error-state-icon i {
+  font-size: var(--font-size-4xl);
+}
+
+.error-state-title {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.error-state-description {
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ================================================
+   PageContainer
+   ================================================ */
+.page-container {
+  padding: var(--space-6) 0;
+}
+
+.page-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+.page-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ================================================
+   Skeleton base theme
+   ================================================ */
+.skeleton-wrapper {
+  --skeleton-margin-bottom: 1rem;
+}
+
+/* ================================================
+   Responsive
+   ================================================ */
+@media (max-width: 575.98px) {
+  .page-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .empty-state,
+  .error-state {
+    padding: var(--space-8) var(--space-4);
+  }
+
+  .btc-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .btc-modal-overlay .modal-content {
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    max-height: 90vh;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .page-title {
+    font-size: var(--font-size-2xl);
+  }
+}

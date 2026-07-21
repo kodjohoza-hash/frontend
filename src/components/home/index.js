@@ -1,0 +1,16 @@
+export { default as HomeNavbar } from './HomeNavbar';
+export { default as Hero } from './Hero';
+export { default as SearchBox } from './SearchBox';
+export { default as StatisticsSection } from './Statistics/StatisticsSection';
+export { default as FeaturesSection } from './Features/FeaturesSection';
+export { default as CompaniesSection } from './Companies/CompaniesSection';
+export { default as CompanyCard } from './Companies/CompanyCard';
+export { default as DestinationsSection } from './Destinations/DestinationsSection';
+export { default as DestinationCard } from './Destinations/DestinationCard';
+export { default as HowItWorksSection } from './HowItWorks/HowItWorksSection';
+export { default as TestimonialsSection } from './Testimonials/TestimonialsSection';
+export { default as FAQSection } from './FAQ/FAQSection';
+export { default as NewsletterSection } from './Newsletter/NewsletterSection';
+export { default as MobileAppSection } from './MobileApp/index';
+export { default as FinalCTASection } from './FinalCTA/index';
+export { default as HomeFooter } from './Footer/HomeFooter';
