@@ -1,5 +1,5 @@
 /**
- * AuthCard — Styled wrapper for auth form content
+ * AuthCard — Premium glass card wrapper
  */
 const AuthCard = ({ children, className = '' }) => (
   <div className={`auth-card ${className}`}>

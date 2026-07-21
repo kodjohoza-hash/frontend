@@ -2,11 +2,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forgotPasswordSchema } from '@schemas/auth.schema';
 import useAuth from '@hooks/useAuth';
-import { Input, Button } from '@components/ui';
+import AuthInput from './AuthInput';
 
-/**
- * ForgotPasswordForm — Email input for password reset request
- */
 const ForgotPasswordForm = () => {
   const { forgotPassword, isSendingReset, forgotPasswordSuccess, forgotPasswordError } = useAuth();
 
@@ -19,9 +16,7 @@ const ForgotPasswordForm = () => {
     defaultValues: { email: '' },
   });
 
-  const onSubmit = (data) => {
-    forgotPassword(data.email);
-  };
+  const onSubmit = (data) => forgotPassword(data.email);
 
   if (forgotPasswordSuccess) {
     return (
@@ -31,7 +26,7 @@ const ForgotPasswordForm = () => {
         </div>
         <h2 className="auth-status__title">Email envoyé !</h2>
         <p className="auth-status__text">
-          Vérifiez votre boîte de réception et cliquez sur le lien de réinitialisation. Le lien expirera dans 30 minutes.
+          Vérifiez votre boîte de réception et cliquez sur le lien de réinitialisation.
         </p>
       </div>
     );
@@ -41,7 +36,7 @@ const ForgotPasswordForm = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="auth-form" noValidate>
       {forgotPasswordError && (
         <div className="auth-alert auth-alert--error" role="alert">
-          <i className="bi bi-exclamation-circle auth-alert__icon" />
+          <i className="bi bi-exclamation-circle-fill auth-alert__icon" />
           <div className="auth-alert__content">
             <p className="auth-alert__message">
               {forgotPasswordError?.response?.data?.message || 'Aucun compte trouvé avec cette adresse email.'}
@@ -50,29 +45,22 @@ const ForgotPasswordForm = () => {
         </div>
       )}
 
-      <Input
+      <AuthInput
         label="Adresse email"
         type="email"
         name="email"
         placeholder="votre@email.com"
-        autoComplete="email"
-        leftIcon={<i className="bi bi-envelope" />}
+        leftIcon={<i className="bi bi-envelope-fill" />}
         error={errors.email?.message}
         disabled={isSendingReset}
         required
         {...register('email')}
       />
 
-      <Button
-        type="submit"
-        variant="primary"
-        size="lg"
-        fullWidth
-        loading={isSendingReset}
-        disabled={isSendingReset}
-      >
-        Envoyer le lien de réinitialisation
-      </Button>
+      <button type="submit" className="btn btn-primary" disabled={isSendingReset}>
+        {isSendingReset && <span className="spinner-border spinner-border-sm" />}
+        Envoyer le lien
+      </button>
     </form>
   );
 };

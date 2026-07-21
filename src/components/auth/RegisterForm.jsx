@@ -1,13 +1,24 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from '@schemas/auth.schema';
 import useAuth from '@hooks/useAuth';
-import { Input, PasswordInput, Button, Checkbox } from '@components/ui';
+import AuthInput from './AuthInput';
+import AuthPasswordInput from './AuthPasswordInput';
 
-/**
- * RegisterForm — Premium registration form
- */
+const COUNTRIES = [
+  { value: '', label: 'Sélectionnez un pays' },
+  { value: 'CM', label: 'Cameroun' },
+  { value: 'GA', label: 'Gabon' },
+  { value: 'CG', label: 'Congo' },
+  { value: 'NG', label: 'Nigeria' },
+  { value: 'TD', label: 'Tchad' },
+  { value: 'CF', label: 'Centrafrique' },
+  { value: 'GQ', label: 'Guinée Équatoriale' },
+  { value: 'SN', label: 'Sénégal' },
+  { value: 'CI', label: 'Côte d\'Ivoire' },
+];
+
 const RegisterForm = () => {
   const navigate = useNavigate();
   const { register: registerUser, isRegistering, registerError } = useAuth();
@@ -20,13 +31,8 @@ const RegisterForm = () => {
   } = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      lastName: '',
-      firstName: '',
-      phone: '',
-      city: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      lastName: '', firstName: '', phone: '', email: '',
+      password: '', confirmPassword: '', country: '', city: '',
       acceptsTerms: false,
     },
   });
@@ -68,22 +74,20 @@ const RegisterForm = () => {
       )}
 
       <div className="auth-form__row">
-        <Input
+        <AuthInput
           label="Nom"
           name="lastName"
           placeholder="Votre nom"
-          autoComplete="family-name"
           leftIcon={<i className="bi bi-person-fill" />}
           error={errors.lastName?.message}
           disabled={isRegistering}
           required
           {...register('lastName')}
         />
-        <Input
+        <AuthInput
           label="Prénom"
           name="firstName"
           placeholder="Votre prénom"
-          autoComplete="given-name"
           leftIcon={<i className="bi bi-person-fill" />}
           error={errors.firstName?.message}
           disabled={isRegistering}
@@ -92,12 +96,11 @@ const RegisterForm = () => {
         />
       </div>
 
-      <Input
+      <AuthInput
         label="Téléphone"
         type="tel"
         name="phone"
         placeholder="6XX XXX XXX"
-        autoComplete="tel"
         leftIcon={<i className="bi bi-telephone-fill" />}
         error={errors.phone?.message}
         disabled={isRegistering}
@@ -105,12 +108,11 @@ const RegisterForm = () => {
         {...register('phone')}
       />
 
-      <Input
-        label="Email"
+      <AuthInput
+        label="Adresse email"
         type="email"
         name="email"
         placeholder="votre@email.com"
-        autoComplete="email"
         leftIcon={<i className="bi bi-envelope-fill" />}
         error={errors.email?.message}
         disabled={isRegistering}
@@ -118,36 +120,33 @@ const RegisterForm = () => {
         {...register('email')}
       />
 
-      <div>
-        <PasswordInput
-          label="Mot de passe"
-          name="password"
-          placeholder="Minimum 8 caractères"
-          autoComplete="new-password"
-          leftIcon={<i className="bi bi-lock-fill" />}
-          error={errors.password?.message}
-          disabled={isRegistering}
-          required
-          {...register('password')}
-        />
-        {password && (
-          <div className="password-strength">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className={`password-strength__bar ${i <= strength.level ? `password-strength__bar--active ${strength.className}` : ''}`}
-              />
-            ))}
-            <span className="password-strength__label">{strength.label}</span>
-          </div>
-        )}
-      </div>
+      <AuthPasswordInput
+        label="Mot de passe"
+        name="password"
+        placeholder="Minimum 8 caractères"
+        leftIcon={<i className="bi bi-lock-fill" />}
+        error={errors.password?.message}
+        disabled={isRegistering}
+        required
+        {...register('password')}
+      />
 
-      <PasswordInput
+      {password && (
+        <div className="password-strength">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className={`password-strength__bar ${i <= strength.level ? `password-strength__bar--active ${strength.className}` : ''}`}
+            />
+          ))}
+          <span className="password-strength__label">{strength.label}</span>
+        </div>
+      )}
+
+      <AuthPasswordInput
         label="Confirmer le mot de passe"
         name="confirmPassword"
         placeholder="Retapez votre mot de passe"
-        autoComplete="new-password"
         leftIcon={<i className="bi bi-lock-fill" />}
         error={errors.confirmPassword?.message}
         disabled={isRegistering}
@@ -155,13 +154,47 @@ const RegisterForm = () => {
         {...register('confirmPassword')}
       />
 
-      <div className="auth-terms">
-        <Checkbox
-          name="acceptsTerms"
+      <div className="auth-form__row">
+        <div className="auth-field">
+          <label htmlFor="auth-input-country" className="auth-field__label">
+            Pays<span className="auth-field__required">*</span>
+          </label>
+          <div className="auth-field__wrapper">
+            <span className="auth-field__icon auth-field__icon--left">
+              <i className="bi bi-globe2" />
+            </span>
+            <select
+              id="auth-input-country"
+              className="auth-field__input auth-field__input--has-left"
+              disabled={isRegistering}
+              style={{ cursor: 'pointer', appearance: 'none' }}
+              {...register('country')}
+            >
+              {COUNTRIES.map((c) => (
+                <option key={c.value} value={c.value}>{c.label}</option>
+              ))}
+            </select>
+          </div>
+          {errors.country?.message && (
+            <p className="auth-field__error">{errors.country.message}</p>
+          )}
+        </div>
+
+        <AuthInput
+          label="Ville"
+          name="city"
+          placeholder="Ex: Douala, Yaoundé..."
+          leftIcon={<i className="bi bi-geo-alt-fill" />}
+          error={errors.city?.message}
           disabled={isRegistering}
-          {...register('acceptsTerms')}
+          required
+          {...register('city')}
         />
-        <label htmlFor="checkbox-acceptsTerms" className="auth-terms__label">
+      </div>
+
+      <div className="auth-terms">
+        <input type="checkbox" id="acceptsTerms" disabled={isRegistering} {...register('acceptsTerms')} />
+        <label htmlFor="acceptsTerms" className="auth-terms__label">
           J'accepte les{' '}
           <a href="/conditions" target="_blank" rel="noopener noreferrer">conditions d'utilisation</a>
           {' '}et la{' '}
@@ -169,26 +202,18 @@ const RegisterForm = () => {
         </label>
       </div>
       {errors.acceptsTerms?.message && (
-        <div className="invalid-feedback d-block" style={{ marginTop: '-0.5rem' }}>
-          {errors.acceptsTerms.message}
-        </div>
+        <p className="auth-field__error" style={{ marginTop: '-0.5rem' }}>{errors.acceptsTerms.message}</p>
       )}
 
-      <Button
-        type="submit"
-        variant="primary"
-        size="lg"
-        fullWidth
-        loading={isRegistering}
-        disabled={isRegistering}
-      >
+      <button type="submit" className="btn btn-primary" disabled={isRegistering}>
+        {isRegistering && <span className="spinner-border spinner-border-sm" />}
         Créer mon compte
-      </Button>
+      </button>
 
       <p className="auth-form__alt">
-        Déjà inscrit ?{' '}
+        Déjà un compte ?{' '}
         <Link to="/login" className="auth-form__alt-link">
-          Connexion
+          Se connecter
         </Link>
       </p>
     </form>

@@ -4,18 +4,15 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@schemas/auth.schema';
 import useAuth from '@hooks/useAuth';
-import { Input, PasswordInput, Button } from '@components/ui';
-import RememberMe from './RememberMe';
+import AuthInput from './AuthInput';
+import AuthPasswordInput from './AuthPasswordInput';
+import SocialLogin from './SocialLogin';
 
-/**
- * LoginForm — Premium login form
- */
 const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, isLoggingIn, loginError } = useAuth();
   const [showAlert, setShowAlert] = useState(!!loginError);
-
   const from = location.state?.from?.pathname || '/';
 
   const {
@@ -24,11 +21,7 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-      rememberMe: false,
-    },
+    defaultValues: { email: '', password: '', rememberMe: false },
   });
 
   const onSubmit = (data) => {
@@ -52,12 +45,11 @@ const LoginForm = () => {
         </div>
       )}
 
-      <Input
-        label="Email"
+      <AuthInput
+        label="Adresse email"
         type="email"
         name="email"
         placeholder="votre@email.com"
-        autoComplete="email"
         leftIcon={<i className="bi bi-envelope-fill" />}
         error={errors.email?.message}
         disabled={isLoggingIn}
@@ -65,11 +57,10 @@ const LoginForm = () => {
         {...register('email')}
       />
 
-      <PasswordInput
+      <AuthPasswordInput
         label="Mot de passe"
         name="password"
         placeholder="Votre mot de passe"
-        autoComplete="current-password"
         leftIcon={<i className="bi bi-lock-fill" />}
         error={errors.password?.message}
         disabled={isLoggingIn}
@@ -78,25 +69,28 @@ const LoginForm = () => {
       />
 
       <div className="auth-form__options">
-        <RememberMe {...register('rememberMe')} />
+        <div className="auth-form__remember">
+          <input type="checkbox" id="remember-me" disabled={isLoggingIn} {...register('rememberMe')} />
+          <label htmlFor="remember-me">Se souvenir de moi</label>
+        </div>
         <Link to="/forgot-password" className="auth-form__link">
           Mot de passe oublié ?
         </Link>
       </div>
 
-      <Button
+      <button
         type="submit"
-        variant="primary"
-        size="lg"
-        fullWidth
-        loading={isLoggingIn}
+        className="btn btn-primary"
         disabled={isLoggingIn}
       >
+        {isLoggingIn && <span className="spinner-border spinner-border-sm" />}
         Se connecter
-      </Button>
+      </button>
+
+      <SocialLogin />
 
       <p className="auth-form__alt">
-        Pas encore de compte ?{' '}
+        Vous n'avez pas encore de compte ?{' '}
         <Link to="/register" className="auth-form__alt-link">
           Créer un compte
         </Link>

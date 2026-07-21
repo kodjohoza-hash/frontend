@@ -1,10 +1,5 @@
 import { z } from 'zod';
 
-/**
- * BUS TIX CONNECT — Auth Validation Schemas (Zod)
- * All messages in French (fr_CM)
- */
-
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
 
 export const loginSchema = z.object({
@@ -32,12 +27,7 @@ export const registerSchema = z.object({
   phone: z
     .string()
     .min(1, 'Le numéro de téléphone est requis')
-    .regex(/^(\+?237)?[69]\d{8}$/, 'Numéro de téléphone camerounais invalide (ex: 6XX XXX XXX)'),
-  city: z
-    .string()
-    .min(1, 'La ville est requise')
-    .min(2, 'La ville doit contenir au moins 2 caractères')
-    .max(50, 'La ville ne peut pas dépasser 50 caractères'),
+    .regex(/^(\+?237)?[69]\d{8}$/, 'Numéro camerounais invalide (ex: 6XX XXX XXX)'),
   email: z
     .string()
     .min(1, 'L\'email est requis')
@@ -50,6 +40,14 @@ export const registerSchema = z.object({
   confirmPassword: z
     .string()
     .min(1, 'La confirmation du mot de passe est requise'),
+  country: z
+    .string()
+    .min(1, 'Le pays est requis'),
+  city: z
+    .string()
+    .min(1, 'La ville est requise')
+    .min(2, 'La ville doit contenir au moins 2 caractères')
+    .max(50, 'La ville ne peut pas dépasser 50 caractères'),
   acceptsTerms: z
     .boolean()
     .refine((val) => val === true, {

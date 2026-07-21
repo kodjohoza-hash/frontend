@@ -3,12 +3,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { verifyEmailSchema } from '@schemas/auth.schema';
 import useAuth from '@hooks/useAuth';
-import { Input, Button } from '@components/ui';
+import AuthInput from '@components/auth/AuthInput';
 import { AuthCard, AuthHeader, AuthIllustration } from '@components/auth';
 
-/**
- * VerifyEmailPage — Two-column split layout
- */
 const VerifyEmailPage = () => {
   const location = useLocation();
   const email = location.state?.email || '';
@@ -40,7 +37,7 @@ const VerifyEmailPage = () => {
                 <p className="auth-status__text">
                   Votre compte a été activé. Vous pouvez maintenant vous connecter.
                 </p>
-                <Link to="/login" className="btn btn-primary btn-lg" style={{ width: '100%' }}>
+                <Link to="/login" className="btn btn-primary" style={{ width: '100%', height: 56, borderRadius: 16, fontSize: 'var(--font-size-sm)', fontWeight: 600 }}>
                   Se connecter
                 </Link>
               </div>
@@ -57,19 +54,15 @@ const VerifyEmailPage = () => {
       <div className="auth-right">
         <div className="auth-right__inner">
           <div className="auth-mobile-logo">
-            <div className="auth-mobile-logo__icon">
-              <i className="bi bi-bus-front-fill" />
-            </div>
+            <div className="auth-mobile-logo__icon"><i className="bi bi-bus-front-fill" /></div>
             <span className="auth-mobile-logo__text">Bus Tix Connect</span>
           </div>
-
           <AuthCard>
             <AuthHeader
               icon={<i className="bi bi-shield-lock-fill" />}
               title="Vérifier votre email"
               subtitle={email ? `Code envoyé à ${email}` : 'Entrez le code de vérification'}
             />
-
             <form onSubmit={handleSubmit(onSubmit)} className="auth-form" noValidate>
               {verifyEmailError && (
                 <div className="auth-alert auth-alert--error" role="alert">
@@ -81,52 +74,32 @@ const VerifyEmailPage = () => {
                   </div>
                 </div>
               )}
-
-              <Input
+              <AuthInput
                 label="Code de vérification"
                 name="code"
                 placeholder="000000"
-                autoComplete="one-time-code"
-                inputMode="numeric"
-                maxLength={6}
                 leftIcon={<i className="bi bi-key-fill" />}
                 error={errors.code?.message}
                 disabled={isVerifying}
                 className="text-center"
-                style={{ fontSize: 'var(--font-size-2xl)', letterSpacing: '0.5em', fontWeight: 600, height: '52px' }}
                 required
                 {...register('code')}
               />
-
-              <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                fullWidth
-                loading={isVerifying}
-                disabled={isVerifying}
-              >
+              <button type="submit" className="btn btn-primary" disabled={isVerifying}>
+                {isVerifying && <span className="spinner-border spinner-border-sm" />}
                 Vérifier
-              </Button>
+              </button>
             </form>
-
             <div style={{ textAlign: 'center', marginTop: 'var(--space-4)' }}>
-              <button
-                type="button"
-                onClick={() => resendVerification(email)}
-                disabled={isResending}
-                className="btn btn-ghost btn-sm"
-              >
+              <button type="button" onClick={() => resendVerification(email)} disabled={isResending} className="btn btn-ghost btn-sm">
                 {isResending ? 'Envoi en cours...' : 'Renvoyer le code'}
               </button>
             </div>
           </AuthCard>
-
           <div className="auth-footer">
             <p className="auth-footer__text">
               <Link to="/login" className="auth-footer__link">
-                <i className="bi bi-arrow-left me-1" />
-                Retour à la connexion
+                <i className="bi bi-arrow-left me-1" /> Retour à la connexion
               </Link>
             </p>
           </div>
