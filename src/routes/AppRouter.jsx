@@ -60,6 +60,7 @@ const AppRouter = () => {
           <Route path={ROUTES.BOOKING_PASSENGER} element={<PassengerInfo />} />
           <Route path={ROUTES.BOOKING_PAYMENT} element={<PaymentPage />} />
           <Route path={ROUTES.BOOKING_CONFIRMATION} element={<ConfirmationPage />} />
+          <Route path="/booking/trips/:id" element={<PlaceholderPage title="Détails du voyage" description="Consultez toutes les informations détaillées sur ce voyage." icon="bi-bus-front-fill" backTo={ROUTES.BOOKING_SEARCH} />} />
         </Route>
 
         {/* ================================================

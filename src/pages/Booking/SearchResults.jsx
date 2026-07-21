@@ -1,26 +1,29 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SearchSummary, FilterSidebar, TripResults, SearchSkeleton } from '@components/search';
+import { SearchHero, FilterSidebar, TripResults, Pagination, SearchSkeleton } from '@components/search';
 import { mockTrips, defaultSearchParams } from '@data/searchResults';
 import '@assets/styles/search.css';
 
-const LoadingDelay = 1500;
+const TRIPS_PER_PAGE = 5;
+const LoadingDelay = 1800;
 
 const SearchResults = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [searchParams, setSearchParams] = useState(defaultSearchParams);
+  const [searchParams] = useState(defaultSearchParams);
   const [filters, setFilters] = useState({
     companies: [],
     priceMin: 0,
-    priceMax: 15000,
+    priceMax: 10000,
     departureTimes: [],
     duration: null,
     classes: [],
     minSeats: 0,
     services: [],
+    minRating: 0,
   });
   const [sortBy, setSortBy] = useState('recommended');
+  const [currentPage, setCurrentPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   useEffect(() => {
@@ -37,7 +40,7 @@ const SearchResults = () => {
     if (filters.priceMin > 0) {
       result = result.filter((t) => t.price >= filters.priceMin);
     }
-    if (filters.priceMax < 15000) {
+    if (filters.priceMax < 10000) {
       result = result.filter((t) => t.price <= filters.priceMax);
     }
     if (filters.departureTimes.length > 0) {
@@ -64,6 +67,9 @@ const SearchResults = () => {
     if (filters.services.length > 0) {
       result = result.filter((t) => filters.services.every((s) => t.services.includes(s)));
     }
+    if (filters.minRating > 0) {
+      result = result.filter((t) => t.companyRating >= filters.minRating);
+    }
 
     switch (sortBy) {
       case 'price_asc': result.sort((a, b) => a.price - b.price); break;
@@ -77,17 +83,25 @@ const SearchResults = () => {
     return result;
   }, [filters, sortBy]);
 
+  const totalPages = Math.ceil(filteredTrips.length / TRIPS_PER_PAGE);
+  const paginatedTrips = useMemo(() => {
+    const start = (currentPage - 1) * TRIPS_PER_PAGE;
+    return filteredTrips.slice(start, start + TRIPS_PER_PAGE);
+  }, [filteredTrips, currentPage]);
+
   const handleResetFilters = useCallback(() => {
     setFilters({
       companies: [],
       priceMin: 0,
-      priceMax: 15000,
+      priceMax: 10000,
       departureTimes: [],
       duration: null,
       classes: [],
       minSeats: 0,
       services: [],
+      minRating: 0,
     });
+    setCurrentPage(1);
   }, []);
 
   const handleModifySearch = useCallback(() => {
@@ -98,18 +112,34 @@ const SearchResults = () => {
     navigate(`/booking/seats?trip=${trip.id}`);
   }, [navigate]);
 
+  const handleViewDetails = useCallback((trip) => {
+    navigate(`/booking/trips/${trip.id}`);
+  }, [navigate]);
+
+  const handlePageChange = useCallback((page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 320, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, sortBy]);
+
   if (isLoading) {
     return (
-      <div className="container py-4">
-        <SearchSkeleton count={4} />
+      <div className="btc-search-results-page">
+        <div className="btc-search-container">
+          <SearchSkeleton />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="btc-search-results-page">
-      <div className="container py-4">
-        <SearchSummary
+      <div className="btc-search-container">
+        {/* Hero Search Summary */}
+        <SearchHero
           searchParams={searchParams}
           resultCount={filteredTrips.length}
           onModifySearch={handleModifySearch}
@@ -117,63 +147,61 @@ const SearchResults = () => {
 
         {/* Mobile filter toggle */}
         <button
-          className="btn btn-sm d-flex d-lg-none align-items-center gap-2 mb-3 w-100 justify-content-center"
+          className="btc-mobile-filter-toggle"
           onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-          style={{
-            color: 'var(--color-primary)',
-            background: 'var(--color-primary-50)',
-            borderRadius: 'var(--radius-lg)',
-            fontSize: 'var(--font-size-sm)',
-            padding: '10px 16px',
-            border: '1px solid var(--color-primary-200)',
-            fontWeight: 'var(--font-weight-medium)',
-          }}
           aria-expanded={mobileFiltersOpen}
-          aria-controls="filter-sidebar"
+          aria-controls="btc-filter-sidebar"
         >
-          <i className="bi bi-funnel" />
+          <i className="bi bi-sliders" />
           Filtres
           {(() => {
             const count = (filters.companies?.length || 0) + (filters.departureTimes?.length || 0) + (filters.classes?.length || 0) + (filters.services?.length || 0);
             return count > 0 ? (
-              <span
-                className="d-inline-flex align-items-center justify-content-center rounded-pill"
-                style={{ width: 18, height: 18, fontSize: '0.65rem', background: 'var(--color-accent)', color: 'var(--color-white)' }}
-              >
-                {count}
-              </span>
+              <span className="btc-mobile-filter-count">{count}</span>
             ) : null;
           })()}
         </button>
 
-        <div className="row g-4">
+        {/* Main Layout: 25% Filters | 75% Results */}
+        <div className="btc-search-layout">
           {/* Mobile filter overlay */}
           {mobileFiltersOpen && (
-            <div className="btc-filter-overlay d-lg-none" onClick={() => setMobileFiltersOpen(false)} />
+            <div className="btc-filter-overlay" onClick={() => setMobileFiltersOpen(false)} />
           )}
 
           {/* Filter Sidebar */}
-          <div
-            id="filter-sidebar"
-            className={`col-12 col-lg-3 ${mobileFiltersOpen ? 'btc-filter-mobile-open' : ''}`}
+          <aside
+            id="btc-filter-sidebar"
+            className={`btc-search-sidebar ${mobileFiltersOpen ? 'btc-sidebar-mobile-open' : ''}`}
           >
-            <div className={`btc-filter-sticky ${mobileFiltersOpen ? 'btc-filter-mobile-visible' : ''}`}>
+            <div className="btc-filter-sticky">
               <FilterSidebar
                 filters={filters}
                 onFilterChange={setFilters}
                 onReset={handleResetFilters}
               />
             </div>
-          </div>
+          </aside>
 
           {/* Results */}
-          <div className="col-12 col-lg-9">
+          <div className="btc-search-results-col">
             <TripResults
-              trips={filteredTrips}
+              trips={paginatedTrips}
               onBook={handleBook}
               sortBy={sortBy}
               onSortChange={setSortBy}
+              onViewDetails={handleViewDetails}
+              onModifySearch={handleModifySearch}
             />
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
           </div>
         </div>
       </div>

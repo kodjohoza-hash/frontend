@@ -1,68 +1,97 @@
+import React from 'react';
 import TripCard from './TripCard';
-import EmptyState from '@components/client/EmptyState';
+import SearchEmptyState from './SearchEmptyState';
 
 const SORT_OPTIONS = [
-  { id: 'recommended', label: 'Recommandé' },
-  { id: 'price_asc', label: 'Prix croissant' },
-  { id: 'price_desc', label: 'Prix décroissant' },
-  { id: 'duration', label: 'Durée la plus courte' },
-  { id: 'departure', label: 'Départ le plus tôt' },
-  { id: 'rating', label: 'Meilleure note' },
+  { id: 'recommended', label: 'Recommandé', icon: 'bi-hand-thumbs-up' },
+  { id: 'price_asc', label: 'Prix ↑', icon: 'bi-arrow-up-short' },
+  { id: 'price_desc', label: 'Prix ↓', icon: 'bi-arrow-down-short' },
+  { id: 'duration', label: 'Durée', icon: 'bi-hourglass-split' },
+  { id: 'departure', label: 'Départ', icon: 'bi-clock' },
+  { id: 'rating', label: 'Note', icon: 'bi-star' },
 ];
 
-const TripResults = ({ trips = [], onBook, sortBy, onSortChange }) => {
-  if (trips.length === 0) {
-    return (
-      <EmptyState
-        icon="bi-bus-front"
-        title="Aucun voyage disponible"
-        description="Aucun voyage ne correspond à vos critères de recherche. Essayez de modifier vos filtres ou votre recherche."
-        actionLabel="Modifier la recherche"
-        actionPath="#"
-      />
-    );
-  }
-
+const TripResults = React.memo(({ trips = [], onBook, sortBy, onSortChange, onViewDetails, onModifySearch }) => {
   return (
     <div className="btc-trip-results">
       {/* Sort Bar */}
-      <div className="d-flex align-items-center justify-content-between mb-3">
-        <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)' }}>
-          {trips.length} {trips.length === 1 ? 'voyage disponible' : 'voyages disponibles'}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 20,
+          flexWrap: 'wrap',
+          gap: 12,
+        }}
+      >
+        <span style={{ fontSize: 'var(--font-size-sm, 0.875rem)', color: 'var(--text-secondary, #4b5563)' }}>
+          <span style={{ fontWeight: 700, color: 'var(--text-primary, #111827)' }}>{trips.length}</span>
+          {' '}
+          {trips.length === 1 ? 'voyage disponible' : 'voyages disponibles'}
         </span>
-        <div className="d-flex align-items-center gap-2">
-          <label htmlFor="sort-select" className="d-none d-sm-inline" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' }}>
-            Trier par
-          </label>
-          <select
-            id="sort-select"
-            className="form-select form-select-sm"
-            value={sortBy}
-            onChange={(e) => onSortChange(e.target.value)}
-            style={{
-              width: 'auto',
-              fontSize: 'var(--font-size-xs)',
-              borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--border-default)',
-              padding: '4px 28px 4px 10px',
-              color: 'var(--text-secondary)',
-              background: 'var(--bg-surface)',
-            }}
-            aria-label="Trier les résultats"
-          >
-            {SORT_OPTIONS.map((opt) => (
-              <option key={opt.id} value={opt.id}>{opt.label}</option>
-            ))}
-          </select>
+
+        {/* Premium sort pills */}
+        <div
+          role="radiogroup"
+          aria-label="Trier les résultats"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            padding: 4,
+            borderRadius: 14,
+            background: 'var(--color-gray-50, #fafafa)',
+            border: '1px solid var(--color-gray-100, #f3f4f6)',
+          }}
+        >
+          {SORT_OPTIONS.map((opt) => {
+            const isActive = sortBy === opt.id;
+            return (
+              <button
+                key={opt.id}
+                role="radio"
+                aria-checked={isActive}
+                aria-label={`Trier par ${opt.label}`}
+                onClick={() => onSortChange(opt.id)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 5,
+                  padding: '7px 14px',
+                  borderRadius: 10,
+                  border: 'none',
+                  background: isActive ? 'var(--color-primary, #0B1D51)' : 'transparent',
+                  color: isActive ? '#fff' : 'var(--text-secondary, #4b5563)',
+                  fontSize: 'var(--font-size-xs, 0.75rem)',
+                  fontWeight: isActive ? 700 : 500,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap',
+                  outline: 'none',
+                }}
+              >
+                <i className={`bi ${opt.icon}`} style={{ fontSize: '0.7rem' }} />
+                {opt.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* Trip Cards */}
-      {trips.map((trip) => (
-        <TripCard key={trip.id} trip={trip} onBook={onBook} />
-      ))}
+      {trips.length === 0 ? (
+        <SearchEmptyState onModifySearch={onModifySearch} />
+      ) : (
+        trips.map((trip) => (
+          <TripCard key={trip.id} trip={trip} onBook={onBook} onViewDetails={onViewDetails} />
+        ))
+      )}
     </div>
   );
-};
+});
 
+TripResults.displayName = 'TripResults';
+
+export { SORT_OPTIONS };
 export default TripResults;

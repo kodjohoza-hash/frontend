@@ -1,279 +1,1991 @@
-/* ================================================
-   BUS TIX CONNECT — Search Results Styles
-   ================================================ */
+/* =============================================
+   BUS TIX CONNECT — Search Results Page
+   Premium Custom Stylesheet
+   ============================================= */
 
-/* ================================================
-   Page
-   ================================================ */
+/* ─────────────────────────────────────────────
+   1. PAGE LAYOUT
+   ───────────────────────────────────────────── */
+
 .btc-search-results-page {
-  min-height: calc(100vh - var(--header-height));
+  min-height: 100vh;
+  background: linear-gradient(
+    165deg,
+    var(--color-gray-50) 0%,
+    #f0f2f7 40%,
+    var(--color-primary-50) 100%
+  );
+  padding: 0 0 4rem;
 }
 
-/* ================================================
-   Skeleton Loading
-   ================================================ */
-.btc-skeleton {
-  background: linear-gradient(90deg, var(--color-gray-200) 25%, var(--color-gray-100) 50%, var(--color-gray-200) 75%);
-  background-size: 200% 100%;
-  animation: btc-skeleton-pulse 1.5s ease-in-out infinite;
+/* ─────────────────────────────────────────────
+   2. SEARCH HERO
+   ───────────────────────────────────────────── */
+
+.btc-search-hero {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-2xl);
+  box-shadow:
+    0 4px 24px rgba(11, 29, 81, 0.06),
+    0 1px 3px rgba(11, 29, 81, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  padding: 2rem 2.5rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes btc-skeleton-pulse {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+.btc-search-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary) 0%,
+    var(--color-accent) 50%,
+    var(--color-primary) 100%
+  );
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
 }
 
-/* ================================================
-   Filter Sidebar Sticky
-   ================================================ */
+.btc-search-hero .btc-hero-route {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btc-search-hero .btc-hero-route .btc-route-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-accent), #ff8f60);
+  color: #fff;
+  font-size: var(--font-size-sm);
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.btc-search-hero .btc-hero-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btc-hero-detail-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 100px;
+  background: rgba(11, 29, 81, 0.05);
+  border: 1px solid rgba(11, 29, 81, 0.08);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  transition: all 0.2s var(--ease-out);
+}
+
+.btc-hero-detail-pill:hover {
+  background: rgba(11, 29, 81, 0.08);
+  border-color: rgba(11, 29, 81, 0.12);
+}
+
+.btc-hero-detail-pill svg,
+.btc-hero-detail-pill i {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  opacity: 0.7;
+}
+
+.btc-search-hero .btc-hero-result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.4rem 1rem;
+  border-radius: 100px;
+  background: linear-gradient(135deg, var(--color-primary), #162d6b);
+  color: #fff;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  box-shadow: 0 2px 12px rgba(11, 29, 81, 0.25);
+  animation: btcPulse 2.5s ease-in-out infinite;
+}
+
+.btc-search-hero .btc-hero-result-badge .btc-result-count {
+  font-weight: var(--font-weight-bold);
+}
+
+/* ─────────────────────────────────────────────
+   3. FILTER SIDEBAR
+   ───────────────────────────────────────────── */
+
+.btc-filter-sidebar {
+  position: relative;
+  z-index: 10;
+}
+
 .btc-filter-sticky {
   position: sticky;
-  top: calc(var(--header-height) + var(--space-4));
-  max-height: calc(100vh - var(--header-height) - var(--space-8));
+  top: 80px;
+  max-height: calc(100vh - 100px);
   overflow-y: auto;
+  padding-right: 0.25rem;
 }
 
 .btc-filter-sticky::-webkit-scrollbar {
   width: 4px;
 }
 
+.btc-filter-sticky::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .btc-filter-sticky::-webkit-scrollbar-thumb {
+  background: var(--color-gray-200);
+  border-radius: 100px;
+}
+
+.btc-filter-sticky::-webkit-scrollbar-thumb:hover {
   background: var(--color-gray-300);
-  border-radius: var(--radius-pill);
 }
 
-/* ================================================
-   Custom Checkbox & Radio
-   ================================================ */
-.btc-checkbox,
-.btc-radio {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--color-gray-300);
-  border-radius: var(--radius-xs);
+/* Filter Card Container */
+.btc-filter-card {
+  background: #fff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow 0.3s var(--ease-out);
+}
+
+.btc-filter-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Filter Sections */
+.btc-filter-section {
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.btc-filter-section:last-child {
+  border-bottom: none;
+}
+
+.btc-filter-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
   cursor: pointer;
+  user-select: none;
+  transition: background 0.2s var(--ease-out);
+}
+
+.btc-filter-section-header:hover {
+  background: var(--color-gray-50);
+}
+
+.btc-filter-section-header h6 {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.btc-filter-section-header .btc-chevron {
+  transition: transform 0.3s var(--ease-spring);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.btc-filter-section.collapsed .btc-chevron {
+  transform: rotate(-90deg);
+}
+
+.btc-filter-section-content {
+  max-height: 600px;
+  overflow: hidden;
+  transition: max-height 0.4s var(--ease-spring), padding 0.3s var(--ease-out);
+  padding: 0 1.25rem 1.25rem;
+}
+
+.btc-filter-section.collapsed .btc-filter-section-content {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Filter Divider */
+.btc-filter-divider {
+  height: 1px;
+  margin: 0.5rem 1.25rem;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-gray-200) 20%,
+    var(--color-gray-200) 80%,
+    transparent 100%
+  );
+  border: none;
+}
+
+/* Filter Clear Button */
+.btc-filter-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem 0.75rem;
+  border: none;
+  border-radius: 100px;
+  background: rgba(255, 107, 53, 0.08);
+  color: var(--color-accent);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+}
+
+.btc-filter-clear:hover {
+  background: rgba(255, 107, 53, 0.15);
+  transform: scale(1.02);
+}
+
+/* ── Custom Checkboxes ── */
+
+.btc-custom-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+  padding: 0.35rem 0;
+  transition: color 0.2s var(--ease-out);
+}
+
+.btc-custom-checkbox:hover {
+  color: var(--color-primary);
+}
+
+.btc-custom-checkbox input[type="checkbox"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btc-custom-checkbox-mark {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid var(--color-gray-300);
+  background: #fff;
   flex-shrink: 0;
-  transition: all var(--duration-fast) var(--ease-default);
+  transition:
+    background 0.25s var(--ease-out),
+    border-color 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out);
 }
 
-.btc-checkbox:checked,
-.btc-radio:checked {
-  border-color: var(--color-primary);
-  background-color: var(--color-primary);
-}
-
-.btc-checkbox:checked::after {
-  content: '';
-  position: absolute;
-  left: 5px;
-  top: 1px;
+.btc-custom-checkbox-mark::after {
+  content: "";
+  display: block;
   width: 5px;
-  height: 10px;
-  border: solid var(--color-white);
+  height: 9px;
+  border: solid #fff;
   border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0);
+  transform-origin: center center;
+  transition: transform 0.25s var(--ease-spring);
+  margin-top: -1px;
 }
 
-.btc-radio {
-  border-radius: var(--radius-circle);
+.btc-custom-checkbox input:checked + .btc-custom-checkbox-mark {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.12);
 }
 
-.btc-radio:checked::after {
-  content: '';
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-circle);
-  background: var(--color-white);
+.btc-custom-checkbox input:checked + .btc-custom-checkbox-mark::after {
+  transform: rotate(45deg) scale(1);
+  animation: btcCheckIn 0.3s var(--ease-spring);
 }
 
-.btc-checkbox:hover,
-.btc-radio:hover {
-  border-color: var(--color-primary);
-}
-
-.btc-checkbox:focus-visible,
-.btc-radio:focus-visible {
+.btc-custom-checkbox input:focus-visible + .btc-custom-checkbox-mark {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
-/* ================================================
-   Range Slider
-   ================================================ */
+.btc-custom-checkbox-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  line-height: 1.3;
+  transition: color 0.2s var(--ease-out);
+}
+
+.btc-custom-checkbox:hover .btc-custom-checkbox-label {
+  color: var(--text-primary);
+}
+
+.btc-custom-checkbox-count {
+  margin-left: auto;
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+  background: var(--color-gray-100);
+  padding: 0.1rem 0.45rem;
+  border-radius: 100px;
+}
+
+/* ── Custom Toggle ── */
+
+.btc-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+}
+
+.btc-toggle input[type="checkbox"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btc-toggle-track {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 100px;
+  background: var(--color-gray-200);
+  transition: background 0.3s var(--ease-out);
+  flex-shrink: 0;
+}
+
+.btc-toggle-track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s var(--ease-spring);
+}
+
+.btc-toggle input:checked + .btc-toggle-track {
+  background: linear-gradient(135deg, var(--color-accent), #ff8f60);
+}
+
+.btc-toggle input:checked + .btc-toggle-track::after {
+  transform: translateX(20px);
+}
+
+.btc-toggle input:focus-visible + .btc-toggle-track {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.btc-toggle-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+/* ── Custom Range Slider ── */
+
 .btc-range-slider {
+  width: 100%;
+  height: 6px;
   -webkit-appearance: none;
   appearance: none;
-  width: 100%;
-  height: 4px;
+  background: transparent;
+  margin: 1rem 0 0.5rem;
+}
+
+.btc-range-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 100px;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent) 0%,
+    var(--color-accent) var(--range-progress, 50%),
+    var(--color-gray-200) var(--range-progress, 50%),
+    var(--color-gray-200) 100%
+  );
+  transition: background 0.15s;
+}
+
+.btc-range-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 100px;
   background: var(--color-gray-200);
-  border-radius: var(--radius-pill);
-  outline: none;
-  cursor: pointer;
+}
+
+.btc-range-slider::-moz-range-progress {
+  height: 6px;
+  border-radius: 100px;
+  background: var(--color-accent);
 }
 
 .btc-range-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: var(--radius-circle);
-  background: var(--color-primary);
-  border: 3px solid var(--color-white);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--color-accent);
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.25);
   cursor: pointer;
-  transition: transform var(--duration-fast) var(--ease-default);
+  margin-top: -7px;
+  transition:
+    transform 0.2s var(--ease-spring),
+    box-shadow 0.2s var(--ease-out);
+}
+
+.btc-range-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--color-accent);
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.25);
+  cursor: pointer;
 }
 
 .btc-range-slider::-webkit-slider-thumb:hover {
   transform: scale(1.15);
+  box-shadow: 0 2px 12px rgba(255, 107, 53, 0.35);
 }
 
-.btc-range-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: var(--radius-circle);
-  background: var(--color-primary);
-  border: 3px solid var(--color-white);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
+.btc-range-slider::-webkit-slider-thumb:active {
+  transform: scale(1.25);
 }
 
-.btc-range-slider:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 4px;
+.btc-range-values {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
 }
 
-/* ================================================
-   Filter Section
-   ================================================ */
-.btc-filter-section {
-  padding: var(--space-2) 0;
+.btc-range-values .btc-range-min,
+.btc-range-values .btc-range-max {
+  color: var(--text-secondary);
 }
 
-.btc-filter-divider {
-  height: 1px;
-  background: var(--border-subtle);
-  margin: var(--space-1) 0;
+/* ── Time Slot Cards ── */
+
+.btc-time-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
 }
 
-.btc-filter-checkbox {
-  cursor: pointer;
-  padding: var(--space-1-5) var(--space-2);
+.btc-time-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.65rem 0.5rem;
+  border: 2px solid var(--color-gray-100);
   border-radius: var(--radius-md);
-  transition: background-color var(--duration-fast) var(--ease-default);
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition:
+    border-color 0.25s var(--ease-out),
+    background 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out),
+    transform 0.2s var(--ease-spring);
 }
 
-.btc-filter-checkbox:hover {
-  background-color: var(--color-gray-50);
+.btc-time-card:hover {
+  border-color: var(--color-gray-300);
+  background: var(--color-gray-50);
+  transform: translateY(-1px);
 }
 
-/* ================================================
-   Mobile Filter Overlay
-   ================================================ */
+.btc-time-card.active {
+  border-color: var(--color-accent);
+  background: rgba(255, 107, 53, 0.04);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.btc-time-card-time {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.btc-time-card-label {
+  font-size: var(--font-size-2xs);
+  color: var(--text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+.btc-time-card.active .btc-time-card-time {
+  color: var(--color-accent);
+}
+
+/* ── Class Pills ── */
+
+.btc-class-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.btc-class-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.85rem;
+  border: 2px solid var(--color-gray-100);
+  border-radius: 100px;
+  background: #fff;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    all 0.25s var(--ease-out);
+  white-space: nowrap;
+}
+
+.btc-class-pill:hover {
+  border-color: var(--color-gray-300);
+  background: var(--color-gray-50);
+}
+
+.btc-class-pill.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.btc-class-pill.active:hover {
+  background: #e85a28;
+  border-color: #e85a28;
+}
+
+/* ── Service Pills ── */
+
+.btc-service-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.btc-service-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 100px;
+  background: var(--color-gray-50);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+}
+
+.btc-service-pill svg,
+.btc-service-pill i {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.btc-service-pill:hover {
+  border-color: var(--color-gray-300);
+  color: var(--text-secondary);
+}
+
+.btc-service-pill.active {
+  background: rgba(255, 107, 53, 0.08);
+  border-color: rgba(255, 107, 53, 0.25);
+  color: var(--color-accent);
+}
+
+.btc-service-pill.active svg,
+.btc-service-pill.active i {
+  opacity: 1;
+  color: var(--color-accent);
+}
+
+/* ── Sort Pills ── */
+
+.btc-sort-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  padding: 0.75rem 0;
+}
+
+.btc-sort-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.9rem;
+  border: 1.5px solid var(--color-gray-200);
+  border-radius: 100px;
+  background: #fff;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  white-space: nowrap;
+}
+
+.btc-sort-pill:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-primary-50);
+}
+
+.btc-sort-pill.active {
+  background: linear-gradient(135deg, var(--color-primary), #162d6b);
+  border-color: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(11, 29, 81, 0.25);
+}
+
+.btc-sort-pill.active:hover {
+  box-shadow: 0 4px 14px rgba(11, 29, 81, 0.35);
+}
+
+.btc-sort-pill .btc-sort-icon {
+  font-size: 11px;
+}
+
+/* ─────────────────────────────────────────────
+   4. TRIP CARD
+   ───────────────────────────────────────────── */
+
+.btc-trip-card {
+  display: flex;
+  background: #fff;
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  overflow: hidden;
+  transition:
+    transform 0.35s var(--ease-spring),
+    box-shadow 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out);
+  animation: btcFadeUp 0.5s var(--ease-out) both;
+}
+
+.btc-trip-card:nth-child(2) { animation-delay: 0.06s; }
+.btc-trip-card:nth-child(3) { animation-delay: 0.12s; }
+.btc-trip-card:nth-child(4) { animation-delay: 0.18s; }
+.btc-trip-card:nth-child(5) { animation-delay: 0.24s; }
+.btc-trip-card:nth-child(6) { animation-delay: 0.3s; }
+
+.btc-trip-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(11, 29, 81, 0.08);
+}
+
+.btc-trip-card:active {
+  transform: translateY(-2px);
+}
+
+/* ── Trip Photo ── */
+
+.btc-trip-photo {
+  position: relative;
+  width: 280px;
+  min-height: 220px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.btc-trip-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.btc-trip-card:hover .btc-trip-photo img {
+  transform: scale(1.05);
+}
+
+.btc-trip-photo::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(11, 29, 81, 0.1) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+.btc-trip-photo-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* ── Trip Content ── */
+
+.btc-trip-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  min-width: 0;
+}
+
+/* Company Row */
+.btc-trip-company {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1rem;
+}
+
+.btc-trip-company-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  object-fit: contain;
+  background: var(--color-gray-50);
+  padding: 4px;
+}
+
+.btc-trip-company-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.btc-trip-company-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btc-trip-company-type {
+  font-size: var(--font-size-2xs);
+  color: var(--text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ── Trip Timeline ── */
+
+.btc-trip-timeline {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.btc-trip-time-point {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 70px;
+}
+
+.btc-trip-time-value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.btc-trip-time-station {
+  font-size: var(--font-size-2xs);
+  color: var(--text-muted);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+.btc-trip-timeline-connector {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding-top: 0.35rem;
+  min-width: 80px;
+}
+
+.btc-trip-duration {
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.btc-trip-timeline-line {
+  width: 100%;
+  height: 3px;
+  border-radius: 100px;
+  background: var(--color-gray-100);
+  position: relative;
+  overflow: hidden;
+}
+
+.btc-trip-timeline-line::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: 100px;
+  transition: width 0.8s var(--ease-out);
+}
+
+.btc-trip-card:hover .btc-trip-timeline-line::after {
+  width: 100%;
+}
+
+.btc-trip-stops {
+  font-size: var(--font-size-2xs);
+  color: var(--text-muted);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+/* Bus Icon on the Line */
+.btc-trip-bus-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 2px solid var(--color-gray-100);
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  z-index: 2;
+  transition: all 0.3s var(--ease-spring);
+}
+
+.btc-trip-bus-icon svg,
+.btc-trip-bus-icon i {
+  font-size: 12px;
+  color: var(--color-primary);
+}
+
+.btc-trip-card:hover .btc-trip-bus-icon {
+  border-color: var(--color-accent);
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+}
+
+.btc-trip-card:hover .btc-trip-bus-icon svg,
+.btc-trip-card:hover .btc-trip-bus-icon i {
+  color: var(--color-accent);
+}
+
+/* ── Trip Services ── */
+
+.btc-trip-services {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.btc-trip-service-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--font-size-2xs);
+  color: var(--text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+.btc-trip-service-item svg,
+.btc-trip-service-item i {
+  font-size: 13px;
+  color: var(--color-gray-300);
+  transition: color 0.2s;
+}
+
+.btc-trip-service-item:hover svg,
+.btc-trip-service-item:hover i {
+  color: var(--color-primary);
+}
+
+.btc-trip-service-divider {
+  width: 1px;
+  height: 12px;
+  background: var(--color-gray-200);
+}
+
+/* ── Trip Pricing ── */
+
+.btc-trip-pricing {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.btc-trip-price-area {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.btc-trip-price-original {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-decoration: line-through;
+  font-weight: var(--font-weight-medium);
+}
+
+.btc-trip-price-current {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.btc-trip-price-current .btc-price-currency {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+}
+
+.btc-trip-price-per {
+  font-size: var(--font-size-2xs);
+  color: var(--text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ── Trip CTA ── */
+
+.btc-trip-cta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ── Trip Details Expand ── */
+
+.btc-trip-details-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  background: var(--color-gray-50);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+}
+
+.btc-trip-details-toggle:hover {
+  background: var(--color-gray-100);
+  border-color: var(--color-gray-300);
+}
+
+.btc-trip-details-toggle .btc-chevron {
+  transition: transform 0.3s var(--ease-spring);
+  font-size: 10px;
+}
+
+.btc-trip-details-toggle.expanded .btc-chevron {
+  transform: rotate(180deg);
+}
+
+.btc-trip-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s var(--ease-spring);
+}
+
+.btc-trip-details.expanded {
+  max-height: 500px;
+}
+
+.btc-trip-details-inner {
+  padding: 1rem 1.5rem;
+  background: var(--color-gray-50);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* ─────────────────────────────────────────────
+   5. BADGES
+   ───────────────────────────────────────────── */
+
+.btc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 100px;
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.btc-badge--rapide {
+  background: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+  border: 1px solid rgba(13, 110, 253, 0.18);
+}
+
+.btc-badge--meilleur_prix {
+  background: rgba(25, 135, 84, 0.1);
+  color: #198754;
+  border: 1px solid rgba(25, 135, 84, 0.18);
+}
+
+.btc-badge--recommande {
+  background: rgba(255, 107, 53, 0.1);
+  color: var(--color-accent);
+  border: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.btc-badge--meilleur_confort {
+  background: rgba(111, 66, 193, 0.1);
+  color: #6f42c1;
+  border: 1px solid rgba(111, 66, 193, 0.18);
+}
+
+.btc-badge--nouveau {
+  background: var(--color-primary);
+  color: #fff;
+  border: 1px solid var(--color-primary);
+}
+
+.btc-badge svg,
+.btc-badge i {
+  font-size: 10px;
+}
+
+/* ─────────────────────────────────────────────
+   6. STAR RATING
+   ───────────────────────────────────────────── */
+
+.btc-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.btc-stars .btc-star {
+  font-size: 12px;
+  color: var(--color-gray-200);
+  transition: color 0.15s;
+}
+
+.btc-stars .btc-star.filled {
+  color: #f5a623;
+}
+
+.btc-stars .btc-star.half {
+  position: relative;
+  color: var(--color-gray-200);
+}
+
+.btc-stars .btc-star.half::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #f5a623;
+}
+
+.btc-stars-rating {
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  margin-left: 0.35rem;
+}
+
+.btc-stars-count {
+  font-size: var(--font-size-2xs);
+  color: var(--text-muted);
+}
+
+/* ─────────────────────────────────────────────
+   7. SEAT AVAILABILITY
+   ───────────────────────────────────────────── */
+
+.btc-seats {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+}
+
+.btc-seats svg,
+.btc-seats i {
+  font-size: 13px;
+}
+
+.btc-seats--plenty {
+  color: var(--color-success);
+}
+
+.btc-seats--moderate {
+  color: var(--color-warning);
+}
+
+.btc-seats--urgent {
+  color: var(--color-danger);
+  animation: btcPulse 2s ease-in-out infinite;
+}
+
+.btc-seats-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.btc-seats--urgent .btc-seats-dot {
+  animation: btcPulse 1.5s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────
+   8. DISCOUNT BADGE
+   ───────────────────────────────────────────── */
+
+.btc-discount-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 100px;
+  background: linear-gradient(135deg, var(--color-danger), #d4380d);
+  color: #fff;
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 6px rgba(214, 40, 57, 0.25);
+}
+
+.btc-discount-badge svg,
+.btc-discount-badge i {
+  font-size: 10px;
+}
+
+/* ─────────────────────────────────────────────
+   9. CTA BUTTON
+   ───────────────────────────────────────────── */
+
+.btn-accent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.75rem;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--color-accent), #e85a28);
+  color: #fff;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.25s var(--ease-spring),
+    box-shadow 0.25s var(--ease-out),
+    background 0.25s var(--ease-out);
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.btn-accent::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transition: left 0.5s var(--ease-out);
+}
+
+.btn-accent:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.4);
+  background: linear-gradient(135deg, #e85a28, var(--color-accent));
+}
+
+.btn-accent:hover::before {
+  left: 100%;
+}
+
+.btn-accent:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(255, 107, 53, 0.3);
+}
+
+.btn-accent:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-accent.btn-sm {
+  padding: 0.45rem 1.2rem;
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-md);
+}
+
+.btn-accent.btn-lg {
+  padding: 0.85rem 2.25rem;
+  font-size: var(--font-size-base);
+  border-radius: var(--radius-xl);
+}
+
+.btn-accent-outline {
+  background: transparent;
+  border: 2px solid var(--color-accent);
+  color: var(--color-accent);
+  box-shadow: none;
+}
+
+.btn-accent-outline:hover {
+  background: rgba(255, 107, 53, 0.06);
+  color: var(--color-accent);
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.15);
+}
+
+/* ─────────────────────────────────────────────
+   10. PAGINATION
+   ───────────────────────────────────────────── */
+
+.btc-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 2rem 0 1rem;
+}
+
+.btc-pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 0.5rem;
+  border: 1.5px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    all 0.25s var(--ease-out);
+}
+
+.btc-pagination-btn:hover:not(:disabled):not(.active) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-primary-50);
+}
+
+.btc-pagination-btn.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+  font-weight: var(--font-weight-bold);
+  box-shadow: 0 2px 10px rgba(255, 107, 53, 0.3);
+}
+
+.btc-pagination-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btc-pagination-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
+
+.btc-pagination-info {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* ─────────────────────────────────────────────
+   11. SKELETON LOADER
+   ───────────────────────────────────────────── */
+
+.btc-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-gray-100);
+  border-radius: var(--radius-md);
+  color: transparent !important;
+  pointer-events: none;
+  user-select: none;
+}
+
+.btc-skeleton * {
+  visibility: hidden;
+}
+
+.btc-skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 40%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.6) 60%,
+    transparent 100%
+  );
+  animation: btcShimmer 1.8s ease-in-out infinite;
+  border-radius: inherit;
+}
+
+.btc-skeleton--circle {
+  border-radius: 50%;
+}
+
+.btc-skeleton--text {
+  height: 1em;
+  border-radius: 100px;
+}
+
+.btc-skeleton--text-sm {
+  height: 0.75em;
+  width: 60%;
+  border-radius: 100px;
+}
+
+.btc-skeleton--card {
+  border-radius: var(--radius-xl);
+  height: 240px;
+}
+
+.btc-skeleton--trip {
+  border-radius: 20px;
+  height: 260px;
+  margin-bottom: 1rem;
+}
+
+/* ─────────────────────────────────────────────
+   12. EMPTY STATE
+   ───────────────────────────────────────────── */
+
+.btc-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.btc-empty-state .btc-empty-bus {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 1.75rem;
+  animation: btcFloat 3.5s ease-in-out infinite;
+}
+
+/* CSS-drawn bus illustration */
+.btc-empty-state .btc-empty-bus::before {
+  content: "";
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 50px;
+  background: var(--color-primary);
+  border-radius: 12px 12px 6px 6px;
+  box-shadow: 0 4px 12px rgba(11, 29, 81, 0.15);
+}
+
+.btc-empty-state .btc-empty-bus::after {
+  content: "";
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 10px;
+  display: flex;
+  gap: 30px;
+  background:
+    radial-gradient(circle, var(--color-gray-300) 7px, transparent 7px) 15px 0px / 14px 14px no-repeat,
+    radial-gradient(circle, var(--color-gray-300) 7px, transparent 7px) 61px 0px / 14px 14px no-repeat;
+}
+
+.btc-empty-bus-windows {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.btc-empty-bus-window {
+  width: 16px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 4px 4px 0 0;
+}
+
+.btc-empty-state h3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.btc-empty-state p {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  max-width: 380px;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+/* ─────────────────────────────────────────────
+   13. MOBILE FILTER OVERLAY
+   ───────────────────────────────────────────── */
+
 .btc-filter-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: var(--z-backdrop);
-  animation: fadeIn var(--duration-fast) var(--ease-out);
-  backdrop-filter: blur(4px);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.btc-filter-mobile-visible {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
-  width: 320px;
-  max-width: 85vw;
-  height: 100vh;
-  z-index: var(--z-modal);
-  background: var(--bg-surface);
-  overflow-y: auto;
-  box-shadow: var(--shadow-2xl);
-  animation: btc-slide-in-left 0.3s ease-out;
-  padding: var(--space-4);
+  right: 0;
+  bottom: 0;
+  background: rgba(11, 29, 81, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1040;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
 }
 
-@keyframes btc-slide-in-left {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(0); }
+.btc-filter-overlay.visible {
+  opacity: 1;
 }
 
-@media (min-width: 992px) {
-  .btc-filter-mobile-visible {
-    position: static;
-    width: auto;
-    max-width: none;
-    height: auto;
-    box-shadow: none;
-    animation: none;
-    padding: 0;
+.btc-filter-mobile-open {
+  animation: btcSlideIn 0.35s var(--ease-spring) forwards;
+}
+
+.btc-filter-mobile-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  border: 1.5px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  box-shadow: var(--shadow-sm);
+}
+
+.btc-filter-mobile-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.btc-filter-mobile-toggle svg,
+.btc-filter-mobile-toggle i {
+  font-size: 16px;
+}
+
+.btc-filter-mobile-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 100px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+}
+
+.btc-filter-close-mobile {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-gray-100);
+  color: var(--text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+}
+
+.btc-filter-close-mobile:hover {
+  background: var(--color-gray-200);
+  color: var(--text-primary);
+}
+
+/* ─────────────────────────────────────────────
+   14. TRIPS LIST & HEADER
+   ───────────────────────────────────────────── */
+
+.btc-trips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.btc-trips-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.btc-trips-count {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+}
+
+.btc-trips-count strong {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* ─────────────────────────────────────────────
+   15. ANIMATIONS
+   ───────────────────────────────────────────── */
+
+@keyframes btcShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
   }
 }
 
-/* ================================================
-   Trip Card Route Line
-   ================================================ */
-.btc-route-line {
-  background: transparent;
+@keyframes btcFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
-/* ================================================
-   Search Summary
-   ================================================ */
-.btc-search-summary .btn:hover {
-  background: var(--color-primary-100) !important;
+@keyframes btcPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
-/* ================================================
-   Responsive
-   ================================================ */
-@media (max-width: 991.98px) {
+@keyframes btcSlideIn {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes btcCheckIn {
+  0% {
+    transform: rotate(45deg) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: rotate(45deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(45deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes btcFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   16. RESPONSIVE
+   ───────────────────────────────────────────── */
+
+/* Tablet */
+@media (max-width: 991px) {
   .btc-filter-sticky {
-    position: static;
-    max-height: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 340px;
+    max-width: 85vw;
+    max-height: 100vh;
+    z-index: 1050;
+    background: #fff;
+    padding: 1rem;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.35s var(--ease-spring);
+    box-shadow: 4px 0 24px rgba(11, 29, 81, 0.12);
+    border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+  }
+
+  .btc-filter-sticky.btc-filter-mobile-open {
+    transform: translateX(0);
+  }
+
+  .btc-filter-overlay {
+    display: block;
+  }
+
+  .btc-filter-mobile-toggle {
+    display: inline-flex;
+  }
+
+  .btc-filter-close-mobile {
+    display: flex;
+  }
+
+  .btc-trip-photo {
+    width: 220px;
+    min-height: 180px;
+  }
+
+  .btc-trip-time-value {
+    font-size: var(--font-size-base);
+  }
+
+  .btc-search-hero {
+    padding: 1.5rem;
+  }
+
+  .btc-search-hero .btc-hero-route {
+    font-size: var(--font-size-xl);
   }
 }
 
-@media (max-width: 575.98px) {
-  .btc-search-results-page .container {
-    padding-left: var(--space-3);
-    padding-right: var(--space-3);
+/* Mobile */
+@media (max-width: 767px) {
+  .btc-search-results-page {
+    padding: 0 0 2rem;
   }
 
-  .btc-trip-card .card-body {
-    padding: var(--space-3) !important;
+  .btc-search-hero {
+    padding: 1.25rem;
+    border-radius: var(--radius-xl);
+    margin-bottom: 1.25rem;
+  }
+
+  .btc-search-hero .btc-hero-route {
+    font-size: var(--font-size-lg);
+    flex-wrap: wrap;
+  }
+
+  .btc-hero-route .btc-route-arrow {
+    width: 28px;
+    height: 28px;
+    font-size: var(--font-size-xs);
+  }
+
+  .btc-search-hero .btc-hero-details {
+    gap: 0.35rem;
+  }
+
+  .btc-hero-detail-pill {
+    padding: 0.25rem 0.65rem;
+    font-size: var(--font-size-2xs);
+  }
+
+  /* Trip card vertical layout */
+  .btc-trip-card {
+    flex-direction: column;
+    border-radius: var(--radius-xl);
+  }
+
+  .btc-trip-photo {
+    width: 100%;
+    min-height: 180px;
+    max-height: 200px;
+  }
+
+  .btc-trip-content {
+    padding: 1.25rem;
+  }
+
+  .btc-trip-timeline {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .btc-trip-timeline-connector {
+    min-width: 60px;
+  }
+
+  .btc-trip-pricing {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .btc-trip-cta {
+    width: 100%;
+  }
+
+  .btc-trip-cta .btn-accent {
+    flex: 1;
+    width: 100%;
+  }
+
+  .btc-trip-company-logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  .btc-trip-services {
+    gap: 0.4rem;
+  }
+
+  /* Sort / filter area */
+  .btc-sort-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.25rem;
+  }
+
+  .btc-sort-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .btc-time-slots {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Pagination compact */
+  .btc-pagination {
+    gap: 0.25rem;
+  }
+
+  .btc-pagination-btn {
+    min-width: 36px;
+    height: 36px;
+    font-size: var(--font-size-xs);
+  }
+
+  /* Empty state */
+  .btc-empty-state {
+    padding: 3rem 1.5rem;
+  }
+
+  .btc-empty-state .btc-empty-bus {
+    width: 90px;
+    height: 90px;
+  }
+
+  .btc-empty-state .btc-empty-bus::before {
+    width: 60px;
+    height: 38px;
+  }
+
+  .btc-empty-state .btc-empty-bus::after {
+    width: 70px;
+    bottom: 10px;
+  }
+
+  .btc-empty-state h3 {
+    font-size: var(--font-size-lg);
   }
 }
 
-/* ================================================
-   Accessibility — Focus Visible
-   ================================================ */
-.btc-trip-card .btn:focus-visible,
-.btc-filter-checkbox:focus-visible,
-.btc-range-slider:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
+/* Small mobile */
+@media (max-width: 575px) {
+  .btc-search-hero {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: var(--radius-lg);
+  }
 
-/* ================================================
-   Print
-   ================================================ */
-@media print {
-  .btc-filter-sticky,
-  .btc-filter-overlay,
-  .btc-search-results-page .btn {
-    display: none !important;
+  .btc-search-hero .btc-hero-route {
+    font-size: var(--font-size-base);
+  }
+
+  .btc-trip-content {
+    padding: 1rem;
+  }
+
+  .btc-trip-time-value {
+    font-size: var(--font-size-base);
+  }
+
+  .btc-trip-price-current {
+    font-size: var(--font-size-lg);
+  }
+
+  .btc-trip-company-name {
+    font-size: var(--font-size-xs);
+  }
+
+  .btn-accent {
+    padding: 0.6rem 1.25rem;
+    font-size: var(--font-size-xs);
+  }
+
+  .btc-trip-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .btc-trip-services {
+    display: none;
+  }
+
+  .btc-filter-card {
+    border-radius: var(--radius-lg);
+  }
+
+  .btc-filter-section-header {
+    padding: 0.85rem 1rem;
+  }
+
+  .btc-filter-section-content {
+    padding: 0 1rem 1rem;
+  }
+
+  .btc-badge {
+    padding: 0.2rem 0.5rem;
+    font-size: 9px;
+  }
+
+  .btc-trip-photo-badge {
+    top: 0.5rem;
+    left: 0.5rem;
+    gap: 0.25rem;
   }
 }
