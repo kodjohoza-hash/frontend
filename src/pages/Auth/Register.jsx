@@ -1,25 +1,32 @@
-import { AuthCard, AuthHeader, AuthFooter, RegisterForm } from '@components/auth';
+import { AuthCard, AuthHeader, AuthIllustration, RegisterForm } from '@components/auth';
 
 /**
- * RegisterPage — Rendered inside AuthLayout via <Outlet />
- * AuthLayout handles: left branding panel + right content wrapper + mobile logo
+ * RegisterPage — Two-column: AuthIllustration (55%) + form card (45%)
  */
 const RegisterPage = () => (
   <>
-    <AuthCard>
-      <AuthHeader
-        title="Créer un compte"
-        subtitle="Rejoignez des milliers de voyageurs au Cameroun"
-      />
+    <AuthIllustration />
 
-      <RegisterForm />
-    </AuthCard>
+    <div className="auth-right">
+      <div className="auth-right__inner">
+        <div className="auth-mobile-logo">
+          <div className="auth-mobile-logo__icon">
+            <i className="bi bi-bus-front-fill" />
+          </div>
+          <span className="auth-mobile-logo__text">Bus Tix Connect</span>
+        </div>
 
-    <AuthFooter
-      text="Déjà un compte ?"
-      linkLabel="Se connecter"
-      linkTo="/login"
-    />
+        <AuthCard>
+          <AuthHeader
+            icon={<i className="bi bi-person-plus-fill" />}
+            title="Créer un compte"
+            subtitle="Rejoignez des milliers de voyageurs au Cameroun"
+          />
+
+          <RegisterForm />
+        </AuthCard>
+      </div>
+    </div>
   </>
 );
 

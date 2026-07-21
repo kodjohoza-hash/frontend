@@ -8,7 +8,7 @@ import { Input, PasswordInput, Button } from '@components/ui';
 import RememberMe from './RememberMe';
 
 /**
- * LoginForm — Premium login form with react-hook-form + Zod
+ * LoginForm — Premium login form
  */
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -34,12 +34,8 @@ const LoginForm = () => {
   const onSubmit = (data) => {
     setShowAlert(false);
     login(data, {
-      onSuccess: () => {
-        navigate(from, { replace: true });
-      },
-      onError: () => {
-        setShowAlert(true);
-      },
+      onSuccess: () => navigate(from, { replace: true }),
+      onError: () => setShowAlert(true),
     });
   };
 
@@ -47,44 +43,43 @@ const LoginForm = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="auth-form" noValidate>
       {showAlert && loginError && (
         <div className="auth-alert auth-alert--error" role="alert">
-          <i className="bi bi-exclamation-circle auth-alert__icon" />
+          <i className="bi bi-exclamation-circle-fill auth-alert__icon" />
           <div className="auth-alert__content">
             <p className="auth-alert__message">
-              {loginError?.response?.data?.message || 'Email ou mot de passe incorrect. Veuillez réessayer.'}
+              {loginError?.response?.data?.message || 'Email ou mot de passe incorrect.'}
             </p>
           </div>
         </div>
       )}
 
       <Input
-        label="Adresse email"
+        label="Email"
         type="email"
         name="email"
         placeholder="votre@email.com"
         autoComplete="email"
-        leftIcon={<i className="bi bi-envelope" />}
+        leftIcon={<i className="bi bi-envelope-fill" />}
         error={errors.email?.message}
         disabled={isLoggingIn}
         required
         {...register('email')}
       />
 
-      <div>
-        <PasswordInput
-          label="Mot de passe"
-          name="password"
-          placeholder="Votre mot de passe"
-          autoComplete="current-password"
-          error={errors.password?.message}
-          disabled={isLoggingIn}
-          required
-          {...register('password')}
-        />
-      </div>
+      <PasswordInput
+        label="Mot de passe"
+        name="password"
+        placeholder="Votre mot de passe"
+        autoComplete="current-password"
+        leftIcon={<i className="bi bi-lock-fill" />}
+        error={errors.password?.message}
+        disabled={isLoggingIn}
+        required
+        {...register('password')}
+      />
 
       <div className="auth-form__options">
         <RememberMe {...register('rememberMe')} />
-        <Link to="/forgot-password" className="auth-form__forgot">
+        <Link to="/forgot-password" className="auth-form__link">
           Mot de passe oublié ?
         </Link>
       </div>
@@ -96,10 +91,16 @@ const LoginForm = () => {
         fullWidth
         loading={isLoggingIn}
         disabled={isLoggingIn}
-        leftIcon={!isLoggingIn ? <i className="bi bi-box-arrow-in-right" /> : undefined}
       >
         Se connecter
       </Button>
+
+      <p className="auth-form__alt">
+        Pas encore de compte ?{' '}
+        <Link to="/register" className="auth-form__alt-link">
+          Créer un compte
+        </Link>
+      </p>
     </form>
   );
 };

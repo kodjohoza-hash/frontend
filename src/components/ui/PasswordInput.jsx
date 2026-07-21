@@ -2,7 +2,7 @@ import { forwardRef, useState } from 'react';
 import clsx from 'clsx';
 
 /**
- * PasswordInput — Champ mot de passe avec affichage/masquage
+ * PasswordInput — Champ mot de passe avec icône gauche + affichage/masquage
  */
 const PasswordInput = forwardRef(({
   label,
@@ -10,6 +10,7 @@ const PasswordInput = forwardRef(({
   error,
   success,
   hint,
+  leftIcon,
   required = false,
   disabled = false,
   className = '',
@@ -28,14 +29,19 @@ const PasswordInput = forwardRef(({
           {required && <span className="text-danger ms-1">*</span>}
         </label>
       )}
-      <div className="input-wrapper position-relative has-right-icon">
+      <div className={clsx('input-wrapper position-relative', leftIcon && 'has-left-icon', 'has-right-icon')}>
+        {leftIcon && (
+          <span className="input-icon input-icon-left">{leftIcon}</span>
+        )}
         <input
           ref={ref}
           type={showPassword ? 'text' : 'password'}
           id={inputId}
           name={name}
           className={clsx(
-            'form-control pe-5',
+            'form-control',
+            leftIcon && 'ps-5',
+            'pe-5',
             error && 'is-invalid',
             success && 'is-valid',
             className

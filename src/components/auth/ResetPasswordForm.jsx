@@ -112,7 +112,7 @@ const ResetPasswordForm = () => {
             ))}
           </div>
         )}
-        {password && <span className="password-strength__text">{strength.label}</span>}
+        {password && <span className="password-strength__label">{strength.label}</span>}
       </div>
 
       <PasswordInput

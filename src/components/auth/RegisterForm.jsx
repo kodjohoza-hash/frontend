@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,7 +6,7 @@ import useAuth from '@hooks/useAuth';
 import { Input, PasswordInput, Button, Checkbox } from '@components/ui';
 
 /**
- * RegisterForm — Premium registration form with react-hook-form + Zod
+ * RegisterForm — Premium registration form
  */
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -41,10 +40,9 @@ const RegisterForm = () => {
     if (/[A-Z]/.test(password)) score++;
     if (/[a-z]/.test(password)) score++;
     if (/\d/.test(password)) score++;
-
-    if (score <= 2) return { level: 1, label: 'Faible', className: 'password-strength__bar--weak' };
-    if (score === 3) return { level: 2, label: 'Moyen', className: 'password-strength__bar--medium' };
-    return { level: 3, label: 'Fort', className: 'password-strength__bar--strong' };
+    if (score <= 2) return { level: 1, label: 'Faible', className: 'strength--weak' };
+    if (score === 3) return { level: 2, label: 'Moyen', className: 'strength--medium' };
+    return { level: 3, label: 'Fort', className: 'strength--strong' };
   };
 
   const strength = getPasswordStrength();
@@ -52,9 +50,7 @@ const RegisterForm = () => {
   const onSubmit = (data) => {
     const { acceptsTerms, ...payload } = data;
     registerUser(payload, {
-      onSuccess: () => {
-        navigate('/verify-email', { state: { email: data.email } });
-      },
+      onSuccess: () => navigate('/verify-email', { state: { email: data.email } }),
     });
   };
 
@@ -62,10 +58,10 @@ const RegisterForm = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="auth-form" noValidate>
       {registerError && (
         <div className="auth-alert auth-alert--error" role="alert">
-          <i className="bi bi-exclamation-circle auth-alert__icon" />
+          <i className="bi bi-exclamation-circle-fill auth-alert__icon" />
           <div className="auth-alert__content">
             <p className="auth-alert__message">
-              {registerError?.response?.data?.message || 'Une erreur est survenue lors de l\'inscription. Veuillez réessayer.'}
+              {registerError?.response?.data?.message || 'Une erreur est survenue. Veuillez réessayer.'}
             </p>
           </div>
         </div>
@@ -77,19 +73,18 @@ const RegisterForm = () => {
           name="lastName"
           placeholder="Votre nom"
           autoComplete="family-name"
-          leftIcon={<i className="bi bi-person" />}
+          leftIcon={<i className="bi bi-person-fill" />}
           error={errors.lastName?.message}
           disabled={isRegistering}
           required
           {...register('lastName')}
         />
-
         <Input
           label="Prénom"
           name="firstName"
           placeholder="Votre prénom"
           autoComplete="given-name"
-          leftIcon={<i className="bi bi-person" />}
+          leftIcon={<i className="bi bi-person-fill" />}
           error={errors.firstName?.message}
           disabled={isRegistering}
           required
@@ -103,7 +98,7 @@ const RegisterForm = () => {
         name="phone"
         placeholder="6XX XXX XXX"
         autoComplete="tel"
-        leftIcon={<i className="bi bi-telephone" />}
+        leftIcon={<i className="bi bi-telephone-fill" />}
         error={errors.phone?.message}
         disabled={isRegistering}
         required
@@ -111,24 +106,12 @@ const RegisterForm = () => {
       />
 
       <Input
-        label="Ville"
-        name="city"
-        placeholder="Ex: Douala, Yaoundé..."
-        autoComplete="address-level2"
-        leftIcon={<i className="bi bi-geo-alt" />}
-        error={errors.city?.message}
-        disabled={isRegistering}
-        required
-        {...register('city')}
-      />
-
-      <Input
-        label="Adresse email"
+        label="Email"
         type="email"
         name="email"
         placeholder="votre@email.com"
         autoComplete="email"
-        leftIcon={<i className="bi bi-envelope" />}
+        leftIcon={<i className="bi bi-envelope-fill" />}
         error={errors.email?.message}
         disabled={isRegistering}
         required
@@ -141,23 +124,22 @@ const RegisterForm = () => {
           name="password"
           placeholder="Minimum 8 caractères"
           autoComplete="new-password"
+          leftIcon={<i className="bi bi-lock-fill" />}
           error={errors.password?.message}
           disabled={isRegistering}
           required
           {...register('password')}
         />
         {password && (
-          <div className="password-strength" aria-label={`Force du mot de passe: ${strength.label}`}>
+          <div className="password-strength">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
                 className={`password-strength__bar ${i <= strength.level ? `password-strength__bar--active ${strength.className}` : ''}`}
               />
             ))}
+            <span className="password-strength__label">{strength.label}</span>
           </div>
-        )}
-        {password && (
-          <span className="password-strength__text">{strength.label}</span>
         )}
       </div>
 
@@ -166,6 +148,7 @@ const RegisterForm = () => {
         name="confirmPassword"
         placeholder="Retapez votre mot de passe"
         autoComplete="new-password"
+        leftIcon={<i className="bi bi-lock-fill" />}
         error={errors.confirmPassword?.message}
         disabled={isRegistering}
         required
@@ -175,23 +158,18 @@ const RegisterForm = () => {
       <div className="auth-terms">
         <Checkbox
           name="acceptsTerms"
-          error={errors.acceptsTerms?.message}
           disabled={isRegistering}
           {...register('acceptsTerms')}
         />
-        <label htmlFor="checkbox-acceptsTerms">
+        <label htmlFor="checkbox-acceptsTerms" className="auth-terms__label">
           J'accepte les{' '}
-          <a href="/conditions" target="_blank" rel="noopener noreferrer">
-            conditions d'utilisation
-          </a>{' '}
-          et la{' '}
-          <a href="/politique" target="_blank" rel="noopener noreferrer">
-            politique de confidentialité
-          </a>
+          <a href="/conditions" target="_blank" rel="noopener noreferrer">conditions d'utilisation</a>
+          {' '}et la{' '}
+          <a href="/politique" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>
         </label>
       </div>
       {errors.acceptsTerms?.message && (
-        <div className="invalid-feedback d-block" style={{ marginTop: '-0.75rem' }}>
+        <div className="invalid-feedback d-block" style={{ marginTop: '-0.5rem' }}>
           {errors.acceptsTerms.message}
         </div>
       )}
@@ -206,6 +184,13 @@ const RegisterForm = () => {
       >
         Créer mon compte
       </Button>
+
+      <p className="auth-form__alt">
+        Déjà inscrit ?{' '}
+        <Link to="/login" className="auth-form__alt-link">
+          Connexion
+        </Link>
+      </p>
     </form>
   );
 };

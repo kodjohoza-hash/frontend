@@ -1,24 +1,32 @@
-import { AuthCard, AuthHeader, AuthFooter, ForgotPasswordForm } from '@components/auth';
+import { AuthCard, AuthHeader, AuthIllustration, ForgotPasswordForm } from '@components/auth';
 
 /**
- * ForgotPasswordPage — Rendered inside AuthLayout via <Outlet />
+ * ForgotPasswordPage — Two-column split layout
  */
 const ForgotPasswordPage = () => (
   <>
-    <AuthCard>
-      <AuthHeader
-        title="Mot de passe oublié ?"
-        subtitle="Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe"
-      />
+    <AuthIllustration />
 
-      <ForgotPasswordForm />
-    </AuthCard>
+    <div className="auth-right">
+      <div className="auth-right__inner">
+        <div className="auth-mobile-logo">
+          <div className="auth-mobile-logo__icon">
+            <i className="bi bi-bus-front-fill" />
+          </div>
+          <span className="auth-mobile-logo__text">Bus Tix Connect</span>
+        </div>
 
-    <AuthFooter
-      text="Vous vous souvenez de votre mot de passe ?"
-      linkLabel="Retour à la connexion"
-      linkTo="/login"
-    />
+        <AuthCard>
+          <AuthHeader
+            icon={<i className="bi bi-key-fill" />}
+            title="Mot de passe oublié ?"
+            subtitle="Entrez votre email et nous vous enverrons un lien de réinitialisation"
+          />
+
+          <ForgotPasswordForm />
+        </AuthCard>
+      </div>
+    </div>
   </>
 );
 
