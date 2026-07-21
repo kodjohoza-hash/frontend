@@ -1866,83 +1866,118 @@ select.btc-search-input {
 }
 
 /* ================================================
-   TESTIMONIALS
+   TESTIMONIALS — Premium Grid
    ================================================ */
 .btc-testimonials {
   padding: 5rem 0;
   background: var(--bg-secondary);
 }
 
+.btc-testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.btc-testimonials-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.btc-testimonials-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card */
 .btc-testimonial-card {
   background: var(--color-white);
-  border-radius: var(--radius-xl);
-  padding: var(--space-6);
+  border-radius: 20px;
+  padding: 2rem;
   border: 1px solid var(--border-subtle);
-  transition: transform 0.3s, box-shadow 0.3s;
-  width: 380px;
-  flex-shrink: 0;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
   position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .btc-testimonial-card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
 }
 
-.btc-testimonial-header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-3);
+.btc-testimonial-card--featured {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-600) 100%);
+  border-color: transparent;
+  color: var(--color-white);
 }
 
-.btc-testimonial-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2.5px solid var(--color-primary-light);
-  flex-shrink: 0;
+.btc-testimonial-card--featured .btc-testimonial-quote-icon {
+  color: rgba(255, 255, 255, 0.2);
 }
 
-.btc-testimonial-name {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  color: var(--text-primary);
+.btc-testimonial-card--featured .btc-testimonial-quote p {
+  color: rgba(255, 255, 255, 0.95);
 }
 
-.btc-testimonial-city {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+.btc-testimonial-card--featured .btc-testimonial-quote p::before {
+  color: rgba(255, 255, 255, 0.25);
 }
 
-.btc-testimonial-city i { font-size: 0.65rem; color: var(--color-accent); }
+.btc-testimonial-card--featured .btc-testimonial-name {
+  color: var(--color-white);
+}
 
-.btc-testimonial-stars {
-  display: flex;
-  gap: 2px;
-  margin-bottom: var(--space-3);
+.btc-testimonial-card--featured .btc-testimonial-city {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.btc-testimonial-card--featured .btc-testimonial-city i {
+  color: var(--color-accent);
+}
+
+.btc-testimonial-card--featured .btc-testimonial-stars {
   color: var(--color-warning);
-  font-size: var(--font-size-sm);
 }
 
+.btc-testimonial-card--featured .btc-testimonial-date {
+  border-top-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.btc-testimonial-card--featured .btc-testimonial-date i {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.btc-testimonial-card--featured:hover {
+  box-shadow: 0 20px 56px rgba(11, 29, 81, 0.25);
+}
+
+/* Quote icon */
+.btc-testimonial-quote-icon {
+  font-size: 2.5rem;
+  color: var(--color-primary-200);
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+/* Quote */
 .btc-testimonial-quote {
-  margin: 0 0 var(--space-4);
+  margin: 0 0 1.5rem;
   padding: 0;
   border: none;
-  position: relative;
+  flex: 1;
 }
 
 .btc-testimonial-quote p {
-  font-size: var(--font-size-sm);
+  font-size: 0.9375rem;
   color: var(--text-secondary);
-  line-height: 1.65;
+  line-height: 1.7;
   font-style: italic;
   margin: 0;
-  padding-left: var(--space-4);
+  padding-left: 1.25rem;
   position: relative;
 }
 
@@ -1950,25 +1985,78 @@ select.btc-search-input {
   content: '\201C';
   position: absolute;
   left: 0;
-  top: -6px;
-  font-size: var(--font-size-3xl);
+  top: -8px;
+  font-size: 2rem;
   color: var(--color-primary-200);
   font-style: normal;
   line-height: 1;
   font-family: Georgia, serif;
 }
 
+/* Footer: avatar + info + stars */
+.btc-testimonial-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.btc-testimonial-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid var(--color-primary-light);
+  flex-shrink: 0;
+}
+
+.btc-testimonial-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.btc-testimonial-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.btc-testimonial-city {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.btc-testimonial-city i {
+  font-size: 0.6rem;
+  color: var(--color-accent);
+}
+
+.btc-testimonial-stars {
+  display: flex;
+  gap: 2px;
+  color: var(--color-warning);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Date */
 .btc-testimonial-date {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: var(--font-size-xs);
+  font-size: 0.7rem;
   color: var(--text-muted);
-  padding-top: var(--space-3);
+  padding-top: 0.75rem;
   border-top: 1px solid var(--border-subtle);
 }
 
-.btc-testimonial-date i { font-size: 0.65rem; color: var(--color-primary); }
+.btc-testimonial-date i {
+  font-size: 0.6rem;
+  color: var(--color-primary);
+}
 
 /* ================================================
    FAQ
@@ -2705,6 +2793,7 @@ select.btc-search-input {
   .btc-dest-grid { grid-template-columns: repeat(2, 1fr); }
   .btc-how-timeline { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
   .btc-how-line { display: none; }
+  .btc-testimonials-grid { grid-template-columns: repeat(2, 1fr); }
   .btc-footer-top { grid-template-columns: 1fr 1fr; }
 }
 
@@ -2763,6 +2852,8 @@ select.btc-search-input {
   .btc-how-card-icon { width: 48px; height: 48px; font-size: 1.15rem; }
   .btc-how-card-title { font-size: 0.875rem; }
   .btc-how-card-desc { font-size: 0.75rem; }
+  .btc-testimonials-grid { grid-template-columns: 1fr; }
+  .btc-testimonial-card { padding: 1.5rem; }
   .btc-company-card { border-radius: 16px; }
   .btc-mobile-app-card { padding: 2rem 1.5rem; }
   .btc-newsletter-card { padding: 2rem 1.5rem; }
