@@ -7,14 +7,14 @@ const MobileApps = memo(() => (
       Téléchargez bientôt notre application mobile
     </p>
     <div className="btc-footer-apps-buttons">
-      <button className="btc-footer-app-btn" tabIndex={-1}>
+      <button className="btc-footer-app-btn" type="button" aria-label="Application bientot disponible sur Google Play">
         <i className="bi bi-google-play" />
         <div>
           <small>Disponible sur</small>
           <strong>Google Play</strong>
         </div>
       </button>
-      <button className="btc-footer-app-btn" tabIndex={-1}>
+      <button className="btc-footer-app-btn" type="button" aria-label="Application bientot disponible sur App Store">
         <i className="bi bi-apple" />
         <div>
           <small>Télécharger sur</small>

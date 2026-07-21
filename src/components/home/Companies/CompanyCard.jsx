@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AMENITY_MAP = {
   wifi: { icon: 'bi-wifi', label: 'Wi-Fi' },
@@ -9,6 +10,7 @@ const AMENITY_MAP = {
 
 const CompanyCard = React.memo(({ company }) => {
   const [imgLoaded, setImgLoaded] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="btc-company-card">
@@ -61,9 +63,9 @@ const CompanyCard = React.memo(({ company }) => {
           <span className="btc-company-price">
             À partir de <strong>{company.price.toLocaleString('fr-FR')} FCFA</strong>
           </span>
-          <a href="#" className="btc-company-btn" aria-label={`Voir les trajets de ${company.name}`}>
+          <button className="btc-company-btn" onClick={() => navigate('/booking/search')} aria-label={`Voir les trajets de ${company.name}`}>
             Voir les trajets <i className="bi bi-arrow-right" />
-          </a>
+          </button>
         </div>
       </div>
     </div>

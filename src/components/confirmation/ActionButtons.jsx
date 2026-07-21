@@ -32,7 +32,7 @@ const ActionButtons = ({ bookingId }) => {
   };
 
   const handleViewReservations = () => {
-    navigate('/dashboard/reservations');
+    navigate('/client/bookings');
   };
 
   const handleBackHome = () => {

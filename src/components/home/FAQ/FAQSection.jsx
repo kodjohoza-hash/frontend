@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useInView } from '@hooks/useLandingPage';
+import { useNavigate } from 'react-router-dom';
 import { FAQ_ITEMS } from '@data/faq';
 import FaqItem from './FaqItem';
 import FaqSearch from './FaqSearch';
@@ -7,6 +8,7 @@ import FaqCategories from './FaqCategories';
 
 const FaqSection = () => {
   const [ref, isInView] = useInView({ threshold: 0.1 });
+  const navigate = useNavigate();
   const [openId, setOpenId] = useState(null);
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
@@ -95,7 +97,7 @@ const FaqSection = () => {
             <p className="btc-faq-cta-text">
               Notre équipe est disponible pour vous accompagner.
             </p>
-            <button className="btc-faq-cta-btn">
+            <button className="btc-faq-cta-btn" onClick={() => window.open('mailto:support@bustixconnect.com', '_blank')}>
               <i className="bi bi-chat-dots" /> Contacter le support
             </button>
           </div>

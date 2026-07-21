@@ -1,9 +1,11 @@
 import { useInView } from '@hooks/useLandingPage';
+import { useNavigate } from 'react-router-dom';
 import { DESTINATIONS } from '@data/destinations';
 import DestinationCard from './DestinationCard';
 
 const DestinationsSection = () => {
   const [ref, isInView] = useInView({ threshold: 0.1 });
+  const navigate = useNavigate();
 
   return (
     <section id="destinations" className="btc-destinations" ref={ref}>
@@ -38,7 +40,7 @@ const DestinationsSection = () => {
         </div>
 
         <div className={`btc-dest-footer ${isInView ? 'is-visible' : ''}`}>
-          <button className="btc-dest-all-btn">
+          <button className="btc-dest-all-btn" onClick={() => navigate('/booking/search')}>
             Voir toutes les destinations <i className="bi bi-arrow-right" />
           </button>
         </div>

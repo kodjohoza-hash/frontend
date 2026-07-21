@@ -1,15 +1,15 @@
 export const NAV_LINKS = [
-  { label: 'Accueil', href: '#accueil' },
+  { label: 'Accueil', href: '#hero' },
   { label: 'Destinations', href: '#destinations' },
   { label: 'Compagnies', href: '#compagnies' },
-  { label: 'Réservation', href: '#reservation' },
+  { label: 'Réservation', href: '#search' },
   { label: 'Comment ça marche', href: '#comment-ca-marche' },
   { label: 'FAQ', href: '#faq' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Contact', href: '#faq' },
 ];
 
 export const SERVICE_LINKS = [
-  { label: 'Réserver un billet', href: '#reservation' },
+  { label: 'Réserver un billet', href: '#search' },
   { label: 'Trouver une compagnie', href: '#compagnies' },
   { label: 'Paiement sécurisé', href: null },
   { label: 'Billet électronique', href: null },
@@ -20,7 +20,7 @@ export const SERVICE_LINKS = [
 
 export const SUPPORT_LINKS = [
   { label: 'Centre d\'aide', href: '#faq' },
-  { label: 'Nous contacter', href: '#contact' },
+  { label: 'Nous contacter', href: '#faq' },
   { label: 'Signaler un problème', href: null },
   { label: 'Politique de remboursement', href: null },
   { label: 'Questions fréquentes', href: '#faq' },

@@ -41,14 +41,14 @@ const MobileAppSection = () => {
               ))}
             </div>
             <div className="btc-mobile-app-buttons">
-              <button className="btc-app-store-btn">
+              <button className="btc-app-store-btn" type="button" aria-label="Application bientot disponible sur App Store">
                 <i className="bi bi-apple" />
                 <div>
                   <small>Télécharger sur</small>
                   <strong>App Store</strong>
                 </div>
               </button>
-              <button className="btc-app-store-btn">
+              <button className="btc-app-store-btn" type="button" aria-label="Application bientot disponible sur Google Play">
                 <i className="bi bi-google-play" />
                 <div>
                   <small>Disponible sur</small>

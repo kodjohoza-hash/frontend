@@ -1,9 +1,6 @@
 export { default as Navbar } from './Navbar';
 export { default as MobileMenu } from './MobileMenu';
 export { default as Sidebar } from './Sidebar';
-export { default as SidebarItem } from './SidebarItem';
-export { default as SidebarGroup } from './SidebarGroup';
 export { default as Footer } from './Footer';
-export { default as NavItem } from './NavItem';
 export { default as Breadcrumb } from './Breadcrumb';
 export { default as PageTitle } from './PageTitle';

@@ -123,8 +123,13 @@ const SearchBox = () => {
           <div className="btc-search-quick">
             <span className="btc-search-quick-label">Départs populaires :</span>
             <div className="btc-search-quick-tags">
-              {['Yaoundé → Douala', 'Douala → Bamenda', 'Yaoundé → Bafoussam', 'Douala → Kribi'].map((tag) => (
-                <button key={tag} className="btc-search-quick-tag" type="button">{tag}</button>
+              {[
+                { from: 'Yaoundé', to: 'Douala', label: 'Yaoundé → Douala' },
+                { from: 'Douala', to: 'Bamenda', label: 'Douala → Bamenda' },
+                { from: 'Yaoundé', to: 'Bafoussam', label: 'Yaoundé → Bafoussam' },
+                { from: 'Douala', to: 'Kribi', label: 'Douala → Kribi' },
+              ].map((tag) => (
+                <button key={tag.label} className="btc-search-quick-tag" type="button" onClick={() => { navigate(`/booking/search?from=${tag.from}&to=${tag.to}`); }}>{tag.label}</button>
               ))}
             </div>
           </div>

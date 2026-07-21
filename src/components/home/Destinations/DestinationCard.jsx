@@ -1,6 +1,8 @@
 import { memo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const DestinationCard = memo(({ destination }) => {
+  const navigate = useNavigate();
   const { image, name, badge, trips, price, description } = destination;
 
   return (
@@ -31,7 +33,7 @@ const DestinationCard = memo(({ destination }) => {
           </div>
         </div>
         <div className="btc-dest-cta">
-          <button className="btc-dest-cta-btn" tabIndex={-1}>
+          <button className="btc-dest-cta-btn" onClick={() => navigate(`/booking/search?from=Douala&to=${encodeURIComponent(name)}`)}>
             Voir les trajets <i className="bi bi-arrow-right" />
           </button>
         </div>

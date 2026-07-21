@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { ROUTES } from '@routes/routeConstants';
 import { SeatMap, SeatLegend, TripInfoCard, BookingSummary } from '@components/seats';
 import { BUS_LAYOUTS, mockTripInfo, generateSeats } from '@data/seatMap';
 import '@assets/styles/seats.css';
@@ -38,9 +39,9 @@ const SeatSelection = () => {
         {/* Breadcrumb */}
         <nav aria-label="Fil d'Ariane" className="mb-4">
           <ol className="breadcrumb" style={{ fontSize: 'var(--font-size-xs)' }}>
-            <li className="breadcrumb-item"><a href="/" className="text-decoration-none" style={{ color: 'var(--text-muted)' }}>Accueil</a></li>
-            <li className="breadcrumb-item"><a href="/booking/search" className="text-decoration-none" style={{ color: 'var(--text-muted)' }}>Recherche</a></li>
-            <li className="breadcrumb-item"><a href="/booking/search" className="text-decoration-none" style={{ color: 'var(--text-muted)' }}>Resultats</a></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.HOME} className="text-decoration-none" style={{ color: 'var(--text-muted)' }}>Accueil</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.BOOKING_SEARCH} className="text-decoration-none" style={{ color: 'var(--text-muted)' }}>Recherche</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.BOOKING_SEARCH} className="text-decoration-none" style={{ color: 'var(--text-muted)' }}>Resultats</Link></li>
             <li className="breadcrumb-item active" style={{ color: 'var(--text-primary)' }}>Choix des sieges</li>
           </ol>
         </nav>

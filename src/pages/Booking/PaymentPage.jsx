@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { ROUTES } from '@routes/routeConstants';
 import {
   PaymentStepper, PaymentMethodCard, MobileMoneyForm, CreditCardForm,
   SecureBadge, PaymentSummary, PromoCodeCard, InsuranceCard,
@@ -112,10 +113,10 @@ const PaymentPage = () => {
         {/* Breadcrumb */}
         <nav aria-label="Fil d'Ariane" className="mb-3">
           <ol className="breadcrumb" style={{ fontSize: 'var(--font-size-xs)' }}>
-            <li className="breadcrumb-item"><a href="/" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Accueil</a></li>
-            <li className="breadcrumb-item"><a href="/booking/search" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Recherche</a></li>
-            <li className="breadcrumb-item"><a href="/booking/search" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Resultats</a></li>
-            <li className="breadcrumb-item"><a href="/booking/seats" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Choix des sieges</a></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.HOME} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Accueil</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.BOOKING_SEARCH} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Recherche</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.BOOKING_SEARCH} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Resultats</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.BOOKING_SEATS} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Choix des sieges</Link></li>
             <li className="breadcrumb-item active" style={{ color: 'var(--text-primary)' }}>Paiement</li>
           </ol>
         </nav>

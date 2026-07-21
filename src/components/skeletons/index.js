@@ -1,9 +1,0 @@
-export { default as PageSkeleton } from './PageSkeleton';
-export { default as CardSkeleton } from './CardSkeleton';
-export { default as TableSkeleton } from './TableSkeleton';
-export { default as DashboardSkeleton } from './DashboardSkeleton';
-export { default as CompanyCardSkeleton } from './CompanyCardSkeleton';
-export { default as TripCardSkeleton } from './TripCardSkeleton';
-export { default as TicketSkeleton } from './TicketSkeleton';
-export { default as ProfileSkeleton } from './ProfileSkeleton';
-export { default as skeletonTheme } from './skeletonTheme';

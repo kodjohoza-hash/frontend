@@ -30,7 +30,7 @@ const PaymentSuccessModal = ({ transaction }) => (
       )}
 
       <div className="d-flex flex-column gap-2">
-        <Link to="/client/tickets" className="btn btn-accent w-100" style={{ borderRadius: 'var(--radius-lg)', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)' }}>
+        <Link to="/booking/confirmation" className="btn btn-accent w-100" style={{ borderRadius: 'var(--radius-lg)', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)' }}>
           <i className="bi bi-ticket-perforated me-2" />
           Voir mon billet
         </Link>
