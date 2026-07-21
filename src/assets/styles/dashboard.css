@@ -1,0 +1,129 @@
+/* ================================================
+   BUS TIX CONNECT — Dashboard Styles
+   ================================================ */
+
+/* ================================================
+   Dashboard Container
+   ================================================ */
+.btc-dashboard {
+  max-width: 1400px;
+}
+
+/* ================================================
+   Stats Cards
+   ================================================ */
+.btc-stats-card {
+  transition: transform var(--duration-normal) var(--ease-default),
+              box-shadow var(--duration-normal) var(--ease-default);
+}
+
+.btc-stats-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* ================================================
+   Upcoming Trip
+   ================================================ */
+.btc-upcoming-trip {
+  transition: box-shadow var(--duration-normal) var(--ease-default);
+}
+
+.btc-upcoming-trip:hover {
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* ================================================
+   Reservations Table
+   ================================================ */
+.btc-reservations-table .table {
+  font-size: var(--font-size-sm);
+}
+
+.btc-reservations-table .table thead th {
+  background: transparent;
+}
+
+.btc-reservations-table .table tbody tr {
+  transition: background-color var(--duration-fast) var(--ease-default);
+}
+
+.btc-reservations-table .table tbody tr:hover {
+  background-color: var(--color-gray-50);
+}
+
+/* ================================================
+   Status Badge
+   ================================================ */
+.btc-status-badge {
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+/* ================================================
+   Notifications
+   ================================================ */
+.btc-notification-item {
+  transition: background-color var(--duration-fast) var(--ease-default);
+  cursor: default;
+}
+
+.btc-notification-item:hover {
+  background-color: var(--color-gray-50);
+}
+
+.btc-notification-unread {
+  border-left: 3px solid var(--color-accent) !important;
+}
+
+/* ================================================
+   Quick Actions
+   ================================================ */
+.btc-quick-action-card {
+  min-height: 60px;
+}
+
+/* ================================================
+   Empty State
+   ================================================ */
+.btc-empty-state-icon {
+  width: 64px;
+  height: 64px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xl);
+  background: var(--color-gray-100);
+  color: var(--color-gray-400);
+  font-size: 1.5rem;
+}
+
+/* ================================================
+   Dashboard Footer
+   ================================================ */
+.btc-dashboard-footer {
+  margin-top: auto;
+}
+
+/* ================================================
+   Responsive
+   ================================================ */
+@media (max-width: 991.98px) {
+  .btc-dashboard .row.g-4 > .col-lg-8,
+  .btc-dashboard .row.g-4 > .col-lg-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .btc-dashboard-header .d-flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btc-upcoming-trip .row.g-3 > .col-4 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}

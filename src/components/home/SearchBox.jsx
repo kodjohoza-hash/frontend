@@ -1,8 +1,10 @@
 import { useState, useId } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CITIES } from '@data/landingPage';
 
 const SearchBox = () => {
   const id = useId();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     departure: '', destination: '', departureDate: '', returnDate: '', passengers: 1, travelClass: 'economy',
   });
@@ -10,6 +12,17 @@ const SearchBox = () => {
   const set = (field) => (e) => setForm((p) => ({ ...p, [field]: e.target.value }));
   const swap = () => setForm((p) => ({ ...p, departure: p.destination, destination: p.departure }));
   const today = new Date().toISOString().split('T')[0];
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (form.departure) params.set('from', form.departure);
+    if (form.destination) params.set('to', form.destination);
+    if (form.departureDate) params.set('date', form.departureDate);
+    if (form.passengers) params.set('passengers', form.passengers);
+    if (form.travelClass) params.set('class', form.travelClass);
+    navigate(`/booking/search?${params.toString()}`);
+  };
 
   return (
     <section id="search" className="btc-search-section" aria-label="Rechercher un voyage">
@@ -27,7 +40,7 @@ const SearchBox = () => {
 
           <div className="btc-search-divider" />
 
-          <form className="btc-search-form" onSubmit={(e) => e.preventDefault()} noValidate>
+          <form className="btc-search-form" onSubmit={handleSubmit} noValidate>
             <div className="btc-search-fields">
               {/* Departure */}
               <div className="btc-search-field">

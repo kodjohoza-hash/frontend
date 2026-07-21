@@ -1,0 +1,279 @@
+/* ================================================
+   BUS TIX CONNECT — Search Results Styles
+   ================================================ */
+
+/* ================================================
+   Page
+   ================================================ */
+.btc-search-results-page {
+  min-height: calc(100vh - var(--header-height));
+}
+
+/* ================================================
+   Skeleton Loading
+   ================================================ */
+.btc-skeleton {
+  background: linear-gradient(90deg, var(--color-gray-200) 25%, var(--color-gray-100) 50%, var(--color-gray-200) 75%);
+  background-size: 200% 100%;
+  animation: btc-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes btc-skeleton-pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ================================================
+   Filter Sidebar Sticky
+   ================================================ */
+.btc-filter-sticky {
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-4));
+  max-height: calc(100vh - var(--header-height) - var(--space-8));
+  overflow-y: auto;
+}
+
+.btc-filter-sticky::-webkit-scrollbar {
+  width: 4px;
+}
+
+.btc-filter-sticky::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: var(--radius-pill);
+}
+
+/* ================================================
+   Custom Checkbox & Radio
+   ================================================ */
+.btc-checkbox,
+.btc-radio {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-gray-300);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.btc-checkbox:checked,
+.btc-radio:checked {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+}
+
+.btc-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--color-white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.btc-radio {
+  border-radius: var(--radius-circle);
+}
+
+.btc-radio:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-circle);
+  background: var(--color-white);
+}
+
+.btc-checkbox:hover,
+.btc-radio:hover {
+  border-color: var(--color-primary);
+}
+
+.btc-checkbox:focus-visible,
+.btc-radio:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ================================================
+   Range Slider
+   ================================================ */
+.btc-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--color-gray-200);
+  border-radius: var(--radius-pill);
+  outline: none;
+  cursor: pointer;
+}
+
+.btc-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-circle);
+  background: var(--color-primary);
+  border: 3px solid var(--color-white);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-default);
+}
+
+.btc-range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.btc-range-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-circle);
+  background: var(--color-primary);
+  border: 3px solid var(--color-white);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.btc-range-slider:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* ================================================
+   Filter Section
+   ================================================ */
+.btc-filter-section {
+  padding: var(--space-2) 0;
+}
+
+.btc-filter-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: var(--space-1) 0;
+}
+
+.btc-filter-checkbox {
+  cursor: pointer;
+  padding: var(--space-1-5) var(--space-2);
+  border-radius: var(--radius-md);
+  transition: background-color var(--duration-fast) var(--ease-default);
+}
+
+.btc-filter-checkbox:hover {
+  background-color: var(--color-gray-50);
+}
+
+/* ================================================
+   Mobile Filter Overlay
+   ================================================ */
+.btc-filter-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: var(--z-backdrop);
+  animation: fadeIn var(--duration-fast) var(--ease-out);
+  backdrop-filter: blur(4px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.btc-filter-mobile-visible {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 320px;
+  max-width: 85vw;
+  height: 100vh;
+  z-index: var(--z-modal);
+  background: var(--bg-surface);
+  overflow-y: auto;
+  box-shadow: var(--shadow-2xl);
+  animation: btc-slide-in-left 0.3s ease-out;
+  padding: var(--space-4);
+}
+
+@keyframes btc-slide-in-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@media (min-width: 992px) {
+  .btc-filter-mobile-visible {
+    position: static;
+    width: auto;
+    max-width: none;
+    height: auto;
+    box-shadow: none;
+    animation: none;
+    padding: 0;
+  }
+}
+
+/* ================================================
+   Trip Card Route Line
+   ================================================ */
+.btc-route-line {
+  background: transparent;
+}
+
+/* ================================================
+   Search Summary
+   ================================================ */
+.btc-search-summary .btn:hover {
+  background: var(--color-primary-100) !important;
+}
+
+/* ================================================
+   Responsive
+   ================================================ */
+@media (max-width: 991.98px) {
+  .btc-filter-sticky {
+    position: static;
+    max-height: none;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .btc-search-results-page .container {
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  .btc-trip-card .card-body {
+    padding: var(--space-3) !important;
+  }
+}
+
+/* ================================================
+   Accessibility — Focus Visible
+   ================================================ */
+.btc-trip-card .btn:focus-visible,
+.btc-filter-checkbox:focus-visible,
+.btc-range-slider:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ================================================
+   Print
+   ================================================ */
+@media print {
+  .btc-filter-sticky,
+  .btc-filter-overlay,
+  .btc-search-results-page .btn {
+    display: none !important;
+  }
+}
