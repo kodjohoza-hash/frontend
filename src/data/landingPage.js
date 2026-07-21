@@ -150,6 +150,15 @@ export const COMPANIES = [
   },
 ];
 
+export const WHY_CHOOSE = [
+  { id: 1, icon: 'bi-bus-front', title: 'Grand choix de compagnies', description: 'Comparez plusieurs compagnies de transport en quelques secondes et choisissez celle qui correspond le mieux à vos besoins.' },
+  { id: 2, icon: 'bi-geo-alt', title: 'Réservation proche de vous', description: 'La plateforme propose les agences et points de vente les plus proches selon votre position.' },
+  { id: 3, icon: 'bi-ticket-perforated', title: 'Billet numérique', description: 'Recevez immédiatement votre billet après votre réservation. Téléchargement simple. Présentation rapide.' },
+  { id: 4, icon: 'bi-shield-lock', title: 'Paiement sécurisé', description: 'Toutes les transactions sont sécurisées. Protection des données. Paiements fiables.' },
+  { id: 5, icon: 'bi-lightning-charge', title: 'Réservation rapide', description: 'Réservez votre voyage en moins de deux minutes grâce à une interface fluide et intuitive.' },
+  { id: 6, icon: 'bi-headset', title: 'Support disponible', description: 'Notre équipe accompagne les voyageurs avant, pendant et après leur réservation.' },
+];
+
 export const DESTINATIONS = [
   { id: 1, name: 'Douala', image: 'https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?w=800&h=600&fit=crop&q=80', trips: 180, price: 2500 },
   { id: 2, name: 'Yaoundé', image: 'https://images.unsplash.com/photo-1597212618440-806262de4f6b?w=800&h=600&fit=crop&q=80', trips: 165, price: 3000 },

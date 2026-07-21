@@ -3,6 +3,7 @@ export { default as Hero } from './Hero';
 export { default as SearchBox } from './SearchBox';
 export { default as StatisticsSection } from './Statistics/StatisticsSection';
 export { default as FeaturesSection } from './Features/FeaturesSection';
+export { default as WhyChooseSection } from './WhyChoose/WhyChooseSection';
 export { default as CompaniesSection } from './Companies/CompaniesSection';
 export { default as CompanyCard } from './Companies/CompanyCard';
 export { default as DestinationsSection } from './Destinations/DestinationsSection';

@@ -4,6 +4,7 @@ import Hero from '@components/home/Hero';
 import SearchBox from '@components/home/SearchBox';
 import StatisticsSection from '@components/home/Statistics/StatisticsSection';
 import FeaturesSection from '@components/home/Features/FeaturesSection';
+import WhyChooseSection from '@components/home/WhyChoose/WhyChooseSection';
 import CompaniesSection from '@components/home/Companies/CompaniesSection';
 import DestinationsSection from '@components/home/Destinations/DestinationsSection';
 import HowItWorksSection from '@components/home/HowItWorks/HowItWorksSection';
@@ -26,6 +27,7 @@ const HomePage = () => {
       <SearchBox />
       <StatisticsSection />
       <FeaturesSection />
+      <WhyChooseSection />
       <CompaniesSection />
       <DestinationsSection />
       <HowItWorksSection />
