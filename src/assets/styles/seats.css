@@ -1,0 +1,578 @@
+/* ================================================
+   BUS TIX CONNECT — Seat Map Styles
+   ================================================ */
+
+/* ================================================
+   Page
+   ================================================ */
+.btc-seat-selection-page {
+  min-height: calc(100vh - var(--header-height));
+}
+
+.btc-summary-sticky {
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-4));
+}
+
+/* ================================================
+   Bus Body — CSS Drawing
+   ================================================ */
+.btc-seat-map-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-4) 0;
+}
+
+.btc-bus {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  background: var(--color-white);
+  border: 3px solid var(--color-primary);
+  border-radius: 20px 20px 12px 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(11, 29, 81, 0.12);
+}
+
+/* Front Windshield */
+.btc-bus-front {
+  position: relative;
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-700) 100%);
+  padding: var(--space-3) var(--space-4);
+  text-align: center;
+}
+
+.btc-bus-windshield {
+  position: relative;
+  height: 28px;
+  margin: 0 var(--space-6);
+  border-radius: 50% 50% 0 0;
+  overflow: hidden;
+}
+
+.btc-windshield-glass {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.08) 100%);
+  border: 2px solid rgba(255,255,255,0.4);
+  border-bottom: none;
+  border-radius: 50% 50% 0 0;
+  backdrop-filter: blur(2px);
+}
+
+.btc-bus-front-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: var(--space-1);
+  color: rgba(255,255,255,0.7);
+  font-size: 0.6rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Driver Area */
+.btc-bus-driver-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-gray-50);
+  border-bottom: 2px solid var(--border-default);
+}
+
+.btc-driver {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.btc-steering-wheel {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  animation: btc-steer-rotate 8s linear infinite;
+}
+
+@keyframes btc-steer-rotate {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(15deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(-15deg); }
+}
+
+.btc-driver-label {
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.btc-bus-door {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.btc-door-line {
+  width: 24px;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: var(--radius-pill);
+}
+
+.btc-door-label {
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Windows */
+.btc-bus-windows-left,
+.btc-bus-windows-right {
+  position: absolute;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 0;
+}
+
+.btc-bus-windows-left {
+  left: -1px;
+}
+
+.btc-bus-windows-right {
+  right: -1px;
+}
+
+.btc-bus-window {
+  width: 6px;
+  height: 24px;
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.08) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 2px;
+}
+
+/* Seats Area */
+.btc-bus-seats-area {
+  padding: var(--space-3) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.btc-seat-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.btc-row-number {
+  width: 20px;
+  font-size: 0.55rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-muted);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.btc-seat-group {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+  justify-content: center;
+}
+
+.btc-bus-aisle {
+  width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btc-aisle-line {
+  width: 2px;
+  height: 100%;
+  min-height: 36px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--color-gray-300) 0px,
+    var(--color-gray-300) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+  border-radius: 1px;
+}
+
+/* Individual Seat */
+.btc-seat {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md) var(--radius-md) 6px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-default);
+  flex-shrink: 0;
+}
+
+.btc-seat-number {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.btc-seat:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Seat: Available */
+.btc-seat-available {
+  background: var(--color-white);
+  border-color: var(--color-gray-300);
+  color: var(--color-gray-600);
+}
+
+.btc-seat-available:hover,
+.btc-seat-hover.btc-seat-available {
+  border-color: var(--color-primary);
+  background: var(--color-primary-50);
+  color: var(--color-primary);
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(11, 29, 81, 0.15);
+}
+
+/* Seat: Occupied */
+.btc-seat-occupied {
+  background: var(--color-gray-200);
+  border-color: var(--color-gray-200);
+  color: var(--color-gray-400);
+  cursor: not-allowed;
+}
+
+/* Seat: Reserved */
+.btc-seat-reserved {
+  background: var(--color-warning-50);
+  border-color: var(--color-warning-200);
+  color: var(--color-warning);
+  cursor: not-allowed;
+}
+
+/* Seat: Selected */
+.btc-seat-selected {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+  transform: scale(1.05);
+  box-shadow: 0 2px 10px rgba(11, 29, 81, 0.3);
+}
+
+/* Seat: VIP */
+.btc-seat-vip {
+  background: var(--color-warning-50);
+  border-color: var(--color-warning-300);
+  color: var(--color-warning);
+}
+
+.btc-seat-vip:hover,
+.btc-seat-hover.btc-seat-vip {
+  border-color: var(--color-warning);
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+}
+
+/* Seat: PMR */
+.btc-seat-pmr {
+  background: var(--color-info-50);
+  border-color: var(--color-info-200);
+  color: var(--color-info);
+}
+
+.btc-seat-pmr:hover,
+.btc-seat-hover.btc-seat-pmr {
+  border-color: var(--color-info);
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+/* Seat Icons */
+.btc-seat-vip-icon {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 0.45rem;
+  color: var(--color-warning);
+  z-index: 1;
+}
+
+.btc-seat-pmr-icon {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 0.45rem;
+  color: var(--color-info);
+  z-index: 1;
+}
+
+/* Pulse Animation for Selected Seats */
+@keyframes btc-seat-pulse-anim {
+  0% { box-shadow: 0 0 0 0 rgba(11, 29, 81, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(11, 29, 81, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(11, 29, 81, 0); }
+}
+
+.btc-seat-pulse {
+  animation: btc-seat-pulse-anim 2s infinite;
+}
+
+/* Pulse dot for legend */
+@keyframes btc-pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Toilet */
+.btc-bus-toilet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--color-info-50);
+  border-top: 1px solid var(--border-subtle);
+  color: var(--color-info);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Back of bus */
+.btc-bus-back {
+  background: var(--color-primary);
+  padding: var(--space-2);
+  text-align: center;
+  border-radius: 0 0 10px 10px;
+}
+
+.btc-bus-back-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: rgba(255,255,255,0.7);
+  font-size: 0.6rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.1em;
+}
+
+/* ================================================
+   Seat Tooltip
+   ================================================ */
+.btc-seat-tooltip {
+  position: absolute;
+  z-index: var(--z-tooltip);
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-3);
+  min-width: 180px;
+  pointer-events: none;
+  border: 1px solid var(--border-default);
+  animation: btc-tooltip-in 0.15s ease-out;
+}
+
+@keyframes btc-tooltip-in {
+  from { opacity: 0; transform: translate(-50%, -100%) translateY(4px); }
+  to { opacity: 1; transform: translate(-50%, -100%); }
+}
+
+.btc-seat-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.btc-seat-tooltip-number {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.btc-seat-tooltip-state {
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+}
+
+.btc-tooltip-state-available { background: var(--color-success-50); color: var(--color-success); }
+.btc-tooltip-state-occupied { background: var(--color-gray-100); color: var(--color-gray-500); }
+.btc-tooltip-state-reserved { background: var(--color-warning-50); color: var(--color-warning); }
+.btc-tooltip-state-selected { background: var(--color-primary-50); color: var(--color-primary); }
+.btc-tooltip-state-vip { background: var(--color-warning-50); color: var(--color-warning); }
+.btc-tooltip-state-pmr { background: var(--color-info-50); color: var(--color-info); }
+
+.btc-seat-tooltip-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin-bottom: var(--space-2);
+}
+
+.btc-tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  padding: 2px 0;
+}
+
+.btc-tooltip-row i {
+  width: 14px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
+.btc-seat-tooltip-arrow {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background: var(--color-white);
+  border-right: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border-default);
+}
+
+/* ================================================
+   Legend
+   ================================================ */
+.btc-legend-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.btc-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.btc-legend-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btc-legend-available {
+  background: var(--color-white);
+  border-color: var(--color-gray-300);
+}
+
+.btc-legend-occupied {
+  background: var(--color-gray-200);
+  border-color: var(--color-gray-200);
+}
+
+.btc-legend-reserved {
+  background: var(--color-warning-50);
+  border-color: var(--color-warning-200);
+}
+
+.btc-legend-selected {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btc-legend-vip {
+  background: var(--color-warning-50);
+  border-color: var(--color-warning-300);
+}
+
+.btc-legend-pmr {
+  background: var(--color-info-50);
+  border-color: var(--color-info-200);
+}
+
+/* ================================================
+   Responsive
+   ================================================ */
+@media (max-width: 991.98px) {
+  .btc-summary-sticky {
+    position: static;
+  }
+
+  .btc-bus {
+    max-width: 340px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .btc-bus {
+    max-width: 300px;
+  }
+
+  .btc-seat {
+    width: 34px;
+    height: 34px;
+    font-size: var(--font-size-2xs);
+  }
+
+  .btc-bus-aisle {
+    width: 20px;
+  }
+
+  .btc-seat-group {
+    gap: 3px;
+  }
+
+  .btc-bus-seats-area {
+    padding: var(--space-2);
+    gap: 3px;
+  }
+}
+
+/* ================================================
+   Print
+   ================================================ */
+@media print {
+  .btc-summary-sticky,
+  .btc-seat-tooltip {
+    display: none !important;
+  }
+}

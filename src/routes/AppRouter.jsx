@@ -23,6 +23,7 @@ const SessionExpired = lazy(() => import('@pages/Auth/SessionExpired'));
 /* Guest Pages */
 const HomePage = lazy(() => import('@pages/Home/HomePage'));
 const SearchResults = lazy(() => import('@pages/Booking/SearchResults'));
+const SeatSelection = lazy(() => import('@pages/Booking/SeatSelection'));
 
 /* Role Dashboards */
 const ClientDashboard = lazy(() => import('@pages/Client/Dashboard'));
@@ -55,6 +56,7 @@ const AppRouter = () => {
             </div>
           } />
           <Route path={ROUTES.BOOKING_SEARCH} element={<SearchResults />} />
+          <Route path={ROUTES.BOOKING_SEATS} element={<SeatSelection />} />
         </Route>
 
         {/* ================================================
