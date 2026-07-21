@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,7 +7,7 @@ import { Input, Button } from '@components/ui';
 import { AuthCard, AuthHeader } from '@components/auth';
 
 /**
- * VerifyEmailPage — Email verification with 6-digit code
+ * VerifyEmailPage — Rendered inside AuthLayout via <Outlet />
  */
 const VerifyEmailPage = () => {
   const location = useLocation();
@@ -34,112 +33,99 @@ const VerifyEmailPage = () => {
 
   if (verifyEmailSuccess) {
     return (
-      <div className="auth-layout__content">
-        <div className="auth-layout__content-inner">
-          <AuthCard>
-            <div className="auth-status">
-              <div className="auth-status__icon auth-status__icon--success">
-                <i className="bi bi-check-circle" />
-              </div>
-              <h2 className="auth-status__title">Email vérifié !</h2>
-              <p className="auth-status__text">
-                Votre compte a été activé avec succès. Vous pouvez maintenant vous connecter.
-              </p>
-              <Link to="/login" className="btn btn-primary btn-lg">
-                Se connecter
-              </Link>
-            </div>
-          </AuthCard>
+      <AuthCard>
+        <div className="auth-status">
+          <div className="auth-status__icon auth-status__icon--success">
+            <i className="bi bi-check-circle" />
+          </div>
+          <h2 className="auth-status__title">Email vérifié !</h2>
+          <p className="auth-status__text">
+            Votre compte a été activé avec succès. Vous pouvez maintenant vous connecter.
+          </p>
+          <Link to="/login" className="btn btn-primary btn-lg">
+            Se connecter
+          </Link>
         </div>
-      </div>
+      </AuthCard>
     );
   }
 
   return (
-    <div className="auth-layout__content">
-      <div className="auth-layout__content-inner">
-        <div className="auth-mobile-logo">
-          <div className="auth-mobile-logo__icon">
-            <i className="bi bi-bus-front-fill" />
-          </div>
-          <div className="auth-mobile-logo__text">Bus Tix Connect</div>
-        </div>
+    <>
+      <AuthCard>
+        <AuthHeader
+          title="Vérifier votre email"
+          subtitle={email
+            ? `Nous avons envoyé un code à 6 chiffres à ${email}`
+            : 'Entrez le code de vérification envoyé à votre email'
+          }
+        />
 
-        <AuthCard>
-          <AuthHeader
-            title="Vérifier votre email"
-            subtitle={email
-              ? `Nous avons envoyé un code à 6 chiffres à ${email}`
-              : 'Entrez le code de vérification envoyé à votre email'
-            }
+        <form onSubmit={handleSubmit(onSubmit)} className="auth-form" noValidate>
+          {verifyEmailError && (
+            <div className="auth-alert auth-alert--error" role="alert">
+              <i className="bi bi-exclamation-circle auth-alert__icon" />
+              <div className="auth-alert__content">
+                <p className="auth-alert__message">
+                  {verifyEmailError?.response?.data?.message || 'Code invalide ou expiré.'}
+                </p>
+              </div>
+            </div>
+          )}
+
+          <Input
+            label="Code de vérification"
+            name="code"
+            placeholder="000000"
+            autoComplete="one-time-code"
+            inputMode="numeric"
+            maxLength={6}
+            leftIcon={<i className="bi bi-shield-lock" />}
+            error={errors.code?.message}
+            disabled={isVerifying}
+            className="text-center"
+            style={{ fontSize: 'var(--font-size-2xl)', letterSpacing: '0.5em', fontWeight: 'var(--font-weight-semibold)' }}
+            required
+            {...register('code')}
           />
 
-          <form onSubmit={handleSubmit(onSubmit)} className="auth-form" noValidate>
-            {verifyEmailError && (
-              <div className="auth-alert auth-alert--error" role="alert">
-                <i className="bi bi-exclamation-circle auth-alert__icon" />
-                <div className="auth-alert__content">
-                  <p className="auth-alert__message">
-                    {verifyEmailError?.response?.data?.message || 'Code invalide ou expiré.'}
-                  </p>
-                </div>
-              </div>
-            )}
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            fullWidth
+            loading={isVerifying}
+            disabled={isVerifying}
+          >
+            Vérifier
+          </Button>
+        </form>
 
-            <Input
-              label="Code de vérification"
-              name="code"
-              placeholder="000000"
-              autoComplete="one-time-code"
-              inputMode="numeric"
-              maxLength={6}
-              leftIcon={<i className="bi bi-shield-lock" />}
-              error={errors.code?.message}
-              disabled={isVerifying}
-              className="text-center"
-              style={{ fontSize: 'var(--font-size-2xl)', letterSpacing: '0.5em', fontWeight: 'var(--font-weight-semibold)' }}
-              required
-              {...register('code')}
-            />
-
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              fullWidth
-              loading={isVerifying}
-              disabled={isVerifying}
-            >
-              Vérifier
-            </Button>
-          </form>
-
-          <div className="auth-form__divider">
-            <span>ou</span>
-          </div>
-
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={handleResend}
-              disabled={isResending}
-              className="btn btn-ghost btn-sm"
-            >
-              {isResending ? 'Envoi en cours...' : 'Renvoyer le code'}
-            </button>
-          </div>
-        </AuthCard>
-
-        <div className="auth-footer">
-          <p className="auth-footer__text">
-            <Link to="/login" className="auth-footer__link">
-              <i className="bi bi-arrow-left me-1" />
-              Retour à la connexion
-            </Link>
-          </p>
+        <div className="auth-form__divider">
+          <span>ou</span>
         </div>
+
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={handleResend}
+            disabled={isResending}
+            className="btn btn-ghost btn-sm"
+          >
+            {isResending ? 'Envoi en cours...' : 'Renvoyer le code'}
+          </button>
+        </div>
+      </AuthCard>
+
+      <div className="auth-footer">
+        <p className="auth-footer__text">
+          <Link to="/login" className="auth-footer__link">
+            <i className="bi bi-arrow-left me-1" />
+            Retour à la connexion
+          </Link>
+        </p>
       </div>
-    </div>
+    </>
   );
 };
 

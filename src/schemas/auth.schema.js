@@ -33,6 +33,11 @@ export const registerSchema = z.object({
     .string()
     .min(1, 'Le numéro de téléphone est requis')
     .regex(/^(\+?237)?[69]\d{8}$/, 'Numéro de téléphone camerounais invalide (ex: 6XX XXX XXX)'),
+  city: z
+    .string()
+    .min(1, 'La ville est requise')
+    .min(2, 'La ville doit contenir au moins 2 caractères')
+    .max(50, 'La ville ne peut pas dépasser 50 caractères'),
   email: z
     .string()
     .min(1, 'L\'email est requis')

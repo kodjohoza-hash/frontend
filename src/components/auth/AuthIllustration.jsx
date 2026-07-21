@@ -1,14 +1,30 @@
 /**
  * AuthIllustration — Left branding panel for auth split layout
+ * Premium design: logo, slogan, 6 advantages, 4 stats — no external images
  */
-const FEATURES = [
-  { icon: 'bi-shield-lock', title: 'Paiement sécurisé', text: 'Transactions 100% protégées' },
-  { icon: 'bi-qr-code-scan', title: 'Billet numérique', text: 'Recevez votre ticket instantanément' },
-  { icon: 'bi-headset', title: 'Support 24h/24', text: 'Une équipe toujours disponible' },
+
+const ADVANTAGES = [
+  { icon: 'bi-shield-lock', title: 'Paiement sécurisé', desc: 'Transactions 100% protégées' },
+  { icon: 'bi-qr-code-scan', title: 'Billet numérique', desc: 'Ticket instantané sur mobile' },
+  { icon: 'bi-headset', title: 'Support 24h/24', desc: 'Une équipe toujours disponible' },
+  { icon: 'bi-tag-heart', title: 'Meilleurs prix', desc: 'Comparez les meilleures offres' },
+  { icon: 'bi-geo-alt', title: 'Couverture nationale', desc: '+50 destinations au Cameroun' },
+  { icon: 'bi-lightning', title: 'Simple et rapide', desc: 'Réservez en 3 clics' },
+];
+
+const STATS = [
+  { value: '500K+', label: 'Voyageurs' },
+  { value: '50+', label: 'Compagnies' },
+  { value: '200+', label: 'Routes' },
+  { value: '4.8/5', label: 'Note' },
 ];
 
 const AuthIllustration = () => (
   <div className="auth-layout__sidebar">
+    <div className="auth-layout__orb auth-layout__orb--1" />
+    <div className="auth-layout__orb auth-layout__orb--2" />
+    <div className="auth-layout__orb auth-layout__orb--3" />
+
     <div className="auth-layout__sidebar-content">
       <div className="auth-layout__brand">
         <div className="auth-layout__brand-icon">
@@ -17,31 +33,29 @@ const AuthIllustration = () => (
         <span className="auth-layout__brand-name">Bus Tix Connect</span>
       </div>
 
-      <div className="auth-layout__hero-image">
-        <img
-          src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=600&h=450&fit=crop&q=80"
-          alt="Bus moderne de voyage au Cameroun"
-          loading="eager"
-        />
-      </div>
-
-      <h2 className="auth-layout__hero-title">
-        Voyagez à travers le Cameroun en toute confiance
-      </h2>
-      <p className="auth-layout__hero-text">
-        Réservez vos billets de bus en ligne, comparez les compagnies et payez en toute sécurité.
+      <p className="auth-layout__slogan">
+        Votre passerelle vers tout le Cameroun
       </p>
 
-      <div className="auth-layout__features">
-        {FEATURES.map((feature) => (
-          <div key={feature.icon} className="auth-layout__feature">
-            <div className="auth-layout__feature-icon">
-              <i className={`bi ${feature.icon}`} />
+      <div className="auth-layout__advantages">
+        {ADVANTAGES.map((item) => (
+          <div key={item.icon} className="auth-layout__advantage">
+            <div className="auth-layout__advantage-icon">
+              <i className={`bi ${item.icon}`} />
             </div>
-            <div className="auth-layout__feature-text">
-              <h4>{feature.title}</h4>
-              <p>{feature.text}</p>
+            <div className="auth-layout__advantage-text">
+              <h4>{item.title}</h4>
+              <p>{item.desc}</p>
             </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="auth-layout__stats">
+        {STATS.map((stat) => (
+          <div key={stat.label} className="auth-layout__stat">
+            <span className="auth-layout__stat-value">{stat.value}</span>
+            <span className="auth-layout__stat-label">{stat.label}</span>
           </div>
         ))}
       </div>

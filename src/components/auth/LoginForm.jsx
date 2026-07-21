@@ -96,6 +96,7 @@ const LoginForm = () => {
         fullWidth
         loading={isLoggingIn}
         disabled={isLoggingIn}
+        leftIcon={!isLoggingIn ? <i className="bi bi-box-arrow-in-right" /> : undefined}
       >
         Se connecter
       </Button>

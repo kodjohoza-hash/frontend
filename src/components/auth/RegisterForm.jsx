@@ -24,6 +24,7 @@ const RegisterForm = () => {
       lastName: '',
       firstName: '',
       phone: '',
+      city: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -76,6 +77,7 @@ const RegisterForm = () => {
           name="lastName"
           placeholder="Votre nom"
           autoComplete="family-name"
+          leftIcon={<i className="bi bi-person" />}
           error={errors.lastName?.message}
           disabled={isRegistering}
           required
@@ -87,6 +89,7 @@ const RegisterForm = () => {
           name="firstName"
           placeholder="Votre prénom"
           autoComplete="given-name"
+          leftIcon={<i className="bi bi-person" />}
           error={errors.firstName?.message}
           disabled={isRegistering}
           required
@@ -105,6 +108,18 @@ const RegisterForm = () => {
         disabled={isRegistering}
         required
         {...register('phone')}
+      />
+
+      <Input
+        label="Ville"
+        name="city"
+        placeholder="Ex: Douala, Yaoundé..."
+        autoComplete="address-level2"
+        leftIcon={<i className="bi bi-geo-alt" />}
+        error={errors.city?.message}
+        disabled={isRegistering}
+        required
+        {...register('city')}
       />
 
       <Input
