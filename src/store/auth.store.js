@@ -1,10 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { ROLES } from '@utils/roles';
+import { PERMISSIONS, hasAllPermissions as checkAllPermissions, hasAnyPermission as checkAnyPermission } from '@utils/permissions';
 
 /**
  * BUS TIX CONNECT — Auth Store (Zustand + Persist)
- * Handles: user, token, refreshToken, role, permissions, loading, isAuthenticated
- * Persists: token + refreshToken to localStorage (key: btc-auth)
+ * Complete RBAC-aware auth state management
+ * Persists: token + refreshToken + sessionExpiresAt to localStorage (key: btc-auth)
  */
 const useAuthStore = create(
   persist(
@@ -22,7 +24,7 @@ const useAuthStore = create(
       sessionExpiresAt: null,
 
       /* ================================================
-         COMPUTED
+         SESSION COMPUTED
          ================================================ */
       get isSessionExpired() {
         const expires = get().sessionExpiresAt;
@@ -31,7 +33,7 @@ const useAuthStore = create(
       },
 
       /* ================================================
-         ACTIONS
+         AUTH ACTIONS
          ================================================ */
       setToken: (token) => set({ token, isAuthenticated: !!token }),
 
@@ -79,6 +81,8 @@ const useAuthStore = create(
         user: { ...state.user, ...userData },
       })),
 
+      setPermissions: (permissions) => set({ permissions }),
+
       clearSession: () => set({
         token: null,
         refreshToken: null,
@@ -89,11 +93,59 @@ const useAuthStore = create(
         sessionExpiresAt: null,
       }),
 
+      /* ================================================
+         RBAC HELPERS
+         ================================================ */
+
+      /** Check if user has a specific role */
       hasRole: (role) => get().role === role,
 
+      /** Check if user has any of the given roles */
+      hasAnyRole: (roles) => roles.includes(get().role),
+
+      /** Check if user has all given roles */
+      hasAllRoles: (roles) => roles.every((r) => get().role === r),
+
+      /** Check if user has a specific permission */
       hasPermission: (permission) => get().permissions.includes(permission),
 
-      hasAnyRole: (roles) => roles.includes(get().role),
+      /** Check if user has ALL of the given permissions */
+      hasAllPermissions: (required) => checkAllPermissions(get().permissions, required),
+
+      /** Check if user has ANY of the given permissions */
+      hasAnyPermission: (required) => checkAnyPermission(get().permissions, required),
+
+      /** Check if user can access a route (role + permissions) */
+      canAccess: ({ roles = [], permissions = [] }) => {
+        const state = get();
+        if (!state.isAuthenticated) return false;
+
+        /* Super admin bypasses all checks */
+        if (state.role === ROLES.SUPER_ADMIN) return true;
+
+        /* Check role */
+        if (roles.length > 0 && !roles.includes(state.role)) return false;
+
+        /* Check permissions */
+        if (permissions.length > 0) {
+          const hasAll = permissions.every((p) => state.permissions.includes(p));
+          if (!hasAll) return false;
+        }
+
+        return true;
+      },
+
+      /** Convenience: is the user a super admin? */
+      isSuperAdmin: () => get().role === ROLES.SUPER_ADMIN,
+
+      /** Convenience: is the user a client? */
+      isClient: () => get().role === ROLES.CLIENT,
+
+      /** Convenience: is the user a company admin? */
+      isCompanyAdmin: () => get().role === ROLES.COMPANY_ADMIN,
+
+      /** Convenience: is the user a counter agent? */
+      isCounterAgent: () => get().role === ROLES.COUNTER_AGENT,
     }),
     {
       name: 'btc-auth',

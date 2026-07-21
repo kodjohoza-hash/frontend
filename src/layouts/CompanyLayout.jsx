@@ -3,19 +3,20 @@ import { Outlet } from 'react-router-dom';
 import Navbar from '@components/layout/Navbar';
 import Sidebar from '@components/layout/Sidebar';
 import Footer from '@components/layout/Footer';
-import { companyMenu } from '@components/layout/menuItems';
+import { useNavigation } from '@hooks/useNavigation';
 
 /**
  * CompanyLayout — Layout pour l'espace compagnie
- * Structure: Sidebar → (Navbar + Content + Footer)
+ * Uses dynamic navigation filtered by role + permissions
  */
 const CompanyLayout = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { menuItems } = useNavigation();
 
   return (
     <div className="btc-layout">
       <Sidebar
-        items={companyMenu}
+        items={menuItems}
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
       />

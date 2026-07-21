@@ -1,0 +1,268 @@
+/**
+ * BUS TIX CONNECT — Permission Constants
+ * Granular permission definitions for RBAC
+ * Format: resource.action (dot notation)
+ * NEVER use string literals — always import from this file
+ */
+
+/* ================================================
+   PERMISSION RESOURCES & ACTIONS
+   ================================================ */
+
+export const RESOURCES = {
+  PROFILE: 'profile',
+  BOOKINGS: 'bookings',
+  TICKETS: 'tickets',
+  PAYMENTS: 'payments',
+  TRIPS: 'trips',
+  BUSES: 'buses',
+  DRIVERS: 'drivers',
+  ROUTES: 'routes',
+  COUNTERS: 'counters',
+  COMPANIES: 'companies',
+  USERS: 'users',
+  ROLES: 'roles',
+  REPORTS: 'reports',
+  SETTINGS: 'settings',
+  NOTIFICATIONS: 'notifications',
+  DASHBOARD: 'dashboard',
+  SEARCH: 'search',
+  AGENCIES: 'agencies',
+};
+
+export const ACTIONS = {
+  VIEW: 'view',
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
+  MANAGE: 'manage',
+  BOOK: 'book',
+  CANCEL: 'cancel',
+  SELL: 'sell',
+  PRINT: 'print',
+  EXPORT: 'export',
+  SEARCH: 'search',
+  APPROVE: 'approve',
+};
+
+/* ================================================
+   INDIVIDUAL PERMISSIONS
+   ================================================ */
+
+export const PERMISSIONS = {
+  /* Profile */
+  PROFILE_VIEW: `${RESOURCES.PROFILE}.${ACTIONS.VIEW}`,
+  PROFILE_UPDATE: `${RESOURCES.PROFILE}.${ACTIONS.UPDATE}`,
+
+  /* Bookings */
+  BOOKINGS_VIEW: `${RESOURCES.BOOKINGS}.${ACTIONS.READ}`,
+  BOOKINGS_CREATE: `${RESOURCES.BOOKINGS}.${ACTIONS.CREATE}`,
+  BOOKINGS_CANCEL: `${RESOURCES.BOOKINGS}.${ACTIONS.CANCEL}`,
+  BOOKINGS_MANAGE: `${RESOURCES.BOOKINGS}.${ACTIONS.MANAGE}`,
+
+  /* Tickets */
+  TICKETS_VIEW: `${RESOURCES.TICKETS}.${ACTIONS.READ}`,
+  TICKETS_PRINT: `${RESOURCES.TICKETS}.${ACTIONS.PRINT}`,
+  TICKETS_MANAGE: `${RESOURCES.TICKETS}.${ACTIONS.MANAGE}`,
+
+  /* Payments */
+  PAYMENTS_VIEW: `${RESOURCES.PAYMENTS}.${ACTIONS.READ}`,
+  PAYMENTS_CREATE: `${RESOURCES.PAYMENTS}.${ACTIONS.CREATE}`,
+  PAYMENTS_MANAGE: `${RESOURCES.PAYMENTS}.${ACTIONS.MANAGE}`,
+
+  /* Trips */
+  TRIPS_VIEW: `${RESOURCES.TRIPS}.${ACTIONS.READ}`,
+  TRIPS_CREATE: `${RESOURCES.TRIPS}.${ACTIONS.CREATE}`,
+  TRIPS_UPDATE: `${RESOURCES.TRIPS}.${ACTIONS.UPDATE}`,
+  TRIPS_DELETE: `${RESOURCES.TRIPS}.${ACTIONS.DELETE}`,
+  TRIPS_MANAGE: `${RESOURCES.TRIPS}.${ACTIONS.MANAGE}`,
+
+  /* Buses */
+  BUSES_VIEW: `${RESOURCES.BUSES}.${ACTIONS.READ}`,
+  BUSES_CREATE: `${RESOURCES.BUSES}.${ACTIONS.CREATE}`,
+  BUSES_UPDATE: `${RESOURCES.BUSES}.${ACTIONS.UPDATE}`,
+  BUSES_DELETE: `${RESOURCES.BUSES}.${ACTIONS.DELETE}`,
+  BUSES_MANAGE: `${RESOURCES.BUSES}.${ACTIONS.MANAGE}`,
+
+  /* Drivers */
+  DRIVERS_VIEW: `${RESOURCES.DRIVERS}.${ACTIONS.READ}`,
+  DRIVERS_CREATE: `${RESOURCES.DRIVERS}.${ACTIONS.CREATE}`,
+  DRIVERS_UPDATE: `${RESOURCES.DRIVERS}.${ACTIONS.UPDATE}`,
+  DRIVERS_DELETE: `${RESOURCES.DRIVERS}.${ACTIONS.DELETE}`,
+  DRIVERS_MANAGE: `${RESOURCES.DRIVERS}.${ACTIONS.MANAGE}`,
+
+  /* Routes (transport routes) */
+  TRANSPORT_ROUTES_VIEW: `${RESOURCES.ROUTES}.${ACTIONS.READ}`,
+  TRANSPORT_ROUTES_CREATE: `${RESOURCES.ROUTES}.${ACTIONS.CREATE}`,
+  TRANSPORT_ROUTES_UPDATE: `${RESOURCES.ROUTES}.${ACTIONS.UPDATE}`,
+  TRANSPORT_ROUTES_DELETE: `${RESOURCES.ROUTES}.${ACTIONS.DELETE}`,
+  TRANSPORT_ROUTES_MANAGE: `${RESOURCES.ROUTES}.${ACTIONS.MANAGE}`,
+
+  /* Counters */
+  COUNTERS_VIEW: `${RESOURCES.COUNTERS}.${ACTIONS.READ}`,
+  COUNTERS_CREATE: `${RESOURCES.COUNTERS}.${ACTIONS.CREATE}`,
+  COUNTERS_UPDATE: `${RESOURCES.COUNTERS}.${ACTIONS.UPDATE}`,
+  COUNTERS_DELETE: `${RESOURCES.COUNTERS}.${ACTIONS.DELETE}`,
+  COUNTERS_MANAGE: `${RESOURCES.COUNTERS}.${ACTIONS.MANAGE}`,
+
+  /* Agencies */
+  AGENCIES_VIEW: `${RESOURCES.AGENCIES}.${ACTIONS.READ}`,
+  AGENCIES_CREATE: `${RESOURCES.AGENCIES}.${ACTIONS.CREATE}`,
+  AGENCIES_UPDATE: `${RESOURCES.AGENCIES}.${ACTIONS.UPDATE}`,
+  AGENCIES_DELETE: `${RESOURCES.AGENCIES}.${ACTIONS.DELETE}`,
+  AGENCIES_MANAGE: `${RESOURCES.AGENCIES}.${ACTIONS.MANAGE}`,
+
+  /* Companies */
+  COMPANIES_VIEW: `${RESOURCES.COMPANIES}.${ACTIONS.READ}`,
+  COMPANIES_CREATE: `${RESOURCES.COMPANIES}.${ACTIONS.CREATE}`,
+  COMPANIES_UPDATE: `${RESOURCES.COMPANIES}.${ACTIONS.UPDATE}`,
+  COMPANIES_DELETE: `${RESOURCES.COMPANIES}.${ACTIONS.DELETE}`,
+  COMPANIES_MANAGE: `${RESOURCES.COMPANIES}.${ACTIONS.MANAGE}`,
+
+  /* Users */
+  USERS_VIEW: `${RESOURCES.USERS}.${ACTIONS.READ}`,
+  USERS_CREATE: `${RESOURCES.USERS}.${ACTIONS.CREATE}`,
+  USERS_UPDATE: `${RESOURCES.USERS}.${ACTIONS.UPDATE}`,
+  USERS_DELETE: `${RESOURCES.USERS}.${ACTIONS.DELETE}`,
+  USERS_MANAGE: `${RESOURCES.USERS}.${ACTIONS.MANAGE}`,
+
+  /* Roles */
+  ROLES_VIEW: `${RESOURCES.ROLES}.${ACTIONS.READ}`,
+  ROLES_MANAGE: `${RESOURCES.ROLES}.${ACTIONS.MANAGE}`,
+
+  /* Reports */
+  REPORTS_VIEW: `${RESOURCES.REPORTS}.${ACTIONS.READ}`,
+  REPORTS_EXPORT: `${RESOURCES.REPORTS}.${ACTIONS.EXPORT}`,
+  REPORTS_MANAGE: `${RESOURCES.REPORTS}.${ACTIONS.MANAGE}`,
+
+  /* Settings */
+  SETTINGS_VIEW: `${RESOURCES.SETTINGS}.${ACTIONS.READ}`,
+  SETTINGS_MANAGE: `${RESOURCES.SETTINGS}.${ACTIONS.MANAGE}`,
+
+  /* Notifications */
+  NOTIFICATIONS_VIEW: `${RESOURCES.NOTIFICATIONS}.${ACTIONS.READ}`,
+
+  /* Dashboard */
+  DASHBOARD_VIEW: `${RESOURCES.DASHBOARD}.${ACTIONS.VIEW}`,
+
+  /* Search */
+  SEARCH_TRIPS: `${RESOURCES.SEARCH}.${ACTIONS.READ}`,
+};
+
+/* ================================================
+   ROLE → PERMISSIONS MAP
+   ================================================ */
+
+import { ROLES } from './roles';
+
+export const ROLE_PERMISSIONS = {
+  /* CLIENT — Consulter, réserver, payer */
+  [ROLES.CLIENT]: [
+    PERMISSIONS.PROFILE_VIEW,
+    PERMISSIONS.PROFILE_UPDATE,
+    PERMISSIONS.BOOKINGS_VIEW,
+    PERMISSIONS.BOOKINGS_CREATE,
+    PERMISSIONS.BOOKINGS_CANCEL,
+    PERMISSIONS.TICKETS_VIEW,
+    PERMISSIONS.PAYMENTS_VIEW,
+    PERMISSIONS.NOTIFICATIONS_VIEW,
+    PERMISSIONS.DASHBOARD_VIEW,
+    PERMISSIONS.SEARCH_TRIPS,
+    PERMISSIONS.TRIPS_VIEW,
+  ],
+
+  /* COMPANY_ADMIN — Gestion complète de sa compagnie */
+  [ROLES.COMPANY_ADMIN]: [
+    PERMISSIONS.PROFILE_VIEW,
+    PERMISSIONS.PROFILE_UPDATE,
+    PERMISSIONS.DASHBOARD_VIEW,
+    PERMISSIONS.AGENCIES_VIEW,
+    PERMISSIONS.AGENCIES_CREATE,
+    PERMISSIONS.AGENCIES_UPDATE,
+    PERMISSIONS.AGENCIES_DELETE,
+    PERMISSIONS.TRIPS_VIEW,
+    PERMISSIONS.TRIPS_CREATE,
+    PERMISSIONS.TRIPS_UPDATE,
+    PERMISSIONS.TRIPS_DELETE,
+    PERMISSIONS.BUSES_VIEW,
+    PERMISSIONS.BUSES_CREATE,
+    PERMISSIONS.BUSES_UPDATE,
+    PERMISSIONS.BUSES_DELETE,
+    PERMISSIONS.DRIVERS_VIEW,
+    PERMISSIONS.DRIVERS_CREATE,
+    PERMISSIONS.DRIVERS_UPDATE,
+    PERMISSIONS.DRIVERS_DELETE,
+    PERMISSIONS.BOOKINGS_VIEW,
+    PERMISSIONS.PAYMENTS_VIEW,
+    PERMISSIONS.COUNTERS_VIEW,
+    PERMISSIONS.COUNTERS_CREATE,
+    PERMISSIONS.COUNTERS_UPDATE,
+    PERMISSIONS.COUNTERS_DELETE,
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_EXPORT,
+    PERMISSIONS.SETTINGS_VIEW,
+    PERMISSIONS.SETTINGS_MANAGE,
+    PERMISSIONS.NOTIFICATIONS_VIEW,
+  ],
+
+  /* COUNTER_AGENT — Vente en guichet */
+  [ROLES.COUNTER_AGENT]: [
+    PERMISSIONS.PROFILE_VIEW,
+    PERMISSIONS.PROFILE_UPDATE,
+    PERMISSIONS.DASHBOARD_VIEW,
+    PERMISSIONS.BOOKINGS_VIEW,
+    PERMISSIONS.BOOKINGS_CREATE,
+    PERMISSIONS.TICKETS_VIEW,
+    PERMISSIONS.TICKETS_PRINT,
+    PERMISSIONS.PAYMENTS_VIEW,
+    PERMISSIONS.PAYMENTS_CREATE,
+    PERMISSIONS.TRIPS_VIEW,
+    PERMISSIONS.SEARCH_TRIPS,
+    PERMISSIONS.NOTIFICATIONS_VIEW,
+  ],
+
+  /* SUPER_ADMIN — Accès total */
+  [ROLES.SUPER_ADMIN]: Object.values(PERMISSIONS),
+};
+
+/* ================================================
+   PERMISSION CHECK HELPERS
+   ================================================ */
+
+/**
+ * Check if a set of permissions includes a specific permission
+ */
+export const hasPermission = (userPermissions, permission) => {
+  return userPermissions.includes(permission);
+};
+
+/**
+ * Check if a set of permissions includes ALL required permissions
+ */
+export const hasAllPermissions = (userPermissions, required = []) => {
+  return required.every((perm) => userPermissions.includes(perm));
+};
+
+/**
+ * Check if a set of permissions includes ANY of the required permissions
+ */
+export const hasAnyPermission = (userPermissions, required = []) => {
+  return required.some((perm) => userPermissions.includes(perm));
+};
+
+/**
+ * Get all permissions for a role
+ */
+export const getRolePermissions = (role) => {
+  return ROLE_PERMISSIONS[role] || [];
+};
+
+/**
+ * Check if a role has a specific permission
+ */
+export const roleHasPermission = (role, permission) => {
+  return getRolePermissions(role).includes(permission);
+};
+
+export default PERMISSIONS;
