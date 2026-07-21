@@ -1,8 +1,8 @@
-import { AuthCard, AuthHeader, AuthIllustration, RegisterForm } from '@components/auth';
+import { AuthCard, AuthHeader, AuthLeftPanel, RegisterForm } from '@components/auth';
 
 const RegisterPage = () => (
   <>
-    <AuthIllustration />
+    <AuthLeftPanel />
     <div className="auth-right">
       <div className="auth-right__inner">
         <div className="auth-mobile-logo">

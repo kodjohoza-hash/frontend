@@ -74,85 +74,39 @@ const RegisterForm = () => {
       )}
 
       <div className="auth-form__row">
-        <AuthInput
-          label="Nom"
-          name="lastName"
-          placeholder="Votre nom"
-          leftIcon={<i className="bi bi-person-fill" />}
-          error={errors.lastName?.message}
-          disabled={isRegistering}
-          required
-          {...register('lastName')}
-        />
-        <AuthInput
-          label="Prénom"
-          name="firstName"
-          placeholder="Votre prénom"
-          leftIcon={<i className="bi bi-person-fill" />}
-          error={errors.firstName?.message}
-          disabled={isRegistering}
-          required
-          {...register('firstName')}
-        />
+        <AuthInput label="Nom" name="lastName" placeholder="Votre nom"
+          leftIcon={<i className="bi bi-person-fill" />} error={errors.lastName?.message}
+          disabled={isRegistering} required {...register('lastName')} />
+        <AuthInput label="Prénom" name="firstName" placeholder="Votre prénom"
+          leftIcon={<i className="bi bi-person-fill" />} error={errors.firstName?.message}
+          disabled={isRegistering} required {...register('firstName')} />
       </div>
 
-      <AuthInput
-        label="Téléphone"
-        type="tel"
-        name="phone"
-        placeholder="6XX XXX XXX"
-        leftIcon={<i className="bi bi-telephone-fill" />}
-        error={errors.phone?.message}
-        disabled={isRegistering}
-        required
-        {...register('phone')}
-      />
+      <AuthInput label="Téléphone" type="tel" name="phone" placeholder="6XX XXX XXX"
+        leftIcon={<i className="bi bi-telephone-fill" />} error={errors.phone?.message}
+        disabled={isRegistering} required {...register('phone')} />
 
-      <AuthInput
-        label="Adresse email"
-        type="email"
-        name="email"
-        placeholder="votre@email.com"
-        leftIcon={<i className="bi bi-envelope-fill" />}
-        error={errors.email?.message}
-        disabled={isRegistering}
-        required
-        {...register('email')}
-      />
+      <AuthInput label="Adresse email" type="email" name="email" placeholder="votre@email.com"
+        leftIcon={<i className="bi bi-envelope-fill" />} error={errors.email?.message}
+        disabled={isRegistering} required {...register('email')} />
 
-      <AuthPasswordInput
-        label="Mot de passe"
-        name="password"
-        placeholder="Minimum 8 caractères"
-        leftIcon={<i className="bi bi-lock-fill" />}
-        error={errors.password?.message}
-        disabled={isRegistering}
-        required
-        {...register('password')}
-      />
+      <AuthPasswordInput label="Mot de passe" name="password" placeholder="Minimum 8 caractères"
+        leftIcon={<i className="bi bi-lock-fill" />} error={errors.password?.message}
+        disabled={isRegistering} required {...register('password')} />
 
       {password && (
         <div className="password-strength">
           {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className={`password-strength__bar ${i <= strength.level ? `password-strength__bar--active ${strength.className}` : ''}`}
-            />
+            <div key={i} className={`password-strength__bar ${i <= strength.level ? `password-strength__bar--active ${strength.className}` : ''}`} />
           ))}
           <span className="password-strength__label">{strength.label}</span>
         </div>
       )}
 
-      <AuthPasswordInput
-        label="Confirmer le mot de passe"
-        name="confirmPassword"
-        placeholder="Retapez votre mot de passe"
-        leftIcon={<i className="bi bi-lock-fill" />}
-        error={errors.confirmPassword?.message}
-        disabled={isRegistering}
-        required
-        {...register('confirmPassword')}
-      />
+      <AuthPasswordInput label="Confirmer le mot de passe" name="confirmPassword"
+        placeholder="Retapez votre mot de passe" leftIcon={<i className="bi bi-lock-fill" />}
+        error={errors.confirmPassword?.message} disabled={isRegistering} required
+        {...register('confirmPassword')} />
 
       <div className="auth-form__row">
         <div className="auth-field">
@@ -160,45 +114,28 @@ const RegisterForm = () => {
             Pays<span className="auth-field__required">*</span>
           </label>
           <div className="auth-field__wrapper">
-            <span className="auth-field__icon auth-field__icon--left">
-              <i className="bi bi-globe2" />
-            </span>
-            <select
-              id="auth-input-country"
-              className="auth-field__input auth-field__input--has-left"
-              disabled={isRegistering}
-              style={{ cursor: 'pointer', appearance: 'none' }}
-              {...register('country')}
-            >
+            <span className="auth-field__icon auth-field__icon--left"><i className="bi bi-globe2" /></span>
+            <select id="auth-input-country" className="auth-field__input auth-field__input--has-left"
+              disabled={isRegistering} style={{ cursor: 'pointer', appearance: 'none' }}
+              {...register('country')}>
               {COUNTRIES.map((c) => (
                 <option key={c.value} value={c.value}>{c.label}</option>
               ))}
             </select>
           </div>
-          {errors.country?.message && (
-            <p className="auth-field__error">{errors.country.message}</p>
-          )}
+          {errors.country?.message && <p className="auth-field__error">{errors.country.message}</p>}
         </div>
 
-        <AuthInput
-          label="Ville"
-          name="city"
-          placeholder="Ex: Douala, Yaoundé..."
-          leftIcon={<i className="bi bi-geo-alt-fill" />}
-          error={errors.city?.message}
-          disabled={isRegistering}
-          required
-          {...register('city')}
-        />
+        <AuthInput label="Ville" name="city" placeholder="Ex: Douala, Yaoundé..."
+          leftIcon={<i className="bi bi-geo-alt-fill" />} error={errors.city?.message}
+          disabled={isRegistering} required {...register('city')} />
       </div>
 
       <div className="auth-terms">
         <input type="checkbox" id="acceptsTerms" disabled={isRegistering} {...register('acceptsTerms')} />
         <label htmlFor="acceptsTerms" className="auth-terms__label">
-          J'accepte les{' '}
-          <a href="/conditions" target="_blank" rel="noopener noreferrer">conditions d'utilisation</a>
-          {' '}et la{' '}
-          <a href="/politique" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>
+          J'accepte les <a href="/conditions" target="_blank" rel="noopener noreferrer">conditions d'utilisation</a>
+          {' '}et la <a href="/politique" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>
         </label>
       </div>
       {errors.acceptsTerms?.message && (
@@ -211,10 +148,8 @@ const RegisterForm = () => {
       </button>
 
       <p className="auth-form__alt">
-        Déjà un compte ?{' '}
-        <Link to="/login" className="auth-form__alt-link">
-          Se connecter
-        </Link>
+        Déjà inscrit ?{' '}
+        <Link to="/login" className="auth-form__alt-link">Se connecter</Link>
       </p>
     </form>
   );

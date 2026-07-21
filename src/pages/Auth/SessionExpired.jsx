@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import useAuth from '@hooks/useAuth';
-import { AuthCard, AuthIllustration } from '@components/auth';
+import { AuthCard, AuthLeftPanel } from '@components/auth';
 
 const SessionExpiredPage = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const SessionExpiredPage = () => {
 
   return (
     <>
-      <AuthIllustration />
+      <AuthLeftPanel />
       <div className="auth-right">
         <div className="auth-right__inner">
           <div className="auth-mobile-logo">
@@ -22,13 +22,9 @@ const SessionExpiredPage = () => {
           </div>
           <AuthCard>
             <div className="auth-status">
-              <div className="auth-status__icon auth-status__icon--warning">
-                <i className="bi bi-clock-history" />
-              </div>
+              <div className="auth-status__icon auth-status__icon--warning"><i className="bi bi-clock-history" /></div>
               <h2 className="auth-status__title">Session expirée</h2>
-              <p className="auth-status__text">
-                Votre session a expiré pour des raisons de sécurité. Veuillez vous reconnecter.
-              </p>
+              <p className="auth-status__text">Votre session a expiré. Veuillez vous reconnecter.</p>
               <button className="btn btn-primary" style={{ width: '100%', height: 56, borderRadius: 16, fontSize: 'var(--font-size-sm)', fontWeight: 600 }} onClick={handleLogin}>
                 Se reconnecter
               </button>

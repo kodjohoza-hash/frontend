@@ -1,10 +1,10 @@
 /**
- * SocialLogin — Google & Facebook login buttons with divider
+ * SocialLogin — Google & Facebook login buttons with "OU CONTINUER AVEC" divider
  */
 const SocialLogin = () => (
   <div className="auth-social">
     <div className="auth-social__divider">
-      <span>ou</span>
+      <span>ou continuer avec</span>
     </div>
 
     <div className="auth-social__buttons">

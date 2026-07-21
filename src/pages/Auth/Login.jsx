@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { AuthCard, AuthHeader, AuthIllustration, LoginForm } from '@components/auth';
+import { AuthCard, AuthHeader, AuthLeftPanel, LoginForm } from '@components/auth';
 
 const LoginPage = () => (
   <>
-    <AuthIllustration />
+    <AuthLeftPanel />
     <div className="auth-right">
       <div className="auth-right__inner">
         <div className="auth-mobile-logo">
@@ -14,7 +14,7 @@ const LoginPage = () => (
           <AuthHeader
             icon={<i className="bi bi-bus-front-fill" />}
             title="Bienvenue !"
-            subtitle="Connectez-vous à votre compte pour continuer."
+            subtitle="Connectez-vous à votre compte."
           />
           <LoginForm />
         </AuthCard>

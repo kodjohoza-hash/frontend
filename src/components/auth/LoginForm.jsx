@@ -78,11 +78,7 @@ const LoginForm = () => {
         </Link>
       </div>
 
-      <button
-        type="submit"
-        className="btn btn-primary"
-        disabled={isLoggingIn}
-      >
+      <button type="submit" className="btn btn-primary" disabled={isLoggingIn}>
         {isLoggingIn && <span className="spinner-border spinner-border-sm" />}
         Se connecter
       </button>
@@ -90,7 +86,7 @@ const LoginForm = () => {
       <SocialLogin />
 
       <p className="auth-form__alt">
-        Vous n'avez pas encore de compte ?{' '}
+        Pas encore inscrit ?{' '}
         <Link to="/register" className="auth-form__alt-link">
           Créer un compte
         </Link>

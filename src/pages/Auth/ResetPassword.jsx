@@ -1,8 +1,8 @@
-import { AuthCard, AuthHeader, AuthIllustration, ResetPasswordForm } from '@components/auth';
+import { AuthCard, AuthHeader, AuthLeftPanel, ResetPasswordForm } from '@components/auth';
 
 const ResetPasswordPage = () => (
   <>
-    <AuthIllustration />
+    <AuthLeftPanel />
     <div className="auth-right">
       <div className="auth-right__inner">
         <div className="auth-mobile-logo">
@@ -13,7 +13,7 @@ const ResetPasswordPage = () => (
           <AuthHeader
             icon={<i className="bi bi-shield-lock-fill" />}
             title="Nouveau mot de passe"
-            subtitle="Choisissez un mot de passe sécurisé pour votre compte"
+            subtitle="Choisissez un mot de passe sécurisé"
           />
           <ResetPasswordForm />
         </AuthCard>
