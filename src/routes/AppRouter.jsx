@@ -25,6 +25,7 @@ const HomePage = lazy(() => import('@pages/Home/HomePage'));
 const SearchResults = lazy(() => import('@pages/Booking/SearchResults'));
 const SeatSelection = lazy(() => import('@pages/Booking/SeatSelection'));
 const PaymentPage = lazy(() => import('@pages/Booking/PaymentPage'));
+const ConfirmationPage = lazy(() => import('@pages/Booking/ConfirmationPage'));
 
 /* Role Dashboards */
 const ClientDashboard = lazy(() => import('@pages/Client/Dashboard'));
@@ -59,6 +60,7 @@ const AppRouter = () => {
           <Route path={ROUTES.BOOKING_SEARCH} element={<SearchResults />} />
           <Route path={ROUTES.BOOKING_SEATS} element={<SeatSelection />} />
           <Route path={ROUTES.BOOKING_PAYMENT} element={<PaymentPage />} />
+          <Route path={ROUTES.BOOKING_CONFIRMATION} element={<ConfirmationPage />} />
         </Route>
 
         {/* ================================================

@@ -1,0 +1,271 @@
+/* ================================================
+   BUS TIX CONNECT — Booking Confirmation & E-Ticket
+   ================================================ */
+
+/* ================================================
+   Page wrapper
+   ================================================ */
+.btc-confirm-page {
+  padding: 3rem 0 4rem;
+  background: var(--color-gray-50);
+  min-height: calc(100vh - 160px);
+}
+
+/* ================================================
+   Stepper
+   ================================================ */
+.btc-confirm-step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-gray-100);
+  color: var(--color-gray-400);
+  border: 2px solid var(--color-gray-200);
+  transition: all 0.3s var(--ease-out);
+}
+
+.btc-step-completed {
+  background: var(--color-success);
+  color: var(--color-white);
+  border-color: var(--color-success);
+}
+
+/* ================================================
+   Success card animation
+   ================================================ */
+.btc-success-card {
+  overflow: hidden;
+}
+
+.btc-success-icon {
+  animation: btcSuccessBounce 0.6s var(--ease-out);
+}
+
+.btc-success-check-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--color-success);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 0 0 8px rgba(25, 135, 84, 0.15), 0 0 0 16px rgba(25, 135, 84, 0.06);
+}
+
+@keyframes btcSuccessBounce {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.1); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Info pills */
+.btc-confirm-info-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--color-gray-50);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ================================================
+   Status badge
+   ================================================ */
+.btc-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.btc-status-confirmed {
+  background: rgba(25, 135, 84, 0.1);
+  color: var(--color-success);
+}
+
+.btc-status-pending {
+  background: rgba(255, 193, 7, 0.12);
+  color: var(--color-warning);
+}
+
+.btc-status-cancelled {
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--color-danger);
+}
+
+.btc-status-refunded {
+  background: rgba(13, 110, 253, 0.1);
+  color: var(--color-info);
+}
+
+/* ================================================
+   E-Ticket — Official document look
+   ================================================ */
+.btc-eticket {
+  border: 2px solid var(--color-gray-200);
+  position: relative;
+  overflow: hidden;
+}
+
+.btc-eticket::before,
+.btc-eticket::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-gray-50);
+  z-index: 1;
+}
+
+.btc-eticket::before {
+  left: -12px;
+}
+
+.btc-eticket::after {
+  right: -12px;
+}
+
+/* Perforation (tear-off line) */
+.btc-perforation {
+  border: none;
+  border-top: 2px dashed var(--color-gray-200);
+  width: calc(100% - 40px);
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ================================================
+   Seat badges
+   ================================================ */
+.btc-seat-badge {
+  transition: transform 0.15s var(--ease-out);
+}
+
+.btc-seat-badge:hover {
+  transform: scale(1.05);
+}
+
+/* ================================================
+   QR code placeholder
+   ================================================ */
+.btc-qr-placeholder svg {
+  display: block;
+}
+
+/* ================================================
+   Barcode
+   ================================================ */
+.btc-barcode-placeholder svg {
+  display: block;
+}
+
+/* ================================================
+   Print styles
+   ================================================ */
+@media print {
+  .btc-confirm-page {
+    background: white;
+    padding: 0;
+    min-height: auto;
+  }
+
+  .btc-confirm-stepper,
+  .btc-eticket + .d-flex,
+  .btc-print-exclude {
+    display: none !important;
+  }
+
+  .btc-print-only {
+    display: block !important;
+  }
+
+  .btc-eticket {
+    border: 2px solid var(--color-gray-300);
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .btc-success-icon {
+    animation: none;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: 1px solid var(--color-gray-200) !important;
+  }
+}
+
+.btc-print-only {
+  display: none;
+}
+
+/* ================================================
+   Responsive
+   ================================================ */
+@media (max-width: 991px) {
+  .btc-confirm-page {
+    padding: 1.5rem 0 3rem;
+  }
+
+  .btc-success-check-circle {
+    width: 60px;
+    height: 60px;
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .btc-confirm-info-pill {
+    padding: 6px 10px;
+  }
+
+  .btc-eticket-header {
+    padding: 14px 16px 12px !important;
+  }
+
+  .btc-perforation {
+    width: calc(100% - 24px);
+  }
+}
+
+/* ================================================
+   Animations
+   ================================================ */
+@keyframes btcFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btc-confirm-page .card {
+  animation: btcFadeInUp 0.5s var(--ease-out) backwards;
+}
+
+.btc-confirm-page .row > *:nth-child(1) .card { animation-delay: 0.05s; }
+.btc-confirm-page .row > *:nth-child(2) .card { animation-delay: 0.1s; }
+
+.btc-confirm-page .card + .card,
+.btc-confirm-page .mt-3 > .card,
+.btc-confirm-page .mt-4 > .card {
+  animation-delay: 0.15s;
+}
+
+.btc-confirm-page .btc-eticket {
+  animation-delay: 0.2s;
+  animation-duration: 0.6s;
+}
