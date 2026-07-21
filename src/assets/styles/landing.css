@@ -3130,6 +3130,159 @@ select.btc-search-input {
 /* ================================================
    FOOTER
    ================================================ */
+/* ================================================
+   NEWSLETTER CARD (Zone 1)
+   ================================================ */
+.btc-newsletter-outer {
+  position: relative;
+  padding: 5rem 0 0;
+  overflow: hidden;
+}
+
+.btc-newsletter-deco {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.btc-newsletter-deco-orb {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.btc-newsletter-deco-orb--1 {
+  width: 300px;
+  height: 300px;
+  top: -100px;
+  right: -80px;
+  background: rgba(var(--color-primary-rgb), 0.03);
+}
+
+.btc-newsletter-deco-orb--2 {
+  width: 200px;
+  height: 200px;
+  bottom: -60px;
+  left: -40px;
+  background: rgba(var(--color-accent-rgb), 0.04);
+}
+
+.btc-newsletter-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-700) 100%);
+  border-radius: 24px;
+  padding: 3rem 3.5rem;
+  box-shadow: 0 20px 60px rgba(var(--color-primary-rgb), 0.2);
+}
+
+.btc-newsletter-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.btc-newsletter-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.btc-newsletter-title {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 800;
+  color: var(--color-white);
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+
+.btc-newsletter-title .text-accent {
+  color: var(--color-accent);
+}
+
+.btc-newsletter-text {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 480px;
+}
+
+.btc-newsletter-form {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.btc-newsletter-input-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 260px;
+}
+
+.btc-newsletter-input-wrap i {
+  position: absolute;
+  left: 1.125rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.btc-newsletter-input-wrap input {
+  width: 100%;
+  padding: 0.9375rem 1.25rem 0.9375rem 3rem;
+  background: var(--color-white);
+  border: none;
+  border-radius: 14px;
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  outline: none;
+  transition: box-shadow 0.2s;
+}
+
+.btc-newsletter-input-wrap input::placeholder {
+  color: var(--text-muted);
+}
+
+.btc-newsletter-input-wrap input:focus {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
+}
+
+.btc-newsletter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9375rem 2rem;
+  background: var(--color-accent);
+  color: var(--color-white);
+  border: none;
+  border-radius: 14px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btc-newsletter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.35);
+}
+
+/* ================================================
+   FOOTER — Ultra Premium (Zones 2-5)
+   ================================================ */
 .btc-footer {
   background: var(--color-gray-900);
   color: var(--color-gray-300);
@@ -3142,8 +3295,8 @@ select.btc-search-input {
 }
 
 .btc-footer .container {
-  padding-top: var(--space-16);
-  padding-bottom: var(--space-4);
+  padding-top: 4rem;
+  padding-bottom: 0;
 }
 
 .btc-footer a {
@@ -3152,27 +3305,31 @@ select.btc-search-input {
   transition: color 0.15s;
 }
 
-.btc-footer a:hover { color: var(--color-white); }
+.btc-footer a:hover {
+  color: var(--color-white);
+}
 
+/* Top Grid — 6 columns */
 .btc-footer-top {
   display: grid;
   grid-template-columns: 1.5fr repeat(5, 1fr);
-  gap: var(--space-8);
-  padding-bottom: var(--space-10);
+  gap: 2rem;
+  padding-bottom: 2.5rem;
 }
 
+/* Brand Column */
 .btc-footer-brand {
   display: flex;
   align-items: center;
   gap: 0.625rem;
   text-decoration: none;
-  margin-bottom: var(--space-4);
+  margin-bottom: 1.25rem;
 }
 
 .btc-footer-brand-icon {
   width: 44px;
   height: 44px;
-  border-radius: var(--radius-lg);
+  border-radius: 14px;
   background: var(--color-primary);
   color: var(--color-white);
   display: flex;
@@ -3183,34 +3340,35 @@ select.btc-search-input {
 
 .btc-footer-brand-text {
   color: var(--color-white);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+  font-size: 1.125rem;
+  font-weight: 700;
 }
 
 .btc-footer-brand-desc {
-  font-size: var(--font-size-sm);
+  font-size: 0.8125rem;
   color: var(--color-gray-400);
-  line-height: 1.65;
+  line-height: 1.7;
   max-width: 280px;
-  margin-bottom: var(--space-5);
+  margin-bottom: 1.5rem;
 }
 
+/* Social Links */
 .btc-footer-socials {
   display: flex;
-  gap: var(--space-3);
+  gap: 0.625rem;
 }
 
 .btc-footer-social {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.06);
   color: var(--color-gray-400);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  transition: background 0.15s, color 0.15s, transform 0.15s;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
 }
 
 .btc-footer-social:hover {
@@ -3219,26 +3377,28 @@ select.btc-search-input {
   transform: translateY(-3px);
 }
 
+/* Headings */
 .btc-footer-heading {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
+  font-size: 0.8125rem;
+  font-weight: 700;
   color: var(--color-white);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  margin-bottom: var(--space-5);
+  margin-bottom: 1.25rem;
 }
 
+/* Navigation */
 .btc-footer-nav {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 0.5rem;
 }
 
 .btc-footer-link {
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0;
-  font-size: var(--font-size-sm);
+  font-size: 0.8125rem;
   color: var(--color-gray-400);
   transition: color 0.15s, padding-left 0.15s;
 }
@@ -3249,60 +3409,154 @@ select.btc-search-input {
 }
 
 .btc-footer-link--muted {
-  color: var(--color-primary-300);
-  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-300) !important;
+  font-weight: 600;
 }
 
-.btc-footer-link--muted:hover { color: var(--color-accent); }
+.btc-footer-link--muted:hover {
+  color: var(--color-accent) !important;
+}
 
+/* Contact */
 .btc-footer-contact-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 0.875rem;
 }
 
 .btc-footer-contact-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: var(--font-size-sm);
+  gap: 0.625rem;
+  font-size: 0.8125rem;
   color: var(--color-gray-400);
 }
 
 .btc-footer-contact-item i {
   font-size: 0.85rem;
   color: var(--color-gray-500);
+  width: 16px;
 }
 
-.btc-footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding: var(--space-5) 0;
+/* Separator */
+.btc-footer-separator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0;
+}
+
+/* Payment Methods (Zone 3) */
+.btc-footer-payments {
+  padding: 2rem 0;
+}
+
+.btc-footer-payments-grid {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: 0.75rem;
 }
 
-.btc-footer-copyright { color: var(--color-gray-500); font-size: var(--font-size-sm); }
-
-.btc-footer-bottom-links {
-  display: flex;
-  gap: var(--space-5);
+.btc-footer-payment-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-gray-400);
+  transition: background 0.2s, color 0.2s;
 }
 
-.btc-footer-bottom-links a {
-  font-size: var(--font-size-sm);
+.btc-footer-payment-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-white);
+}
+
+.btc-footer-payment-item i {
+  font-size: 0.85rem;
   color: var(--color-gray-500);
 }
 
-.btc-footer-bottom-links a:hover { color: var(--color-white); }
+.btc-footer-payment-item:hover i {
+  color: var(--color-accent);
+}
+
+/* Mobile Apps (Zone 4) */
+.btc-footer-apps {
+  padding: 2rem 0;
+}
+
+.btc-footer-apps-text {
+  font-size: 0.875rem;
+  color: var(--color-gray-400);
+  margin-bottom: 1rem;
+}
+
+.btc-footer-apps-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btc-footer-app-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 1.25rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-white);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btc-footer-app-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btc-footer-app-btn i {
+  font-size: 1.5rem;
+}
+
+.btc-footer-app-btn small {
+  font-size: 0.6rem;
+  display: block;
+  opacity: 0.7;
+}
+
+.btc-footer-app-btn strong {
+  font-size: 0.8125rem;
+}
+
+/* Bottom (Zone 5) */
+.btc-footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+}
+
+.btc-footer-copyright {
+  color: var(--color-gray-500);
+  font-size: 0.8125rem;
+}
+
+.btc-footer-version {
+  font-size: 0.75rem;
+  color: var(--color-gray-600);
+  padding: 0.25rem 0.625rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+}
 
 /* Back to top */
 .btc-back-to-top {
   position: fixed;
-  bottom: var(--space-6);
-  right: var(--space-6);
+  bottom: 2rem;
+  right: 2rem;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -3314,16 +3568,25 @@ select.btc-search-input {
   justify-content: center;
   font-size: 1.1rem;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(11, 29, 81, 0.3);
-  z-index: var(--z-fixed);
+  box-shadow: 0 4px 16px rgba(var(--color-primary-rgb), 0.3);
+  z-index: 1000;
   opacity: 0;
   visibility: hidden;
   transform: translateY(12px);
   transition: all 0.3s;
 }
 
-.btc-back-to-top.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
-.btc-back-to-top:hover { background: var(--color-accent); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(255, 107, 53, 0.35); }
+.btc-back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.btc-back-to-top:hover {
+  background: var(--color-accent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.35);
+}
 
 /* ================================================
    RESPONSIVE — Header + Hero
@@ -3408,7 +3671,11 @@ select.btc-search-input {
   .btc-mobile-app-card { flex-direction: column; gap: 2.5rem; padding: 3rem 2rem; }
   .btc-mobile-app-visual { order: -1; }
   .btc-mobile-app-features { grid-template-columns: 1fr 1fr; }
-  .btc-footer-top { grid-template-columns: 1fr 1fr; }
+  .btc-footer-top { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .btc-newsletter-card { flex-direction: column; padding: 2.5rem 2rem; text-align: center; }
+  .btc-newsletter-text { margin: 0 auto; }
+  .btc-newsletter-form { flex-direction: column; width: 100%; }
+  .btc-newsletter-input-wrap { min-width: 0; }
 }
 
 /* md < 768 */
@@ -3477,10 +3744,11 @@ select.btc-search-input {
   .btc-mobile-phone { width: 240px; }
   .btc-mobile-phone-screen { min-height: 340px; }
   .btc-company-card { border-radius: 16px; }
-  .btc-mobile-app-card { padding: 2rem 1.5rem; }
   .btc-newsletter-card { padding: 2rem 1.5rem; }
-  .btc-newsletter-input-group { flex-direction: column; }
   .btc-newsletter-btn { width: 100%; justify-content: center; }
+  .btc-footer-top { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .btc-footer-apps-buttons { flex-direction: column; }
+  .btc-footer-app-btn { justify-content: center; }
   .btc-final-cta-stats { gap: 1.5rem; }
   .btc-faq-question { padding: 1rem 1.25rem; }
   .btc-faq-answer { padding-left: 1.25rem; }
@@ -3524,4 +3792,9 @@ select.btc-search-input {
   }
   .btc-how-timeline { grid-template-columns: 1fr; }
   .btc-how-card { padding: 1.5rem; }
+  .btc-newsletter-card { padding: 1.5rem 1.25rem; border-radius: 20px; }
+  .btc-footer-top { grid-template-columns: 1fr; gap: 2rem; }
+  .btc-footer-bottom { flex-direction: column; gap: 0.75rem; text-align: center; }
+  .btc-footer-payments-grid { gap: 0.5rem; }
+  .btc-footer-payment-item { padding: 0.4rem 0.75rem; font-size: 0.7rem; }
 }
