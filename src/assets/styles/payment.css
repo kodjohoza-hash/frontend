@@ -1,1771 +1,1869 @@
-/* ==========================================================================
-   BUS TIX CONNECT — Payment Page Styles
-   Premium payment experience crafted for trust & confidence
-   ========================================================================== */
+/* ============================================================
+   BUS TIX CONNECT — Payment Page
+   Design System: "SPLIT" — Dark Navy / Light Glass
+   Version: 2.0.0
+   ============================================================ */
 
-/* ==========================================================================
-   1. CSS Custom Properties
-   ========================================================================== */
-
+/* ------------------------------------------------------------
+   1. CSS Variables & Reset
+   ------------------------------------------------------------ */
 :root {
-  /* Brand Colors */
   --color-primary: #0B1D51;
-  --color-primary-50: #E8EDF6;
-  --color-primary-100: #D1DBED;
-  --color-primary-200: #A3B7DB;
-  --color-primary-300: #7593C9;
-  --color-primary-400: #476FB7;
-  --color-primary-500: #1A4BA5;
-  --color-primary-600: #0B1D51;
-  --color-primary-700: #091739;
-  --color-primary-800: #060F26;
-
-  /* Accent */
+  --color-primary-light: #0F2347;
+  --color-primary-lighter: #12296B;
   --color-accent: #FF6B35;
-  --color-accent-50: #FFF3EC;
-  --color-accent-100: #FFE7D9;
-  --color-accent-200: #FFCFB3;
-  --color-accent-300: #FFB78D;
-  --color-accent-400: #FF9F67;
-  --color-accent-500: #FF6B35;
-  --color-accent-600: #E55A25;
-  --color-accent-700: #CC4A15;
-
-  /* Semantic Colors */
+  --color-accent-dark: #E85D2C;
   --color-success: #10B981;
-  --color-success-50: #ECFDF5;
-  --color-success-100: #D1FAE5;
+  --color-success-dark: #059669;
   --color-warning: #F59E0B;
-  --color-warning-50: #FFFBEB;
+  --color-warning-dark: #D97706;
   --color-danger: #EF4444;
-  --color-danger-50: #FEF2F2;
+  --color-danger-dark: #DC2626;
 
-  /* Gray Scale */
-  --color-gray-50: #F9FAFB;
-  --color-gray-100: #F3F4F6;
-  --color-gray-200: #E5E7EB;
-  --color-gray-300: #D1D5DB;
-  --color-gray-400: #9CA3AF;
-  --color-gray-500: #6B7280;
-  --color-gray-600: #4B5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1F2937;
+  --color-gray-50: #F8FAFC;
+  --color-gray-100: #F1F5F9;
+  --color-gray-200: #E2E8F0;
+  --color-gray-300: #CBD5E1;
+  --color-gray-400: #94A3B8;
+  --color-gray-500: #64748B;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-800: #1E293B;
+  --color-gray-900: #0F172A;
 
-  /* Border Radius */
+  --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-2xl: 24px;
+  --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(11, 29, 81, 0.05);
-  --shadow-md: 0 4px 12px rgba(11, 29, 81, 0.08);
-  --shadow-lg: 0 8px 30px rgba(11, 29, 81, 0.12);
-  --shadow-xl: 0 20px 50px rgba(11, 29, 81, 0.15);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.16);
+  --shadow-glow-accent: 0 0 0 1px var(--color-accent), 0 8px 32px rgba(255, 107, 53, 0.15);
 
-  /* Typography */
-  --text-primary: #1F2937;
-  --text-secondary: #4B5563;
-  --text-muted: #9CA3AF;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Courier New', 'SF Mono', 'Fira Code', monospace;
+
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-/* ==========================================================================
-   2. Page Layout
-   ========================================================================== */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
 
-.btc-pay-page {
+body {
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  color: var(--color-gray-800);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* ------------------------------------------------------------
+   2. Page Layout — THE SPLIT
+   ------------------------------------------------------------ */
+.pay-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--color-primary-50) 0%, #F0F4FA 50%, var(--color-gray-50) 100%);
-  padding: 0 0 60px 0;
-  position: relative;
-  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-gray-100);
 }
 
-.btc-pay-page::before {
+.pay-split {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  min-height: calc(100vh - 80px);
+}
+
+/* --- LEFT PANEL: Dark Navy + Glassmorphism --- */
+.pay-left {
+  background: linear-gradient(160deg, #0B1D51 0%, #0F2347 40%, #12296B 100%);
+  padding: 40px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative gradient orb — top right */
+.pay-left::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 320px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, #12296B 60%, #1A4BA5 100%);
-  border-radius: 0 0 40px 40px;
+  top: -100px;
+  right: -100px;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 107, 53, 0.08) 0%, transparent 70%);
+  pointer-events: none;
   z-index: 0;
 }
 
-.btc-pay-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
+/* Decorative gradient orb — bottom left */
+.pay-left::after {
+  content: '';
+  position: absolute;
+  bottom: -150px;
+  left: -100px;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pay-left > * {
   position: relative;
   z-index: 1;
 }
 
-.btc-pay-layout {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 32px;
-  align-items: start;
-  margin-top: 24px;
+/* --- RIGHT PANEL: Light / White --- */
+.pay-right {
+  background: #F8FAFC;
+  padding: 40px 32px;
+  position: relative;
+  overflow-y: auto;
+  border-left: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-/* --- Left & Right columns --- */
-.btc-pay-left {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 0;
-}
-
-.btc-pay-right {
-  min-width: 0;
-}
-
-.btc-pay-right-sticky {
-  position: sticky;
-  top: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* --- Section Cards --- */
-.btc-pay-section-card {
-  background: #FFFFFF;
-  border-radius: var(--radius-xl, 16px);
-  border: 1px solid var(--color-gray-100, #F3F4F6);
-  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.05));
-  overflow: hidden;
-}
-
-.btc-pay-section-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--color-gray-100, #F3F4F6);
-}
-
-.btc-pay-section-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-lg, 12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: 1rem;
-}
-
-.btc-pay-section-body {
-  padding: 20px 24px;
-}
-
-.btc-pay-methods-list {
-  padding: 16px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* --- Form animation --- */
-.btc-pay-form-enter {
-  animation: btcPaySlideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-
-@keyframes btcPaySlideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* --- Actions --- */
-.btc-pay-actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.btc-pay-btn-back {
+/* ------------------------------------------------------------
+   3. Breadcrumb
+   ------------------------------------------------------------ */
+.pay-breadcrumb {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 20px;
-  background: #FFFFFF;
-  color: var(--text-secondary, #4B5563);
-  border: 2px solid var(--color-gray-200, #E5E7EB);
-  border-radius: var(--radius-lg, 12px);
-  font-size: var(--font-size-sm, 0.875rem);
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+  font-size: 0.78rem;
+  list-style: none;
 }
 
-.btc-pay-btn-back:hover {
-  background: var(--color-gray-50, #F9FAFB);
-  border-color: var(--color-gray-300, #D1D5DB);
-}
-
-.btc-pay-btn-back:focus-visible {
-  outline: 3px solid var(--color-accent, #FF6B35);
-  outline-offset: 2px;
-}
-
-.btc-pay-btn-submit {
-  flex: 1;
+.pay-breadcrumb-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 14px 28px;
-  background: linear-gradient(135deg, var(--color-accent, #FF6B35) 0%, #E85D2C 100%);
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.pay-breadcrumb-item a {
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  padding: 4px 0;
+  border-bottom: 1px solid transparent;
+}
+
+.pay-breadcrumb-item a:hover {
+  color: rgba(255, 255, 255, 0.8);
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+
+.pay-breadcrumb-item--active {
   color: #FFFFFF;
-  border: none;
-  border-radius: var(--radius-lg, 12px);
-  font-size: var(--font-size-sm, 0.875rem);
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
-  letter-spacing: 0.01em;
-}
-
-.btc-pay-btn-submit:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.4);
-}
-
-.btc-pay-btn-submit:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.btc-pay-btn-submit:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.btc-pay-btn-submit:focus-visible {
-  outline: 3px solid var(--color-primary, #0B1D51);
-  outline-offset: 2px;
-}
-
-
-/* ==========================================================================
-   3. Stepper
-   ========================================================================== */
-
-.btc-pay-stepper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  padding: 24px 0 32px;
-}
-
-.btc-pay-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  flex-shrink: 0;
-}
-
-.btc-pay-step-circle {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 700;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  z-index: 2;
-  border: 3px solid transparent;
-}
-
-.btc-pay-step-circle::before {
-  content: '';
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  transition: border-color 0.4s ease;
-  pointer-events: none;
-}
-
-.btc-pay-step--completed .btc-pay-step-circle {
-  background: var(--color-success);
-  color: #ffffff;
-  border-color: var(--color-success);
-  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
-}
-
-.btc-pay-step--completed .btc-pay-step-circle::before {
-  border-color: rgba(16, 185, 129, 0.2);
-}
-
-.btc-pay-step--current .btc-pay-step-circle {
-  background: var(--color-primary);
-  color: #ffffff;
-  border-color: var(--color-primary);
-  box-shadow: 0 4px 16px rgba(11, 29, 81, 0.35);
-}
-
-.btc-pay-step--current .btc-pay-step-circle::before {
-  border-color: rgba(11, 29, 81, 0.25);
-  animation: btcPayPulse 2s ease-in-out infinite;
-}
-
-.btc-pay-step--upcoming .btc-pay-step-circle {
-  background: var(--color-gray-100);
-  color: var(--color-gray-400);
-  border-color: var(--color-gray-200);
-}
-
-.btc-pay-step--upcoming .btc-pay-step-circle::before {
-  border-color: transparent;
-}
-
-.btc-pay-step-label {
-  font-size: 11px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-top: 8px;
-  transition: color 0.3s ease;
-  white-space: nowrap;
 }
 
-.btc-pay-step--completed .btc-pay-step-label {
-  color: var(--color-success);
-}
-
-.btc-pay-step--current .btc-pay-step-label {
-  color: #ffffff;
-  opacity: 0.95;
-}
-
-.btc-pay-step--upcoming .btc-pay-step-label {
-  color: var(--color-gray-400);
-}
-
-.btc-pay-step-line {
-  width: 64px;
-  height: 2px;
-  background: var(--color-gray-200);
-  margin: 0 4px;
-  margin-bottom: 20px;
-  border-radius: 1px;
-  transition: background 0.4s ease;
-  flex-shrink: 0;
-}
-
-.btc-pay-step-line--active {
-  background: linear-gradient(90deg, var(--color-success), var(--color-primary));
-  box-shadow: 0 0 6px rgba(11, 29, 81, 0.2);
-}
-
-.btc-pay-step-line--completed {
-  background: var(--color-success);
-}
-
-
-/* ==========================================================================
-   4. Payment Methods
-   ========================================================================== */
-
-.btc-pay-methods-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: var(--radius-xl);
-  padding: 28px;
-  box-shadow: var(--shadow-md);
-  animation: btcPayFadeInUp 0.5s ease-out;
-  margin-bottom: 24px;
-}
-
-.btc-pay-methods-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btc-pay-methods-title svg {
-  width: 20px;
-  height: 20px;
-  color: var(--color-accent);
-}
-
-.btc-pay-methods-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.btc-pay-method {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 18px;
-  border: 2px solid var(--color-gray-200);
-  border-radius: var(--radius-lg);
-  background: #ffffff;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  text-align: left;
-  font-family: inherit;
-}
-
-.btc-pay-method::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(11, 29, 81, 0.02) 0%, transparent 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.btc-pay-method:hover:not(:disabled):not(.btc-pay-method--selected) {
-  border-color: var(--color-primary-200);
-  box-shadow: var(--shadow-sm);
-  transform: translateY(-1px);
-}
-
-.btc-pay-method:hover:not(:disabled):not(.btc-pay-method--selected)::after {
-  opacity: 1;
-}
-
-.btc-pay-method:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.btc-pay-method--selected {
-  border-color: var(--color-primary);
-  background: var(--color-primary-50);
-  box-shadow: 0 0 0 3px rgba(11, 29, 81, 0.1), var(--shadow-md);
-}
-
-.btc-pay-method--selected::after {
-  opacity: 1;
-  background: linear-gradient(135deg, rgba(11, 29, 81, 0.03) 0%, transparent 100%);
-}
-
-.btc-pay-method-logo {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: 22px;
-  font-weight: 800;
-  transition: transform 0.3s ease;
-}
-
-.btc-pay-method:hover:not(:disabled) .btc-pay-method-logo {
-  transform: scale(1.05);
-}
-
-.btc-pay-method-logo--momo {
-  background: linear-gradient(135deg, #FFCC00 0%, #FF8800 100%);
-  color: #7B2D00;
-}
-
-.btc-pay-method-logo--om {
-  background: linear-gradient(135deg, #FF4444 0%, #CC0000 100%);
-  color: #ffffff;
-}
-
-.btc-pay-method-logo--orange {
-  background: linear-gradient(135deg, #FF6600 0%, #CC3300 100%);
-  color: #ffffff;
-}
-
-.btc-pay-method-logo--card {
-  background: linear-gradient(135deg, var(--color-primary) 0%, #1A4BA5 100%);
-  color: #ffffff;
-}
-
-.btc-pay-method-logo--cash {
-  background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
-  color: #ffffff;
-}
-
-.btc-pay-method-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.btc-pay-method-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  line-height: 1.3;
-}
-
-.btc-pay-method-desc {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-.btc-pay-method-radio {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 2px solid var(--color-gray-300);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.btc-pay-method-radio::after {
-  content: '';
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  transform: scale(0);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.btc-pay-method--selected .btc-pay-method-radio {
-  border-color: var(--color-primary);
-  background: var(--color-primary-50);
-}
-
-.btc-pay-method--selected .btc-pay-method-radio::after {
-  transform: scale(1);
-  animation: btcPayRadioIn 0.3s ease-out;
-}
-
-
-/* ==========================================================================
-   5. Forms
-   ========================================================================== */
-
-.btc-pay-form-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: var(--radius-xl);
-  padding: 28px;
-  box-shadow: var(--shadow-md);
-  animation: btcPaySlideDown 0.45s ease-out;
-  margin-bottom: 24px;
-  overflow: hidden;
-}
-
-.btc-pay-form-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--color-gray-100);
-}
-
-.btc-pay-form-title svg {
-  width: 20px;
-  height: 20px;
-  color: var(--color-accent);
-}
-
-.btc-pay-form-field {
-  margin-bottom: 20px;
-  position: relative;
-}
-
-.btc-pay-form-field:last-child {
-  margin-bottom: 0;
-}
-
-.btc-pay-form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.btc-pay-form-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
-}
-
-.btc-pay-form-label--required::after {
-  content: ' *';
-  color: var(--color-danger);
-}
-
-.btc-pay-form-input {
-  width: 100%;
-  padding: 13px 16px;
-  font-size: 15px;
-  font-family: inherit;
-  color: var(--text-primary);
-  background: #ffffff;
-  border: 2px solid var(--color-gray-200);
-  border-radius: var(--radius-md);
-  outline: none;
-  transition: all 0.25s ease;
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-.btc-pay-form-input::placeholder {
-  color: var(--color-gray-400);
-  font-weight: 400;
-}
-
-.btc-pay-form-input:hover {
-  border-color: var(--color-gray-300);
-}
-
-.btc-pay-form-input:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(11, 29, 81, 0.08);
-  background: #ffffff;
-}
-
-.btc-pay-form-input--error {
-  border-color: var(--color-danger);
-  background: var(--color-danger-50);
-}
-
-.btc-pay-form-input--error:focus {
-  border-color: var(--color-danger);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-}
-
-.btc-pay-form-input--success {
-  border-color: var(--color-success);
-}
-
-.btc-pay-form-input--success:focus {
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-}
-
-.btc-pay-form-input-group {
-  display: flex;
-  position: relative;
-}
-
-.btc-pay-form-input-group .btc-pay-form-input {
-  padding-left: 16px;
-}
-
-.btc-pay-form-prefix {
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  background: var(--color-gray-50);
-  border: 2px solid var(--color-gray-200);
-  border-right: none;
-  border-radius: var(--radius-md) 0 0 var(--radius-md);
-  white-space: nowrap;
+.pay-breadcrumb-sep {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 0.7rem;
   user-select: none;
 }
 
-.btc-pay-form-input-group .btc-pay-form-input {
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-}
-
-.btc-pay-form-error {
+/* ------------------------------------------------------------
+   4. Stepper
+   ------------------------------------------------------------ */
+.pay-stepper {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-2xl);
+  padding: 20px 28px;
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-danger);
-  animation: btcPaySlideDown 0.3s ease-out;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
 }
 
-.btc-pay-form-error svg {
+.pay-stepper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.0) 100%);
+  pointer-events: none;
+}
+
+.pay-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.pay-step-indicator {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: all var(--transition-smooth);
+}
+
+/* Upcoming */
+.pay-step--upcoming .pay-step-indicator {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Active */
+.pay-step--active .pay-step-indicator {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+  color: #FFFFFF;
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15), 0 4px 16px rgba(255, 107, 53, 0.3);
+}
+
+/* Completed */
+.pay-step--completed .pay-step-indicator {
+  background: var(--color-success);
+  color: #FFFFFF;
+}
+
+.pay-step-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.pay-step--active .pay-step-label {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.pay-step--completed .pay-step-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pay-step--upcoming .pay-step-label {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.pay-step-connector {
+  flex: 1;
+  height: 2px;
+  min-width: 32px;
+  margin: 0 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+.pay-step-connector--filled {
+  background: var(--color-success);
+}
+
+.pay-step-connector--active {
+  background: linear-gradient(to right, var(--color-success), rgba(255, 255, 255, 0.08));
+}
+
+/* Completed checkmark icon inside indicator */
+.pay-step-check {
+  width: 16px;
+  height: 16px;
+}
+
+/* ------------------------------------------------------------
+   5. Section Headers
+   ------------------------------------------------------------ */
+.pay-section-header {
+  margin-bottom: 0;
+}
+
+.pay-section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.pay-section-subtitle {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.4;
+}
+
+.pay-section-divider {
+  width: 40px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--color-accent), transparent);
+  margin-top: 8px;
+}
+
+/* ------------------------------------------------------------
+   6. Payment Method Grid
+   ------------------------------------------------------------ */
+.pay-method-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.pay-method-tile {
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.pay-method-tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.pay-method-tile:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.pay-method-tile:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.pay-method-tile:active:not(:disabled) {
+  transform: translateY(0) scale(0.99);
+}
+
+.pay-method-tile:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pay-method-tile--selected {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-glow-accent);
+}
+
+.pay-method-tile--selected::before {
+  opacity: 1;
+}
+
+.pay-method-tile--selected:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.pay-method-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: visible;
+}
+
+/* Brand glow behind logo */
+.pay-method-logo::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0.15;
+  filter: blur(12px);
+  z-index: -1;
+  transition: opacity var(--transition-base);
+}
+
+.pay-method-tile--selected .pay-method-logo::after {
+  opacity: 0.3;
+}
+
+.pay-method-logo--momo {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #000;
+}
+
+.pay-method-logo--om {
+  background: linear-gradient(135deg, #FF6B00, #FF3D00);
+  color: #FFF;
+}
+
+.pay-method-logo--card {
+  background: linear-gradient(135deg, #667EEA, #764BA2);
+  color: #FFF;
+}
+
+.pay-method-logo--cash {
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: #FFF;
+}
+
+.pay-method-name {
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.pay-method-desc {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.3;
+}
+
+.pay-method-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.pay-method-check svg {
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.25s ease;
+}
+
+.pay-method-tile--selected .pay-method-check {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  animation: payCheckPop 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pay-method-tile--selected .pay-method-check svg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Mobile money details row */
+.pay-momo-details {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pay-momo-details-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pay-momo-details-text {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.3;
+}
+
+/* ------------------------------------------------------------
+   7. Form Section (Dark Background)
+   ------------------------------------------------------------ */
+.pay-form {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  animation: paySlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.pay-form-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pay-form-title-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.5;
+}
+
+/* --- Floating Label Inputs --- */
+.pay-input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.pay-input-group:last-child {
+  margin-bottom: 0;
+}
+
+.pay-input {
+  width: 100%;
+  padding: 18px 16px 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: all var(--transition-base);
+  line-height: 1.4;
+}
+
+.pay-input:focus {
+  border-color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+}
+
+.pay-input::placeholder {
+  color: transparent;
+}
+
+.pay-label {
+  position: absolute;
+  left: 16px;
+  top: 14px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  transition: all 0.2s ease;
+  transform-origin: left center;
+}
+
+.pay-input:focus ~ .pay-label,
+.pay-input:not(:placeholder-shown) ~ .pay-label {
+  top: 6px;
+  font-size: 0.68rem;
+  color: var(--color-accent);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Input with prefix (+237) */
+.pay-input-prefix {
+  display: flex;
+  align-items: stretch;
+}
+
+.pay-input-prefix-addon {
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: none;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.pay-input-prefix .pay-input {
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+
+.pay-input-prefix .pay-input:focus {
+  border-color: var(--color-accent);
+}
+
+.pay-input-prefix .pay-label {
+  left: 14px;
+}
+
+.pay-input-prefix-addon + .pay-input-group .pay-input {
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+
+/* Error state */
+.pay-input--error {
+  border-color: var(--color-danger) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+.pay-input--error:focus {
+  border-color: var(--color-danger) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+.pay-error {
+  font-size: 0.75rem;
+  color: var(--color-danger);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: paySlideIn 0.2s ease;
+}
+
+.pay-error-icon {
   width: 14px;
   height: 14px;
   flex-shrink: 0;
 }
 
-.btc-pay-form-hint {
-  margin-top: 6px;
-  font-size: 12px;
-  color: var(--text-muted);
+/* Success state */
+.pay-input--success {
+  border-color: var(--color-success) !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12) !important;
 }
 
-.btc-pay-form-select {
+.pay-success-text {
+  font-size: 0.75rem;
+  color: var(--color-success);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: paySlideIn 0.2s ease;
+}
+
+/* Card type badge */
+.pay-card-type-badge {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pay-card-type-badge--visa {
+  background: rgba(26, 115, 232, 0.15);
+  color: #4A90D9;
+}
+
+.pay-card-type-badge--mastercard {
+  background: rgba(235, 0, 27, 0.12);
+  color: #EB001B;
+}
+
+.pay-card-type-badge--amex {
+  background: rgba(0, 113, 224, 0.12);
+  color: #0071E0;
+}
+
+/* Card row (number + expiry + cvv) */
+.pay-card-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.pay-card-row--three {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* Input help text */
+.pay-input-help {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+/* Select dropdown */
+.pay-select {
   width: 100%;
-  padding: 13px 40px 13px 16px;
-  font-size: 15px;
+  padding: 18px 40px 8px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  color: #FFFFFF;
+  font-size: 0.9rem;
   font-family: inherit;
-  color: var(--text-primary);
-  background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B7280' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 16px center;
-  border: 2px solid var(--color-gray-200);
-  border-radius: var(--radius-md);
   outline: none;
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all var(--transition-base);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
 }
 
-.btc-pay-form-select:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(11, 29, 81, 0.08);
+.pay-select:focus {
+  border-color: var(--color-accent);
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
 }
 
+.pay-select option {
+  background: var(--color-primary);
+  color: #FFFFFF;
+}
 
-/* ==========================================================================
-   6. Card Preview
-   ========================================================================== */
-
-.btc-pay-card-preview {
-  width: 100%;
-  max-width: 360px;
-  aspect-ratio: 1.586 / 1;
-  background: linear-gradient(135deg, var(--color-primary) 0%, #1A4BA5 50%, #2563EB 100%);
+/* ------------------------------------------------------------
+   8. Agency Info (Dark Background)
+   ------------------------------------------------------------ */
+.pay-agency {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-xl);
   padding: 24px;
+  color: #FFFFFF;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 12px 40px rgba(11, 29, 81, 0.3);
-  margin-bottom: 24px;
-  transition: transform 0.4s ease;
+  align-items: flex-start;
+  gap: 16px;
 }
 
-.btc-pay-card-preview::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -30%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.btc-pay-card-preview::after {
-  content: '';
-  position: absolute;
-  bottom: -20%;
-  left: -10%;
-  width: 60%;
-  height: 60%;
-  background: radial-gradient(circle, rgba(255, 107, 53, 0.12) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.btc-pay-card-preview-chip {
-  width: 40px;
-  height: 30px;
-  background: linear-gradient(135deg, #D4AF37 0%, #C5A028 50%, #B8960E 100%);
-  border-radius: 6px;
-  position: relative;
+.pay-agency-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-accent);
   overflow: hidden;
 }
 
-.btc-pay-card-preview-chip::after {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
+.pay-agency-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.btc-pay-card-preview-number {
-  font-size: 20px;
-  font-weight: 600;
-  color: #ffffff;
-  letter-spacing: 3px;
-  font-family: 'Courier New', monospace;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  z-index: 1;
+.pay-agency-info {
+  flex: 1;
+  min-width: 0;
 }
 
-.btc-pay-card-preview-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  z-index: 1;
-}
-
-.btc-pay-card-preview-name {
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-}
-
-.btc-pay-card-preview-expiry {
-  text-align: right;
-}
-
-.btc-pay-card-preview-expiry-label {
-  font-size: 8px;
-  color: rgba(255, 255, 255, 0.6);
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.pay-agency-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #FFFFFF;
   margin-bottom: 2px;
 }
 
-.btc-pay-card-preview-expiry-value {
-  font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
-  letter-spacing: 1px;
+.pay-agency-detail {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.4;
 }
 
-
-/* ==========================================================================
-   7. Summary Card (Right Column)
-   ========================================================================== */
-
-.btc-pay-summary {
-  position: sticky;
-  top: 24px;
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: var(--radius-xl);
-  padding: 0;
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-  animation: btcPayFadeInUp 0.6s ease-out 0.1s both;
-}
-
-.btc-pay-summary-header {
-  padding: 20px 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, #12296B 100%);
-  color: #ffffff;
-}
-
-.btc-pay-summary-company-logo {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 800;
-  flex-shrink: 0;
-}
-
-.btc-pay-summary-company-name {
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.btc-pay-summary-company-sub {
-  font-size: 12px;
-  opacity: 0.7;
-  margin-top: 2px;
-}
-
-.btc-pay-summary-photo {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  display: block;
-}
-
-.btc-pay-summary-body {
-  padding: 20px 24px;
-}
-
-.btc-pay-summary-route {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 16px 0;
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--color-gray-100);
-}
-
-.btc-pay-summary-route-point {
-  text-align: center;
-}
-
-.btc-pay-summary-route-city {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.3;
-}
-
-.btc-pay-summary-route-code {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-.btc-pay-summary-route-arrow {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  flex-shrink: 0;
-}
-
-.btc-pay-summary-route-arrow-line {
-  width: 48px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
-  border-radius: 1px;
-  position: relative;
-}
-
-.btc-pay-summary-route-arrow-line::after {
-  content: '';
-  position: absolute;
-  right: -1px;
-  top: -3px;
-  width: 8px;
-  height: 8px;
-  border-top: 2px solid var(--color-primary);
-  border-right: 2px solid var(--color-primary);
-  transform: rotate(45deg);
-}
-
-.btc-pay-summary-route-duration {
-  font-size: 10px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.btc-pay-summary-date-time {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-bottom: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--color-gray-100);
-}
-
-.btc-pay-summary-date-time span {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.btc-pay-summary-seats-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-}
-
-.btc-pay-summary-seats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--color-gray-100);
-}
-
-.btc-pay-summary-seat-badge {
+.pay-agency-rating {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 5px 10px;
-  background: var(--color-primary-50);
-  color: var(--color-primary);
-  border-radius: var(--radius-md);
-  font-size: 12px;
-  font-weight: 600;
-  border: 1px solid rgba(11, 29, 81, 0.1);
-}
-
-.btc-pay-summary-seat-badge svg {
-  width: 12px;
-  height: 12px;
-}
-
-.btc-pay-summary-pricing {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.btc-pay-summary-price-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-}
-
-.btc-pay-summary-price-label {
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.btc-pay-summary-price-value {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.btc-pay-summary-price-row--discount .btc-pay-summary-price-value {
-  color: var(--color-success);
-}
-
-.btc-pay-summary-price-row--insurance .btc-pay-summary-price-value {
-  color: var(--color-primary);
-}
-
-.btc-pay-summary-total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 16px;
-  border-top: 2px solid var(--color-gray-200);
-}
-
-.btc-pay-summary-total-label {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.btc-pay-summary-total-value {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--color-accent);
-  letter-spacing: -0.5px;
-}
-
-.btc-pay-summary-total-currency {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-accent-600);
-  margin-right: 2px;
-}
-
-
-/* ==========================================================================
-   8. Promo Code
-   ========================================================================== */
-
-.btc-pay-promo {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: var(--radius-xl);
-  padding: 20px 28px;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 24px;
-  transition: box-shadow 0.3s ease;
-}
-
-.btc-pay-promo:hover {
-  box-shadow: var(--shadow-md);
-}
-
-.btc-pay-promo-collapsed {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  user-select: none;
-  padding: 4px 0;
-}
-
-.btc-pay-promo-collapsed-text {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
+  margin-top: 6px;
+  padding: 3px 8px;
+  background: rgba(255, 107, 53, 0.1);
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
   font-weight: 600;
   color: var(--color-accent);
 }
 
-.btc-pay-promo-collapsed-text svg {
-  width: 18px;
-  height: 18px;
+.pay-agency-rating-star {
+  color: var(--color-accent);
 }
 
-.btc-pay-promo-collapsed-arrow {
-  width: 20px;
-  height: 20px;
-  color: var(--text-muted);
-  transition: transform 0.3s ease;
-}
-
-.btc-pay-promo-collapsed-arrow--open {
-  transform: rotate(180deg);
-}
-
-.btc-pay-promo-expanded {
-  max-height: 0;
+/* ------------------------------------------------------------
+   9. Right Panel — Summary Card
+   ------------------------------------------------------------ */
+.pay-summary {
+  background: #FFFFFF;
+  border-radius: var(--radius-2xl);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
   overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              padding 0.3s ease;
+  position: sticky;
+  top: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  animation: paySlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.1s;
 }
 
-.btc-pay-promo-expanded--open {
-  max-height: 120px;
-  padding-top: 16px;
+.pay-summary-photo {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  position: relative;
 }
 
-.btc-pay-promo-input-row {
-  display: flex;
-  gap: 10px;
-}
-
-.btc-pay-promo-input {
-  flex: 1;
-  padding: 11px 14px;
-  font-size: 14px;
-  font-family: inherit;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-primary);
-  background: var(--color-gray-50);
-  border: 2px solid var(--color-gray-200);
-  border-radius: var(--radius-md);
-  outline: none;
-  transition: all 0.25s ease;
-}
-
-.btc-pay-promo-input::placeholder {
-  text-transform: none;
-  letter-spacing: 0;
-  font-weight: 400;
-}
-
-.btc-pay-promo-input:focus {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
-  background: #ffffff;
-}
-
-.btc-pay-promo-btn {
-  padding: 11px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: inherit;
-  color: #ffffff;
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-600) 100%);
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.25s ease;
-}
-
-.btc-pay-promo-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.35);
-}
-
-.btc-pay-promo-btn:active {
-  transform: translateY(0);
-}
-
-.btc-pay-promo-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.btc-pay-promo-success {
+.pay-summary-photo-placeholder {
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-lighter) 100%);
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  background: var(--color-success-50);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-success);
-  animation: btcPaySlideDown 0.3s ease-out;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 2rem;
 }
 
-.btc-pay-promo-success svg {
-  width: 16px;
-  height: 16px;
+.pay-summary-body {
+  padding: 24px;
+}
+
+.pay-summary-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.pay-summary-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  line-height: 1.3;
+}
+
+.pay-summary-badge {
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   flex-shrink: 0;
 }
 
-
-/* ==========================================================================
-   9. Insurance
-   ========================================================================== */
-
-.btc-pay-insurance {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 2px solid var(--color-gray-200);
-  border-radius: var(--radius-xl);
-  padding: 20px 28px;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 24px;
-  transition: all 0.35s ease;
-  cursor: pointer;
+.pay-summary-badge--confirmed {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--color-success);
 }
 
-.btc-pay-insurance:hover {
-  border-color: var(--color-gray-300);
-  box-shadow: var(--shadow-md);
+.pay-summary-badge--pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--color-warning);
 }
 
-.btc-pay-insurance--selected {
-  border-color: var(--color-success);
-  background: rgba(16, 185, 129, 0.03);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08), var(--shadow-md);
-}
-
-.btc-pay-insurance--selected:hover {
-  border-color: var(--color-success);
-}
-
-.btc-pay-insurance-header {
+/* Route timeline */
+.pay-summary-route {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
+  margin: 16px 0;
+  padding: 16px 0;
+  border-top: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--color-gray-100);
 }
 
-.btc-pay-insurance-info {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.pay-summary-route-point {
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.pay-summary-route-city {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin-bottom: 2px;
+}
+
+.pay-summary-route-time {
+  font-size: 0.75rem;
+  color: var(--color-gray-500);
+}
+
+.pay-summary-route-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 3px solid var(--color-accent);
+  background: #FFFFFF;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+  position: relative;
+}
+
+.pay-summary-route-dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 12px;
+  height: 2px;
+  background: var(--color-accent);
+  transform: translateY(-50%);
+  opacity: 0.4;
+}
+
+.pay-summary-route-line {
   flex: 1;
+  height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--color-gray-300) 0px,
+    var(--color-gray-300) 6px,
+    transparent 6px,
+    transparent 10px
+  );
 }
 
-.btc-pay-insurance-icon {
-  width: 44px;
-  height: 44px;
+/* Date info */
+.pay-summary-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--color-gray-600);
+  margin-bottom: 12px;
+}
+
+.pay-summary-date-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+}
+
+/* Seat badges */
+.pay-summary-seats {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.pay-summary-seat {
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-md);
-  background: var(--color-success-50);
+  background: var(--color-primary);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  position: relative;
+  overflow: hidden;
+}
+
+.pay-summary-seat::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+}
+
+.pay-summary-seat-label {
+  font-size: 0.72rem;
+  color: var(--color-gray-500);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+/* Price rows */
+.pay-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.pay-summary-row-label {
+  font-size: 0.82rem;
+  color: var(--color-gray-500);
+}
+
+.pay-summary-row-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-gray-800);
+}
+
+.pay-summary-row--discount .pay-summary-row-value {
+  color: var(--color-success);
+}
+
+.pay-summary-row--insurance {
+  padding: 10px 0;
+}
+
+/* Promo applied tag */
+.pay-summary-promo-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: rgba(16, 188, 129, 0.1);
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-success);
+}
+
+/* Total */
+.pay-summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  margin-top: 8px;
+  border-top: 2px solid var(--color-gray-200);
+}
+
+.pay-summary-total-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-gray-700);
+}
+
+.pay-summary-total-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  letter-spacing: -0.02em;
+}
+
+/* Summary action button */
+.pay-summary-action {
+  margin-top: 20px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+  border: none;
+  border-radius: var(--radius-lg);
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  font-weight: 700;
+  width: 100%;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
+  font-family: inherit;
+}
+
+.pay-summary-action:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(255, 107, 53, 0.4);
+}
+
+.pay-summary-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Summary info rows with icons */
+.pay-summary-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.pay-summary-info:last-child {
+  border-bottom: none;
+}
+
+.pay-summary-info-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: var(--color-gray-100);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: all 0.3s ease;
 }
 
-.btc-pay-insurance--selected .btc-pay-insurance-icon {
+.pay-summary-info-icon svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-gray-500);
+}
+
+.pay-summary-info-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.pay-summary-info-label {
+  font-size: 0.72rem;
+  color: var(--color-gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.pay-summary-info-value {
+  font-size: 0.85rem;
+  color: var(--color-gray-800);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------
+   10. Promo Code (Dark Background)
+   ------------------------------------------------------------ */
+.pay-promo {
+  display: flex;
+  flex-direction: column;
+}
+
+.pay-promo-toggle {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color var(--transition-fast);
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+}
+
+.pay-promo-toggle:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pay-promo-toggle-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+}
+
+.pay-promo-toggle--open .pay-promo-toggle-icon {
+  transform: rotate(180deg);
+}
+
+.pay-promo-input-row {
+  display: flex;
+  gap: 8px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.pay-promo-input-row--open {
+  max-height: 80px;
+  opacity: 1;
+  margin-top: 12px;
+}
+
+.pay-promo-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  color: #FFFFFF;
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  transition: all var(--transition-base);
+}
+
+.pay-promo-input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+.pay-promo-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+}
+
+.pay-promo-apply {
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.pay-promo-apply:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.pay-promo-apply:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Promo success/error message */
+.pay-promo-message {
+  font-size: 0.75rem;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: paySlideIn 0.2s ease;
+}
+
+.pay-promo-message--success {
+  color: var(--color-success);
+}
+
+.pay-promo-message--error {
+  color: var(--color-danger);
+}
+
+/* ------------------------------------------------------------
+   11. Insurance (Dark Background)
+   ------------------------------------------------------------ */
+.pay-insurance {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.pay-insurance:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.pay-insurance--selected {
+  border-color: var(--color-success);
+  background: rgba(16, 185, 129, 0.06);
+}
+
+.pay-insurance--selected:hover {
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.pay-insurance-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition-base);
+}
+
+.pay-insurance--selected .pay-insurance-icon {
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.pay-insurance-icon svg {
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.pay-insurance--selected .pay-insurance-icon svg {
+  color: var(--color-success);
+}
+
+.pay-insurance-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.pay-insurance-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 2px;
+}
+
+.pay-insurance-desc {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.3;
+}
+
+.pay-insurance-price {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-top: 4px;
+}
+
+/* Custom toggle */
+.pay-toggle {
+  width: 48px;
+  height: 26px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.15);
+  position: relative;
+  transition: background var(--transition-smooth);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.pay-toggle--on {
   background: var(--color-success);
 }
 
-.btc-pay-insurance--selected .btc-pay-insurance-icon svg {
-  color: #ffffff;
-}
-
-.btc-pay-insurance-icon svg {
-  width: 22px;
-  height: 22px;
-  color: var(--color-success);
-}
-
-.btc-pay-insurance-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.btc-pay-insurance-price {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-.btc-pay-insurance-price span {
-  font-weight: 600;
-  color: var(--color-success);
-}
-
-.btc-pay-insurance-toggle {
-  width: 44px;
-  height: 24px;
-  border-radius: 12px;
-  background: var(--color-gray-300);
-  position: relative;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  flex-shrink: 0;
-  border: none;
-  padding: 0;
-}
-
-.btc-pay-insurance-toggle::after {
+.pay-toggle::after {
   content: '';
   position: absolute;
   top: 3px;
   left: 3px;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: #FFFFFF;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.btc-pay-insurance--selected .btc-pay-insurance-toggle {
+.pay-toggle--on::after {
+  transform: translateX(22px);
+}
+
+/* ------------------------------------------------------------
+   12. Terms (Dark Background)
+   ------------------------------------------------------------ */
+.pay-terms {
+  padding: 16px 0;
+}
+
+.pay-terms-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: flex-start;
+}
+
+.pay-terms-item:last-child {
+  margin-bottom: 0;
+}
+
+.pay-terms-text {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.pay-terms-text a {
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.pay-terms-text a:hover {
+  color: #FFFFFF;
+  text-decoration: underline;
+}
+
+/* Custom checkbox */
+.pay-checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  margin-top: 1px;
+  background: transparent;
+}
+
+.pay-checkbox:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.pay-checkbox--checked {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  animation: payCheckPop 0.2s ease;
+}
+
+.pay-checkbox svg {
+  width: 12px;
+  height: 12px;
+  color: #FFFFFF;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.2s ease;
+}
+
+.pay-checkbox--checked svg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Required asterisk */
+.pay-terms-required {
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------
+   13. Trust / Security Badges (Dark Background)
+   ------------------------------------------------------------ */
+.pay-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.pay-trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all var(--transition-fast);
+}
+
+.pay-trust-badge:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.pay-trust-badge-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------
+   14. Countdown Bar
+   ------------------------------------------------------------ */
+.pay-countdown {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: var(--radius-lg);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: background 0.3s, color 0.3s;
+}
+
+.pay-countdown-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.pay-countdown-text {
+  flex: 1;
+}
+
+.pay-countdown--safe {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+.pay-countdown--warn {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--color-warning);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+}
+
+.pay-countdown--danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-danger);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  animation: payPulse 1s infinite;
+}
+
+.pay-countdown-time {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 1rem;
+  margin-left: auto;
+  letter-spacing: 0.05em;
+}
+
+/* Countdown progress bar */
+.pay-countdown-bar {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.pay-countdown-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s linear, background 0.3s ease;
+}
+
+.pay-countdown--safe .pay-countdown-bar-fill {
   background: var(--color-success);
 }
 
-.btc-pay-insurance--selected .btc-pay-insurance-toggle::after {
-  transform: translateX(20px);
+.pay-countdown--warn .pay-countdown-bar-fill {
+  background: var(--color-warning);
 }
 
-.btc-pay-insurance-details {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--color-gray-100);
-  display: none;
+.pay-countdown--danger .pay-countdown-bar-fill {
+  background: var(--color-danger);
 }
 
-.btc-pay-insurance--selected .btc-pay-insurance-details {
-  display: block;
-  animation: btcPaySlideDown 0.3s ease-out;
-}
-
-.btc-pay-insurance-detail-item {
+/* ------------------------------------------------------------
+   15. Actions (Dark Background)
+   ------------------------------------------------------------ */
+.pay-actions {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  padding: 4px 0;
-}
-
-.btc-pay-insurance-detail-item svg {
-  width: 14px;
-  height: 14px;
-  color: var(--color-success);
-  flex-shrink: 0;
-}
-
-
-/* ==========================================================================
-   10. Terms Card
-   ========================================================================== */
-
-.btc-pay-terms {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: var(--radius-xl);
-  padding: 20px 28px;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 24px;
-}
-
-.btc-pay-terms-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.btc-pay-terms-list {
-  display: flex;
-  flex-direction: column;
   gap: 12px;
+  padding-top: 8px;
 }
 
-.btc-pay-terms-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.btc-pay-terms-checkbox {
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
-  border: 2px solid var(--color-gray-300);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 1px;
+.pay-btn-back {
+  padding: 16px 24px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s ease;
-  background: #ffffff;
-  appearance: none;
-  -webkit-appearance: none;
-  position: relative;
-}
-
-.btc-pay-terms-checkbox:hover {
-  border-color: var(--color-primary);
-}
-
-.btc-pay-terms-checkbox:focus {
-  box-shadow: 0 0 0 3px rgba(11, 29, 81, 0.1);
-}
-
-.btc-pay-terms-checkbox:checked {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-}
-
-.btc-pay-terms-checkbox:checked::after {
-  content: '';
-  width: 6px;
-  height: 10px;
-  border: 2px solid #ffffff;
-  border-top: none;
-  border-left: none;
-  transform: rotate(45deg) translate(-1px, -1px);
-}
-
-.btc-pay-terms-text {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  cursor: pointer;
-}
-
-.btc-pay-terms-text a {
-  color: var(--color-primary);
-  text-decoration: underline;
-  text-decoration-color: rgba(11, 29, 81, 0.3);
-  transition: text-decoration-color 0.2s ease;
-}
-
-.btc-pay-terms-text a:hover {
-  text-decoration-color: var(--color-primary);
-}
-
-
-/* ==========================================================================
-   11. Security Badges
-   ========================================================================== */
-
-.btc-pay-security {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: var(--radius-xl);
-  padding: 20px 28px;
-  margin-bottom: 24px;
-}
-
-.btc-pay-security-title {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text-muted);
-  margin-bottom: 14px;
-  text-align: center;
-}
-
-.btc-pay-security-badges {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.btc-pay-security-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  background: rgba(16, 185, 129, 0.06);
-  border: 1px solid rgba(16, 185, 129, 0.12);
-  border-radius: var(--radius-md);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.btc-pay-security-badge svg {
-  width: 14px;
-  height: 14px;
-  color: var(--color-success);
-  flex-shrink: 0;
-}
-
-
-/* ==========================================================================
-   12. Countdown
-   ========================================================================== */
-
-.btc-pay-countdown {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: var(--radius-xl);
-  padding: 20px 28px;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 24px;
-  transition: all 0.3s ease;
-}
-
-.btc-pay-countdown-label {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-muted);
-  margin-bottom: 12px;
-}
-
-.btc-pay-countdown-ring {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 12px;
-  position: relative;
-}
-
-.btc-pay-countdown-ring svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-.btc-pay-countdown-ring-bg {
-  fill: none;
-  stroke: var(--color-gray-200);
-  stroke-width: 4;
-}
-
-.btc-pay-countdown-ring-progress {
-  fill: none;
-  stroke: var(--color-primary);
-  stroke-width: 4;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
-}
-
-.btc-pay-countdown-time {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--text-primary);
-  font-variant-numeric: tabular-nums;
-}
-
-.btc-pay-countdown--warning {
-  border-color: rgba(245, 158, 11, 0.3);
-  background: rgba(255, 251, 235, 0.9);
-}
-
-.btc-pay-countdown--warning .btc-pay-countdown-ring-progress {
-  stroke: var(--color-warning);
-}
-
-.btc-pay-countdown--warning .btc-pay-countdown-time {
-  color: var(--color-warning);
-}
-
-.btc-pay-countdown--danger {
-  border-color: rgba(239, 68, 68, 0.3);
-  background: rgba(254, 242, 242, 0.9);
-  animation: btcPayCountdownPulse 1.5s ease-in-out infinite;
-}
-
-.btc-pay-countdown--danger .btc-pay-countdown-ring-progress {
-  stroke: var(--color-danger);
-}
-
-.btc-pay-countdown--danger .btc-pay-countdown-time {
-  color: var(--color-danger);
-}
-
-.btc-pay-countdown-message {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-.btc-pay-countdown--warning .btc-pay-countdown-message {
-  color: var(--color-warning);
-}
-
-.btc-pay-countdown--danger .btc-pay-countdown-message {
-  color: var(--color-danger);
-  font-weight: 600;
-}
-
-
-/* ==========================================================================
-   13. Submit Button
-   ========================================================================== */
-
-.btc-pay-submit-wrapper {
-  margin-bottom: 24px;
-}
-
-.btc-pay-submit {
-  width: 100%;
-  padding: 16px 28px;
-  font-size: 16px;
-  font-weight: 700;
+  transition: all var(--transition-fast);
   font-family: inherit;
-  color: #ffffff;
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-600) 100%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.pay-btn-back:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+}
+
+.pay-btn-back:active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.pay-btn-back-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.pay-btn-pay {
+  flex: 1;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
   border: none;
   border-radius: var(--radius-lg);
+  color: #FFFFFF;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+  transition: all var(--transition-smooth);
+  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.35);
+  font-family: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-}
-
-.btc-pay-submit::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.btc-pay-submit:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.4);
-}
-
-.btc-pay-submit:hover:not(:disabled)::before {
-  opacity: 1;
-}
-
-.btc-pay-submit:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
-}
-
-.btc-pay-submit:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.btc-pay-submit svg {
-  width: 20px;
-  height: 20px;
-}
-
-.btc-pay-submit-lock {
-  margin-right: 4px;
-}
-
-
-/* ==========================================================================
-   14. Modals
-   ========================================================================== */
-
-.btc-pay-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(11, 29, 81, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
-  padding: 24px;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.btc-pay-modal-overlay--visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-.btc-pay-modal {
-  background: #ffffff;
-  border-radius: var(--radius-2xl);
-  padding: 40px;
-  max-width: 440px;
-  width: 100%;
-  box-shadow: var(--shadow-xl);
-  text-align: center;
-  transform: scale(0.9) translateY(20px);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
   overflow: hidden;
 }
 
-.btc-pay-modal-overlay--visible .btc-pay-modal {
-  transform: scale(1) translateY(0);
+.pay-btn-pay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
 }
 
-.btc-pay-modal-close {
+.pay-btn-pay:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.pay-btn-pay:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255, 107, 53, 0.45);
+}
+
+.pay-btn-pay:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+}
+
+.pay-btn-pay:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.pay-btn-pay-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.pay-btn-pay-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pay-btn-pay-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: paySpin 0.7s linear infinite;
+}
+
+/* Secondary pay button */
+.pay-btn-secondary {
+  flex: 1;
+  padding: 16px 32px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pay-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
+}
+
+/* ------------------------------------------------------------
+   16. Processing Overlay
+   ------------------------------------------------------------ */
+.pay-processing {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 29, 81, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  animation: payFadeIn 0.3s ease;
+}
+
+.pay-processing-ring {
+  width: 64px;
+  height: 64px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: paySpin 0.8s linear infinite;
+  position: relative;
+}
+
+.pay-processing-ring::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border: 2px solid rgba(255, 107, 53, 0.08);
+  border-top-color: rgba(255, 107, 53, 0.3);
+  border-radius: 50%;
+  animation: paySpin 1.2s linear infinite reverse;
+}
+
+.pay-processing-text {
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  max-width: 280px;
+}
+
+.pay-processing-subtext {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.pay-processing-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 280px;
+}
+
+.pay-processing-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.3);
+  transition: color 0.3s ease;
+}
+
+.pay-processing-step--active {
+  color: #FFFFFF;
+}
+
+.pay-processing-step--done {
+  color: var(--color-success);
+}
+
+.pay-processing-step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.pay-processing-step--active .pay-processing-step-dot {
+  background: var(--color-accent);
+  box-shadow: 0 0 8px rgba(255, 107, 53, 0.4);
+  animation: payPulse 1s infinite;
+}
+
+.pay-processing-step--done .pay-processing-step-dot {
+  background: var(--color-success);
+}
+
+/* ------------------------------------------------------------
+   17. Modals
+   ------------------------------------------------------------ */
+.pay-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 29, 81, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: payFadeIn 0.2s ease;
+}
+
+.pay-modal {
+  background: #FFFFFF;
+  border-radius: var(--radius-2xl);
+  padding: 40px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  animation: payModalIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.pay-modal-close {
   position: absolute;
   top: 16px;
   right: 16px;
@@ -1774,754 +1872,763 @@
   border-radius: 50%;
   border: none;
   background: var(--color-gray-100);
-  color: var(--text-muted);
-  cursor: pointer;
+  color: var(--color-gray-500);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
-.btc-pay-modal-close:hover {
+.pay-modal-close:hover {
   background: var(--color-gray-200);
-  color: var(--text-primary);
+  color: var(--color-gray-700);
 }
 
-.btc-pay-modal-close svg {
-  width: 16px;
-  height: 16px;
-}
-
-.btc-pay-modal-icon {
-  width: 72px;
-  height: 72px;
+.pay-modal-icon {
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
-  position: relative;
 }
 
-.btc-pay-modal-icon--success {
-  background: var(--color-success-50);
+.pay-modal-icon--success {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--color-success);
 }
 
-.btc-pay-modal-icon--error {
-  background: var(--color-danger-50);
+.pay-modal-icon--error {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-danger);
 }
 
-.btc-pay-modal-success-check {
-  width: 72px;
-  height: 72px;
+.pay-modal-icon--warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--color-warning);
 }
 
-.btc-pay-modal-success-check circle {
-  fill: var(--color-success);
-  opacity: 0;
-  transform-origin: center;
-  animation: btcPayCheckIn 0.5s ease-out 0.1s forwards;
-}
-
-.btc-pay-modal-success-check polyline {
-  fill: none;
-  stroke: #ffffff;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 40;
-  stroke-dashoffset: 40;
-  animation: btcPayCheckDraw 0.4s ease-out 0.4s forwards;
-}
-
-.btc-pay-modal-error-x {
-  width: 72px;
-  height: 72px;
-}
-
-.btc-pay-modal-error-x circle {
-  fill: var(--color-danger);
-  opacity: 0;
-  transform-origin: center;
-  animation: btcPayCheckIn 0.5s ease-out 0.1s forwards;
-}
-
-.btc-pay-modal-error-x line {
-  stroke: #ffffff;
-  stroke-width: 3;
-  stroke-linecap: round;
-  opacity: 0;
-  animation: btcPayFadeInUp 0.3s ease-out 0.4s forwards;
-}
-
-.btc-pay-modal-title {
-  font-size: 22px;
+.pay-modal-title {
+  font-size: 1.15rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--color-gray-900);
+  text-align: center;
   margin-bottom: 8px;
 }
 
-.btc-pay-modal-message {
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  margin-bottom: 28px;
+.pay-modal-desc {
+  font-size: 0.85rem;
+  color: var(--color-gray-500);
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 24px;
 }
 
-.btc-pay-modal-actions {
+.pay-modal-actions {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.btc-pay-modal-btn {
-  width: 100%;
-  padding: 13px 24px;
-  font-size: 15px;
+.pay-modal-btn {
+  padding: 14px 24px;
+  border-radius: var(--radius-lg);
+  font-size: 0.88rem;
   font-weight: 600;
-  font-family: inherit;
-  border-radius: var(--radius-md);
-  border: none;
   cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.btc-pay-modal-btn--primary {
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-600) 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
-}
-
-.btc-pay-modal-btn--primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(255, 107, 53, 0.4);
-}
-
-.btc-pay-modal-btn--secondary {
-  background: var(--color-gray-100);
-  color: var(--text-secondary);
-}
-
-.btc-pay-modal-btn--secondary:hover {
-  background: var(--color-gray-200);
-  color: var(--text-primary);
-}
-
-.btc-pay-modal-ticket-ref {
-  display: inline-block;
-  padding: 6px 14px;
-  background: var(--color-primary-50);
-  border: 1px solid rgba(11, 29, 81, 0.1);
-  border-radius: var(--radius-md);
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--color-primary);
-  letter-spacing: 2px;
-  margin-bottom: 20px;
-  font-family: 'Courier New', monospace;
-}
-
-
-/* ==========================================================================
-   15. Processing Overlay
-   ========================================================================== */
-
-.btc-pay-processing {
-  position: fixed;
-  inset: 0;
-  background: rgba(11, 29, 81, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  z-index: 10001;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.btc-pay-processing--visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-.btc-pay-processing-spinner {
-  width: 60px;
-  height: 60px;
-  position: relative;
-}
-
-.btc-pay-processing-spinner::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 4px solid rgba(255, 255, 255, 0.15);
-  border-top-color: var(--color-accent);
-  animation: btcPaySpin 0.8s linear infinite;
-}
-
-.btc-pay-processing-spinner::after {
-  content: '';
-  position: absolute;
-  inset: 8px;
-  border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #ffffff;
-  animation: btcPaySpin 1.2s linear infinite reverse;
-}
-
-.btc-pay-processing-text {
-  font-size: 16px;
-  font-weight: 600;
-  color: #ffffff;
+  transition: all var(--transition-fast);
+  font-family: inherit;
+  border: none;
   text-align: center;
 }
 
-.btc-pay-processing-subtext {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: -12px;
+.pay-modal-btn--primary {
+  background: var(--color-accent);
+  color: #FFFFFF;
 }
 
+.pay-modal-btn--primary:hover {
+  background: var(--color-accent-dark);
+}
 
-/* ==========================================================================
-   16. Skeleton Loading
-   ========================================================================== */
+.pay-modal-btn--secondary {
+  background: var(--color-gray-100);
+  color: var(--color-gray-700);
+}
 
-.btc-pay-skeleton {
-  background: linear-gradient(90deg, var(--color-gray-100) 25%, var(--color-gray-50) 50%, var(--color-gray-100) 75%);
-  background-size: 400% 100%;
-  animation: btcPayShimmer 1.5s ease-in-out infinite;
+.pay-modal-btn--secondary:hover {
+  background: var(--color-gray-200);
+}
+
+/* Success animation ring */
+.pay-modal-success-ring {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  position: relative;
+}
+
+.pay-modal-success-ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid var(--color-success);
+  animation: payBounceIn 0.5s ease both;
+}
+
+.pay-modal-success-ring::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--color-success);
+  font-weight: 800;
+  animation: payBounceIn 0.5s ease 0.1s both;
+}
+
+/* ------------------------------------------------------------
+   18. Skeleton Loading
+   ------------------------------------------------------------ */
+.pay-skeleton {
   border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: payShimmer 1.5s ease-in-out infinite;
 }
 
-.btc-pay-skeleton--text {
+.pay-skeleton--text {
   height: 14px;
-  width: 80%;
   margin-bottom: 8px;
 }
 
-.btc-pay-skeleton--text-sm {
-  height: 10px;
-  width: 50%;
+.pay-skeleton--text:last-child {
+  width: 60%;
 }
 
-.btc-pay-skeleton--title {
+.pay-skeleton--title {
   height: 20px;
-  width: 60%;
+  width: 70%;
   margin-bottom: 12px;
 }
 
-.btc-pay-skeleton--card {
-  height: 200px;
-  width: 100%;
+.pay-skeleton--box {
+  height: 80px;
   border-radius: var(--radius-xl);
 }
 
-.btc-pay-skeleton--input {
-  height: 46px;
-  width: 100%;
-}
-
-.btc-pay-skeleton--button {
-  height: 52px;
-  width: 100%;
-  border-radius: var(--radius-lg);
-}
-
-.btc-pay-skeleton--circle {
-  width: 44px;
-  height: 44px;
+.pay-skeleton--circle {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
 }
 
-.btc-pay-skeleton--row {
+.pay-skeleton--button {
+  height: 48px;
+  border-radius: var(--radius-lg);
+}
+
+/* Right panel skeleton */
+.pay-skeleton-right {
+  background: var(--color-gray-200);
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    var(--color-gray-100) 25%,
+    var(--color-gray-200) 50%,
+    var(--color-gray-100) 75%
+  );
+  background-size: 200% 100%;
+  animation: payShimmer 1.5s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------
+   19. Toast / Notification
+   ------------------------------------------------------------ */
+.pay-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 14px 20px;
+  border-radius: var(--radius-lg);
+  background: var(--color-gray-900);
+  color: #FFFFFF;
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  animation: paySlideIn 0.3s ease;
+  max-width: 360px;
 }
 
+.pay-toast--success {
+  border-left: 4px solid var(--color-success);
+}
 
-/* ==========================================================================
-   17. Responsive Design
-   ========================================================================== */
+.pay-toast--error {
+  border-left: 4px solid var(--color-danger);
+}
 
-/* Large screens */
+.pay-toast--warning {
+  border-left: 4px solid var(--color-warning);
+}
+
+.pay-toast-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.pay-toast-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  transition: color var(--transition-fast);
+}
+
+.pay-toast-close:hover {
+  color: #FFFFFF;
+}
+
+/* ------------------------------------------------------------
+   20. Responsive Design
+   ------------------------------------------------------------ */
 @media (max-width: 1199px) {
-  .btc-pay-layout {
-    grid-template-columns: 1fr 340px;
-    gap: 24px;
+  .pay-split {
+    grid-template-columns: 1fr 360px;
   }
 
-  .btc-pay-container {
-    max-width: 1080px;
+  .pay-left {
+    padding: 32px;
   }
 
-  .btc-pay-summary-total-value {
-    font-size: 22px;
+  .pay-right {
+    padding: 32px;
+  }
+
+  .pay-method-logo {
+    width: 48px;
+    height: 48px;
+    font-size: 0.82rem;
   }
 }
 
-/* Tablet */
 @media (max-width: 991px) {
-  .btc-pay-layout {
+  .pay-split {
     grid-template-columns: 1fr;
-    gap: 24px;
+    min-height: auto;
   }
 
-  .btc-pay-page::before {
-    height: 240px;
-    border-radius: 0 0 24px 24px;
+  .pay-left {
+    background: linear-gradient(160deg, #0B1D51 0%, #0F2347 40%, #12296B 100%);
+    padding: 32px 24px;
   }
 
-  .btc-pay-summary {
+  .pay-right {
+    padding: 32px 24px;
+    border-left: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  .pay-summary {
     position: static;
-    order: 2;
   }
 
-  .btc-pay-methods-card,
-  .btc-pay-form-card,
-  .btc-pay-promo,
-  .btc-pay-insurance,
-  .btc-pay-terms,
-  .btc-pay-security {
-    order: 1;
+  .pay-method-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  .btc-pay-countdown {
-    order: 0;
-  }
-
-  .btc-pay-submit-wrapper {
-    order: 3;
-  }
-
-  .btc-pay-summary-body {
+  .pay-stepper {
     padding: 16px 20px;
+    overflow-x: auto;
   }
 
-  .btc-pay-summary-header {
-    padding: 16px 20px;
+  .pay-step-label {
+    font-size: 0.72rem;
   }
 }
 
-/* Mobile */
 @media (max-width: 767px) {
-  .btc-pay-page {
-    padding-bottom: 40px;
+  .pay-left {
+    padding: 24px 16px;
   }
 
-  .btc-pay-page::before {
-    height: 200px;
-    border-radius: 0 0 20px 20px;
+  .pay-right {
+    padding: 24px 16px;
   }
 
-  .btc-pay-container {
-    padding: 0 16px;
+  .pay-method-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .btc-pay-layout {
+  .pay-summary-body {
+    padding: 20px;
+  }
+
+  .pay-summary-photo {
+    height: 140px;
+  }
+
+  .pay-card-row {
+    grid-template-columns: 1fr;
+  }
+
+  .pay-card-row--three {
+    grid-template-columns: 1fr;
+  }
+
+  .pay-section-title {
+    font-size: 1rem;
+  }
+
+  .pay-agency {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .pay-actions {
+    flex-direction: column-reverse;
+  }
+
+  .pay-btn-back,
+  .pay-btn-pay {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pay-modal {
+    padding: 28px 24px;
+    margin: 16px;
+  }
+
+  .pay-toast {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .pay-method-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pay-method-tile {
+    padding: 16px;
+    display: flex;
+    align-items: center;
     gap: 16px;
   }
 
-  .btc-pay-stepper {
+  .pay-method-logo {
+    margin-bottom: 0;
+  }
+
+  .pay-method-check {
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+  }
+
+  .pay-stepper {
     gap: 0;
-    padding: 16px 0 24px;
+    padding: 14px 16px;
   }
 
-  .btc-pay-step-circle {
-    width: 36px;
-    height: 36px;
-    font-size: 14px;
+  .pay-step-label {
+    display: none;
   }
 
-  .btc-pay-step-label {
-    font-size: 9px;
+  .pay-step-indicator {
+    width: 32px;
+    height: 32px;
+    font-size: 0.72rem;
   }
 
-  .btc-pay-step-line {
-    width: 40px;
-    margin-bottom: 16px;
+  .pay-step-connector {
+    min-width: 20px;
+    margin: 0 8px;
   }
 
-  .btc-pay-methods-card,
-  .btc-pay-form-card,
-  .btc-pay-promo,
-  .btc-pay-insurance,
-  .btc-pay-terms,
-  .btc-pay-security,
-  .btc-pay-countdown {
-    padding: 16px 18px;
-    border-radius: var(--radius-lg);
+  .pay-insurance {
+    padding: 14px 16px;
+    gap: 12px;
   }
 
-  .btc-pay-form-row {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  .btc-pay-card-preview {
-    max-width: 100%;
-    padding: 18px;
-  }
-
-  .btc-pay-card-preview-number {
-    font-size: 16px;
-    letter-spacing: 2px;
-  }
-
-  .btc-pay-summary-route {
-    padding: 12px 0;
-  }
-
-  .btc-pay-summary-route-city {
-    font-size: 14px;
-  }
-
-  .btc-pay-summary-seats {
-    gap: 4px;
-  }
-
-  .btc-pay-summary-seat-badge {
-    padding: 4px 8px;
-    font-size: 11px;
-  }
-
-  .btc-pay-modal {
-    padding: 28px 24px;
-    margin: 16px;
-    border-radius: var(--radius-xl);
-  }
-
-  .btc-pay-modal-title {
-    font-size: 18px;
-  }
-
-  .btc-pay-countdown {
-    padding: 16px 20px;
-  }
-
-  .btc-pay-countdown-ring {
-    width: 64px;
-    height: 64px;
-  }
-
-  .btc-pay-countdown-time {
-    font-size: 16px;
-  }
-
-  .btc-pay-submit {
-    padding: 14px 24px;
-    font-size: 15px;
-  }
-}
-
-/* Small mobile */
-@media (max-width: 480px) {
-  .btc-pay-page::before {
-    height: 160px;
-    border-radius: 0 0 16px 16px;
-  }
-
-  .btc-pay-container {
-    padding: 0 12px;
-  }
-
-  .btc-pay-methods-card,
-  .btc-pay-form-card,
-  .btc-pay-promo,
-  .btc-pay-insurance,
-  .btc-pay-terms,
-  .btc-pay-security {
-    padding: 14px 14px;
-  }
-
-  .btc-pay-method {
-    padding: 12px 14px;
+  .pay-summary-route {
     gap: 10px;
   }
 
-  .btc-pay-method-logo {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
+  .pay-summary-route-city {
+    font-size: 0.85rem;
   }
 
-  .btc-pay-method-name {
-    font-size: 13px;
+  .pay-countdown {
+    padding: 10px 14px;
+    font-size: 0.78rem;
   }
 
-  .btc-pay-method-desc {
-    font-size: 11px;
-  }
-
-  .btc-pay-form-input {
-    padding: 11px 12px;
-    font-size: 14px;
-  }
-
-  .btc-pay-form-label {
-    font-size: 10px;
-  }
-
-  .btc-pay-step-line {
-    width: 28px;
-  }
-
-  .btc-pay-stepper {
-    padding: 12px 0 20px;
-  }
-
-  .btc-pay-summary-route-arrow-line {
-    width: 32px;
-  }
-
-  .btc-pay-summary-pricing {
-    gap: 8px;
-  }
-
-  .btc-pay-summary-price-row {
-    font-size: 13px;
-  }
-
-  .btc-pay-summary-total-value {
-    font-size: 20px;
-  }
-
-  .btc-pay-promo-input-row {
-    flex-direction: column;
-  }
-
-  .btc-pay-promo-btn {
-    padding: 11px 24px;
-  }
-
-  .btc-pay-security-badges {
-    gap: 8px;
-  }
-
-  .btc-pay-security-badge {
-    padding: 6px 10px;
-    font-size: 10px;
-  }
-
-  .btc-pay-terms-text {
-    font-size: 12px;
+  .pay-input {
+    padding: 16px 14px 8px;
   }
 }
 
+/* ------------------------------------------------------------
+   21. Scrollbar — Custom for .pay-right
+   ------------------------------------------------------------ */
+.pay-right::-webkit-scrollbar {
+  width: 6px;
+}
 
-/* ==========================================================================
-   18. Animations
-   ========================================================================== */
+.pay-right::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-@keyframes btcPayFadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(16px);
+.pay-right::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 3px;
+}
+
+.pay-right::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Firefox */
+.pay-right {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
+}
+
+/* Left panel scrollbar */
+.pay-left::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pay-left::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pay-left::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+/* Stepper horizontal scroll */
+.pay-stepper::-webkit-scrollbar {
+  height: 0;
+}
+
+/* ------------------------------------------------------------
+   22. Print Styles
+   ------------------------------------------------------------ */
+@media print {
+  .pay-processing,
+  .pay-modal-overlay,
+  .pay-countdown,
+  .pay-toast,
+  .pay-actions,
+  .pay-promo,
+  .pay-trust,
+  .pay-terms,
+  .pay-left::before,
+  .pay-left::after {
+    display: none !important;
   }
-  100% {
+
+  .pay-page {
+    background: #FFFFFF;
+  }
+
+  .pay-split {
+    display: block;
+    min-height: auto;
+  }
+
+  .pay-left {
+    background: none !important;
+    padding: 20px;
+    color: #000;
+  }
+
+  .pay-left * {
+    color: #000 !important;
+    background: transparent !important;
+    border-color: #CCC !important;
+    box-shadow: none !important;
+  }
+
+  .pay-right {
+    background: #FFFFFF;
+    padding: 20px;
+    border: none;
+  }
+
+  .pay-summary {
+    box-shadow: none;
+    border: 1px solid #CCC;
+    position: static;
+  }
+
+  .pay-section-title,
+  .pay-method-name,
+  .pay-input {
+    color: #000 !important;
+  }
+
+  .pay-summary-total-value {
+    color: #000 !important;
+  }
+
+  body {
+    font-size: 12pt;
+    color: #000;
+  }
+
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @page {
+    margin: 1cm;
+  }
+}
+
+/* ------------------------------------------------------------
+   23. Animations
+   ------------------------------------------------------------ */
+@keyframes payCheckPop {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes paySlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes btcPayPulse {
-  0% {
-    border-color: rgba(11, 29, 81, 0.25);
-    transform: scale(1);
-  }
-  50% {
-    border-color: rgba(11, 29, 81, 0.08);
-    transform: scale(1.04);
-  }
-  100% {
-    border-color: rgba(11, 29, 81, 0.25);
-    transform: scale(1);
-  }
-}
-
-@keyframes btcPayShimmer {
-  0% {
-    background-position: -400% 0;
-  }
-  100% {
-    background-position: 400% 0;
-  }
-}
-
-@keyframes btcPayCountdownPulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.15);
-    border-color: rgba(239, 68, 68, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
-    border-color: rgba(239, 68, 68, 0.5);
-  }
-}
-
-@keyframes btcPaySlideDown {
-  0% {
-    opacity: 0;
-    max-height: 0;
-    transform: translateY(-8px);
-  }
-  100% {
-    opacity: 1;
-    max-height: 500px;
-    transform: translateY(0);
-  }
-}
-
-@keyframes btcPayCheckIn {
-  0% {
-    opacity: 0;
-    transform: scale(0);
-  }
-  60% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes btcPayCheckDraw {
-  0% {
-    stroke-dashoffset: 40;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes btcPayRadioIn {
-  0% {
-    transform: scale(0);
-  }
-  60% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes btcPaySpin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
+@keyframes paySpin {
+  to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes btcPayCardIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.9) translateY(30px);
-  }
-  60% {
-    transform: scale(1.02) translateY(-4px);
-  }
+@keyframes payPulse {
+  0%,
   100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes payModalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(16px);
+  }
+  to {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
 }
 
-
-/* ==========================================================================
-   19. Custom Scrollbar
-   ========================================================================== */
-
-.btc-pay-form-card::-webkit-scrollbar,
-.btc-pay-modal::-webkit-scrollbar {
-  width: 6px;
-}
-
-.btc-pay-form-card::-webkit-scrollbar-track,
-.btc-pay-modal::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.btc-pay-form-card::-webkit-scrollbar-thumb,
-.btc-pay-modal::-webkit-scrollbar-thumb {
-  background: var(--color-gray-300);
-  border-radius: 3px;
-}
-
-.btc-pay-form-card::-webkit-scrollbar-thumb:hover,
-.btc-pay-modal::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-400);
-}
-
-/* Firefox */
-.btc-pay-form-card,
-.btc-pay-modal {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-gray-300) transparent;
-}
-
-
-/* ==========================================================================
-   20. Print Styles
-   ========================================================================== */
-
-@media print {
-  .btc-pay-page {
-    background: #ffffff;
-    padding: 0;
+@keyframes payShimmer {
+  from {
+    background-position: 200% 0;
   }
-
-  .btc-pay-page::before {
-    display: none;
-  }
-
-  .btc-pay-modal-overlay,
-  .btc-pay-processing,
-  .btc-pay-countdown,
-  .btc-pay-submit,
-  .btc-pay-promo,
-  .btc-pay-insurance,
-  .btc-pay-terms,
-  .btc-pay-security {
-    display: none !important;
-  }
-
-  .btc-pay-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .btc-pay-summary {
-    position: static;
-    box-shadow: none;
-    border: 1px solid #e5e7eb;
-  }
-
-  .btc-pay-methods-card,
-  .btc-pay-form-card {
-    box-shadow: none;
-    border: 1px solid #e5e7eb;
-    backdrop-filter: none;
-  }
-
-  .btc-pay-card-preview {
-    box-shadow: none;
-    border: 1px solid #e5e7eb;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-  }
-
-  * {
-    animation: none !important;
-    transition: none !important;
+  to {
+    background-position: -200% 0;
   }
 }
+
+@keyframes payBounceIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes payFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes payFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes payGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px var(--color-accent), 0 4px 16px rgba(255, 107, 53, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 2px var(--color-accent), 0 8px 32px rgba(255, 107, 53, 0.35);
+  }
+}
+
+@keyframes payRipple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Utility animation classes */
+.pay-animate-fade-up {
+  animation: payFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.pay-animate-slide-in {
+  animation: paySlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.pay-animate-bounce-in {
+  animation: payBounceIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Staggered animation delays */
+.pay-delay-1 { animation-delay: 0.05s; }
+.pay-delay-2 { animation-delay: 0.1s; }
+.pay-delay-3 { animation-delay: 0.15s; }
+.pay-delay-4 { animation-delay: 0.2s; }
+.pay-delay-5 { animation-delay: 0.25s; }
+.pay-delay-6 { animation-delay: 0.3s; }
+
+/* ------------------------------------------------------------
+   24. Utility Classes
+   ------------------------------------------------------------ */
+.pay-hidden {
+  display: none !important;
+}
+
+.pay-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pay-text-center {
+  text-align: center;
+}
+
+.pay-mt-sm { margin-top: 8px; }
+.pay-mt-md { margin-top: 16px; }
+.pay-mt-lg { margin-top: 24px; }
+.pay-mb-sm { margin-bottom: 8px; }
+.pay-mb-md { margin-bottom: 16px; }
+.pay-mb-lg { margin-bottom: 24px; }
+
+/* Glass effect helper */
+.pay-glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Accent text */
+.pay-accent {
+  color: var(--color-accent);
+}
+
+/* Text sizes */
+.pay-text-xs { font-size: 0.68rem; }
+.pay-text-sm { font-size: 0.78rem; }
+.pay-text-md { font-size: 0.88rem; }
+.pay-text-lg { font-size: 1.05rem; }
+.pay-text-xl { font-size: 1.25rem; }
+
+/* Flex helpers */
+.pay-flex {
+  display: flex;
+}
+
+.pay-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.pay-items-center {
+  align-items: center;
+}
+
+.pay-justify-between {
+  justify-content: space-between;
+}
+
+.pay-gap-xs { gap: 4px; }
+.pay-gap-sm { gap: 8px; }
+.pay-gap-md { gap: 16px; }
+.pay-gap-lg { gap: 24px; }
+
+/* Divider */
+.pay-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 8px 0;
+}
+
+/* ============================================================
+   END — BUS TIX CONNECT Payment Stylesheet v2.0.0
+   ============================================================ */
