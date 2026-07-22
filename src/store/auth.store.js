@@ -153,6 +153,10 @@ const useAuthStore = create(
         token: state.token,
         refreshToken: state.refreshToken,
         sessionExpiresAt: state.sessionExpiresAt,
+        user: state.user,
+        role: state.role,
+        permissions: state.permissions,
+        isAuthenticated: state.isAuthenticated,
       }),
     }
   )

@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@schemas/auth.schema';
 import useAuth from '@hooks/useAuth';
+import { getRoleDashboard } from '@utils/roles';
 import AuthInput from './AuthInput';
 import AuthPasswordInput from './AuthPasswordInput';
 import SocialLogin from './SocialLogin';
@@ -11,9 +12,15 @@ import SocialLogin from './SocialLogin';
 const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, isLoggingIn, loginError } = useAuth();
+  const { login, isLoggingIn, loginError, user } = useAuth();
   const [showAlert, setShowAlert] = useState(!!loginError);
-  const from = location.state?.from?.pathname || '/';
+
+  const resolveRedirect = useCallback(() => {
+    if (user?.role) {
+      return getRoleDashboard(user.role);
+    }
+    return '/';
+  }, [user]);
 
   const {
     register,
@@ -27,7 +34,7 @@ const LoginForm = () => {
   const onSubmit = (data) => {
     setShowAlert(false);
     login(data, {
-      onSuccess: () => navigate(from, { replace: true }),
+      onSuccess: () => navigate(resolveRedirect(), { replace: true }),
       onError: () => setShowAlert(true),
     });
   };

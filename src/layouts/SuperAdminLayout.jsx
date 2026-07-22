@@ -1,34 +1,9 @@
-import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import Navbar from '@components/layout/Navbar';
-import Sidebar from '@components/layout/Sidebar';
-import Footer from '@components/layout/Footer';
-import { useNavigation } from '@hooks/useNavigation';
 
 /**
- * SuperAdminLayout — Layout pour l'administration
- * Uses dynamic navigation filtered by role + permissions
+ * SuperAdminLayout — Passthrough wrapper for /super-admin/* routes
+ * Each page manages its own layout.
  */
-const SuperAdminLayout = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const { menuItems } = useNavigation();
-
-  return (
-    <div className="btc-layout">
-      <Sidebar
-        items={menuItems}
-        collapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-      />
-      <div className="btc-layout-main">
-        <Navbar />
-        <main className="btc-layout-content">
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
-    </div>
-  );
-};
+const SuperAdminLayout = () => <Outlet />;
 
 export default SuperAdminLayout;

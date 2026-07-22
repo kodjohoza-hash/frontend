@@ -1,0 +1,63 @@
+import { ROLES } from '@utils/roles';
+import { ROLE_PERMISSIONS } from '@utils/permissions';
+
+const MOCK_USERS = [
+  {
+    id: 'usr_mock_001',
+    email: 'client@bustixconnect.com',
+    password: 'Client@123',
+    firstName: 'Jean-Pierre',
+    lastName: 'Kamga',
+    phone: '+237691234567',
+    role: ROLES.CLIENT,
+    country: 'CM',
+    city: 'Douala',
+    avatar: null,
+    emailVerified: true,
+    createdAt: '2024-03-15T10:00:00Z',
+  },
+  {
+    id: 'usr_mock_002',
+    email: 'company@bustixconnect.com',
+    password: 'Company@123',
+    firstName: 'Marie',
+    lastName: 'Ngo Biyick',
+    phone: '+237699887766',
+    role: ROLES.COMPANY_ADMIN,
+    country: 'CM',
+    city: 'Yaoundé',
+    avatar: null,
+    emailVerified: true,
+    createdAt: '2024-01-10T08:00:00Z',
+  },
+  {
+    id: 'usr_mock_003',
+    email: 'counter@bustixconnect.com',
+    password: 'Counter@123',
+    firstName: 'Paul',
+    lastName: 'Atangana',
+    phone: '+237677554433',
+    role: ROLES.COUNTER_AGENT,
+    country: 'CM',
+    city: 'Bafoussam',
+    avatar: null,
+    emailVerified: true,
+    createdAt: '2024-02-20T14:00:00Z',
+  },
+  {
+    id: 'usr_mock_004',
+    email: 'admin@bustixconnect.com',
+    password: 'Admin@123',
+    firstName: 'Super',
+    lastName: 'Admin',
+    phone: '+237655443322',
+    role: ROLES.SUPER_ADMIN,
+    country: 'CM',
+    city: 'Yaoundé',
+    avatar: null,
+    emailVerified: true,
+    createdAt: '2023-12-01T08:00:00Z',
+  },
+];
+
+export default MOCK_USERS;

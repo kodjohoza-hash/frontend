@@ -23,6 +23,7 @@ export default defineConfig({
       '@schemas': path.resolve(root, './src/schemas'),
       '@styles': path.resolve(root, './src/assets/styles'),
       '@data': path.resolve(root, './src/data'),
+      '@mock': path.resolve(root, './src/mock'),
     },
   },
   server: {

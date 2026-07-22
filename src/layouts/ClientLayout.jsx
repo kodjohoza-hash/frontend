@@ -1,34 +1,9 @@
-import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import Navbar from '@components/layout/Navbar';
-import Sidebar from '@components/layout/Sidebar';
-import Footer from '@components/layout/Footer';
-import { useNavigation } from '@hooks/useNavigation';
 
 /**
- * ClientLayout — Layout pour l'espace client
- * Uses dynamic navigation filtered by role + permissions
+ * ClientLayout — Passthrough wrapper for /client/* routes
+ * Each page (Dashboard, Bookings, etc.) manages its own layout.
  */
-const ClientLayout = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const { menuItems } = useNavigation();
-
-  return (
-    <div className="btc-layout">
-      <Sidebar
-        items={menuItems}
-        collapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-      />
-      <div className="btc-layout-main">
-        <Navbar />
-        <main className="btc-layout-content">
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
-    </div>
-  );
-};
+const ClientLayout = () => <Outlet />;
 
 export default ClientLayout;

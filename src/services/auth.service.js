@@ -1,54 +1,52 @@
-import api from '@config/axios';
+import { mockLogin, mockRegister, mockLogout, mockGetProfile, mockForgotPassword, mockResetPassword, mockVerifyEmail, mockResendVerification } from '@mock/authService';
 
 /**
- * BUS TIX CONNECT — Auth Service
- * API layer for authentication endpoints
- * Ready for Express.js backend integration
+ * BUS TIX CONNECT — Mock Auth Service
+ * Drop-in replacement for the real authService.
+ * Returns the same { data: ... } shape so useAuth hook works unchanged.
+ *
+ * When the real Express.js backend is ready, swap this file for the original
+ * auth.service.js that uses axios — no other changes needed.
  */
 const authService = {
-  login: (credentials) => {
-    return api.post('/auth/login', credentials);
-  },
+  login: (credentials) => mockLogin(credentials),
 
-  register: (data) => {
-    return api.post('/auth/register', data);
-  },
+  register: (data) => mockRegister(data),
 
-  logout: () => {
-    return api.post('/auth/logout');
-  },
+  logout: () => mockLogout(),
 
-  refresh: (refreshToken) => {
-    return api.post('/auth/refresh', { refreshToken });
-  },
+  refresh: (refreshToken) =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          data: {
+            token: 'mock_token_' + Date.now().toString(36),
+            refreshToken: 'mock_refresh_' + Date.now().toString(36),
+            expiresAt: Date.now() + 24 * 60 * 60 * 1000,
+          },
+        });
+      }, 200);
+    }),
 
-  forgotPassword: (email) => {
-    return api.post('/auth/forgot-password', { email });
-  },
+  forgotPassword: (email) => mockForgotPassword(email),
 
-  resetPassword: (data) => {
-    return api.post('/auth/reset-password', data);
-  },
+  resetPassword: (data) => mockResetPassword(data),
 
-  verifyEmail: (data) => {
-    return api.post('/auth/verify-email', data);
-  },
+  verifyEmail: (data) => mockVerifyEmail(data),
 
-  resendVerification: (email) => {
-    return api.post('/auth/resend-verification', { email });
-  },
+  resendVerification: (email) => mockResendVerification(email),
 
-  getProfile: () => {
-    return api.get('/auth/profile');
-  },
+  getProfile: () => mockGetProfile(),
 
-  updateProfile: (data) => {
-    return api.put('/auth/profile', data);
-  },
+  updateProfile: (data) =>
+    new Promise((resolve) => {
+      setTimeout(() => resolve({ data }), 300);
+    }),
 
-  changePassword: (data) => {
-    return api.put('/auth/change-password', data);
-  },
+  changePassword: (data) =>
+    new Promise((resolve) => {
+      setTimeout(() => resolve({ data: { message: 'Mot de passe modifié.' } }), 300);
+    }),
 };
 
 export default authService;

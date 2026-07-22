@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from '@schemas/auth.schema';
 import useAuth from '@hooks/useAuth';
+import useAuthStore from '@store/auth.store';
 import AuthInput from './AuthInput';
 import AuthPasswordInput from './AuthPasswordInput';
 
@@ -21,7 +22,8 @@ const COUNTRIES = [
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  const { register: registerUser, isRegistering, registerError } = useAuth();
+  const { registerAsync, isRegistering, registerError } = useAuth();
+  const storeLogin = useAuthStore((s) => s.login);
 
   const {
     register,
@@ -53,11 +55,21 @@ const RegisterForm = () => {
 
   const strength = getPasswordStrength();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const { acceptsTerms, ...payload } = data;
-    registerUser(payload, {
-      onSuccess: () => navigate('/verify-email', { state: { email: data.email } }),
-    });
+    try {
+      const response = await registerAsync(payload);
+      const res = response.data;
+      storeLogin({
+        user: res.user,
+        token: res.token,
+        refreshToken: res.refreshToken,
+        expiresAt: res.expiresAt,
+      });
+      navigate('/client/dashboard', { replace: true });
+    } catch {
+      // error is handled by registerError from the mutation
+    }
   };
 
   return (
