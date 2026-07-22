@@ -1,2634 +1,1592 @@
 /* ============================================================
-   BUS TIX CONNECT — Payment Page
-   Design System: "SPLIT" — Dark Navy / Light Glass
-   Version: 2.0.0
+   BUS TIX CONNECT — Payment Page v3.0
+   Design System: "CLEAN LIGHT" — SaaS Premium
+   Visual identity: White left / Navy right (Stripe-inspired)
    ============================================================ */
 
-/* ------------------------------------------------------------
-   1. CSS Variables & Reset
-   ------------------------------------------------------------ */
+/* ── 1. Tokens ───────────────────────────────────────────── */
 :root {
-  --color-primary: #0B1D51;
-  --color-primary-light: #0F2347;
-  --color-primary-lighter: #12296B;
-  --color-accent: #FF6B35;
-  --color-accent-dark: #E85D2C;
-  --color-success: #10B981;
-  --color-success-dark: #059669;
-  --color-warning: #F59E0B;
-  --color-warning-dark: #D97706;
-  --color-danger: #EF4444;
-  --color-danger-dark: #DC2626;
+  --ck-navy: #0B1D51;
+  --ck-navy-light: #132B6B;
+  --ck-navy-dark: #071233;
+  --ck-orange: #FF6B35;
+  --ck-orange-dark: #E85D2C;
+  --ck-green: #10b981;
+  --ck-red: #EF4444;
+  --ck-amber: #F59E0B;
+  --ck-blue: #3b82f6;
+  --ck-purple: #8b5cf6;
+  --ck-cyan: #06b6d4;
 
-  --color-gray-50: #F8FAFC;
-  --color-gray-100: #F1F5F9;
-  --color-gray-200: #E2E8F0;
-  --color-gray-300: #CBD5E1;
-  --color-gray-400: #94A3B8;
-  --color-gray-500: #64748B;
-  --color-gray-600: #475569;
-  --color-gray-700: #334155;
-  --color-gray-800: #1E293B;
-  --color-gray-900: #0F172A;
+  --ck-white: #ffffff;
+  --ck-gray-50: #f8fafc;
+  --ck-gray-100: #f1f5f9;
+  --ck-gray-200: #e2e8f0;
+  --ck-gray-300: #cbd5e1;
+  --ck-gray-400: #94a3b8;
+  --ck-gray-500: #64748b;
+  --ck-gray-600: #475569;
+  --ck-gray-700: #334155;
+  --ck-gray-800: #1e293b;
+  --ck-gray-900: #0f172a;
 
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 24px;
-  --radius-full: 9999px;
+  --ck-r-2xl: 24px;
+  --ck-r-xl: 16px;
+  --ck-r-lg: 12px;
+  --ck-r-md: 8px;
+  --ck-r-sm: 6px;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.16);
-  --shadow-glow-accent: 0 0 0 1px var(--color-accent), 0 8px 32px rgba(255, 107, 53, 0.15);
+  --ck-shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --ck-shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --ck-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --ck-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+  --ck-shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.04);
+  --ck-shadow-glow: 0 0 0 3px rgba(255,107,53,0.18);
+  --ck-shadow-navy: 0 20px 50px -10px rgba(11,29,81,0.35);
 
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'Courier New', 'SF Mono', 'Fira Code', monospace;
+  --ck-font: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ck-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --transition-fast: 0.15s ease;
-  --transition-base: 0.25s ease;
-  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ck-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ck-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* ── 2. Reset ────────────────────────────────────────────── */
+.ck-page *,
+.ck-page *::before,
+.ck-page *::after { box-sizing: border-box; }
+
+.ck-page input,
+.ck-page button,
+.ck-page textarea { font-family: inherit; }
+
+.ck-page button { cursor: pointer; border: none; background: none; }
+
+.ck-spin {
+  display: inline-block;
+  animation: ckSpin 0.8s linear infinite;
+}
+@keyframes ckSpin { to { transform: rotate(360deg); } }
+
+@keyframes ckFadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ckSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ckPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes ckShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes ckModalIn {
+  from { opacity: 0; transform: scale(0.92) translateY(16px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes ckBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes ckBounceIn {
+  0% { opacity: 0; transform: scale(0); }
+  60% { transform: scale(1.15); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes ckRing {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes ckCheckIn {
+  0% { transform: scale(0) rotate(-45deg); }
+  60% { transform: scale(1.2) rotate(-45deg); }
+  100% { transform: scale(1) rotate(0deg); }
 }
 
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-body {
-  font-family: var(--font-sans);
-  line-height: 1.5;
-  color: var(--color-gray-800);
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
-
-input,
-select,
-textarea {
-  font-family: inherit;
-}
-
-/* ------------------------------------------------------------
-   2. Page Layout — THE SPLIT
-   ------------------------------------------------------------ */
-.pay-page {
+/* ── 3. Page Shell ───────────────────────────────────────── */
+.ck-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--color-gray-100);
+  background: var(--ck-gray-100);
+  font-family: var(--ck-font-body);
+  color: var(--ck-gray-800);
+  -webkit-font-smoothing: antialiased;
 }
 
-.pay-split {
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  min-height: calc(100vh - 80px);
+.ck-wrap {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
-/* --- LEFT PANEL: Dark Navy + Glassmorphism --- */
-.pay-left {
-  background: linear-gradient(160deg, #0B1D51 0%, #0F2347 40%, #12296B 100%);
-  padding: 40px 48px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  position: relative;
-  overflow: hidden;
+/* ── 4. Breadcrumb ───────────────────────────────────────── */
+.ck-breadcrumb {
+  padding: 20px 0 0;
 }
-
-/* Decorative gradient orb — top right */
-.pay-left::before {
-  content: '';
-  position: absolute;
-  top: -100px;
-  right: -100px;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 107, 53, 0.08) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Decorative gradient orb — bottom left */
-.pay-left::after {
-  content: '';
-  position: absolute;
-  bottom: -150px;
-  left: -100px;
-  width: 500px;
-  height: 500px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.pay-left > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* --- RIGHT PANEL: Light / White --- */
-.pay-right {
-  background: #F8FAFC;
-  padding: 40px 32px;
-  position: relative;
-  overflow-y: auto;
-  border-left: 1px solid rgba(0, 0, 0, 0.04);
-}
-
-/* ------------------------------------------------------------
-   3. Breadcrumb
-   ------------------------------------------------------------ */
-.pay-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.78rem;
+.ck-breadcrumb__list {
   list-style: none;
-}
-
-.pay-breadcrumb-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: rgba(255, 255, 255, 0.4);
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+.ck-breadcrumb__link {
+  font-size: 0.8rem;
+  color: var(--ck-gray-400);
   text-decoration: none;
-  transition: color var(--transition-fast);
+  transition: color 0.2s var(--ck-ease);
+  font-family: var(--ck-font-body);
 }
-
-.pay-breadcrumb-item a {
-  color: rgba(255, 255, 255, 0.5);
-  text-decoration: none;
-  transition: color var(--transition-fast);
-  padding: 4px 0;
-  border-bottom: 1px solid transparent;
+.ck-breadcrumb__link:hover { color: var(--ck-orange); }
+.ck-breadcrumb__sep {
+  font-size: 0.6rem;
+  color: var(--ck-gray-300);
 }
-
-.pay-breadcrumb-item a:hover {
-  color: rgba(255, 255, 255, 0.8);
-  border-bottom-color: rgba(255, 255, 255, 0.3);
-}
-
-.pay-breadcrumb-item--active {
-  color: #FFFFFF;
+.ck-breadcrumb__current {
+  font-size: 0.8rem;
+  color: var(--ck-gray-700);
   font-weight: 600;
 }
 
-.pay-breadcrumb-sep {
-  color: rgba(255, 255, 255, 0.2);
-  font-size: 0.7rem;
-  user-select: none;
+/* ── 5. Stepper ──────────────────────────────────────────── */
+.ck-stepper {
+  padding: 24px 0 20px;
 }
-
-/* ------------------------------------------------------------
-   4. Stepper
-   ------------------------------------------------------------ */
-.pay-stepper {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-2xl);
-  padding: 20px 28px;
+.ck-stepper__list {
+  list-style: none;
   display: flex;
   align-items: center;
   gap: 0;
-  position: relative;
-  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
-
-.pay-stepper::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.0) 100%);
-  pointer-events: none;
-}
-
-.pay-step {
+.ck-stepper__item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  position: relative;
-  z-index: 1;
+  flex: 1;
 }
-
-.pay-step-indicator {
+.ck-stepper__node-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.ck-stepper__node {
   width: 36px;
   height: 36px;
-  border-radius: var(--radius-full);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.78rem;
-  font-weight: 700;
-  flex-shrink: 0;
-  transition: all var(--transition-smooth);
-}
-
-/* Upcoming */
-.pay-step--upcoming .pay-step-indicator {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.4);
-}
-
-/* Active */
-.pay-step--active .pay-step-indicator {
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
-  color: #FFFFFF;
-  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15), 0 4px 16px rgba(255, 107, 53, 0.3);
-}
-
-/* Completed */
-.pay-step--completed .pay-step-indicator {
-  background: var(--color-success);
-  color: #FFFFFF;
-}
-
-.pay-step-label {
-  font-size: 0.78rem;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.pay-step--active .pay-step-label {
-  color: #FFFFFF;
+  font-size: 0.82rem;
   font-weight: 600;
+  background: var(--ck-white);
+  color: var(--ck-gray-400);
+  border: 2px solid var(--ck-gray-200);
+  transition: all 0.3s var(--ck-ease);
+  flex-shrink: 0;
 }
-
-.pay-step--completed .pay-step-label {
-  color: rgba(255, 255, 255, 0.6);
+.ck-stepper__node--done {
+  background: var(--ck-green);
+  color: var(--ck-white);
+  border-color: var(--ck-green);
 }
-
-.pay-step--upcoming .pay-step-label {
-  color: rgba(255, 255, 255, 0.35);
+.ck-stepper__node--active {
+  background: var(--ck-orange);
+  color: var(--ck-white);
+  border-color: var(--ck-orange);
+  box-shadow: 0 0 0 4px rgba(255,107,53,0.18);
 }
-
-.pay-step-connector {
+.ck-stepper__label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--ck-gray-400);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
+  font-family: var(--ck-font-body);
+}
+.ck-stepper__label--done { color: var(--ck-green); }
+.ck-stepper__label--active { color: var(--ck-orange); font-weight: 600; }
+.ck-stepper__line {
   flex: 1;
   height: 2px;
-  min-width: 32px;
-  margin: 0 16px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 1px;
-  position: relative;
-  z-index: 1;
+  background: var(--ck-gray-200);
+  margin: 0 4px;
+  margin-bottom: 22px;
+  transition: background 0.3s var(--ck-ease);
+}
+.ck-stepper__line--done { background: var(--ck-green); }
+
+/* ── 6. Split Layout ─────────────────────────────────────── */
+.ck-split {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 32px;
+  align-items: start;
+  padding-bottom: 48px;
 }
 
-.pay-step-connector--filled {
-  background: var(--color-success);
+.ck-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.pay-step-connector--active {
-  background: linear-gradient(to right, var(--color-success), rgba(255, 255, 255, 0.08));
+.ck-right {
+  position: sticky;
+  top: 24px;
 }
 
-/* Completed checkmark icon inside indicator */
-.pay-step-check {
-  width: 16px;
-  height: 16px;
+/* ── 7. Cards (shared) ──────────────────────────────────── */
+.ck-card {
+  background: var(--ck-white);
+  border-radius: var(--ck-r-2xl);
+  border: 1px solid var(--ck-gray-200);
+  box-shadow: var(--ck-shadow-sm);
+  overflow: hidden;
+  transition: box-shadow 0.25s var(--ck-ease);
 }
-
-/* ------------------------------------------------------------
-   5. Section Headers
-   ------------------------------------------------------------ */
-.pay-section-header {
-  margin-bottom: 0;
+.ck-card:hover {
+  box-shadow: var(--ck-shadow-md);
 }
-
-.pay-section-title {
-  font-size: 1.1rem;
+.ck-card__head {
+  padding: 28px 28px 0;
+}
+.ck-card__title {
+  font-family: var(--ck-font);
+  font-size: 1.15rem;
   font-weight: 700;
-  color: #FFFFFF;
-  margin-bottom: 4px;
+  color: var(--ck-gray-900);
+  margin: 0 0 4px;
   letter-spacing: -0.01em;
-  line-height: 1.3;
 }
-
-.pay-section-subtitle {
+.ck-card__subtitle {
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.45);
-  line-height: 1.4;
+  color: var(--ck-gray-400);
+  margin: 0;
+  font-family: var(--ck-font-body);
+}
+.ck-card__body {
+  padding: 20px 28px 28px;
 }
 
-.pay-section-divider {
-  width: 40px;
-  height: 3px;
-  border-radius: 2px;
-  background: linear-gradient(to right, var(--color-accent), transparent);
-  margin-top: 8px;
-}
-
-/* ------------------------------------------------------------
-   6. Payment Method Grid
-   ------------------------------------------------------------ */
-.pay-method-grid {
+/* ── 8. Method Grid ──────────────────────────────────────── */
+.ck-methods {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 
-.pay-method-tile {
-  background: rgba(255, 255, 255, 0.04);
-  border: 2px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-xl);
-  padding: 20px;
-  cursor: pointer;
-  transition: all var(--transition-smooth);
+.ck-method {
   position: relative;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 18px;
+  background: var(--ck-white);
+  border: 2px solid var(--ck-gray-200);
+  border-radius: var(--ck-r-xl);
+  text-align: left;
+  transition: all 0.25s var(--ck-ease);
+  cursor: pointer;
 }
-
-.pay-method-tile::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity var(--transition-base);
+.ck-method:hover:not(:disabled) {
+  border-color: var(--ck-gray-300);
+  box-shadow: var(--ck-shadow-md);
+  transform: translateY(-1px);
 }
-
-.pay-method-tile:hover:not(:disabled)::before {
-  opacity: 1;
+.ck-method--selected {
+  border-color: var(--method-color, var(--ck-orange));
+  background: var(--method-bg, rgba(255,107,53,0.04));
+  box-shadow: 0 0 0 3px rgba(255,107,53,0.12);
 }
-
-.pay-method-tile:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+.ck-method--selected:hover {
+  transform: none;
 }
-
-.pay-method-tile:active:not(:disabled) {
-  transform: translateY(0) scale(0.99);
-}
-
-.pay-method-tile:disabled {
-  opacity: 0.35;
+.ck-method--disabled {
+  opacity: 0.4;
   cursor: not-allowed;
 }
-
-.pay-method-tile--selected {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--color-accent);
-  box-shadow: var(--shadow-glow-accent);
-}
-
-.pay-method-tile--selected::before {
-  opacity: 1;
-}
-
-.pay-method-tile--selected:hover {
-  transform: translateY(-2px) scale(1.02);
-}
-
-.pay-method-logo {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius-xl);
+.ck-method__icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--ck-r-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
-  font-size: 0.9rem;
-  margin-bottom: 14px;
-  position: relative;
-  overflow: visible;
-}
-
-/* Brand glow behind logo */
-.pay-method-logo::after {
-  content: '';
-  position: absolute;
-  inset: -8px;
-  border-radius: 50%;
-  background: inherit;
-  opacity: 0.15;
-  filter: blur(12px);
-  z-index: -1;
-  transition: opacity var(--transition-base);
-}
-
-.pay-method-tile--selected .pay-method-logo::after {
-  opacity: 0.3;
-}
-
-.pay-method-logo--momo {
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  color: #000;
-}
-
-.pay-method-logo--om {
-  background: linear-gradient(135deg, #FF6B00, #FF3D00);
-  color: #FFF;
-}
-
-.pay-method-logo--card {
-  background: linear-gradient(135deg, #667EEA, #764BA2);
-  color: #FFF;
-}
-
-.pay-method-logo--cash {
-  background: linear-gradient(135deg, #10B981, #059669);
-  color: #FFF;
-}
-
-.pay-method-name {
-  font-size: 0.93rem;
-  font-weight: 600;
-  color: #FFFFFF;
-  margin-bottom: 4px;
-  line-height: 1.3;
-}
-
-.pay-method-desc {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.4);
-  line-height: 1.3;
-}
-
-.pay-method-check {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.25s ease;
-}
-
-.pay-method-check svg {
-  width: 12px;
-  height: 12px;
-  opacity: 0;
-  transform: scale(0);
-  transition: all 0.25s ease;
-}
-
-.pay-method-tile--selected .pay-method-check {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  animation: payCheckPop 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.pay-method-tile--selected .pay-method-check svg {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Mobile money details row */
-.pay-momo-details {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.pay-momo-details-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 1.15rem;
   flex-shrink: 0;
+  background: var(--method-bg, var(--ck-gray-100));
+  color: var(--method-color, var(--ck-gray-500));
+  transition: all 0.25s var(--ck-ease);
 }
-
-.pay-momo-details-text {
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.5);
-  line-height: 1.3;
+.ck-method--selected .ck-method__icon-wrap {
+  background: var(--method-accent, var(--method-bg));
+  color: var(--method-color, var(--ck-orange));
 }
-
-/* ------------------------------------------------------------
-   7. Form Section (Dark Background)
-   ------------------------------------------------------------ */
-.pay-form {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-xl);
-  padding: 24px;
-  animation: paySlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+.ck-method__body {
+  flex: 1;
+  min-width: 0;
 }
-
-.pay-form-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 20px;
+.ck-method__top {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
-.pay-form-title-icon {
-  width: 20px;
-  height: 20px;
-  opacity: 0.5;
-}
-
-/* --- Floating Label Inputs --- */
-.pay-input-group {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.pay-input-group:last-child {
-  margin-bottom: 0;
-}
-
-.pay-input {
-  width: 100%;
-  padding: 18px 16px 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
-  color: #FFFFFF;
-  font-size: 0.9rem;
-  font-family: inherit;
-  outline: none;
-  transition: all var(--transition-base);
-  line-height: 1.4;
-}
-
-.pay-input:focus {
-  border-color: var(--color-accent);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
-}
-
-.pay-input::placeholder {
-  color: transparent;
-}
-
-.pay-label {
-  position: absolute;
-  left: 16px;
-  top: 14px;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.4);
-  pointer-events: none;
-  transition: all 0.2s ease;
-  transform-origin: left center;
-}
-
-.pay-input:focus ~ .pay-label,
-.pay-input:not(:placeholder-shown) ~ .pay-label {
-  top: 6px;
-  font-size: 0.68rem;
-  color: var(--color-accent);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.ck-method__name {
+  font-size: 0.88rem;
   font-weight: 600;
-}
-
-/* Input with prefix (+237) */
-.pay-input-prefix {
-  display: flex;
-  align-items: stretch;
-}
-
-.pay-input-prefix-addon {
-  padding: 0 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-right: none;
-  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.85rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
+  color: var(--ck-gray-800);
+  font-family: var(--ck-font);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
-.pay-input-prefix .pay-input {
-  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
-}
-
-.pay-input-prefix .pay-input:focus {
-  border-color: var(--color-accent);
-}
-
-.pay-input-prefix .pay-label {
-  left: 14px;
-}
-
-.pay-input-prefix-addon + .pay-input-group .pay-input {
-  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
-}
-
-/* Error state */
-.pay-input--error {
-  border-color: var(--color-danger) !important;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
-}
-
-.pay-input--error:focus {
-  border-color: var(--color-danger) !important;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
-}
-
-.pay-error {
-  font-size: 0.75rem;
-  color: var(--color-danger);
-  margin-top: 6px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  animation: paySlideIn 0.2s ease;
-}
-
-.pay-error-icon {
-  width: 14px;
-  height: 14px;
+.ck-method__badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 7px;
+  border-radius: var(--ck-r-sm);
+  background: var(--ck-orange);
+  color: var(--ck-white);
   flex-shrink: 0;
 }
-
-/* Success state */
-.pay-input--success {
-  border-color: var(--color-success) !important;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12) !important;
-}
-
-.pay-success-text {
-  font-size: 0.75rem;
-  color: var(--color-success);
-  margin-top: 6px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  animation: paySlideIn 0.2s ease;
-}
-
-/* Card type badge */
-.pay-card-type-badge {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.pay-card-type-badge--visa {
-  background: rgba(26, 115, 232, 0.15);
-  color: #4A90D9;
-}
-
-.pay-card-type-badge--mastercard {
-  background: rgba(235, 0, 27, 0.12);
-  color: #EB001B;
-}
-
-.pay-card-type-badge--amex {
-  background: rgba(0, 113, 224, 0.12);
-  color: #0071E0;
-}
-
-/* Card row (number + expiry + cvv) */
-.pay-card-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.pay-card-row--three {
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
-/* Input help text */
-.pay-input-help {
+.ck-method__tagline {
+  display: block;
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.3);
-  margin-top: 6px;
-  line-height: 1.4;
+  color: var(--ck-gray-400);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
-/* Select dropdown */
-.pay-select {
-  width: 100%;
-  padding: 18px 40px 8px 16px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
-  color: #FFFFFF;
-  font-size: 0.9rem;
-  font-family: inherit;
-  outline: none;
-  appearance: none;
-  -webkit-appearance: none;
-  cursor: pointer;
-  transition: all var(--transition-base);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-}
-
-.pay-select:focus {
-  border-color: var(--color-accent);
-  background-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
-}
-
-.pay-select option {
-  background: var(--color-primary);
-  color: #FFFFFF;
-}
-
-/* ------------------------------------------------------------
-   8. Agency Info (Dark Background)
-   ------------------------------------------------------------ */
-.pay-agency {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-xl);
-  padding: 24px;
-  color: #FFFFFF;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.pay-agency-logo {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.08);
+.ck-method__check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.7rem;
+  color: transparent;
+  background: var(--ck-gray-100);
+  border: 2px solid var(--ck-gray-200);
+  transition: all 0.25s var(--ck-spring);
   flex-shrink: 0;
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--color-accent);
-  overflow: hidden;
+}
+.ck-method--selected .ck-method__check {
+  color: var(--ck-white);
+  background: var(--method-color, var(--ck-orange));
+  border-color: var(--method-color, var(--ck-orange));
+  animation: ckBounceIn 0.3s var(--ck-spring);
 }
 
-.pay-agency-logo img {
+/* ── 9. Form ─────────────────────────────────────────────── */
+.ck-form {
+  background: var(--ck-white);
+  border-radius: var(--ck-r-2xl);
+  border: 1px solid var(--ck-gray-200);
+  box-shadow: var(--ck-shadow-sm);
+  padding: 28px;
+}
+.ck-form--slide {
+  animation: ckSlideIn 0.35s var(--ck-ease) both;
+}
+
+.ck-form__row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.ck-form__row--half {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.ck-form__hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--ck-gray-400);
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: var(--ck-gray-50);
+  border-radius: var(--ck-r-lg);
+  border: 1px solid var(--ck-gray-100);
+}
+
+.ck-card-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: var(--ck-gray-50);
+  border-radius: var(--ck-r-lg);
+  border: 1px solid var(--ck-gray-200);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ck-gray-700);
+  letter-spacing: 0.08em;
+}
+
+/* ── 10. Field ───────────────────────────────────────────── */
+.ck-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ck-field__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ck-gray-600);
+  font-family: var(--ck-font-body);
+}
+.ck-field__input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--ck-white);
+  border: 1.5px solid var(--ck-gray-200);
+  border-radius: var(--ck-r-lg);
+  transition: all 0.2s var(--ck-ease);
+  overflow: hidden;
+}
+.ck-field__input-wrap:focus-within {
+  border-color: var(--ck-orange);
+  box-shadow: var(--ck-shadow-glow);
+}
+.ck-field__input-wrap--error {
+  border-color: var(--ck-red) !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.12) !important;
+}
+.ck-field__prefix {
+  padding: 0 0 0 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ck-gray-500);
+  border-right: 1px solid var(--ck-gray-200);
+  height: 48px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  user-select: none;
+}
+.ck-field__input {
+  flex: 1;
+  height: 48px;
+  padding: 0 14px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.9rem;
+  color: var(--ck-gray-800);
+  font-family: var(--ck-font-body);
+}
+.ck-field__input::placeholder {
+  color: var(--ck-gray-300);
+}
+.ck-field__icon {
+  padding-right: 14px;
+  color: var(--ck-gray-300);
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  transition: color 0.2s var(--ck-ease);
+}
+.ck-field__input-wrap:focus-within .ck-field__icon {
+  color: var(--ck-orange);
+}
+.ck-field__error {
+  font-size: 0.72rem;
+  color: var(--ck-red);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: ckFadeUp 0.2s var(--ck-ease);
+}
+
+/* ── 11. Card Preview ────────────────────────────────────── */
+.ck-preview {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1.586;
+  border-radius: var(--ck-r-xl);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  color: var(--ck-white);
+  box-shadow: var(--ck-shadow-xl);
+  margin-bottom: 8px;
+}
+.ck-preview__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.ck-preview__shine {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(255,255,255,0.05) 100%);
+}
+.ck-preview__chip {
+  position: relative;
+  z-index: 2;
+  width: 40px;
+  height: 30px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ck-preview__chip-line {
+  width: 70%;
+  height: 1px;
+  background: rgba(0,0,0,0.15);
+}
+.ck-preview__brand {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.ck-preview__number {
+  position: relative;
+  z-index: 2;
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.ck-preview__bottom {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ck-preview__sub {
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+.ck-preview__val {
+  font-size: 0.78rem;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* ── 12. Agency Panel ────────────────────────────────────── */
+.ck-agency {
+  background: var(--ck-white);
+  border-radius: var(--ck-r-2xl);
+  border: 1px solid var(--ck-gray-200);
+  box-shadow: var(--ck-shadow-sm);
+  padding: 28px;
+}
+.ck-agency__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.ck-agency__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--ck-r-lg);
+  background: rgba(11,29,81,0.06);
+  color: var(--ck-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.ck-agency__title {
+  margin: 0;
+  font-family: var(--ck-font);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ck-gray-900);
+}
+.ck-agency__sub {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: var(--ck-gray-400);
+}
+.ck-agency__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.ck-agency__step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.ck-agency__step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ck-gray-100);
+  color: var(--ck-gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 1px solid var(--ck-gray-200);
+}
+.ck-agency__step-text {
+  font-size: 0.82rem;
+  color: var(--ck-gray-500);
+  line-height: 1.5;
+  padding-top: 3px;
+}
+.ck-agency__btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: var(--ck-r-lg);
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: var(--ck-font);
+  border: 1.5px solid var(--ck-gray-200);
+  background: var(--ck-gray-50);
+  color: var(--ck-gray-600);
+  transition: all 0.2s var(--ck-ease);
+}
+.ck-agency__btn:hover {
+  background: var(--ck-gray-100);
+  border-color: var(--ck-gray-300);
+}
+.ck-agency__btn--ok {
+  background: rgba(16,185,129,0.08) !important;
+  border-color: var(--ck-green) !important;
+  color: var(--ck-green) !important;
+}
+
+/* ── 13. Summary (Right Panel) ───────────────────────────── */
+.ck-summary {
+  background: var(--ck-navy);
+  border-radius: var(--ck-r-2xl);
+  overflow: hidden;
+  color: var(--ck-white);
+  box-shadow: var(--ck-shadow-navy);
+}
+.ck-summary__hero {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+}
+.ck-summary__photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
-
-.pay-agency-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.pay-agency-name {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #FFFFFF;
-  margin-bottom: 2px;
-}
-
-.pay-agency-detail {
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.45);
-  line-height: 1.4;
-}
-
-.pay-agency-rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 6px;
-  padding: 3px 8px;
-  background: rgba(255, 107, 53, 0.1);
-  border-radius: var(--radius-sm);
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--color-accent);
-}
-
-.pay-agency-rating-star {
-  color: var(--color-accent);
-}
-
-/* ------------------------------------------------------------
-   9. Right Panel — Summary Card
-   ------------------------------------------------------------ */
-.pay-summary {
-  background: #FFFFFF;
-  border-radius: var(--radius-2xl);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-  overflow: hidden;
-  position: sticky;
-  top: 24px;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  animation: paySlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: 0.1s;
-}
-
-.pay-summary-photo {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  position: relative;
-}
-
-.pay-summary-photo-placeholder {
-  width: 100%;
-  height: 180px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-lighter) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.3);
-  font-size: 2rem;
-}
-
-.pay-summary-body {
-  padding: 24px;
-}
-
-.pay-summary-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 4px;
-}
-
-.pay-summary-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--color-gray-900);
-  line-height: 1.3;
-}
-
-.pay-summary-badge {
-  padding: 3px 10px;
-  border-radius: var(--radius-full);
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  flex-shrink: 0;
-}
-
-.pay-summary-badge--confirmed {
-  background: rgba(16, 185, 129, 0.1);
-  color: var(--color-success);
-}
-
-.pay-summary-badge--pending {
-  background: rgba(245, 158, 11, 0.1);
-  color: var(--color-warning);
-}
-
-/* Route timeline */
-.pay-summary-route {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin: 16px 0;
-  padding: 16px 0;
-  border-top: 1px solid var(--color-gray-100);
-  border-bottom: 1px solid var(--color-gray-100);
-}
-
-.pay-summary-route-point {
-  text-align: center;
-  flex-shrink: 0;
-}
-
-.pay-summary-route-city {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--color-gray-900);
-  margin-bottom: 2px;
-}
-
-.pay-summary-route-time {
-  font-size: 0.75rem;
-  color: var(--color-gray-500);
-}
-
-.pay-summary-route-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 3px solid var(--color-accent);
-  background: #FFFFFF;
-  flex-shrink: 0;
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
-  position: relative;
-}
-
-.pay-summary-route-dot::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 100%;
-  width: 12px;
-  height: 2px;
-  background: var(--color-accent);
-  transform: translateY(-50%);
-  opacity: 0.4;
-}
-
-.pay-summary-route-line {
-  flex: 1;
-  height: 2px;
-  background: repeating-linear-gradient(
-    to right,
-    var(--color-gray-300) 0px,
-    var(--color-gray-300) 6px,
-    transparent 6px,
-    transparent 10px
-  );
-}
-
-/* Date info */
-.pay-summary-date {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.82rem;
-  color: var(--color-gray-600);
-  margin-bottom: 12px;
-}
-
-.pay-summary-date-icon {
-  width: 16px;
-  height: 16px;
-  opacity: 0.5;
-}
-
-/* Seat badges */
-.pay-summary-seats {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-
-.pay-summary-seat {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-md);
-  background: var(--color-primary);
-  color: #FFFFFF;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 700;
-  position: relative;
-  overflow: hidden;
-}
-
-.pay-summary-seat::before {
-  content: '';
+.ck-summary__hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
-}
-
-.pay-summary-seat-label {
-  font-size: 0.72rem;
-  color: var(--color-gray-500);
-  margin-bottom: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-}
-
-/* Price rows */
-.pay-summary-row {
+  background: linear-gradient(to top, rgba(11,29,81,0.92) 0%, rgba(11,29,81,0.3) 60%, transparent 100%);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
+  align-items: flex-end;
+  padding: 16px 20px;
 }
-
-.pay-summary-row-label {
-  font-size: 0.82rem;
-  color: var(--color-gray-500);
-}
-
-.pay-summary-row-value {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--color-gray-800);
-}
-
-.pay-summary-row--discount .pay-summary-row-value {
-  color: var(--color-success);
-}
-
-.pay-summary-row--insurance {
-  padding: 10px 0;
-}
-
-/* Promo applied tag */
-.pay-summary-promo-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  background: rgba(16, 188, 129, 0.1);
-  border-radius: var(--radius-sm);
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--color-success);
-}
-
-/* Total */
-.pay-summary-total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 16px;
-  margin-top: 8px;
-  border-top: 2px solid var(--color-gray-200);
-}
-
-.pay-summary-total-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--color-gray-700);
-}
-
-.pay-summary-total-value {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--color-accent);
-  letter-spacing: -0.02em;
-}
-
-/* Summary action button */
-.pay-summary-action {
-  margin-top: 20px;
-  padding: 14px 24px;
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
-  border: none;
-  border-radius: var(--radius-lg);
-  color: #FFFFFF;
-  font-size: 0.9rem;
-  font-weight: 700;
-  width: 100%;
-  cursor: pointer;
-  transition: all var(--transition-smooth);
-  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
-  font-family: inherit;
-}
-
-.pay-summary-action:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(255, 107, 53, 0.4);
-}
-
-.pay-summary-action:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* Summary info rows with icons */
-.pay-summary-info {
+.ck-summary__company {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--color-gray-100);
 }
-
-.pay-summary-info:last-child {
-  border-bottom: none;
-}
-
-.pay-summary-info-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-md);
-  background: var(--color-gray-100);
+.ck-summary__company-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--ck-r-md);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--ck-white);
+  flex-shrink: 0;
+}
+.ck-summary__company-name {
+  display: block;
+  font-family: var(--ck-font);
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.03em;
+}
+.ck-summary__company-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.65);
+}
+.ck-summary__company-rating .bi-star-fill { color: #fbbf24; font-size: 0.65rem; }
+.ck-summary__verified { color: var(--ck-blue); font-size: 0.72rem; margin-left: 2px; }
+
+.ck-summary__body {
+  padding: 20px;
+}
+
+/* Route visual */
+.ck-summary__route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 16px 0;
+}
+.ck-summary__city {
+  text-align: center;
+  min-width: 0;
+}
+.ck-summary__code {
+  display: block;
+  font-family: var(--ck-font);
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.ck-summary__city-name {
+  display: block;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.5);
+  margin-top: 2px;
+}
+.ck-summary__route-line {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  color: rgba(255,255,255,0.3);
+  font-size: 0.85rem;
+}
+.ck-summary__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ck-orange);
+  flex-shrink: 0;
+}
+.ck-summary__dashes {
+  flex: 1;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,0.2) 0 4px, transparent 4px 8px);
+}
+.ck-summary__route-line .bi-bus-front-fill {
+  color: var(--ck-orange);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  margin: 0 2px;
+}
+
+/* Meta */
+.ck-summary__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 4px;
+}
+.ck-summary__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.76rem;
+  color: rgba(255,255,255,0.6);
+}
+.ck-summary__meta-item i {
+  width: 16px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.35);
   flex-shrink: 0;
 }
 
-.pay-summary-info-icon svg {
-  width: 16px;
-  height: 16px;
-  color: var(--color-gray-500);
+.ck-summary__divider {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 16px 0;
 }
 
-.pay-summary-info-text {
-  flex: 1;
-  min-width: 0;
-}
-
-.pay-summary-info-label {
-  font-size: 0.72rem;
-  color: var(--color-gray-400);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-weight: 600;
-}
-
-.pay-summary-info-value {
-  font-size: 0.85rem;
-  color: var(--color-gray-800);
-  font-weight: 600;
-}
-
-/* ------------------------------------------------------------
-   10. Promo Code (Dark Background)
-   ------------------------------------------------------------ */
-.pay-promo {
+/* Pricing */
+.ck-summary__pricing {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+}
+.ck-summary__price-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.55);
+}
+.ck-summary__price-row--promo {
+  color: var(--ck-green);
+}
+.ck-summary__price-row--promo i { font-size: 0.7rem; }
+
+.ck-summary__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--ck-font);
+}
+.ck-summary__total span:first-child {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.ck-summary__total-val {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--ck-white);
+  letter-spacing: -0.02em;
 }
 
-.pay-promo-toggle {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.82rem;
-  cursor: pointer;
+.ck-summary__baggage {
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: color var(--transition-fast);
-  background: none;
-  border: none;
-  padding: 0;
-  font-family: inherit;
-}
-
-.pay-promo-toggle:hover {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.pay-promo-toggle-icon {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.3s ease;
-}
-
-.pay-promo-toggle--open .pay-promo-toggle-icon {
-  transform: rotate(180deg);
-}
-
-.pay-promo-input-row {
-  display: flex;
   gap: 8px;
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-  opacity: 0;
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.06);
+  border-radius: var(--ck-r-lg);
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.45);
 }
+.ck-summary__baggage i { font-size: 0.82rem; }
 
-.pay-promo-input-row--open {
-  max-height: 80px;
-  opacity: 1;
-  margin-top: 12px;
+/* ── 14. Promo ───────────────────────────────────────────── */
+.ck-promo {
+  background: var(--ck-white);
+  border-radius: var(--ck-r-2xl);
+  border: 1px solid var(--ck-gray-200);
+  box-shadow: var(--ck-shadow-sm);
+  padding: 24px 28px;
 }
-
-.pay-promo-input {
+.ck-promo__title {
+  font-family: var(--ck-font);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ck-gray-800);
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ck-promo__title i { color: var(--ck-orange); }
+.ck-promo__row {
+  display: flex;
+  gap: 10px;
+}
+.ck-promo__input {
   flex: 1;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
-  color: #FFFFFF;
+  height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid var(--ck-gray-200);
+  border-radius: var(--ck-r-lg);
   font-size: 0.85rem;
-  font-family: inherit;
+  color: var(--ck-gray-800);
+  background: var(--ck-gray-50);
   outline: none;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  transition: all 0.2s var(--ck-ease);
+  font-family: var(--ck-font-body);
+  letter-spacing: 0.04em;
   font-weight: 600;
-  transition: all var(--transition-base);
+  text-transform: uppercase;
 }
-
-.pay-promo-input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+.ck-promo__input:focus {
+  border-color: var(--ck-orange);
+  box-shadow: var(--ck-shadow-glow);
+  background: var(--ck-white);
+}
+.ck-promo__input::placeholder {
   text-transform: none;
-  letter-spacing: normal;
   font-weight: 400;
+  letter-spacing: normal;
+  color: var(--ck-gray-300);
 }
-
-.pay-promo-input:focus {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
-}
-
-.pay-promo-apply {
-  padding: 12px 20px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-lg);
-  color: rgba(255, 255, 255, 0.7);
+.ck-promo__btn {
+  height: 44px;
+  padding: 0 20px;
+  border-radius: var(--ck-r-lg);
   font-size: 0.82rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  font-family: inherit;
+  background: var(--ck-gray-800);
+  color: var(--ck-white);
+  transition: all 0.2s var(--ck-ease);
   white-space: nowrap;
+  font-family: var(--ck-font-body);
 }
-
-.pay-promo-apply:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #FFFFFF;
-  border-color: rgba(255, 255, 255, 0.18);
+.ck-promo__btn:hover:not(:disabled) {
+  background: var(--ck-gray-900);
+  transform: translateY(-1px);
 }
-
-.pay-promo-apply:disabled {
+.ck-promo__btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
-
-/* Promo success/error message */
-.pay-promo-message {
+.ck-promo__status {
+  margin: 10px 0 0;
   font-size: 0.75rem;
-  margin-top: 8px;
   display: flex;
   align-items: center;
   gap: 6px;
-  animation: paySlideIn 0.2s ease;
 }
+.ck-promo__status--ok { color: var(--ck-green); }
+.ck-promo__status--err { color: var(--ck-red); }
 
-.pay-promo-message--success {
-  color: var(--color-success);
-}
-
-.pay-promo-message--error {
-  color: var(--color-danger);
-}
-
-/* ------------------------------------------------------------
-   11. Insurance (Dark Background)
-   ------------------------------------------------------------ */
-.pay-insurance {
+/* ── 15. Insurance ───────────────────────────────────────── */
+.ck-insurance {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
-  padding: 18px 20px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-xl);
+  background: var(--ck-white);
+  border-radius: var(--ck-r-2xl);
+  border: 1.5px solid var(--ck-gray-200);
+  box-shadow: var(--ck-shadow-sm);
+  padding: 22px 24px;
   cursor: pointer;
-  transition: all var(--transition-base);
-  position: relative;
+  transition: all 0.25s var(--ck-ease);
 }
-
-.pay-insurance:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
+.ck-insurance:hover {
+  border-color: var(--ck-gray-300);
+  box-shadow: var(--ck-shadow-md);
 }
-
-.pay-insurance--selected {
-  border-color: var(--color-success);
-  background: rgba(16, 185, 129, 0.06);
+.ck-insurance--on {
+  border-color: var(--ck-green);
+  background: rgba(16,185,129,0.02);
 }
-
-.pay-insurance--selected:hover {
-  background: rgba(16, 185, 129, 0.08);
-}
-
-.pay-insurance-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.06);
+.ck-insurance__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--ck-r-lg);
+  background: rgba(16,185,129,0.08);
+  color: var(--ck-green);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.1rem;
   flex-shrink: 0;
-  transition: all var(--transition-base);
 }
-
-.pay-insurance--selected .pay-insurance-icon {
-  background: rgba(16, 185, 129, 0.12);
+.ck-insurance--on .ck-insurance__icon {
+  background: var(--ck-green);
+  color: var(--ck-white);
 }
-
-.pay-insurance-icon svg {
-  width: 20px;
-  height: 20px;
-  color: rgba(255, 255, 255, 0.5);
+.ck-insurance__body { flex: 1; min-width: 0; }
+.ck-insurance__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
 }
-
-.pay-insurance--selected .pay-insurance-icon svg {
-  color: var(--color-success);
-}
-
-.pay-insurance-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.pay-insurance-label {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #FFFFFF;
-  margin-bottom: 2px;
-}
-
-.pay-insurance-desc {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.4);
-  line-height: 1.3;
-}
-
-.pay-insurance-price {
-  font-size: 0.82rem;
+.ck-insurance__title {
+  margin: 0;
+  font-family: var(--ck-font);
+  font-size: 0.92rem;
   font-weight: 700;
-  color: var(--color-accent);
-  margin-top: 4px;
+  color: var(--ck-gray-800);
 }
+.ck-insurance__price {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ck-green);
+  background: rgba(16,185,129,0.08);
+  padding: 2px 8px;
+  border-radius: var(--ck-r-sm);
+}
+.ck-insurance__desc {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  color: var(--ck-gray-400);
+  line-height: 1.5;
+}
+.ck-insurance__features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.ck-insurance__feat {
+  font-size: 0.72rem;
+  color: var(--ck-gray-500);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ck-insurance__feat i { color: var(--ck-green); font-size: 0.7rem; }
 
-/* Custom toggle */
-.pay-toggle {
-  width: 48px;
-  height: 26px;
-  border-radius: 13px;
-  background: rgba(255, 255, 255, 0.15);
-  position: relative;
-  transition: background var(--transition-smooth);
+/* Toggle */
+.ck-insurance__toggle {
   flex-shrink: 0;
-  cursor: pointer;
+  padding-top: 4px;
 }
-
-.pay-toggle--on {
-  background: var(--color-success);
+.ck-insurance__checkbox { display: none; }
+.ck-insurance__slider {
+  display: block;
+  width: 44px;
+  height: 24px;
+  background: var(--ck-gray-200);
+  border-radius: 12px;
+  position: relative;
+  transition: background 0.2s var(--ck-ease);
 }
-
-.pay-toggle::after {
+.ck-insurance__slider::after {
   content: '';
   position: absolute;
   top: 3px;
   left: 3px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.pay-toggle--on::after {
-  transform: translateX(22px);
-}
-
-/* ------------------------------------------------------------
-   12. Terms (Dark Background)
-   ------------------------------------------------------------ */
-.pay-terms {
-  padding: 16px 0;
-}
-
-.pay-terms-item {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-  align-items: flex-start;
-}
-
-.pay-terms-item:last-child {
-  margin-bottom: 0;
-}
-
-.pay-terms-text {
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.5);
-  line-height: 1.5;
-  flex: 1;
-}
-
-.pay-terms-text a {
-  color: var(--color-accent);
-  text-decoration: none;
-  font-weight: 600;
-  transition: color var(--transition-fast);
-}
-
-.pay-terms-text a:hover {
-  color: #FFFFFF;
-  text-decoration: underline;
-}
-
-/* Custom checkbox */
-.pay-checkbox {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  flex-shrink: 0;
-  margin-top: 1px;
-  background: transparent;
-}
-
-.pay-checkbox:hover {
-  border-color: rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.pay-checkbox--checked {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  animation: payCheckPop 0.2s ease;
-}
-
-.pay-checkbox svg {
-  width: 12px;
-  height: 12px;
-  color: #FFFFFF;
-  opacity: 0;
-  transform: scale(0);
-  transition: all 0.2s ease;
-}
-
-.pay-checkbox--checked svg {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Required asterisk */
-.pay-terms-required {
-  color: var(--color-danger);
-  font-weight: 600;
-}
-
-/* ------------------------------------------------------------
-   13. Trust / Security Badges (Dark Background)
-   ------------------------------------------------------------ */
-.pay-trust {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  padding: 8px 0;
-}
-
-.pay-trust-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 10px;
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.5);
-  transition: all var(--transition-fast);
-}
-
-.pay-trust-badge:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.pay-trust-badge-icon {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
-
-/* ------------------------------------------------------------
-   14. Countdown Bar
-   ------------------------------------------------------------ */
-.pay-countdown {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 20px;
-  border-radius: var(--radius-lg);
-  font-size: 0.82rem;
-  font-weight: 600;
-  transition: background 0.3s, color 0.3s;
-}
-
-.pay-countdown-icon {
   width: 18px;
   height: 18px;
-  flex-shrink: 0;
+  background: var(--ck-white);
+  border-radius: 50%;
+  box-shadow: var(--ck-shadow-sm);
+  transition: transform 0.25s var(--ck-spring);
+}
+.ck-insurance__checkbox:checked + .ck-insurance__slider {
+  background: var(--ck-green);
+}
+.ck-insurance__checkbox:checked + .ck-insurance__slider::after {
+  transform: translateX(20px);
 }
 
-.pay-countdown-text {
-  flex: 1;
+/* ── 16. Terms ───────────────────────────────────────────── */
+.ck-terms {
+  background: var(--ck-white);
+  border-radius: var(--ck-r-2xl);
+  border: 1.5px solid var(--ck-gray-200);
+  box-shadow: var(--ck-shadow-sm);
+  padding: 22px 24px;
 }
-
-.pay-countdown--safe {
-  background: rgba(16, 185, 129, 0.1);
-  color: var(--color-success);
-  border: 1px solid rgba(16, 185, 129, 0.15);
-}
-
-.pay-countdown--warn {
-  background: rgba(245, 158, 11, 0.1);
-  color: var(--color-warning);
-  border: 1px solid rgba(245, 158, 11, 0.15);
-}
-
-.pay-countdown--danger {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--color-danger);
-  border: 1px solid rgba(239, 68, 68, 0.15);
-  animation: payPulse 1s infinite;
-}
-
-.pay-countdown-time {
-  font-family: var(--font-mono);
-  font-weight: 800;
-  font-size: 1rem;
-  margin-left: auto;
-  letter-spacing: 0.05em;
-}
-
-/* Countdown progress bar */
-.pay-countdown-bar {
-  width: 100%;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-  margin-top: 8px;
-  overflow: hidden;
-}
-
-.pay-countdown-bar-fill {
-  height: 100%;
-  border-radius: 2px;
-  transition: width 1s linear, background 0.3s ease;
-}
-
-.pay-countdown--safe .pay-countdown-bar-fill {
-  background: var(--color-success);
-}
-
-.pay-countdown--warn .pay-countdown-bar-fill {
-  background: var(--color-warning);
-}
-
-.pay-countdown--danger .pay-countdown-bar-fill {
-  background: var(--color-danger);
-}
-
-/* ------------------------------------------------------------
-   15. Actions (Dark Background)
-   ------------------------------------------------------------ */
-.pay-actions {
+.ck-terms--ok { border-color: rgba(16,185,129,0.3); }
+.ck-terms__label {
   display: flex;
+  align-items: flex-start;
   gap: 12px;
-  padding-top: 8px;
-}
-
-.pay-btn-back {
-  padding: 16px 24px;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-lg);
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.85rem;
-  font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-fast);
-  font-family: inherit;
+}
+.ck-terms__checkbox { display: none; }
+.ck-terms__check {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--ck-r-sm);
+  border: 2px solid var(--ck-gray-300);
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ck-ease);
+  position: relative;
+}
+.ck-terms__checkbox:checked + .ck-terms__check {
+  background: var(--ck-green);
+  border-color: var(--ck-green);
+}
+.ck-terms__checkbox:checked + .ck-terms__check::after {
+  content: '';
+  width: 5px;
+  height: 9px;
+  border: solid var(--ck-white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translateY(-1px);
+}
+.ck-terms__text {
+  font-size: 0.8rem;
+  color: var(--ck-gray-500);
+  line-height: 1.6;
+}
+.ck-terms__link {
+  color: var(--ck-orange);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  font-size: inherit;
+  font-weight: 500;
+}
+.ck-terms__policies {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ck-gray-100);
+}
+.ck-terms__policy {
   display: flex;
   align-items: center;
   gap: 8px;
-  white-space: nowrap;
+  font-size: 0.72rem;
+  color: var(--ck-gray-400);
 }
+.ck-terms__policy i { color: var(--ck-gray-300); font-size: 0.78rem; }
 
-.pay-btn-back:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #FFFFFF;
+/* ── 17. Trust Bar ───────────────────────────────────────── */
+.ck-trust {
+  background: var(--ck-white);
+  border-radius: var(--ck-r-2xl);
+  border: 1px solid var(--ck-gray-200);
+  box-shadow: var(--ck-shadow-xs);
+  padding: 20px 24px;
 }
-
-.pay-btn-back:active {
-  background: rgba(255, 255, 255, 0.08);
+.ck-trust__badges {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
 }
-
-.pay-btn-back-icon {
-  width: 16px;
-  height: 16px;
+.ck-trust__badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--ck-gray-500);
+  padding: 6px 10px;
+  background: var(--ck-gray-50);
+  border-radius: var(--ck-r-md);
+  border: 1px solid var(--ck-gray-100);
 }
+.ck-trust__badge i { color: var(--tb-color); font-size: 0.82rem; }
+.ck-trust__text {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--ck-gray-400);
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ck-trust__text i { color: var(--ck-green); }
 
-.pay-btn-pay {
+/* ── 18. Actions ─────────────────────────────────────────── */
+.ck-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 4px;
+}
+.ck-btn-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: var(--ck-r-xl);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ck-gray-500);
+  background: var(--ck-white);
+  border: 1.5px solid var(--ck-gray-200);
+  transition: all 0.2s var(--ck-ease);
+  font-family: var(--ck-font);
+}
+.ck-btn-back:hover {
+  border-color: var(--ck-gray-300);
+  color: var(--ck-gray-700);
+  background: var(--ck-gray-50);
+}
+.ck-btn-pay {
   flex: 1;
-  padding: 16px 32px;
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
-  border: none;
-  border-radius: var(--radius-lg);
-  color: #FFFFFF;
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all var(--transition-smooth);
-  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.35);
-  font-family: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  position: relative;
-  overflow: hidden;
+  padding: 14px 32px;
+  border-radius: var(--ck-r-xl);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ck-white);
+  background: linear-gradient(135deg, var(--ck-orange), var(--ck-orange-dark));
+  box-shadow: 0 4px 14px rgba(255,107,53,0.35);
+  transition: all 0.3s var(--ck-ease);
+  font-family: var(--ck-font);
+  letter-spacing: 0.01em;
 }
-
-.pay-btn-pay::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity var(--transition-fast);
-}
-
-.pay-btn-pay:hover:not(:disabled)::before {
-  opacity: 1;
-}
-
-.pay-btn-pay:hover:not(:disabled) {
+.ck-btn-pay:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(255, 107, 53, 0.45);
+  box-shadow: 0 8px 24px rgba(255,107,53,0.45);
 }
-
-.pay-btn-pay:active:not(:disabled) {
+.ck-btn-pay:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
 }
-
-.pay-btn-pay:disabled {
-  opacity: 0.4;
+.ck-btn-pay:disabled {
+  opacity: 0.45;
   cursor: not-allowed;
   box-shadow: none;
 }
 
-.pay-btn-pay-icon {
-  width: 18px;
-  height: 18px;
-}
-
-.pay-btn-pay-loading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.pay-btn-pay-spinner {
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #FFFFFF;
-  border-radius: 50%;
-  animation: paySpin 0.7s linear infinite;
-}
-
-/* Secondary pay button */
-.pay-btn-secondary {
-  flex: 1;
-  padding: 16px 32px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-lg);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  font-family: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.pay-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #FFFFFF;
-}
-
-/* ------------------------------------------------------------
-   16. Processing Overlay
-   ------------------------------------------------------------ */
-.pay-processing {
+/* ── 19. Processing ──────────────────────────────────────── */
+.ck-processing {
   position: fixed;
   inset: 0;
-  background: rgba(11, 29, 81, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   z-index: 9999;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24px;
-  animation: payFadeIn 0.3s ease;
-}
-
-.pay-processing-ring {
-  width: 64px;
-  height: 64px;
-  border: 4px solid rgba(255, 255, 255, 0.1);
-  border-top-color: var(--color-accent);
-  border-radius: 50%;
-  animation: paySpin 0.8s linear infinite;
-  position: relative;
-}
-
-.pay-processing-ring::before {
-  content: '';
-  position: absolute;
-  inset: -12px;
-  border: 2px solid rgba(255, 107, 53, 0.08);
-  border-top-color: rgba(255, 107, 53, 0.3);
-  border-radius: 50%;
-  animation: paySpin 1.2s linear infinite reverse;
-}
-
-.pay-processing-text {
-  color: #FFFFFF;
-  font-size: 1rem;
-  font-weight: 600;
-  text-align: center;
-  max-width: 280px;
-}
-
-.pay-processing-subtext {
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.82rem;
-  text-align: center;
-}
-
-.pay-processing-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 280px;
-}
-
-.pay-processing-step {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.3);
-  transition: color 0.3s ease;
-}
-
-.pay-processing-step--active {
-  color: #FFFFFF;
-}
-
-.pay-processing-step--done {
-  color: var(--color-success);
-}
-
-.pay-processing-step-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-}
-
-.pay-processing-step--active .pay-processing-step-dot {
-  background: var(--color-accent);
-  box-shadow: 0 0 8px rgba(255, 107, 53, 0.4);
-  animation: payPulse 1s infinite;
-}
-
-.pay-processing-step--done .pay-processing-step-dot {
-  background: var(--color-success);
-}
-
-/* ------------------------------------------------------------
-   17. Modals
-   ------------------------------------------------------------ */
-.pay-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(11, 29, 81, 0.8);
+  background: rgba(248,250,252,0.92);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 9998;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  animation: payFadeIn 0.2s ease;
+  animation: ckBackdropIn 0.3s var(--ck-ease);
 }
-
-.pay-modal {
-  background: #FFFFFF;
-  border-radius: var(--radius-2xl);
-  padding: 40px;
-  max-width: 440px;
-  width: 100%;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
-  animation: payModalIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+.ck-processing__card {
+  background: var(--ck-white);
+  border-radius: var(--ck-r-2xl);
+  padding: 48px 40px;
+  box-shadow: var(--ck-shadow-xl);
+  text-align: center;
+  max-width: 380px;
+  width: 90%;
+  animation: ckModalIn 0.4s var(--ck-ease);
+}
+.ck-processing__spinner {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  margin: 0 auto 24px;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-.pay-modal-close {
+.ck-processing__ring {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
+  inset: 0;
+  border: 3px solid var(--ck-gray-100);
+  border-top-color: var(--ck-orange);
   border-radius: 50%;
-  border: none;
-  background: var(--color-gray-100);
-  color: var(--color-gray-500);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all var(--transition-fast);
+  animation: ckRing 1s linear infinite;
 }
-
-.pay-modal-close:hover {
-  background: var(--color-gray-200);
-  color: var(--color-gray-700);
+.ck-processing__spinner > i {
+  font-size: 1.5rem;
+  color: var(--ck-orange);
 }
-
-.pay-modal-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
-}
-
-.pay-modal-icon--success {
-  background: rgba(16, 185, 129, 0.1);
-  color: var(--color-success);
-}
-
-.pay-modal-icon--error {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--color-danger);
-}
-
-.pay-modal-icon--warning {
-  background: rgba(245, 158, 11, 0.1);
-  color: var(--color-warning);
-}
-
-.pay-modal-title {
+.ck-processing__title {
+  font-family: var(--ck-font);
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--color-gray-900);
-  text-align: center;
-  margin-bottom: 8px;
+  color: var(--ck-gray-900);
+  margin: 0 0 8px;
 }
-
-.pay-modal-desc {
-  font-size: 0.85rem;
-  color: var(--color-gray-500);
-  text-align: center;
+.ck-processing__text {
+  font-size: 0.82rem;
+  color: var(--ck-gray-400);
+  margin: 0 0 24px;
   line-height: 1.5;
-  margin-bottom: 24px;
 }
-
-.pay-modal-actions {
+.ck-processing__steps {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  text-align: left;
 }
-
-.pay-modal-btn {
-  padding: 14px 24px;
-  border-radius: var(--radius-lg);
-  font-size: 0.88rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  font-family: inherit;
-  border: none;
-  text-align: center;
-}
-
-.pay-modal-btn--primary {
-  background: var(--color-accent);
-  color: #FFFFFF;
-}
-
-.pay-modal-btn--primary:hover {
-  background: var(--color-accent-dark);
-}
-
-.pay-modal-btn--secondary {
-  background: var(--color-gray-100);
-  color: var(--color-gray-700);
-}
-
-.pay-modal-btn--secondary:hover {
-  background: var(--color-gray-200);
-}
-
-/* Success animation ring */
-.pay-modal-success-ring {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 20px;
-  position: relative;
-}
-
-.pay-modal-success-ring::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 3px solid var(--color-success);
-  animation: payBounceIn 0.5s ease both;
-}
-
-.pay-modal-success-ring::after {
-  content: '✓';
-  position: absolute;
-  inset: 0;
+.ck-processing__step {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  color: var(--color-success);
-  font-weight: 800;
-  animation: payBounceIn 0.5s ease 0.1s both;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--ck-gray-300);
 }
-
-/* ------------------------------------------------------------
-   18. Skeleton Loading
-   ------------------------------------------------------------ */
-.pay-skeleton {
-  border-radius: var(--radius-md);
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.04) 25%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.04) 75%
-  );
-  background-size: 200% 100%;
-  animation: payShimmer 1.5s ease-in-out infinite;
-}
-
-.pay-skeleton--text {
-  height: 14px;
-  margin-bottom: 8px;
-}
-
-.pay-skeleton--text:last-child {
-  width: 60%;
-}
-
-.pay-skeleton--title {
-  height: 20px;
-  width: 70%;
-  margin-bottom: 12px;
-}
-
-.pay-skeleton--box {
-  height: 80px;
-  border-radius: var(--radius-xl);
-}
-
-.pay-skeleton--circle {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-}
-
-.pay-skeleton--button {
-  height: 48px;
-  border-radius: var(--radius-lg);
-}
-
-/* Right panel skeleton */
-.pay-skeleton-right {
-  background: var(--color-gray-200);
-  border-radius: var(--radius-md);
-  background: linear-gradient(
-    90deg,
-    var(--color-gray-100) 25%,
-    var(--color-gray-200) 50%,
-    var(--color-gray-100) 75%
-  );
-  background-size: 200% 100%;
-  animation: payShimmer 1.5s ease-in-out infinite;
-}
-
-/* ------------------------------------------------------------
-   19. Toast / Notification
-   ------------------------------------------------------------ */
-.pay-toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  padding: 14px 20px;
-  border-radius: var(--radius-lg);
-  background: var(--color-gray-900);
-  color: #FFFFFF;
-  font-size: 0.85rem;
+.ck-processing__step--active {
+  color: var(--ck-green);
   font-weight: 500;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+.ck-processing__step--active i { color: var(--ck-green); }
+
+/* ── 20. Modals ──────────────────────────────────────────── */
+.ck-modal-backdrop {
+  position: fixed;
+  inset: 0;
   z-index: 10000;
   display: flex;
   align-items: center;
+  justify-content: center;
+  background: rgba(15,23,42,0.6);
+  backdrop-filter: blur(6px);
+  animation: ckBackdropIn 0.25s var(--ck-ease);
+  padding: 24px;
+}
+.ck-modal {
+  background: var(--ck-white);
+  border-radius: var(--ck-r-2xl);
+  padding: 40px 36px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  animation: ckModalIn 0.4s var(--ck-ease);
+}
+.ck-modal__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 1.5rem;
+}
+.ck-modal__icon--success {
+  background: rgba(16,185,129,0.1);
+  color: var(--ck-green);
+  animation: ckBounceIn 0.5s var(--ck-spring);
+}
+.ck-modal__icon--error {
+  background: rgba(239,68,68,0.1);
+  color: var(--ck-red);
+  animation: ckBounceIn 0.5s var(--ck-spring);
+}
+.ck-modal__icon--expired {
+  background: rgba(245,158,11,0.1);
+  color: var(--ck-amber);
+  animation: ckBounceIn 0.5s var(--ck-spring);
+}
+.ck-modal__title {
+  font-family: var(--ck-font);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ck-gray-900);
+  margin: 0 0 8px;
+}
+.ck-modal__subtitle {
+  font-size: 0.85rem;
+  color: var(--ck-gray-400);
+  margin: 0 0 24px;
+  line-height: 1.5;
+}
+.ck-modal__details {
+  background: var(--ck-gray-50);
+  border-radius: var(--ck-r-lg);
+  padding: 16px;
+  margin-bottom: 24px;
+  border: 1px solid var(--ck-gray-100);
+}
+.ck-modal__detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+.ck-modal__detail span {
+  font-size: 0.78rem;
+  color: var(--ck-gray-400);
+}
+.ck-modal__detail strong {
+  font-size: 0.82rem;
+  color: var(--ck-gray-800);
+}
+.ck-modal__actions {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
-  animation: paySlideIn 0.3s ease;
-  max-width: 360px;
+}
+.ck-modal__btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--ck-r-lg);
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: var(--ck-font);
+  transition: all 0.2s var(--ck-ease);
+}
+.ck-modal__btn--primary {
+  background: var(--ck-orange);
+  color: var(--ck-white);
+}
+.ck-modal__btn--primary:hover {
+  background: var(--ck-orange-dark);
+  transform: translateY(-1px);
+}
+.ck-modal__btn--ghost {
+  background: transparent;
+  color: var(--ck-gray-400);
+  border: 1px solid var(--ck-gray-200);
+}
+.ck-modal__btn--ghost:hover {
+  background: var(--ck-gray-50);
+  color: var(--ck-gray-600);
 }
 
-.pay-toast--success {
-  border-left: 4px solid var(--color-success);
+/* ── 21. Skeleton ────────────────────────────────────────── */
+.ck-skeleton {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  padding: 24px 0 48px;
 }
-
-.pay-toast--error {
-  border-left: 4px solid var(--color-danger);
+.ck-skeleton__title {
+  height: 28px;
+  width: 260px;
+  background: linear-gradient(90deg, var(--ck-gray-100) 25%, var(--ck-gray-200) 50%, var(--ck-gray-100) 75%);
+  background-size: 200% 100%;
+  animation: ckShimmer 1.5s infinite;
+  border-radius: var(--ck-r-md);
 }
-
-.pay-toast--warning {
-  border-left: 4px solid var(--color-warning);
+.ck-skeleton__subtitle {
+  height: 16px;
+  width: 180px;
+  margin-top: 10px;
+  background: linear-gradient(90deg, var(--ck-gray-100) 25%, var(--ck-gray-200) 50%, var(--ck-gray-100) 75%);
+  background-size: 200% 100%;
+  animation: ckShimmer 1.5s infinite;
+  animation-delay: 0.1s;
+  border-radius: var(--ck-r-sm);
 }
-
-.pay-toast-icon {
-  width: 20px;
-  height: 20px;
+.ck-skeleton__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+}
+.ck-skeleton__card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px;
+  background: var(--ck-white);
+  border-radius: var(--ck-r-xl);
+  border: 1px solid var(--ck-gray-200);
+}
+.ck-skeleton__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--ck-r-lg);
+  background: linear-gradient(90deg, var(--ck-gray-100) 25%, var(--ck-gray-200) 50%, var(--ck-gray-100) 75%);
+  background-size: 200% 100%;
+  animation: ckShimmer 1.5s infinite;
   flex-shrink: 0;
 }
-
-.pay-toast-close {
-  margin-left: auto;
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  padding: 4px;
+.ck-skeleton__lines {
+  flex: 1;
   display: flex;
-  transition: color var(--transition-fast);
+  flex-direction: column;
+  gap: 8px;
+}
+.ck-skeleton__line {
+  height: 12px;
+  border-radius: var(--ck-r-sm);
+  background: linear-gradient(90deg, var(--ck-gray-100) 25%, var(--ck-gray-200) 50%, var(--ck-gray-100) 75%);
+  background-size: 200% 100%;
+  animation: ckShimmer 1.5s infinite;
+}
+.ck-skeleton__line--w100 { width: 100%; }
+.ck-skeleton__line--w80 { width: 80%; }
+.ck-skeleton__line--w70 { width: 70%; }
+.ck-skeleton__line--w60 { width: 60%; }
+.ck-skeleton__line--w40 { width: 40%; }
+.ck-skeleton__form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+  padding: 28px;
+  background: var(--ck-white);
+  border-radius: var(--ck-r-2xl);
+  border: 1px solid var(--ck-gray-200);
+}
+.ck-skeleton__field {
+  height: 48px;
+  background: linear-gradient(90deg, var(--ck-gray-100) 25%, var(--ck-gray-200) 50%, var(--ck-gray-100) 75%);
+  background-size: 200% 100%;
+  animation: ckShimmer 1.5s infinite;
+  border-radius: var(--ck-r-lg);
+}
+.ck-skeleton__right {
+  background: var(--ck-navy);
+  border-radius: var(--ck-r-2xl);
+  overflow: hidden;
+}
+.ck-skeleton__photo {
+  height: 160px;
+  background: linear-gradient(90deg, var(--ck-navy-light) 25%, var(--ck-navy) 50%, var(--ck-navy-light) 75%);
+  background-size: 200% 100%;
+  animation: ckShimmer 1.5s infinite;
+}
+.ck-skeleton__divider {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 12px 0;
+}
+.ck-skeleton__total {
+  height: 32px;
+  width: 140px;
+  margin-left: auto;
+  margin-top: 12px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+  background-size: 200% 100%;
+  animation: ckShimmer 1.5s infinite;
+  border-radius: var(--ck-r-md);
 }
 
-.pay-toast-close:hover {
-  color: #FFFFFF;
-}
-
-/* ------------------------------------------------------------
-   20. Responsive Design
-   ------------------------------------------------------------ */
-@media (max-width: 1199px) {
-  .pay-split {
-    grid-template-columns: 1fr 360px;
-  }
-
-  .pay-left {
-    padding: 32px;
-  }
-
-  .pay-right {
-    padding: 32px;
-  }
-
-  .pay-method-logo {
-    width: 48px;
-    height: 48px;
-    font-size: 0.82rem;
+/* ── 22. Responsive ──────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .ck-split {
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
   }
 }
 
-@media (max-width: 991px) {
-  .pay-split {
+@media (max-width: 768px) {
+  .ck-split {
     grid-template-columns: 1fr;
-    min-height: auto;
+    gap: 20px;
   }
-
-  .pay-left {
-    background: linear-gradient(160deg, #0B1D51 0%, #0F2347 40%, #12296B 100%);
-    padding: 32px 24px;
-  }
-
-  .pay-right {
-    padding: 32px 24px;
-    border-left: none;
-    border-top: 1px solid rgba(0, 0, 0, 0.04);
-  }
-
-  .pay-summary {
+  .ck-right {
     position: static;
+    order: -1;
   }
-
-  .pay-method-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .ck-summary {
+    max-height: none;
   }
-
-  .pay-stepper {
-    padding: 16px 20px;
-    overflow-x: auto;
-  }
-
-  .pay-step-label {
-    font-size: 0.72rem;
-  }
-}
-
-@media (max-width: 767px) {
-  .pay-left {
-    padding: 24px 16px;
-  }
-
-  .pay-right {
-    padding: 24px 16px;
-  }
-
-  .pay-method-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .pay-summary-body {
-    padding: 20px;
-  }
-
-  .pay-summary-photo {
-    height: 140px;
-  }
-
-  .pay-card-row {
+  .ck-methods {
     grid-template-columns: 1fr;
   }
-
-  .pay-card-row--three {
+  .ck-form__row--half {
     grid-template-columns: 1fr;
   }
-
-  .pay-section-title {
-    font-size: 1rem;
-  }
-
-  .pay-agency {
-    padding: 16px;
-    gap: 12px;
-  }
-
-  .pay-actions {
+  .ck-actions {
     flex-direction: column-reverse;
   }
-
-  .pay-btn-back,
-  .pay-btn-pay {
+  .ck-btn-pay {
     width: 100%;
-    justify-content: center;
   }
-
-  .pay-modal {
-    padding: 28px 24px;
-    margin: 16px;
+  .ck-skeleton {
+    grid-template-columns: 1fr;
   }
-
-  .pay-toast {
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
-    max-width: none;
-  }
+  .ck-skeleton__right { order: -1; }
+  .ck-stepper__label { display: none; }
+  .ck-stepper__node { width: 32px; height: 32px; font-size: 0.75rem; }
 }
 
 @media (max-width: 480px) {
-  .pay-method-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .pay-method-tile {
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .pay-method-logo {
-    margin-bottom: 0;
-  }
-
-  .pay-method-check {
-    top: 50%;
-    right: 16px;
-    transform: translateY(-50%);
-  }
-
-  .pay-stepper {
-    gap: 0;
-    padding: 14px 16px;
-  }
-
-  .pay-step-label {
-    display: none;
-  }
-
-  .pay-step-indicator {
-    width: 32px;
-    height: 32px;
-    font-size: 0.72rem;
-  }
-
-  .pay-step-connector {
-    min-width: 20px;
-    margin: 0 8px;
-  }
-
-  .pay-insurance {
-    padding: 14px 16px;
-    gap: 12px;
-  }
-
-  .pay-summary-route {
-    gap: 10px;
-  }
-
-  .pay-summary-route-city {
-    font-size: 0.85rem;
-  }
-
-  .pay-countdown {
-    padding: 10px 14px;
-    font-size: 0.78rem;
-  }
-
-  .pay-input {
-    padding: 16px 14px 8px;
-  }
+  .ck-wrap { padding: 0 16px; }
+  .ck-card__head { padding: 20px 20px 0; }
+  .ck-card__body { padding: 16px 20px 20px; }
+  .ck-form { padding: 20px; }
+  .ck-promo { padding: 18px 20px; }
+  .ck-modal { padding: 32px 24px; }
+  .ck-processing__card { padding: 32px 24px; }
 }
-
-/* ------------------------------------------------------------
-   21. Scrollbar — Custom for .pay-right
-   ------------------------------------------------------------ */
-.pay-right::-webkit-scrollbar {
-  width: 6px;
-}
-
-.pay-right::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.pay-right::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.12);
-  border-radius: 3px;
-}
-
-.pay-right::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.2);
-}
-
-/* Firefox */
-.pay-right {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
-}
-
-/* Left panel scrollbar */
-.pay-left::-webkit-scrollbar {
-  width: 4px;
-}
-
-.pay-left::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.pay-left::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-}
-
-/* Stepper horizontal scroll */
-.pay-stepper::-webkit-scrollbar {
-  height: 0;
-}
-
-/* ------------------------------------------------------------
-   22. Print Styles
-   ------------------------------------------------------------ */
-@media print {
-  .pay-processing,
-  .pay-modal-overlay,
-  .pay-countdown,
-  .pay-toast,
-  .pay-actions,
-  .pay-promo,
-  .pay-trust,
-  .pay-terms,
-  .pay-left::before,
-  .pay-left::after {
-    display: none !important;
-  }
-
-  .pay-page {
-    background: #FFFFFF;
-  }
-
-  .pay-split {
-    display: block;
-    min-height: auto;
-  }
-
-  .pay-left {
-    background: none !important;
-    padding: 20px;
-    color: #000;
-  }
-
-  .pay-left * {
-    color: #000 !important;
-    background: transparent !important;
-    border-color: #CCC !important;
-    box-shadow: none !important;
-  }
-
-  .pay-right {
-    background: #FFFFFF;
-    padding: 20px;
-    border: none;
-  }
-
-  .pay-summary {
-    box-shadow: none;
-    border: 1px solid #CCC;
-    position: static;
-  }
-
-  .pay-section-title,
-  .pay-method-name,
-  .pay-input {
-    color: #000 !important;
-  }
-
-  .pay-summary-total-value {
-    color: #000 !important;
-  }
-
-  body {
-    font-size: 12pt;
-    color: #000;
-  }
-
-  img {
-    max-width: 100% !important;
-    height: auto !important;
-  }
-
-  @page {
-    margin: 1cm;
-  }
-}
-
-/* ------------------------------------------------------------
-   23. Animations
-   ------------------------------------------------------------ */
-@keyframes payCheckPop {
-  from {
-    transform: scale(0);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-@keyframes paySlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes paySpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes payPulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-@keyframes payModalIn {
-  from {
-    opacity: 0;
-    transform: scale(0.92) translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes payShimmer {
-  from {
-    background-position: 200% 0;
-  }
-  to {
-    background-position: -200% 0;
-  }
-}
-
-@keyframes payBounceIn {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(1.15);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes payFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes payFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes payGlow {
-  0%,
-  100% {
-    box-shadow: 0 0 0 1px var(--color-accent), 0 4px 16px rgba(255, 107, 53, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 0 2px var(--color-accent), 0 8px 32px rgba(255, 107, 53, 0.35);
-  }
-}
-
-@keyframes payRipple {
-  0% {
-    transform: scale(0);
-    opacity: 0.5;
-  }
-  100% {
-    transform: scale(4);
-    opacity: 0;
-  }
-}
-
-/* Utility animation classes */
-.pay-animate-fade-up {
-  animation: payFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-
-.pay-animate-slide-in {
-  animation: paySlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-
-.pay-animate-bounce-in {
-  animation: payBounceIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-
-/* Staggered animation delays */
-.pay-delay-1 { animation-delay: 0.05s; }
-.pay-delay-2 { animation-delay: 0.1s; }
-.pay-delay-3 { animation-delay: 0.15s; }
-.pay-delay-4 { animation-delay: 0.2s; }
-.pay-delay-5 { animation-delay: 0.25s; }
-.pay-delay-6 { animation-delay: 0.3s; }
-
-/* ------------------------------------------------------------
-   24. Utility Classes
-   ------------------------------------------------------------ */
-.pay-hidden {
-  display: none !important;
-}
-
-.pay-visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.pay-text-center {
-  text-align: center;
-}
-
-.pay-mt-sm { margin-top: 8px; }
-.pay-mt-md { margin-top: 16px; }
-.pay-mt-lg { margin-top: 24px; }
-.pay-mb-sm { margin-bottom: 8px; }
-.pay-mb-md { margin-bottom: 16px; }
-.pay-mb-lg { margin-bottom: 24px; }
-
-/* Glass effect helper */
-.pay-glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-/* Accent text */
-.pay-accent {
-  color: var(--color-accent);
-}
-
-/* Text sizes */
-.pay-text-xs { font-size: 0.68rem; }
-.pay-text-sm { font-size: 0.78rem; }
-.pay-text-md { font-size: 0.88rem; }
-.pay-text-lg { font-size: 1.05rem; }
-.pay-text-xl { font-size: 1.25rem; }
-
-/* Flex helpers */
-.pay-flex {
-  display: flex;
-}
-
-.pay-flex-col {
-  display: flex;
-  flex-direction: column;
-}
-
-.pay-items-center {
-  align-items: center;
-}
-
-.pay-justify-between {
-  justify-content: space-between;
-}
-
-.pay-gap-xs { gap: 4px; }
-.pay-gap-sm { gap: 8px; }
-.pay-gap-md { gap: 16px; }
-.pay-gap-lg { gap: 24px; }
-
-/* Divider */
-.pay-divider {
-  width: 100%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.06);
-  margin: 8px 0;
-}
-
-/* ============================================================
-   END — BUS TIX CONNECT Payment Stylesheet v2.0.0
-   ============================================================ */
