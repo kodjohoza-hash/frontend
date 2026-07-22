@@ -1,17 +1,27 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ROUTES } from '@routes/routeConstants';
 import {
-  PaymentStepper, PaymentMethodCard, MobileMoneyForm, CreditCardForm,
-  SecureBadge, PaymentSummary, PromoCodeCard, InsuranceCard,
-  ReservationRecap, PaymentLoader, PaymentErrorModal, PaymentSuccessModal,
-  ReservationTimer, PaymentSkeleton,
+  PaymentStepper,
+  PaymentMethodCard,
+  MobileMoneyForm,
+  CreditCardForm,
+  PaymentSummary,
+  PromoCodeCard,
+  InsuranceCard,
+  TermsCard,
+  SecurityBadges,
+  PaymentCountdown,
+  PaymentLoader,
+  PaymentSuccessModal,
+  PaymentErrorModal,
+  TimerExpiredModal,
+  PaymentSkeleton,
+  AgencyInfo,
 } from '@components/payment';
 import { PAYMENT_METHODS, mockReservation, STEPS, INSURANCE_OPTION } from '@data/payment';
 import PaymentService from '@services/paymentService';
 import '@assets/styles/payment.css';
-
-const LoadingDelay = 1200;
 
 const PaymentPage = () => {
   const navigate = useNavigate();
@@ -26,11 +36,12 @@ const PaymentPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [timerExpired, setTimerExpired] = useState(false);
 
   const reservation = mockReservation;
 
-  useState(() => {
-    const timer = setTimeout(() => setIsLoading(false), LoadingDelay);
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1200);
     return () => clearTimeout(timer);
   }, []);
 
@@ -44,11 +55,12 @@ const PaymentPage = () => {
 
   const selectedMethodData = PAYMENT_METHODS.find((m) => m.id === selectedMethod);
 
+  const canPay = selectedMethod && formValid && acceptedTerms;
+
   const handleMethodSelect = useCallback((methodId) => {
     setSelectedMethod(methodId);
     setFormData({});
     setFormValid(false);
-    setError(null);
   }, []);
 
   const handleFormValid = useCallback((valid, data) => {
@@ -71,10 +83,9 @@ const PaymentPage = () => {
   }, [reservation]);
 
   const handlePay = useCallback(async () => {
-    if (!selectedMethod || !formValid || !acceptedTerms) return;
+    if (!canPay) return;
     setIsProcessing(true);
     setError(null);
-
     try {
       const result = await PaymentService.processPayment({
         method: selectedMethod,
@@ -82,126 +93,132 @@ const PaymentPage = () => {
         ...formData,
         currency: reservation.currency,
       });
-
       if (result.success) {
         setSuccess(result);
       } else {
         setError(result.error);
       }
     } catch (err) {
-      setError('Une erreur inattendue est survenue. Verifiez votre connexion.');
+      setError('Une erreur inattendue est survenue. Vérifiez votre connexion.');
     } finally {
       setIsProcessing(false);
     }
-  }, [selectedMethod, formValid, acceptedTerms, total, formData, reservation.currency]);
+  }, [canPay, selectedMethod, total, formData, reservation.currency]);
 
   const handleTimerExpired = useCallback(() => {
-    setError('Le delai de reservation a expire. Veuillez relancer votre recherche.');
+    setTimerExpired(true);
   }, []);
+
+  const handleBackToSearch = useCallback(() => {
+    navigate(ROUTES.BOOKING_SEARCH);
+  }, [navigate]);
 
   if (isLoading) {
     return (
-      <div className="container py-4">
-        <PaymentSkeleton />
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(165deg, var(--color-primary-50, #EEF2FF) 0%, var(--color-gray-50, #F9FAFB) 40%, #FFFFFF 100%)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '24px 24px 64px' }}>
+          <PaymentSkeleton />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="btc-payment-page">
-      <div className="container py-4">
+    <div className="btc-pay-page">
+      <div className="btc-pay-container">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="mb-3">
-          <ol className="breadcrumb" style={{ fontSize: 'var(--font-size-xs)' }}>
-            <li className="breadcrumb-item"><Link to={ROUTES.HOME} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Accueil</Link></li>
-            <li className="breadcrumb-item"><Link to={ROUTES.BOOKING_SEARCH} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Recherche</Link></li>
-            <li className="breadcrumb-item"><Link to={ROUTES.BOOKING_SEARCH} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Resultats</Link></li>
-            <li className="breadcrumb-item"><Link to={ROUTES.BOOKING_SEATS} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Choix des sieges</Link></li>
-            <li className="breadcrumb-item active" style={{ color: 'var(--text-primary)' }}>Paiement</li>
+        <nav aria-label="Fil d'Ariane" style={{ marginBottom: 20, animation: 'btcPayFadeInUp 0.3s ease both' }}>
+          <ol style={{ listStyle: 'none', display: 'flex', alignItems: 'center', gap: 6, margin: 0, padding: 0, fontSize: 'var(--font-size-xs, 0.8125rem)', flexWrap: 'wrap' }}>
+            <li>
+              <Link to={ROUTES.HOME} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Accueil</Link>
+            </li>
+            <li style={{ color: 'var(--text-muted)', fontSize: '0.6rem' }}><i className="bi bi-chevron-right" /></li>
+            <li>
+              <Link to={ROUTES.BOOKING_SEARCH} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Recherche</Link>
+            </li>
+            <li style={{ color: 'var(--text-muted)', fontSize: '0.6rem' }}><i className="bi bi-chevron-right" /></li>
+            <li>
+              <Link to={ROUTES.BOOKING_SEATS} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Sièges</Link>
+            </li>
+            <li style={{ color: 'var(--text-muted)', fontSize: '0.6rem' }}><i className="bi bi-chevron-right" /></li>
+            <li style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Paiement</li>
           </ol>
         </nav>
 
         {/* Stepper */}
         <PaymentStepper steps={STEPS} currentStep={4} />
 
-        {/* Timer */}
-        <ReservationTimer durationMinutes={10} onExpired={handleTimerExpired} />
+        {/* Countdown */}
+        <PaymentCountdown durationMinutes={10} onExpired={handleTimerExpired} />
 
         {/* Processing Overlay */}
-        {isProcessing && (
-          <div className="btc-processing-overlay">
-            <PaymentLoader />
-          </div>
-        )}
+        {isProcessing && <PaymentLoader />}
 
         {/* Error Modal */}
         {error && !isProcessing && (
           <PaymentErrorModal
             error={error}
-            onRetry={() => { setError(null); }}
-            onClose={() => { setError(null); navigate('/booking/seats'); }}
+            onRetry={() => setError(null)}
+            onClose={() => { setError(null); navigate(ROUTES.BOOKING_SEATS); }}
           />
         )}
 
         {/* Success Modal */}
-        {success && (
-          <PaymentSuccessModal transaction={success} />
-        )}
+        {success && <PaymentSuccessModal transaction={success} />}
+
+        {/* Timer Expired Modal */}
+        {timerExpired && <TimerExpiredModal onBackToSearch={handleBackToSearch} />}
 
         {/* Main Content */}
-        {!isProcessing && !error && !success && (
-          <div className="row g-4">
-            {/* Left: Payment Methods */}
-            <div className="col-12 col-lg-7">
+        {!isProcessing && !error && !success && !timerExpired && (
+          <div className="btc-pay-layout">
+            {/* Left Column — Payment Methods & Forms */}
+            <div className="btc-pay-left">
               {/* Payment Methods Card */}
-              <div className="card border-0 mb-3" style={{ borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-sm)' }}>
-                <div className="card-body p-4">
-                  <h6 className="fw-bold mb-3" style={{ fontSize: 'var(--font-size-base)', color: 'var(--text-primary)' }}>
-                    <i className="bi bi-credit-card-2-front-fill me-2" style={{ color: 'var(--color-accent)' }} />
-                    Choisissez votre mode de paiement
-                  </h6>
-
-                  <div className="d-flex flex-column gap-2">
-                    {PAYMENT_METHODS.filter((m) => m.available).map((method) => (
-                      <PaymentMethodCard
-                        key={method.id}
-                        method={method}
-                        isSelected={selectedMethod === method.id}
-                        onSelect={handleMethodSelect}
-                      />
-                    ))}
+              <div className="btc-pay-section-card">
+                <div className="btc-pay-section-header">
+                  <div className="btc-pay-section-icon" style={{ background: 'rgba(255, 107, 53, 0.1)', color: 'var(--color-accent, #FF6B35)' }}>
+                    <i className="bi bi-credit-card-2-front-fill" />
                   </div>
+                  <div>
+                    <h3 style={{ fontSize: 'var(--font-size-base, 1rem)', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                      Choisissez votre moyen de paiement
+                    </h3>
+                    <p style={{ fontSize: 'var(--font-size-xs, 0.8125rem)', color: 'var(--text-muted)', margin: 0, marginTop: 2 }}>
+                      Toutes vos transactions sont sécurisées
+                    </p>
+                  </div>
+                </div>
+                <div className="btc-pay-methods-list">
+                  {PAYMENT_METHODS.filter((m) => m.available).map((method) => (
+                    <PaymentMethodCard
+                      key={method.id}
+                      method={method}
+                      isSelected={selectedMethod === method.id}
+                      onSelect={handleMethodSelect}
+                    />
+                  ))}
                 </div>
               </div>
 
-              {/* Dynamic Form */}
+              {/* Dynamic Form — Mobile Money */}
               {selectedMethod && selectedMethodData?.category === 'mobile_money' && (
-                <div className="card border-0 mb-3 btc-form-card" style={{ borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-sm)' }}>
-                  <div className="card-body p-4">
-                    <MobileMoneyForm provider={selectedMethod} onValid={handleFormValid} />
-                  </div>
+                <div className="btc-pay-section-card btc-pay-form-enter">
+                  <MobileMoneyForm provider={selectedMethod} onValid={handleFormValid} />
                 </div>
               )}
 
+              {/* Dynamic Form — Card */}
               {selectedMethod && selectedMethodData?.category === 'card' && (
-                <div className="card border-0 mb-3 btc-form-card" style={{ borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-sm)' }}>
-                  <div className="card-body p-4">
-                    <CreditCardForm onValid={handleFormValid} />
-                  </div>
+                <div className="btc-pay-section-card btc-pay-form-enter">
+                  <CreditCardForm onValid={handleFormValid} />
                 </div>
               )}
 
+              {/* Dynamic Form — Agency */}
               {selectedMethod && selectedMethodData?.category === 'agency' && (
-                <div className="card border-0 mb-3" style={{ borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-sm)' }}>
-                  <div className="card-body p-4 text-center">
-                    <i className="bi bi-building mb-2" style={{ fontSize: '1.5rem', color: 'var(--color-primary)' }} />
-                    <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)' }}>
-                      Rendez-vous a l'agence avec votre numero de reservation pour payer en especes.
-                    </p>
-                    <button onClick={() => setFormValid(true)} className="btn btn-sm" style={{ background: 'var(--color-primary-50)', color: 'var(--color-primary)', borderRadius: 'var(--radius-md)', fontWeight: 'var(--font-weight-semibold)' }}>
-                      Confirmer le paiement a l'agence
-                    </button>
-                  </div>
+                <div className="btc-pay-section-card btc-pay-form-enter">
+                  <AgencyInfo onConfirm={() => setFormValid(true)} />
                 </div>
               )}
 
@@ -212,61 +229,39 @@ const PaymentPage = () => {
               <InsuranceCard insurance={INSURANCE_OPTION} isSelected={insurance} onToggle={setInsurance} />
 
               {/* Terms */}
-              <div className="card border-0 mb-3" style={{ borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-sm)' }}>
-                <div className="card-body p-4">
-                  <label className="d-flex align-items-start gap-2 cursor-pointer mb-0" htmlFor="terms-accept">
-                    <input
-                      type="checkbox"
-                      id="terms-accept"
-                      checked={acceptedTerms}
-                      onChange={(e) => setAcceptedTerms(e.target.checked)}
-                      className="mt-1"
-                      style={{ width: 18, height: 18, accentColor: 'var(--color-primary)', cursor: 'pointer' }}
-                      aria-label="Accepter les conditions generales"
-                    />
-                    <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)', lineHeight: 'var(--line-height-relaxed)' }}>
-                      J'accepte les <a href="#" style={{ color: 'var(--color-primary)', fontWeight: 'var(--font-weight-semibold)' }}>conditions generales de vente</a>,
-                      la <a href="#" style={{ color: 'var(--color-primary)', fontWeight: 'var(--font-weight-semibold)' }}>politique de confidentialite</a>
-                      et je confirme que les informations saisies sont exactes.
-                    </span>
-                  </label>
-                </div>
-              </div>
+              <TermsCard reservation={reservation} onAccept={setAcceptedTerms} isAccepted={acceptedTerms} />
 
               {/* Security Badges */}
-              <SecureBadge />
+              <SecurityBadges />
 
               {/* Actions */}
-              <div className="d-flex gap-2 mt-3">
+              <div className="btc-pay-actions">
                 <button
-                  onClick={() => navigate('/booking/seats')}
-                  className="btn btn-outline-secondary"
-                  style={{ borderRadius: 'var(--radius-lg)', padding: '12px 20px', fontSize: 'var(--font-size-sm)' }}
+                  type="button"
+                  onClick={() => navigate(ROUTES.BOOKING_SEATS)}
+                  className="btc-pay-btn-back"
+                  aria-label="Retour aux sièges"
                 >
-                  <i className="bi bi-arrow-left me-2" />
-                  Retour aux sieges
+                  <i className="bi bi-arrow-left" />
+                  Retour aux sièges
                 </button>
                 <button
+                  type="button"
                   onClick={handlePay}
-                  disabled={!selectedMethod || !formValid || !acceptedTerms}
-                  className="btn btn-accent flex-fill"
-                  style={{
-                    borderRadius: 'var(--radius-lg)',
-                    padding: '12px 24px',
-                    fontWeight: 'var(--font-weight-semibold)',
-                    fontSize: 'var(--font-size-sm)',
-                    opacity: (!selectedMethod || !formValid || !acceptedTerms) ? 0.6 : 1,
-                  }}
+                  disabled={!canPay}
+                  className="btc-pay-btn-submit"
+                  aria-label={`Payer ${total.toLocaleString()} FCFA`}
+                  style={{ opacity: canPay ? 1 : 0.5, cursor: canPay ? 'pointer' : 'not-allowed' }}
                 >
-                  <i className="bi bi-lock-fill me-2" />
+                  <i className="bi bi-lock-fill" />
                   Payer {total.toLocaleString()} FCFA
                 </button>
               </div>
             </div>
 
-            {/* Right: Summary */}
-            <div className="col-12 col-lg-5">
-              <div className="btc-payment-right-sticky">
+            {/* Right Column — Summary (Sticky) */}
+            <div className="btc-pay-right">
+              <div className="btc-pay-right-sticky">
                 <PaymentSummary
                   reservation={reservation}
                   selectedSeats={reservation.seats}
@@ -274,9 +269,6 @@ const PaymentPage = () => {
                   insurance={insurance}
                   total={total}
                 />
-                <div className="mt-3">
-                  <ReservationRecap reservation={reservation} />
-                </div>
               </div>
             </div>
           </div>

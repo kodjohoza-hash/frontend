@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const keyframes = `
   @keyframes btcScaleIn {
@@ -32,31 +33,31 @@ const styles = {
     background: '#fff',
     borderRadius: 'var(--radius-2xl)',
     boxShadow: '0 24px 80px rgba(0, 0, 0, 0.2)',
-    maxWidth: 420,
+    maxWidth: 400,
     width: '100%',
     padding: '32px 28px',
     textAlign: 'center',
   },
-  errorCircle: {
+  clockCircle: {
     width: 72,
     height: 72,
     borderRadius: '50%',
-    background: 'rgba(239, 68, 68, 0.1)',
+    background: 'rgba(245, 158, 11, 0.1)',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
     animation: 'btcScaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
   },
-  errorIcon: {
+  clockIcon: {
     fontSize: '1.8rem',
-    color: 'var(--color-danger)',
+    color: 'var(--color-warning)',
   },
   title: {
     fontSize: '1.2rem',
     fontWeight: 800,
     color: 'var(--text-primary)',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   message: {
     fontSize: '0.82rem',
@@ -64,38 +65,16 @@ const styles = {
     marginBottom: 28,
     lineHeight: 1.5,
   },
-  buttons: {
-    display: 'flex',
-    gap: 12,
-  },
-  outlineBtn: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '12px 20px',
-    borderRadius: 'var(--radius-lg)',
-    background: 'transparent',
-    color: 'var(--text-secondary)',
-    fontSize: '0.82rem',
-    fontWeight: 600,
-    border: '2px solid var(--color-gray-200)',
-    cursor: 'pointer',
-    textDecoration: 'none',
-    fontFamily: 'inherit',
-    transition: 'border-color 0.2s ease, background 0.2s ease',
-  },
   primaryBtn: {
-    flex: 1,
-    display: 'flex',
+    display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
-    padding: '12px 20px',
+    gap: 8,
+    padding: '12px 28px',
     borderRadius: 'var(--radius-lg)',
-    background: 'var(--color-accent)',
+    background: 'var(--color-primary)',
     color: '#fff',
-    fontSize: '0.82rem',
+    fontSize: '0.85rem',
     fontWeight: 700,
     border: 'none',
     cursor: 'pointer',
@@ -105,32 +84,27 @@ const styles = {
   },
 };
 
-const PaymentErrorModal = React.memo(({ error, onRetry, onClose }) => (
+const TimerExpiredModal = React.memo(() => (
   <>
     <style>{keyframes}</style>
-    <div style={styles.overlay} role="dialog" aria-modal="true" aria-label="Erreur de paiement">
+    <div style={styles.overlay} role="dialog" aria-modal="true" aria-label="Délai expiré">
       <div style={styles.modal}>
-        <div style={styles.errorCircle}>
-          <i className="bi bi-x-lg" style={styles.errorIcon} />
+        <div style={styles.clockCircle}>
+          <i className="bi bi-clock-history" style={styles.clockIcon} />
         </div>
 
-        <h2 style={styles.title}>Paiement échoué</h2>
+        <h2 style={styles.title}>Délai expiré</h2>
         <p style={styles.message}>
-          {error || "Une erreur est survenue lors du paiement. Veuillez réessayer ou choisir un autre moyen de paiement."}
+          Votre réservation a expiré. Les sièges ont été libérés et sont à nouveau disponibles.
         </p>
 
-        <div style={styles.buttons}>
-          <button type="button" onClick={onClose} style={styles.outlineBtn}>
-            Retour aux sièges
-          </button>
-          <button type="button" onClick={onRetry} style={styles.primaryBtn}>
-            <i className="bi bi-arrow-clockwise" />
-            Réessayer
-          </button>
-        </div>
+        <Link to="/booking/search" style={styles.primaryBtn}>
+          <i className="bi bi-search" />
+          Retour à la recherche
+        </Link>
       </div>
     </div>
   </>
 ));
 
-export default PaymentErrorModal;
+export default TimerExpiredModal;
