@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
-import { user, notifications as allNotifications } from '@data/clientDashboard';
+import useAuth from '@hooks/useAuth';
+import { notifications as allNotifications } from '@data/clientDashboard';
 
 const DbHeader = ({ onToggleSidebar }) => {
+  const { user, logout } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [notifOpen, setNotifOpen] = useState(false);
@@ -13,6 +15,8 @@ const DbHeader = ({ onToggleSidebar }) => {
   const notifRef = useRef(null);
   const profileRef = useRef(null);
 
+  const firstName = user?.firstName || '';
+  const initials = (user?.firstName?.[0] || '') + (user?.lastName?.[0] || '');
   const unreadCount = allNotifications.filter((n) => !n.read).length;
 
   useEffect(() => {
@@ -52,6 +56,12 @@ const DbHeader = ({ onToggleSidebar }) => {
     return 'Bonsoir';
   };
 
+  const handleLogout = () => {
+    setProfileOpen(false);
+    logout();
+    navigate('/login', { replace: true });
+  };
+
   return (
     <header className="db-header">
       <div className="db-header__left">
@@ -59,7 +69,7 @@ const DbHeader = ({ onToggleSidebar }) => {
           <i className="bi bi-list" />
         </button>
         <div className="db-header__greeting">
-          <h1 className="db-header__title">{greeting()}, {user.firstName}</h1>
+          <h1 className="db-header__title">{greeting()}, {firstName}</h1>
           <p className="db-header__subtitle">Que souhaitez-vous faire aujourd'hui ?</p>
         </div>
       </div>
@@ -138,15 +148,15 @@ const DbHeader = ({ onToggleSidebar }) => {
             onClick={() => { setProfileOpen(!profileOpen); setNotifOpen(false); }}
           >
             <div className="db-header__avatar">
-              {user.avatar ? (
-                <img src={user.avatar} alt={user.firstName} />
+              {user?.avatar ? (
+                <img src={user.avatar} alt={firstName} />
               ) : (
-                <span>{user.initials}</span>
+                <span>{initials}</span>
               )}
             </div>
             <div className="db-header__profile-info">
-              <span className="db-header__profile-name">{user.firstName} {user.lastName}</span>
-              <span className="db-header__profile-tier">{user.loyaltyTier} • {user.loyaltyPoints.toLocaleString()} pts</span>
+              <span className="db-header__profile-name">{user?.firstName} {user?.lastName}</span>
+              <span className="db-header__profile-tier">{user?.role === 'client' ? 'Voyageur' : user?.role === 'super_admin' ? 'Administrateur' : user?.role === 'company_admin' ? 'Compagnie' : 'Guichet'}</span>
             </div>
             <i className="bi bi-chevron-down db-header__profile-arrow" />
           </button>
@@ -154,11 +164,11 @@ const DbHeader = ({ onToggleSidebar }) => {
             <div className="db-header__dropdown db-header__dropdown--profile">
               <div className="db-header__dropdown-profile-top">
                 <div className="db-header__avatar db-header__avatar--lg">
-                  {user.avatar ? <img src={user.avatar} alt={user.firstName} /> : <span>{user.initials}</span>}
+                  {user?.avatar ? <img src={user.avatar} alt={firstName} /> : <span>{initials}</span>}
                 </div>
                 <div>
-                  <span className="db-header__dropdown-profile-name">{user.firstName} {user.lastName}</span>
-                  <span className="db-header__dropdown-profile-email">{user.email}</span>
+                  <span className="db-header__dropdown-profile-name">{user?.firstName} {user?.lastName}</span>
+                  <span className="db-header__dropdown-profile-email">{user?.email}</span>
                 </div>
               </div>
               <div className="db-header__dropdown-divider" />
@@ -169,7 +179,7 @@ const DbHeader = ({ onToggleSidebar }) => {
                 <i className="bi bi-gear" /> Paramètres
               </button>
               <div className="db-header__dropdown-divider" />
-              <button type="button" className="db-header__dropdown-item db-header__dropdown-item--danger">
+              <button type="button" className="db-header__dropdown-item db-header__dropdown-item--danger" onClick={handleLogout}>
                 <i className="bi bi-box-arrow-right" /> Déconnexion
               </button>
             </div>

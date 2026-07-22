@@ -1,15 +1,18 @@
 import { Link } from 'react-router-dom';
-import { user } from '@data/clientDashboard';
+import useAuth from '@hooks/useAuth';
 
 const DbWelcomeCard = () => {
+  const { user } = useAuth();
+  const firstName = user?.firstName || 'Voyageur';
+
   return (
     <section className="db-welcome">
       <div className="db-welcome__content">
         <h2 className="db-welcome__heading">
-          Bienvenue, <span className="db-welcome__name">{user.firstName}</span> 👋
+          Bienvenue, <span className="db-welcome__name">{firstName}</span> 👋
         </h2>
         <p className="db-welcome__text">
-          Vous avez <strong>3 trajets à venir</strong>. Gérez vos réservations et découvrez de nouvelles destinations.
+          Gérez vos réservations et découvrez de nouvelles destinations au Cameroun.
         </p>
         <Link to="/booking/search" className="db-welcome__cta">
           <i className="bi bi-search" />

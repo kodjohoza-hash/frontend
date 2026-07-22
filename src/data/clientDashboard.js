@@ -1,15 +1,3 @@
-export const user = {
-  firstName: 'Jean-Pierre',
-  lastName: 'Kamga',
-  email: 'jeanpierre.kamga@gmail.com',
-  phone: '+237 691 234 567',
-  avatar: null,
-  initials: 'JP',
-  memberSince: '2024-03-15',
-  loyaltyTier: 'Or',
-  loyaltyPoints: 2450,
-};
-
 export const stats = [
   {
     id: 'bookings',
