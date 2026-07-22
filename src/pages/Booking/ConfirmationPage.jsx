@@ -1,99 +1,76 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@routes/routeConstants';
 import {
-  ConfirmationStepper,
-  BookingSuccessCard,
-  TripSummaryCard,
-  PassengerCard,
-  SeatList,
-  PaymentSummaryCard,
-  ETicketCard,
-  TravelTipsCard,
-  SupportCard,
-  ActionButtons,
-  ConfirmationSkeleton,
+  CnStepper,
+  CnSuccessCard,
+  CnETicket,
+  CnTripSummary,
+  CnPassengerList,
+  CnPaymentInfo,
+  CnAdvice,
+  CnSupport,
+  CnActions,
+  CnSkeleton,
 } from '@components/confirmation';
 import {
-  mockBooking,
-  mockTrip,
-  mockPassengers,
-  mockSeats,
-  mockPayment,
-  STEPS,
+  CONFIRMATION_STEPS,
+  BOOKING,
+  TRIP,
+  PASSENGERS,
+  PAYMENT,
+  TRAVEL_ADVICE,
+  SUPPORT_CONTACTS,
 } from '@data/bookingConfirmation';
+import '@assets/styles/confirmation.css';
 
 const ConfirmationPage = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1200);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    const t = setTimeout(() => setLoading(false), 1100);
+    return () => clearTimeout(t);
   }, []);
 
   if (loading) {
     return (
-      <div className="btc-confirm-page">
-        <div className="container" style={{ maxWidth: 880 }}>
-          <ConfirmationSkeleton />
-        </div>
+      <div className="cn-page">
+        <div className="cn-wrap"><CnSkeleton /></div>
       </div>
     );
   }
 
   return (
-    <div className="btc-confirm-page">
-      <div className="container" style={{ maxWidth: 880 }}>
-        <ConfirmationStepper steps={STEPS} />
+    <div className="cn-page">
+      <div className="cn-wrap">
+        <CnStepper steps={CONFIRMATION_STEPS} />
+        <CnSuccessCard booking={BOOKING} />
 
-        <BookingSuccessCard booking={mockBooking} />
-
-        <div className="row g-4">
-          {/* Left column: info cards */}
-          <div className="col-lg-5">
-            <TripSummaryCard trip={mockTrip} />
-            <div className="mt-3">
-              <PassengerCard passengers={mockPassengers} />
-            </div>
-            <div className="mt-3">
-              <SeatList seats={mockSeats} />
-            </div>
-            <div className="mt-3">
-              <PaymentSummaryCard payment={mockPayment} />
-            </div>
+        <div className="cn-split">
+          <div className="cn-left">
+            <CnETicket
+              booking={BOOKING}
+              trip={TRIP}
+              passengers={PASSENGERS}
+              payment={PAYMENT}
+            />
+            <CnActions bookingId={BOOKING.id} />
           </div>
 
-          {/* Right column: e-ticket + extras */}
-          <div className="col-lg-7">
-            <ETicketCard
-              booking={mockBooking}
-              trip={mockTrip}
-              passengers={mockPassengers}
-              seats={mockSeats}
-              payment={mockPayment}
-            />
-
-            <ActionButtons bookingId={mockBooking.id} />
-
-            <div className="mt-4">
-              <TravelTipsCard />
-            </div>
-
-            <div className="mt-3">
-              <SupportCard />
-            </div>
+          <div className="cn-right">
+            <CnTripSummary trip={TRIP} />
+            <CnPassengerList passengers={PASSENGERS} />
+            <CnPaymentInfo payment={PAYMENT} />
+            <CnAdvice items={TRAVEL_ADVICE} />
+            <CnSupport contacts={SUPPORT_CONTACTS} />
           </div>
         </div>
 
-        {/* Print-only footer */}
-        <div className="btc-print-only text-center mt-4 pb-3" style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
+        <div className="cn-print-only" style={{ textAlign: 'center', paddingTop: 24, fontSize: '0.65rem', color: '#94a3b8' }}>
           <div>BUS TIX CONNECT — www.bustixconnect.com</div>
-          <div>Ce billet a ete genere electroniquement. Valide sans signature.</div>
+          <div>Ce billet a été généré électroniquement. Valide sans signature.</div>
         </div>
       </div>
     </div>

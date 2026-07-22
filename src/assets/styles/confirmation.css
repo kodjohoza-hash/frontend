@@ -1,271 +1,925 @@
-/* ================================================
-   BUS TIX CONNECT — Booking Confirmation & E-Ticket
-   ================================================ */
+/* ============================================================
+   BUS TIX CONNECT — Confirmation & E-Ticket v3.0
+   Design System: "TICKET OFFICIAL" — Premium Document
+   ============================================================ */
 
-/* ================================================
-   Page wrapper
-   ================================================ */
-.btc-confirm-page {
-  padding: 3rem 0 4rem;
-  background: var(--color-gray-50);
-  min-height: calc(100vh - 160px);
+/* ── 1. Tokens ───────────────────────────────────────────── */
+:root {
+  --cn-navy: #0B1D51;
+  --cn-navy-light: #132B6B;
+  --cn-navy-dark: #071233;
+  --cn-orange: #FF6B35;
+  --cn-orange-dark: #E85D2C;
+  --cn-green: #10b981;
+  --cn-green-dark: #059669;
+  --cn-red: #EF4444;
+  --cn-amber: #F59E0B;
+  --cn-blue: #3b82f6;
+
+  --cn-white: #ffffff;
+  --cn-gray-50: #f8fafc;
+  --cn-gray-100: #f1f5f9;
+  --cn-gray-200: #e2e8f0;
+  --cn-gray-300: #cbd5e1;
+  --cn-gray-400: #94a3b8;
+  --cn-gray-500: #64748b;
+  --cn-gray-600: #475569;
+  --cn-gray-700: #334155;
+  --cn-gray-800: #1e293b;
+  --cn-gray-900: #0f172a;
+
+  --cn-r-2xl: 24px;
+  --cn-r-xl: 16px;
+  --cn-r-lg: 12px;
+  --cn-r-md: 8px;
+  --cn-r-sm: 6px;
+
+  --cn-shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --cn-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --cn-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+  --cn-shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.04);
+  --cn-shadow-ticket: 0 8px 32px -8px rgba(11,29,81,0.18), 0 4px 12px rgba(0,0,0,0.06);
+
+  --cn-font: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --cn-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --cn-font-mono: 'Courier New', 'SF Mono', 'Fira Code', monospace;
+
+  --cn-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --cn-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ================================================
-   Stepper
-   ================================================ */
-.btc-confirm-step-circle {
+/* ── 2. Reset ────────────────────────────────────────────── */
+.cn-page *, .cn-page *::before, .cn-page *::after { box-sizing: border-box; }
+.cn-page button { cursor: pointer; border: none; background: none; font-family: inherit; }
+.cn-page a { text-decoration: none; color: inherit; }
+
+/* ── 3. Animations ───────────────────────────────────────── */
+@keyframes cnFadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes cnSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes cnBounceIn {
+  0% { opacity: 0; transform: scale(0); }
+  60% { transform: scale(1.15); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes cnSuccessPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.3); }
+  50% { box-shadow: 0 0 0 12px rgba(16,185,129,0); }
+}
+@keyframes cnConfetti {
+  0% { opacity: 0; transform: translateY(0) scale(0) rotate(0deg); }
+  20% { opacity: 1; transform: translateY(-30px) scale(1) rotate(90deg); }
+  100% { opacity: 0; transform: translateY(-80px) scale(0.3) rotate(360deg); }
+}
+@keyframes cnShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes cnPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* ── 4. Page Shell ───────────────────────────────────────── */
+.cn-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--cn-gray-100);
+  font-family: var(--cn-font-body);
+  color: var(--cn-gray-800);
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 48px;
+}
+.cn-wrap {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── 5. Stepper ──────────────────────────────────────────── */
+.cn-stepper { padding: 24px 0 20px; }
+.cn-stepper__list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+.cn-stepper__item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.cn-stepper__node-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.cn-stepper__node {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--color-gray-100);
-  color: var(--color-gray-400);
-  border: 2px solid var(--color-gray-200);
-  transition: all 0.3s var(--ease-out);
-}
-
-.btc-step-completed {
-  background: var(--color-success);
-  color: var(--color-white);
-  border-color: var(--color-success);
-}
-
-/* ================================================
-   Success card animation
-   ================================================ */
-.btc-success-card {
-  overflow: hidden;
-}
-
-.btc-success-icon {
-  animation: btcSuccessBounce 0.6s var(--ease-out);
-}
-
-.btc-success-check-circle {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: var(--color-success);
-  color: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: var(--cn-white);
+  color: var(--cn-gray-400);
+  border: 2px solid var(--cn-gray-200);
+  transition: all 0.3s var(--cn-ease);
+  flex-shrink: 0;
+}
+.cn-stepper__node--done {
+  background: var(--cn-green);
+  color: var(--cn-white);
+  border-color: var(--cn-green);
+}
+.cn-stepper__node--active {
+  background: var(--cn-green);
+  color: var(--cn-white);
+  border-color: var(--cn-green);
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.2);
+  animation: cnSuccessPulse 2s infinite;
+}
+.cn-stepper__label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--cn-gray-400);
+  text-align: center;
+  white-space: nowrap;
+  max-width: 80px;
+}
+.cn-stepper__label--done { color: var(--cn-green); }
+.cn-stepper__label--active { color: var(--cn-green); font-weight: 700; }
+.cn-stepper__line {
+  flex: 1;
+  height: 2px;
+  background: var(--cn-gray-200);
+  margin: 0 4px;
+  margin-bottom: 22px;
+}
+.cn-stepper__line--done { background: var(--cn-green); }
+
+/* ── 6. Split Layout ─────────────────────────────────────── */
+.cn-split {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  align-items: start;
+}
+.cn-left { display: flex; flex-direction: column; gap: 24px; }
+.cn-right { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 24px; }
+
+/* ── 7. Cards ────────────────────────────────────────────── */
+.cn-card {
+  background: var(--cn-white);
+  border-radius: var(--cn-r-2xl);
+  border: 1px solid var(--cn-gray-200);
+  box-shadow: var(--cn-shadow-sm);
+  padding: 24px;
+  transition: box-shadow 0.25s var(--cn-ease);
+}
+.cn-card:hover { box-shadow: var(--cn-shadow-md); }
+.cn-card__title {
+  font-family: var(--cn-font);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cn-gray-800);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cn-card__title i { color: var(--cn-orange); font-size: 1rem; }
+
+/* ── 8. Success Card ─────────────────────────────────────── */
+.cn-success {
+  background: var(--cn-white);
+  border-radius: var(--cn-r-2xl);
+  border: 1px solid var(--cn-gray-200);
+  box-shadow: var(--cn-shadow-md);
+  padding: 40px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: cnFadeUp 0.5s var(--cn-ease);
+}
+.cn-success__confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.cn-success__dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cn-green);
+  animation: cnConfetti 1.2s var(--cn-ease) var(--delay) both;
+  transform: rotate(var(--d));
+}
+.cn-success__dot:nth-child(odd) { background: var(--cn-orange); width: 6px; height: 6px; }
+.cn-success__dot:nth-child(3n) { background: var(--cn-blue); width: 5px; height: 5px; }
+
+.cn-success__icon { margin-bottom: 20px; position: relative; z-index: 1; }
+.cn-success__circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--cn-green);
+  color: var(--cn-white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 2rem;
-  box-shadow: 0 0 0 8px rgba(25, 135, 84, 0.15), 0 0 0 16px rgba(25, 135, 84, 0.06);
+  box-shadow: 0 0 0 8px rgba(16,185,129,0.12), 0 0 0 20px rgba(16,185,129,0.06);
+  animation: cnBounceIn 0.6s var(--cn-spring);
 }
-
-@keyframes btcSuccessBounce {
-  0% { transform: scale(0.3); opacity: 0; }
-  50% { transform: scale(1.1); }
-  70% { transform: scale(0.95); }
-  100% { transform: scale(1); opacity: 1; }
+.cn-success__title {
+  font-family: var(--cn-font);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--cn-gray-900);
+  margin: 0 0 8px;
+  position: relative;
+  z-index: 1;
 }
+.cn-success__subtitle {
+  font-size: 0.88rem;
+  color: var(--cn-gray-400);
+  margin: 0 0 24px;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+.cn-success__subtitle strong { color: var(--cn-navy); }
 
-/* Info pills */
-.btc-confirm-info-pill {
+.cn-success__pills {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+.cn-pill {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding: 8px 16px;
-  border-radius: var(--radius-lg);
-  background: var(--color-gray-50);
-  border: 1px solid var(--border-subtle);
+  padding: 10px 16px;
+  background: var(--cn-gray-50);
+  border: 1px solid var(--cn-gray-100);
+  border-radius: var(--cn-r-lg);
 }
-
-/* ================================================
-   Status badge
-   ================================================ */
-.btc-status-badge {
-  display: inline-flex;
-  align-items: center;
+.cn-pill__label {
+  font-size: 0.65rem;
+  color: var(--cn-gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.cn-pill__value {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--cn-gray-800);
+  font-family: var(--cn-font);
+}
+.cn-pill--ok {
+  background: rgba(16,185,129,0.08);
+  color: var(--cn-green);
+  font-size: 0.78rem;
+  font-weight: 600;
+  flex-direction: row;
   gap: 4px;
-  padding: 4px 12px;
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
+  padding: 10px 14px;
 }
 
-.btc-status-confirmed {
-  background: rgba(25, 135, 84, 0.1);
-  color: var(--color-success);
-}
-
-.btc-status-pending {
-  background: rgba(255, 193, 7, 0.12);
-  color: var(--color-warning);
-}
-
-.btc-status-cancelled {
-  background: rgba(220, 53, 69, 0.1);
-  color: var(--color-danger);
-}
-
-.btc-status-refunded {
-  background: rgba(13, 110, 253, 0.1);
-  color: var(--color-info);
-}
-
-/* ================================================
-   E-Ticket — Official document look
-   ================================================ */
-.btc-eticket {
-  border: 2px solid var(--color-gray-200);
+/* ── 9. E-Ticket ─────────────────────────────────────────── */
+.cn-ticket {
   position: relative;
-  overflow: hidden;
+  background: var(--cn-white);
+  border-radius: var(--cn-r-2xl);
+  box-shadow: var(--cn-shadow-ticket);
+  overflow: visible;
+  animation: cnFadeUp 0.6s var(--cn-ease) 0.15s both;
 }
 
-.btc-eticket::before,
-.btc-eticket::after {
-  content: '';
+/* Notched sides */
+.cn-ticket__notch {
   position: absolute;
   top: 50%;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: var(--color-gray-50);
-  z-index: 1;
+  background: var(--cn-gray-100);
+  z-index: 2;
+  transform: translateY(-50%);
+}
+.cn-ticket__notch--left { left: -12px; }
+.cn-ticket__notch--right { right: -12px; }
+
+/* Header */
+.cn-ticket__header {
+  background: linear-gradient(135deg, var(--cn-navy) 0%, var(--cn-navy-light) 100%);
+  color: var(--cn-white);
+  padding: 20px 28px;
+  border-radius: var(--cn-r-2xl) var(--cn-r-2xl) 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cn-ticket__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cn-ticket__logo {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--cn-r-md);
+  background: rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+.cn-ticket__brand-name {
+  font-family: var(--cn-font);
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+.cn-ticket__brand-tag {
+  font-size: 0.65rem;
+  opacity: 0.6;
+  letter-spacing: 0.08em;
+}
+.cn-ticket__status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: rgba(16,185,129,0.2);
+  border-radius: var(--cn-r-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6ee7b7;
 }
 
-.btc-eticket::before {
-  left: -12px;
-}
-
-.btc-eticket::after {
-  right: -12px;
-}
-
-/* Perforation (tear-off line) */
-.btc-perforation {
+/* Perforation */
+.cn-ticket__perf {
+  height: 1px;
   border: none;
-  border-top: 2px dashed var(--color-gray-200);
-  width: calc(100% - 40px);
+  border-top: 2px dashed var(--cn-gray-200);
+  width: calc(100% - 48px);
   margin: 0 auto;
-  position: relative;
 }
 
-/* ================================================
-   Seat badges
-   ================================================ */
-.btc-seat-badge {
-  transition: transform 0.15s var(--ease-out);
-}
+/* Body */
+.cn-ticket__body { padding: 24px 28px; }
 
-.btc-seat-badge:hover {
-  transform: scale(1.05);
+/* Route */
+.cn-ticket__route {
+  text-align: center;
+  padding: 20px;
+  background: var(--cn-gray-50);
+  border-radius: var(--cn-r-xl);
+  margin-bottom: 20px;
 }
+.cn-ticket__company {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.cn-ticket__company-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--cn-r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--cn-white);
+}
+.cn-ticket__company-name {
+  font-family: var(--cn-font);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--cn-gray-800);
+}
+.cn-ticket__verified { color: var(--cn-blue); font-size: 0.85rem; }
 
-/* ================================================
-   QR code placeholder
-   ================================================ */
-.btc-qr-placeholder svg {
+.cn-ticket__cities {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.cn-ticket__city { text-align: center; min-width: 70px; }
+.cn-ticket__time {
   display: block;
+  font-family: var(--cn-font);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--cn-navy);
+  line-height: 1;
 }
-
-/* ================================================
-   Barcode
-   ================================================ */
-.btc-barcode-placeholder svg {
+.cn-ticket__city-code {
   display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--cn-gray-500);
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+}
+.cn-ticket__city-name {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--cn-gray-400);
+  margin-top: 1px;
+}
+.cn-ticket__arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--cn-gray-300);
+}
+.cn-ticket__arrow-line {
+  width: 32px;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, var(--cn-gray-300) 0 4px, transparent 4px 8px);
+}
+.cn-ticket__arrow .bi-bus-front-fill { color: var(--cn-orange); font-size: 0.85rem; }
+.cn-ticket__duration {
+  font-size: 0.6rem;
+  color: var(--cn-gray-400);
+  white-space: nowrap;
 }
 
-/* ================================================
-   Print styles
-   ================================================ */
+/* Info grid */
+.cn-ticket__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.cn-ticket__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cn-ticket__info-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cn-gray-400);
+}
+.cn-ticket__info-value {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--cn-gray-800);
+}
+.cn-ticket__info-value--mono { font-family: var(--cn-font-mono); font-size: 0.72rem; }
+
+/* Passengers section */
+.cn-ticket__section-label {
+  display: block;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cn-gray-400);
+  margin-bottom: 10px;
+}
+.cn-ticket__pax {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+.cn-ticket__pax--bordered { border-bottom: 1px dashed var(--cn-gray-200); }
+.cn-ticket__pax-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--cn-navy);
+  color: var(--cn-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.cn-ticket__pax-info { flex: 1; min-width: 0; }
+.cn-ticket__pax-name {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--cn-gray-800);
+}
+.cn-ticket__pax-seat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  color: var(--cn-gray-400);
+}
+.cn-ticket__pax-price {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--cn-gray-600);
+}
+
+/* Total */
+.cn-ticket__total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 0 16px;
+  font-family: var(--cn-font);
+}
+.cn-ticket__total-row span:first-child {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--cn-gray-600);
+}
+.cn-ticket__total-val {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--cn-navy);
+}
+
+/* Codes section */
+.cn-ticket__codes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  gap: 12px;
+}
+.cn-ticket__qr {
+  padding: 12px;
+  background: var(--cn-white);
+  border: 2px solid var(--cn-gray-200);
+  border-radius: var(--cn-r-lg);
+}
+.cn-ticket__barcode { width: 100%; max-width: 240px; }
+.cn-ticket__scan-note {
+  font-size: 0.7rem;
+  color: var(--cn-gray-400);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ── 10. Trip Summary ────────────────────────────────────── */
+.cn-ts__company {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.cn-ts__avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--cn-r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--cn-white);
+}
+.cn-ts__company-name {
+  display: block;
+  font-family: var(--cn-font);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--cn-gray-800);
+}
+.cn-ts__company-meta {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--cn-gray-400);
+}
+
+.cn-ts__route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px;
+  background: var(--cn-gray-50);
+  border-radius: var(--cn-r-lg);
+  margin-bottom: 16px;
+}
+.cn-ts__city { text-align: center; min-width: 0; }
+.cn-ts__code {
+  display: block;
+  font-family: var(--cn-font);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--cn-navy);
+}
+.cn-ts__name {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--cn-gray-400);
+  margin-top: 1px;
+}
+.cn-ts__line {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  color: var(--cn-gray-300);
+  font-size: 0.8rem;
+}
+.cn-ts__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cn-orange);
+  flex-shrink: 0;
+}
+.cn-ts__dash {
+  flex: 1;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, var(--cn-gray-300) 0 3px, transparent 3px 6px);
+}
+.cn-ts__line .bi-bus-front-fill { color: var(--cn-orange); font-size: 0.75rem; flex-shrink: 0; margin: 0 2px; }
+
+.cn-ts__meta { display: flex; flex-direction: column; gap: 8px; }
+.cn-ts__meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--cn-gray-500);
+}
+.cn-ts__meta-row i { width: 14px; text-align: center; color: var(--cn-gray-300); font-size: 0.78rem; flex-shrink: 0; }
+
+/* ── 11. Passenger List ──────────────────────────────────── */
+.cn-pax-list { display: flex; flex-direction: column; gap: 0; }
+.cn-pax {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+.cn-pax--bordered { border-bottom: 1px solid var(--cn-gray-100); }
+.cn-pax__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--cn-navy);
+  color: var(--cn-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.cn-pax__info { flex: 1; min-width: 0; }
+.cn-pax__name { display: block; font-size: 0.82rem; font-weight: 600; color: var(--cn-gray-800); }
+.cn-pax__meta { display: flex; align-items: center; gap: 4px; font-size: 0.7rem; color: var(--cn-gray-400); }
+.cn-pax__price { font-size: 0.78rem; font-weight: 600; color: var(--cn-gray-600); }
+
+/* ── 12. Payment Info ────────────────────────────────────── */
+.cn-pay { display: flex; flex-direction: column; gap: 8px; }
+.cn-pay__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--cn-gray-500);
+}
+.cn-pay__val { font-weight: 600; color: var(--cn-gray-700); }
+.cn-pay__row--sm { font-size: 0.72rem; }
+.cn-pay__mono { font-family: var(--cn-font-mono); font-size: 0.68rem; }
+.cn-pay__ok {
+  color: var(--cn-green);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.cn-pay__divider {
+  height: 1px;
+  background: var(--cn-gray-100);
+  margin: 4px 0;
+}
+.cn-pay__total {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+.cn-pay__total span:first-child { font-size: 0.85rem; font-weight: 700; color: var(--cn-gray-800); }
+.cn-pay__total span:last-child { font-size: 1rem; font-weight: 800; color: var(--cn-orange); }
+.cn-pay__meta { display: flex; flex-direction: column; gap: 6px; padding-top: 4px; }
+
+/* ── 13. Advice ──────────────────────────────────────────── */
+.cn-advice { display: flex; flex-direction: column; gap: 12px; }
+.cn-advice__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: var(--cn-gray-50);
+  border-radius: var(--cn-r-lg);
+  border: 1px solid var(--cn-gray-100);
+}
+.cn-advice__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--cn-r-md);
+  background: rgba(11,29,81,0.06);
+  color: var(--cn-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.cn-advice__body { flex: 1; }
+.cn-advice__title {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--cn-gray-800);
+  margin-bottom: 2px;
+}
+.cn-advice__desc {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--cn-gray-400);
+  line-height: 1.5;
+}
+
+/* ── 14. Support ─────────────────────────────────────────── */
+.cn-support { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.cn-support__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  background: var(--cn-gray-50);
+  border-radius: var(--cn-r-lg);
+  border: 1px solid var(--cn-gray-100);
+}
+.cn-support__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--cn-r-md);
+  background: color-mix(in srgb, var(--sc) 10%, transparent);
+  color: var(--sc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  flex-shrink: 0;
+}
+.cn-support__body { flex: 1; min-width: 0; }
+.cn-support__label { display: block; font-size: 0.72rem; font-weight: 600; color: var(--cn-gray-700); }
+.cn-support__value {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--cn-gray-500);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cn-support__detail { display: block; font-size: 0.62rem; color: var(--cn-gray-400); margin-top: 1px; }
+
+/* ── 15. Actions ─────────────────────────────────────────── */
+.cn-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 4px 0;
+  animation: cnFadeUp 0.5s var(--cn-ease) 0.25s both;
+}
+.cn-actions__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 18px;
+  border-radius: var(--cn-r-lg);
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: var(--cn-font);
+  transition: all 0.2s var(--cn-ease);
+  white-space: nowrap;
+}
+.cn-actions__btn--primary {
+  background: linear-gradient(135deg, var(--cn-orange), var(--cn-orange-dark));
+  color: var(--cn-white);
+  box-shadow: 0 4px 12px rgba(255,107,53,0.3);
+}
+.cn-actions__btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255,107,53,0.4);
+}
+.cn-actions__btn--outline {
+  background: var(--cn-white);
+  color: var(--cn-gray-600);
+  border: 1.5px solid var(--cn-gray-200);
+}
+.cn-actions__btn--outline:hover {
+  border-color: var(--cn-gray-300);
+  color: var(--cn-gray-800);
+  background: var(--cn-gray-50);
+}
+.cn-actions__btn--ghost {
+  background: transparent;
+  color: var(--cn-gray-400);
+}
+.cn-actions__btn--ghost:hover {
+  color: var(--cn-gray-700);
+  background: var(--cn-gray-100);
+}
+.cn-actions__sep {
+  width: 1px;
+  background: var(--cn-gray-200);
+  margin: 0 4px;
+  align-self: stretch;
+}
+
+/* ── 16. Skeleton ────────────────────────────────────────── */
+.cn-skeleton { padding: 24px 0 48px; }
+.cn-skeleton__stepper {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.cn-skeleton__step { display: flex; flex-direction: column; align-items: center; }
+.cn-skeleton__success { margin-bottom: 24px; border-radius: var(--cn-r-2xl); }
+.cn-skeleton__split {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+}
+.cn-skeleton__left { display: flex; flex-direction: column; gap: 20px; }
+.cn-skeleton__right { display: flex; flex-direction: column; gap: 20px; }
+.cn-skeleton__card { border-radius: var(--cn-r-2xl); }
+
+/* ── 17. Print ───────────────────────────────────────────── */
 @media print {
-  .btc-confirm-page {
-    background: white;
-    padding: 0;
-    min-height: auto;
-  }
+  .cn-page { background: white; padding: 0; min-height: auto; }
+  .cn-stepper, .cn-actions, .cn-right, .cn-success, .cn-skeleton { display: none !important; }
+  .cn-split { grid-template-columns: 1fr; }
+  .cn-left { order: 1; }
+  .cn-ticket { box-shadow: none; border: 1px solid var(--cn-gray-300); break-inside: avoid; }
+  .cn-ticket__notch { display: none; }
+}
+.cn-print-only { display: none; }
 
-  .btc-confirm-stepper,
-  .btc-eticket + .d-flex,
-  .btc-print-exclude {
-    display: none !important;
-  }
-
-  .btc-print-only {
-    display: block !important;
-  }
-
-  .btc-eticket {
-    border: 2px solid var(--color-gray-300);
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  .btc-success-icon {
-    animation: none;
-  }
-
-  .card {
-    box-shadow: none !important;
-    border: 1px solid var(--color-gray-200) !important;
-  }
+/* ── 18. Responsive ──────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .cn-split { grid-template-columns: 1fr 320px; gap: 24px; }
 }
 
-.btc-print-only {
-  display: none;
+@media (max-width: 768px) {
+  .cn-split { grid-template-columns: 1fr; gap: 20px; }
+  .cn-right { position: static; order: -1; }
+  .cn-ticket__cities { gap: 12px; }
+  .cn-ticket__time { font-size: 1.2rem; }
+  .cn-ticket__grid { grid-template-columns: repeat(2, 1fr); }
+  .cn-support { grid-template-columns: 1fr; }
+  .cn-stepper__label { display: none; }
+  .cn-stepper__node { width: 32px; height: 32px; font-size: 0.75rem; }
+  .cn-skeleton__split { grid-template-columns: 1fr; }
+  .cn-actions { justify-content: center; }
 }
 
-/* ================================================
-   Responsive
-   ================================================ */
-@media (max-width: 991px) {
-  .btc-confirm-page {
-    padding: 1.5rem 0 3rem;
-  }
-
-  .btc-success-check-circle {
-    width: 60px;
-    height: 60px;
-    font-size: 1.6rem;
-  }
-}
-
-@media (max-width: 575px) {
-  .btc-confirm-info-pill {
-    padding: 6px 10px;
-  }
-
-  .btc-eticket-header {
-    padding: 14px 16px 12px !important;
-  }
-
-  .btc-perforation {
-    width: calc(100% - 24px);
-  }
-}
-
-/* ================================================
-   Animations
-   ================================================ */
-@keyframes btcFadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.btc-confirm-page .card {
-  animation: btcFadeInUp 0.5s var(--ease-out) backwards;
-}
-
-.btc-confirm-page .row > *:nth-child(1) .card { animation-delay: 0.05s; }
-.btc-confirm-page .row > *:nth-child(2) .card { animation-delay: 0.1s; }
-
-.btc-confirm-page .card + .card,
-.btc-confirm-page .mt-3 > .card,
-.btc-confirm-page .mt-4 > .card {
-  animation-delay: 0.15s;
-}
-
-.btc-confirm-page .btc-eticket {
-  animation-delay: 0.2s;
-  animation-duration: 0.6s;
+@media (max-width: 480px) {
+  .cn-wrap { padding: 0 16px; }
+  .cn-success { padding: 32px 20px; }
+  .cn-success__title { font-size: 1.2rem; }
+  .cn-success__pills { flex-direction: column; align-items: center; }
+  .cn-ticket__body { padding: 20px; }
+  .cn-ticket__header { padding: 16px 20px; }
+  .cn-ticket__cities { flex-direction: column; gap: 8px; }
+  .cn-ticket__arrow { flex-direction: row; gap: 6px; }
+  .cn-ticket__arrow-line { width: 20px; height: 1px; }
+  .cn-ticket__grid { grid-template-columns: 1fr 1fr; }
+  .cn-actions { flex-direction: column; }
+  .cn-actions__btn { width: 100%; justify-content: center; }
+  .cn-actions__sep { display: none; }
 }
