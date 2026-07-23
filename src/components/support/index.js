@@ -1,5 +1,4 @@
 export { default as SupportHero } from './SupportHero';
-export { default as SupportSearch } from './SupportSearch';
 export { default as SupportCategories } from './SupportCategories';
 export { default as FAQAccordion } from './FAQAccordion';
 export { default as ContactCards } from './ContactCards';

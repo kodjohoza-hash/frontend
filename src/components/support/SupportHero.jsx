@@ -1,13 +1,11 @@
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@routes/routeConstants';
+import { useRef } from 'react';
 
-const SupportHero = () => {
-  const navigate = useNavigate();
-  const [search, setSearch] = useState('');
-  const [focused, setFocused] = useState(false);
+const POPULAR_TAGS = ['Réservation', 'Remboursement', 'Billet', 'Mot de passe'];
 
-  const handleSearch = (e) => {
+const SupportHero = ({ search, onSearch }) => {
+  const inputRef = useRef(null);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (search.trim()) {
       const el = document.getElementById('sp-faq');
@@ -15,47 +13,49 @@ const SupportHero = () => {
     }
   };
 
+  const handleTag = (tag) => {
+    onSearch(tag);
+    setTimeout(() => {
+      const el = document.getElementById('sp-faq');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  };
+
   return (
     <div className="sp-hero">
-      <div className="sp-hero__visual">
-        <div className="sp-hero__icon-main">
+      <div className="sp-hero__left">
+        <div className="sp-hero__icon">
           <i className="bi bi-headset" />
         </div>
-        <div className="sp-hero__floats">
-          <div className="sp-hero__float sp-hero__float--1"><i className="bi bi-chat-dots" /></div>
-          <div className="sp-hero__float sp-hero__float--2"><i className="bi bi-question-circle" /></div>
-          <div className="sp-hero__float sp-hero__float--3"><i className="bi bi-life-preserver" /></div>
-        </div>
+        <h2 className="sp-hero__title">Comment pouvons-nous vous aider ?</h2>
+        <p className="sp-hero__desc">
+          Parcourez notre base de connaissances ou contactez directement notre équipe support.
+        </p>
       </div>
 
-      <h2 className="sp-hero__title">Comment pouvons-nous vous aider ?</h2>
-      <p className="sp-hero__subtitle">Recherchez dans notre base de connaissances ou contactez-nous directement.</p>
+      <div className="sp-hero__right">
+        <form className="sp-hero__form" onSubmit={handleSubmit}>
+          <div className="sp-hero__search">
+            <i className="bi bi-search" />
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="Rechercher une réponse..."
+              value={search}
+              onChange={(e) => onSearch(e.target.value)}
+            />
+            <button type="submit">Rechercher</button>
+          </div>
+        </form>
 
-      <form className="sp-hero__search" onSubmit={handleSearch}>
-        <div className={`sp-hero__search-box ${focused ? 'sp-hero__search-box--focus' : ''}`}>
-          <i className="bi bi-search sp-hero__search-icon" />
-          <input
-            type="text"
-            className="sp-hero__search-input"
-            placeholder="Rechercher une réponse..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-          />
-          <button type="submit" className="sp-hero__search-btn">
-            Rechercher
-          </button>
+        <div className="sp-hero__tags">
+          <span className="sp-hero__tags-label">Populaires :</span>
+          {POPULAR_TAGS.map((tag) => (
+            <button key={tag} type="button" className="sp-hero__tag" onClick={() => handleTag(tag)}>
+              {tag}
+            </button>
+          ))}
         </div>
-      </form>
-
-      <div className="sp-hero__quick-links">
-        <span className="sp-hero__quick-label">Populaires :</span>
-        {['Réservation', 'Remboursement', 'Billet', 'Mot de passe'].map((tag) => (
-          <button key={tag} type="button" className="sp-hero__tag" onClick={() => { setSearch(tag); handleSearch(new Event('submit')); }}>
-            {tag}
-          </button>
-        ))}
       </div>
     </div>
   );

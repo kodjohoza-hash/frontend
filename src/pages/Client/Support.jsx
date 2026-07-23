@@ -3,7 +3,6 @@ import DbSidebar from '@components/client/DbSidebar';
 import DbHeader from '@components/client/DbHeader';
 import {
   SupportHero,
-  SupportSearch,
   SupportCategories,
   FAQAccordion,
   ContactCards,
@@ -43,10 +42,7 @@ const SupportPage = () => {
         <DbHeader onToggleSidebar={toggleSidebar} />
         <main className="db-layout__content sp-page">
           <div className="sp-page__header">
-            <div className="sp-page__title-group">
-              <h1 className="sp-page__title">Centre d'aide</h1>
-              <p className="sp-page__subtitle">Nous sommes là pour vous accompagner à chaque étape de votre voyage.</p>
-            </div>
+            <h1 className="sp-page__title">Centre d'aide</h1>
             <button
               type="button"
               className="sp-btn sp-btn--primary"
@@ -56,12 +52,11 @@ const SupportPage = () => {
               }}
             >
               <i className="bi bi-plus-lg" />
-              Créer une demande d'assistance
+              Créer une demande
             </button>
           </div>
 
-          <SupportHero />
-          <SupportSearch value={search} onChange={setSearch} />
+          <SupportHero search={search} onSearch={setSearch} />
           <SupportCategories onCategoryClick={handleCategoryClick} />
           <FAQAccordion search={search} />
           <ContactCards />
