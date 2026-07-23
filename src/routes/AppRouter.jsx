@@ -35,6 +35,7 @@ const PlaceholderPage = lazy(() => import('@pages/Shared/PlaceholderPage'));
 const ClientDashboard = lazy(() => import('@pages/Client/Dashboard'));
 const ClientTickets = lazy(() => import('@pages/Client/Tickets'));
 const ClientProfile = lazy(() => import('@pages/Client/Profile'));
+const ClientSettings = lazy(() => import('@pages/Client/Settings'));
 
 /* Role Dashboards */
 const CompanyDashboard = lazy(() => import('@pages/Company/Dashboard'));
@@ -104,7 +105,7 @@ const AppRouter = () => {
           <Route path={ROUTES.CLIENT_BOOKINGS} element={<PlaceholderPage title="Mes reservations" description="Consultez et gérez toutes vos reservations de voyage." icon="bi-ticket-perforated" backTo={ROUTES.CLIENT_DASHBOARD} />} />
           <Route path={ROUTES.CLIENT_TICKETS} element={<ClientTickets />} />
           <Route path={ROUTES.CLIENT_PROFILE} element={<ClientProfile />} />
-          <Route path={ROUTES.CLIENT_SETTINGS} element={<PlaceholderPage title="Paramètres" description="Configurez vos options de notification, langue et sécurité." icon="bi-gear" backTo={ROUTES.CLIENT_DASHBOARD} />} />
+          <Route path={ROUTES.CLIENT_SETTINGS} element={<ClientSettings />} />
         </Route>
 
         {/* ================================================
