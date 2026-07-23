@@ -25,7 +25,7 @@ const Footer = ({
           <div className="col-12 col-md-4 text-center text-md-start mb-3 mb-md-0">
             <div className="d-flex align-items-center justify-content-center justify-content-md-start">
               <AppLogo
-                size={28}
+                size={32}
                 variant="horizontal"
                 textClassName={clsx('fw-bold', isDark ? 'text-white' : 'text-primary')}
               />

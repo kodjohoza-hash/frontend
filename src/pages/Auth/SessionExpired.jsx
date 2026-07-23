@@ -18,7 +18,7 @@ const SessionExpiredPage = () => {
       <div className="auth-right">
         <div className="auth-right__inner">
           <div className="auth-mobile-logo">
-            <AppLogo size={28} variant="horizontal" textClassName="auth-mobile-logo__text" />
+            <AppLogo size={32} variant="horizontal" textClassName="auth-mobile-logo__text" />
           </div>
           <AuthCard>
             <div className="auth-status">

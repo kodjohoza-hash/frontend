@@ -46,7 +46,7 @@ const Navbar = ({ variant = 'default', className = '' }) => {
         <div className="container-fluid px-3 px-lg-4">
           {/* Logo */}
           <Link className="navbar-brand d-flex align-items-center text-decoration-none" to="/">
-            <AppLogo size={32} variant="horizontal" textClassName="fw-bold d-none d-sm-inline" />
+            <AppLogo size={36} variant="horizontal" textClassName="fw-bold d-none d-sm-inline" />
           </Link>
 
           {/* Desktop Nav */}

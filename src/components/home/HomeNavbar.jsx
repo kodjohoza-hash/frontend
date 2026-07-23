@@ -50,7 +50,7 @@ const HomeNavbar = () => {
           {/* Logo — Left column */}
           <div className="btc-header-brand">
             <Link to="/" className="btc-home-brand" aria-label="Bus Tix Connect — Accueil">
-              <AppLogo size={32} variant="horizontal" textClassName="btc-home-brand-text" />
+              <AppLogo size={36} variant="horizontal" textClassName="btc-home-brand-text" />
             </Link>
           </div>
 
@@ -104,7 +104,7 @@ const HomeNavbar = () => {
       >
         <div className="btc-offcanvas-header">
           <Link to="/" className="btc-home-brand" onClick={() => setMobileOpen(false)}>
-              <AppLogo size={28} variant="horizontal" textClassName="btc-home-brand-text" />
+              <AppLogo size={32} variant="horizontal" textClassName="btc-home-brand-text" />
           </Link>
           <button
             className="btc-offcanvas-close"

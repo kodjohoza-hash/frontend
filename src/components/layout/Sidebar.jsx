@@ -58,7 +58,7 @@ const Sidebar = ({
       <div className="btc-sidebar-header d-flex align-items-center justify-content-between p-3 border-bottom">
         {!collapsed && (
           <Link to="/" className="text-decoration-none d-flex align-items-center gap-2">
-            {logo || <AppLogo size={28} variant="horizontal" textClassName="fw-bold text-primary sidebar-brand-text" />}
+            {logo || <AppLogo size={32} variant="horizontal" textClassName="fw-bold text-primary sidebar-brand-text" />}
           </Link>
         )}
         {collapsed && (

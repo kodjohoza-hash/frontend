@@ -41,7 +41,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
       >
         <div className="mobile-menu-header d-flex justify-content-between align-items-center p-3 border-bottom">
           <Link to="/" className="text-decoration-none d-flex align-items-center" onClick={onClose}>
-            <AppLogo size={28} variant="horizontal" textClassName="fw-bold text-primary" />
+            <AppLogo size={32} variant="horizontal" textClassName="fw-bold text-primary" />
           </Link>
           <button
             className="btn btn-link text-dark p-1"

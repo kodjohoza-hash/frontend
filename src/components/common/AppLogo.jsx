@@ -18,12 +18,13 @@ const AppLogo = ({
   variant = 'horizontal',
   className = '',
   textClassName = '',
+  text,
 }) => {
   const px = typeof size === 'number' ? size : SIZES[size] || SIZES.md;
   const showText = variant === 'horizontal';
 
   return (
-    <span className={`app-logo ${className}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+    <span className={`app-logo ${className}`} style={{ display: 'inline-flex', alignItems: 'center', gap: px * 0.3 }}>
       <img
         src={logoPng}
         alt="BUS TIX CONNECT"
@@ -37,13 +38,12 @@ const AppLogo = ({
           className={textClassName}
           style={{
             fontWeight: 700,
-            fontSize: px * 0.45,
-            lineHeight: 1.1,
-            color: 'inherit',
+            fontSize: Math.max(px * 0.5, 14),
+            lineHeight: 1.2,
             whiteSpace: 'nowrap',
           }}
         >
-          BUS TIX CONNECT
+          {text || 'BUS TIX CONNECT'}
         </span>
       )}
     </span>

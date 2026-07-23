@@ -17,7 +17,7 @@ const AuthLeftPanel = () => (
 
     <div className="auth-left__content">
       <div className="auth-left__brand">
-        <AppLogo size={40} variant="horizontal" textClassName="auth-left__name" />
+        <AppLogo size={48} variant="horizontal" textClassName="auth-left__name" />
       </div>
 
       <div className="auth-left__badge">

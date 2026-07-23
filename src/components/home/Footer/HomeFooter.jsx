@@ -41,7 +41,7 @@ const HomeFooter = () => {
             {/* Brand Column */}
             <div className="btc-footer-brand-col">
               <Link to="/" className="btc-footer-brand">
-                <AppLogo size={32} variant="horizontal" textClassName="btc-footer-brand-text" />
+                <AppLogo size={36} variant="horizontal" textClassName="btc-footer-brand-text" />
               </Link>
               <p className="btc-footer-brand-desc">
                 BUS TIX CONNECT simplifie la réservation de billets de bus en mettant en relation les voyageurs et les compagnies de transport grâce à une plateforme moderne, rapide et sécurisée.

@@ -14,7 +14,7 @@ const DbSidebar = ({ collapsed, onToggle }) => {
       <div className="db-sidebar__brand">
         <Link to="/client/dashboard" className="db-sidebar__logo">
           <AppLogo
-            size={collapsed ? 28 : 32}
+            size={collapsed ? 32 : 36}
             variant={collapsed ? 'icon' : 'horizontal'}
             textClassName="db-sidebar__logo-text"
           />
