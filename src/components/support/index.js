@@ -1,0 +1,9 @@
+export { default as SupportHero } from './SupportHero';
+export { default as SupportSearch } from './SupportSearch';
+export { default as SupportCategories } from './SupportCategories';
+export { default as FAQAccordion } from './FAQAccordion';
+export { default as ContactCards } from './ContactCards';
+export { default as SupportTicketForm } from './SupportTicketForm';
+export { default as SupportTicketsTable } from './SupportTicketsTable';
+export { default as SupportResources } from './SupportResources';
+export { default as SupportSkeleton } from './SupportSkeleton';

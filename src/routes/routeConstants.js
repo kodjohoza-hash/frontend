@@ -24,6 +24,7 @@ export const ROUTES = {
   CLIENT_TICKETS: '/client/tickets',
   CLIENT_PROFILE: '/client/profile',
   CLIENT_SETTINGS: '/client/settings',
+  CLIENT_SUPPORT: '/client/support',
 
   /* ================================================
      COMPANY
@@ -100,6 +101,7 @@ export const ROUTE_NAMES = {
   [ROUTES.CLIENT_TICKETS]: 'Mes billets',
   [ROUTES.CLIENT_PROFILE]: 'Mon profil',
   [ROUTES.CLIENT_SETTINGS]: 'Paramètres',
+  [ROUTES.CLIENT_SUPPORT]: 'Centre d\'aide',
   [ROUTES.COMPANY_DASHBOARD]: 'Tableau de bord',
   [ROUTES.COMPANY_ROUTES]: 'Trajets',
   [ROUTES.COMPANY_BUSES]: 'Bus',

@@ -13,6 +13,7 @@ export const ROUTE_PERMISSIONS = {
   [ROUTES.CLIENT_TICKETS]: { roles: ['client'], permissions: [PERMISSIONS.TICKETS_VIEW] },
   [ROUTES.CLIENT_PROFILE]: { roles: ['client'], permissions: [PERMISSIONS.PROFILE_VIEW] },
   [ROUTES.CLIENT_SETTINGS]: { roles: ['client'], permissions: [PERMISSIONS.SETTINGS_VIEW] },
+  [ROUTES.CLIENT_SUPPORT]: { roles: ['client'], permissions: [PERMISSIONS.SUPPORT_VIEW] },
 
   /* Company */
   [ROUTES.COMPANY_DASHBOARD]: { roles: ['company_admin'], permissions: [PERMISSIONS.DASHBOARD_VIEW] },

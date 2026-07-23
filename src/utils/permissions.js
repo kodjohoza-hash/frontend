@@ -28,6 +28,7 @@ export const RESOURCES = {
   DASHBOARD: 'dashboard',
   SEARCH: 'search',
   AGENCIES: 'agencies',
+  SUPPORT: 'support',
 };
 
 export const ACTIONS = {
@@ -148,6 +149,9 @@ export const PERMISSIONS = {
 
   /* Search */
   SEARCH_TRIPS: `${RESOURCES.SEARCH}.${ACTIONS.READ}`,
+
+  /* Support */
+  SUPPORT_VIEW: `${RESOURCES.SUPPORT}.${ACTIONS.READ}`,
 };
 
 /* ================================================
@@ -170,6 +174,7 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.DASHBOARD_VIEW,
     PERMISSIONS.SEARCH_TRIPS,
     PERMISSIONS.TRIPS_VIEW,
+    PERMISSIONS.SUPPORT_VIEW,
   ],
 
   /* COMPANY_ADMIN — Gestion complète de sa compagnie */

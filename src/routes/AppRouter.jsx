@@ -37,6 +37,7 @@ const ClientTickets = lazy(() => import('@pages/Client/Tickets'));
 const ClientProfile = lazy(() => import('@pages/Client/Profile'));
 const ClientSettings = lazy(() => import('@pages/Client/Settings'));
 const ClientNotifications = lazy(() => import('@pages/Client/Notifications'));
+const ClientSupport = lazy(() => import('@pages/Client/Support'));
 
 /* Role Dashboards */
 const CompanyDashboard = lazy(() => import('@pages/Company/Dashboard'));
@@ -107,6 +108,7 @@ const AppRouter = () => {
           <Route path={ROUTES.CLIENT_TICKETS} element={<ClientTickets />} />
           <Route path={ROUTES.CLIENT_PROFILE} element={<ClientProfile />} />
           <Route path={ROUTES.CLIENT_SETTINGS} element={<ClientSettings />} />
+          <Route path={ROUTES.CLIENT_SUPPORT} element={<ClientSupport />} />
         </Route>
 
         {/* ================================================
