@@ -110,6 +110,7 @@ const AppRouter = () => {
           <Route path={ROUTES.CLIENT_PROFILE} element={<ClientProfile />} />
           <Route path={ROUTES.CLIENT_SETTINGS} element={<ClientSettings />} />
           <Route path={ROUTES.CLIENT_SUPPORT} element={<ClientSupport />} />
+          <Route path={ROUTES.CLIENT_MESSAGES} element={<PlaceholderPage title="Messagerie" description="Échangez avec les compagnies et le support. Bientôt disponible !" icon="bi-chat-dots" backTo={ROUTES.CLIENT_DASHBOARD} />} />
         </Route>
 
         {/* ================================================

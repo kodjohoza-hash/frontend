@@ -149,6 +149,15 @@ const DbHeader = ({ onToggleSidebar }) => {
           )}
         </div>
 
+        <button
+          type="button"
+          className="db-header__icon-btn"
+          onClick={() => navigate('/client/messages')}
+          title="Messages"
+        >
+          <i className="bi bi-chat-dots" />
+        </button>
+
         <div className="db-header__notif-wrapper" ref={notifRef}>
           <button
             type="button"

@@ -415,9 +415,9 @@
 }
 
 .db-header__search-toggle {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   border: 1px solid var(--db-border);
   background: var(--db-surface);
   color: var(--db-text-secondary);
@@ -425,13 +425,28 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all var(--db-transition);
+  font-size: 1.2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--db-shadow-sm);
+  flex-shrink: 0;
 }
 
 .db-header__search-toggle:hover {
   background: var(--db-primary-50);
   color: var(--db-primary);
   border-color: var(--db-primary-200);
+  box-shadow: 0 2px 8px rgba(11, 29, 81, 0.12);
+  transform: translateY(-1px);
+}
+
+.db-header__search-toggle:active {
+  transform: translateY(0) scale(0.95);
+  box-shadow: var(--db-shadow-sm);
+}
+
+.db-header__search-toggle:focus-visible {
+  outline: 2px solid var(--db-primary);
+  outline-offset: 2px;
 }
 
 .db-header__search--open .db-header__search-toggle {
@@ -499,9 +514,9 @@
 /* Icon buttons */
 .db-header__icon-btn {
   position: relative;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   border: 1px solid var(--db-border);
   background: var(--db-surface);
   color: var(--db-text-secondary);
@@ -509,15 +524,35 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 1.1rem;
-  transition: all var(--db-transition);
+  font-size: 1.2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--db-shadow-sm);
+  flex-shrink: 0;
 }
 
-.db-header__icon-btn:hover,
+.db-header__icon-btn:hover {
+  background: var(--db-primary-50);
+  color: var(--db-primary);
+  border-color: var(--db-primary-200);
+  box-shadow: 0 2px 8px rgba(11, 29, 81, 0.12);
+  transform: translateY(-1px);
+}
+
+.db-header__icon-btn:active {
+  transform: translateY(0) scale(0.95);
+  box-shadow: var(--db-shadow-sm);
+}
+
+.db-header__icon-btn:focus-visible {
+  outline: 2px solid var(--db-primary);
+  outline-offset: 2px;
+}
+
 .db-header__icon-btn--active {
   background: var(--db-primary-50);
   color: var(--db-primary);
   border-color: var(--db-primary-200);
+  box-shadow: 0 2px 8px rgba(11, 29, 81, 0.12);
 }
 
 .db-header__badge {
@@ -1896,6 +1931,11 @@
   .db-header__search-form {
     width: 260px;
   }
+  .db-header__icon-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 1.1rem;
+  }
   .db-header__notif-actions {
     opacity: 1;
   }
@@ -1907,6 +1947,19 @@
   }
   .db-skeleton__stats-row {
     grid-template-columns: 1fr;
+  }
+  .db-header__icon-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+  .db-header__badge {
+    min-width: 16px;
+    height: 16px;
+    font-size: 0.6rem;
+    top: -3px;
+    right: -3px;
   }
 }
 

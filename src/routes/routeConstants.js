@@ -25,6 +25,7 @@ export const ROUTES = {
   CLIENT_PROFILE: '/client/profile',
   CLIENT_SETTINGS: '/client/settings',
   CLIENT_SUPPORT: '/client/support',
+  CLIENT_MESSAGES: '/client/messages',
 
   /* ================================================
      COMPANY
