@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import useAuth from '@hooks/useAuth';
-import { notifications as allNotifications } from '@data/clientDashboard';
+import { notifications as initialNotifications } from '@data/notificationsData';
 
 const DbHeader = ({ onToggleSidebar }) => {
   const { user, logout } = useAuth();
@@ -10,6 +10,10 @@ const DbHeader = ({ onToggleSidebar }) => {
   const [searchValue, setSearchValue] = useState('');
   const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [notifications, setNotifications] = useState(
+    initialNotifications.sort((a, b) => new Date(b.date) - new Date(a.date))
+  );
+  const [bellBounce, setBellBounce] = useState(false);
   const navigate = useNavigate();
   const searchRef = useRef(null);
   const notifRef = useRef(null);
@@ -17,7 +21,17 @@ const DbHeader = ({ onToggleSidebar }) => {
 
   const firstName = user?.firstName || '';
   const initials = (user?.firstName?.[0] || '') + (user?.lastName?.[0] || '');
-  const unreadCount = allNotifications.filter((n) => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
+  const triggerBellBounce = useCallback(() => {
+    setBellBounce(true);
+    setTimeout(() => setBellBounce(false), 600);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(triggerBellBounce, 1200);
+    return () => clearTimeout(timer);
+  }, [triggerBellBounce]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -32,12 +46,32 @@ const DbHeader = ({ onToggleSidebar }) => {
     const date = new Date(dateStr);
     const now = new Date();
     const diffMs = now - date;
+    const diffMin = Math.floor(diffMs / 60000);
+    if (diffMin < 1) return "À l'instant";
+    if (diffMin < 60) return `Il y a ${diffMin}min`;
     const diffH = Math.floor(diffMs / 3600000);
-    if (diffH < 1) return "À l'instant";
     if (diffH < 24) return `Il y a ${diffH}h`;
     const diffD = Math.floor(diffH / 24);
     if (diffD === 1) return 'Hier';
+    if (diffD < 7) return `Il y a ${diffD}j`;
     return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+  };
+
+  const handleMarkAllRead = (e) => {
+    e.stopPropagation();
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  };
+
+  const handleMarkRead = (e, id) => {
+    e.stopPropagation();
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+    );
+  };
+
+  const handleDelete = (e, id) => {
+    e.stopPropagation();
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
 
   const handleSearchSubmit = (e) => {
@@ -61,6 +95,17 @@ const DbHeader = ({ onToggleSidebar }) => {
     logout();
     navigate('/login', { replace: true });
   };
+
+  const notifColorMap = {
+    success: 'success',
+    danger: 'danger',
+    warning: 'warning',
+    info: 'info',
+    accent: 'accent',
+    muted: 'muted',
+  };
+
+  const dropdownNotifs = notifications.slice(0, 5);
 
   return (
     <header className="db-header">
@@ -107,34 +152,93 @@ const DbHeader = ({ onToggleSidebar }) => {
         <div className="db-header__notif-wrapper" ref={notifRef}>
           <button
             type="button"
-            className={clsx('db-header__icon-btn', notifOpen && 'db-header__icon-btn--active')}
+            className={clsx(
+              'db-header__icon-btn',
+              notifOpen && 'db-header__icon-btn--active',
+              bellBounce && 'db-header__icon-btn--bounce'
+            )}
             onClick={() => { setNotifOpen(!notifOpen); setProfileOpen(false); }}
           >
             <i className="bi bi-bell" />
-            {unreadCount > 0 && <span className="db-header__badge">{unreadCount}</span>}
+            {unreadCount > 0 && (
+              <span className={clsx('db-header__badge', bellBounce && 'db-header__badge--pulse')}>
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
           </button>
           {notifOpen && (
             <div className="db-header__dropdown db-header__dropdown--notif">
               <div className="db-header__dropdown-header">
-                <span className="db-header__dropdown-title">Notifications</span>
-                {unreadCount > 0 && <span className="db-header__dropdown-count">{unreadCount} nouvelles</span>}
+                <div className="db-header__dropdown-header-left">
+                  <span className="db-header__dropdown-title">Notifications</span>
+                  {unreadCount > 0 && <span className="db-header__dropdown-count">{unreadCount}</span>}
+                </div>
+                {unreadCount > 0 && (
+                  <button type="button" className="db-header__notif-mark-all" onClick={handleMarkAllRead}>
+                    <i className="bi bi-check-all" />
+                    Tout lire
+                  </button>
+                )}
               </div>
               <div className="db-header__dropdown-list">
-                {allNotifications.slice(0, 5).map((n) => (
-                  <div key={n.id} className={clsx('db-header__notif-item', !n.read && 'db-header__notif-item--unread')}>
-                    <div className={clsx('db-header__notif-icon', `db-header__notif-icon--${n.type}`)}>
-                      <i className={clsx('bi', n.icon)} />
-                    </div>
-                    <div className="db-header__notif-body">
-                      <span className="db-header__notif-title">{n.title}</span>
-                      <span className="db-header__notif-msg">{n.message}</span>
-                      <span className="db-header__notif-time">{formatTime(n.date)}</span>
-                    </div>
-                    {!n.read && <span className="db-header__notif-dot" />}
+                {dropdownNotifs.length === 0 && (
+                  <div className="db-header__notif-empty">
+                    <i className="bi bi-bell-slash" />
+                    <span>Aucune notification</span>
                   </div>
-                ))}
+                )}
+                {dropdownNotifs.map((n) => {
+                  const color = notifColorMap[n.color] || 'info';
+                  return (
+                    <div
+                      key={n.id}
+                      className={clsx('db-header__notif-item', !n.read && 'db-header__notif-item--unread')}
+                      onClick={() => {
+                        if (n.actionPath) {
+                          navigate(n.actionPath);
+                          setNotifOpen(false);
+                        }
+                      }}
+                    >
+                      {!n.read && <span className="db-header__notif-dot-left" />}
+                      <div className={clsx('db-header__notif-icon', `db-header__notif-icon--${color}`)}>
+                        <i className={clsx('bi', n.icon)} />
+                      </div>
+                      <div className="db-header__notif-body">
+                        <span className="db-header__notif-title">{n.title}</span>
+                        <span className="db-header__notif-msg">{n.message}</span>
+                        <span className="db-header__notif-time">{formatTime(n.date)}</span>
+                      </div>
+                      <div className="db-header__notif-actions">
+                        {!n.read && (
+                          <button
+                            type="button"
+                            className="db-header__notif-action-btn"
+                            title="Marquer comme lu"
+                            onClick={(e) => handleMarkRead(e, n.id)}
+                          >
+                            <i className="bi bi-check-lg" />
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          className="db-header__notif-action-btn db-header__notif-action-btn--delete"
+                          title="Supprimer"
+                          onClick={(e) => handleDelete(e, n.id)}
+                        >
+                          <i className="bi bi-x-lg" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              <button type="button" className="db-header__dropdown-footer" onClick={() => { navigate('/client/settings'); setNotifOpen(false); }}>
+              <button
+                type="button"
+                className="db-header__dropdown-footer"
+                onClick={() => { navigate('/client/notifications'); setNotifOpen(false); }}
+              >
+                <i className="bi bi-bell" />
                 Voir toutes les notifications
               </button>
             </div>
