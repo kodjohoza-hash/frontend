@@ -41,6 +41,10 @@
   font-family: 'Poppins', system-ui, sans-serif;
 }
 
+.sp-page.db-layout__content {
+  padding: 16px 24px 32px;
+}
+
 /* ================================================================
    PAGE HEADER — inline title + button
    ================================================================ */
@@ -49,7 +53,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .sp-page__title {
@@ -67,10 +71,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: var(--sp-text);
-  margin: 0 0 14px;
+  margin: 0 0 10px;
 }
 
 .sp-section-title i {
@@ -146,12 +150,12 @@
 .sp-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  gap: 24px;
   align-items: center;
   background: linear-gradient(135deg, var(--sp-primary) 0%, var(--sp-primary-400) 100%);
   border-radius: var(--sp-radius);
-  padding: 28px 32px;
-  margin-bottom: 20px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
   position: relative;
   overflow: hidden;
 }
@@ -184,27 +188,27 @@
 .sp-hero__left {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
   position: relative;
   z-index: 1;
 }
 
 .sp-hero__icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: #fff;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .sp-hero__title {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: #fff;
   margin: 0;
@@ -212,10 +216,10 @@
 }
 
 .sp-hero__desc {
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.45;
   max-width: 380px;
 }
 
@@ -223,7 +227,7 @@
 .sp-hero__right {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
   position: relative;
   z-index: 1;
 }
@@ -232,11 +236,11 @@
 .sp-hero__search {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   background: #fff;
-  border-radius: 12px;
-  padding: 0 6px 0 16px;
-  height: 48px;
+  border-radius: 10px;
+  padding: 0 6px 0 14px;
+  height: 44px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   transition: box-shadow var(--sp-transition);
 }
@@ -267,12 +271,12 @@
 }
 
 .sp-hero__search button {
-  padding: 10px 20px;
+  padding: 8px 18px;
   background: var(--sp-primary);
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
   transition: background var(--sp-transition);
@@ -321,20 +325,20 @@
    CATEGORIES — uniform grid
    ================================================================ */
 .sp-categories {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .sp-categories__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 .sp-category {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
+  gap: 10px;
+  padding: 12px 14px;
   border-radius: var(--sp-radius-sm);
   background: var(--sp-surface);
   border: 1px solid var(--sp-border);
@@ -343,7 +347,7 @@
   transition: all var(--sp-transition);
   text-align: left;
   font-family: inherit;
-  min-height: 72px;
+  min-height: 64px;
 }
 
 .sp-category:hover {
@@ -357,13 +361,13 @@
 }
 
 .sp-category__icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 0.92rem;
   flex-shrink: 0;
   transition: transform var(--sp-transition);
 }
@@ -420,7 +424,7 @@
    FAQ ACCORDION
    ================================================================ */
 .sp-faq {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .sp-faq__list {
@@ -452,7 +456,7 @@
   justify-content: space-between;
   gap: 12px;
   width: 100%;
-  padding: 14px 18px;
+  padding: 12px 16px;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -499,10 +503,10 @@
 }
 
 .sp-faq__answer-text {
-  padding: 0 18px 16px;
-  font-size: 0.8rem;
+  padding: 0 16px 14px;
+  font-size: 0.78rem;
   color: var(--sp-text-secondary);
-  line-height: 1.7;
+  line-height: 1.65;
   margin: 0;
 }
 
@@ -527,13 +531,13 @@
    CONTACT CARDS
    ================================================================ */
 .sp-contact {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .sp-contact__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 .sp-contact-card {
@@ -541,14 +545,14 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 10px;
-  padding: 20px 16px;
+  gap: 8px;
+  padding: 16px 14px;
   border-radius: var(--sp-radius-sm);
   background: var(--sp-surface);
   border: 1px solid var(--sp-border);
   box-shadow: var(--sp-shadow-sm);
   transition: all var(--sp-transition);
-  min-height: 200px;
+  min-height: 180px;
 }
 
 .sp-contact-card:hover {
@@ -562,13 +566,13 @@
 }
 
 .sp-contact-card__icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
 }
 
 .sp-contact-card__icon--success { background: var(--sp-success-50); color: var(--sp-success); }
@@ -637,19 +641,19 @@
    FORM
    ================================================================ */
 .sp-ticket-form {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .sp-form {
-  padding: 20px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .sp-form__row {
   display: flex;
-  gap: 14px;
+  gap: 12px;
 }
 
 .sp-form__row--2 > * {
@@ -829,7 +833,7 @@
    TICKETS TABLE
    ================================================================ */
 .sp-tickets {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .sp-tickets__table-wrapper {
@@ -1045,9 +1049,9 @@
 .sp-skeleton__hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: 20px;
   align-items: center;
-  padding: 24px;
+  padding: 16px 20px;
   border-radius: var(--sp-radius);
   background: var(--sp-border-light);
 }
@@ -1059,18 +1063,18 @@
 .sp-skeleton__categories-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 .sp-skeleton__category-card {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 16px;
+  padding: 12px 14px;
   border-radius: var(--sp-radius-sm);
   background: var(--sp-surface);
   border: 1px solid var(--sp-border);
-  min-height: 72px;
+  min-height: 64px;
 }
 
 .sp-skeleton__faq-list {
@@ -1089,19 +1093,19 @@
 .sp-skeleton__contact-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 .sp-skeleton__contact-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 20px 16px;
+  gap: 8px;
+  padding: 16px 14px;
   border-radius: var(--sp-radius-sm);
   background: var(--sp-surface);
   border: 1px solid var(--sp-border);
-  min-height: 200px;
+  min-height: 180px;
 }
 
 /* ================================================================
@@ -1110,8 +1114,8 @@
 @media (max-width: 1100px) {
   .sp-hero {
     grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 24px;
+    gap: 14px;
+    padding: 16px 20px;
   }
   .sp-hero__left {
     text-align: center;
@@ -1139,30 +1143,33 @@
 }
 
 @media (max-width: 768px) {
+  .sp-page.db-layout__content {
+    padding: 12px 16px 24px;
+  }
   .sp-page__header {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 8px;
   }
   .sp-page__header .sp-btn {
     align-self: flex-start;
   }
   .sp-hero {
-    padding: 20px;
+    padding: 14px 16px;
   }
   .sp-hero__title {
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
   .sp-hero__search {
     flex-direction: column;
     height: auto;
-    padding: 12px;
+    padding: 10px;
     gap: 8px;
   }
   .sp-hero__search input {
     width: 100%;
     text-align: center;
-    padding: 8px;
+    padding: 6px;
   }
   .sp-hero__search button {
     width: 100%;
@@ -1175,7 +1182,7 @@
   }
   .sp-form__row--2 {
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
   .sp-tickets__table th:nth-child(4),
   .sp-tickets__table td:nth-child(4),
