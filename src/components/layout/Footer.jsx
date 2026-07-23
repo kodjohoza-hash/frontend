@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import AppLogo from '@components/common/AppLogo';
 
 /**
  * Footer — Pied de page réutilisable
@@ -22,11 +23,12 @@ const Footer = ({
       <div className="container">
         <div className="row align-items-center">
           <div className="col-12 col-md-4 text-center text-md-start mb-3 mb-md-0">
-            <div className="d-flex align-items-center justify-content-center justify-content-md-start gap-2">
-              <div className={clsx('navbar-logo-icon', isDark && 'text-white')}>
-                <i className="bi bi-bus-front-fill" />
-              </div>
-              <span className={clsx('fw-bold', isDark ? 'text-white' : 'text-primary')}>Bus Tix Connect</span>
+            <div className="d-flex align-items-center justify-content-center justify-content-md-start">
+              <AppLogo
+                size={28}
+                variant="horizontal"
+                textClassName={clsx('fw-bold', isDark ? 'text-white' : 'text-primary')}
+              />
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-import logoSvg from '@assets/logo.svg';
+import logoPng from '@assets/logos/bus-tix-connect-logo.png';
 
 /**
  * AppLogo — Reusable brand logo component
@@ -25,7 +25,7 @@ const AppLogo = ({
   return (
     <span className={`app-logo ${className}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
       <img
-        src={logoSvg}
+        src={logoPng}
         alt="BUS TIX CONNECT"
         width={px}
         height={px}

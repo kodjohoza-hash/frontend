@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import clsx from 'clsx';
 import { useLocation, Link } from 'react-router-dom';
+import AppLogo from '@components/common/AppLogo';
 
 /**
  * Sidebar — Barre latérale réutilisable
@@ -57,21 +58,12 @@ const Sidebar = ({
       <div className="btc-sidebar-header d-flex align-items-center justify-content-between p-3 border-bottom">
         {!collapsed && (
           <Link to="/" className="text-decoration-none d-flex align-items-center gap-2">
-            {logo || (
-              <>
-                <div className="navbar-logo-icon">
-                  <i className="bi bi-bus-front-fill" />
-                </div>
-                <span className="fw-bold text-primary sidebar-brand-text">Bus Tix Connect</span>
-              </>
-            )}
+            {logo || <AppLogo size={28} variant="horizontal" textClassName="fw-bold text-primary sidebar-brand-text" />}
           </Link>
         )}
         {collapsed && (
           <Link to="/" className="text-decoration-none d-flex align-items-center justify-content-center w-100">
-            <div className="navbar-logo-icon">
-              <i className="bi bi-bus-front-fill" />
-            </div>
+            <AppLogo size={28} variant="icon" />
           </Link>
         )}
       </div>

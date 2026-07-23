@@ -2,6 +2,7 @@ import { useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import useAuth from '@hooks/useAuth';
+import AppLogo from '@components/common/AppLogo';
 
 /**
  * MobileMenu — Menu mobile overlay avec animation
@@ -39,11 +40,8 @@ const MobileMenu = ({ isOpen, onClose }) => {
         aria-modal="true"
       >
         <div className="mobile-menu-header d-flex justify-content-between align-items-center p-3 border-bottom">
-          <Link to="/" className="text-decoration-none d-flex align-items-center gap-2" onClick={onClose}>
-            <div className="navbar-logo-icon">
-              <i className="bi bi-bus-front-fill" />
-            </div>
-            <span className="fw-bold text-primary">Bus Tix Connect</span>
+          <Link to="/" className="text-decoration-none d-flex align-items-center" onClick={onClose}>
+            <AppLogo size={28} variant="horizontal" textClassName="fw-bold text-primary" />
           </Link>
           <button
             className="btn btn-link text-dark p-1"
