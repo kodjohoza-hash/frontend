@@ -33,6 +33,7 @@ const PlaceholderPage = lazy(() => import('@pages/Shared/PlaceholderPage'));
 
 /* Client Pages */
 const ClientDashboard = lazy(() => import('@pages/Client/Dashboard'));
+const ClientBookings = lazy(() => import('@pages/Client/Bookings'));
 const ClientTickets = lazy(() => import('@pages/Client/Tickets'));
 const ClientProfile = lazy(() => import('@pages/Client/Profile'));
 const ClientSettings = lazy(() => import('@pages/Client/Settings'));
@@ -104,7 +105,7 @@ const AppRouter = () => {
           </RoleGuard>
         }>
           <Route path={ROUTES.CLIENT_DASHBOARD} element={<ClientDashboard />} />
-          <Route path={ROUTES.CLIENT_BOOKINGS} element={<PlaceholderPage title="Mes reservations" description="Consultez et gérez toutes vos reservations de voyage." icon="bi-ticket-perforated" backTo={ROUTES.CLIENT_DASHBOARD} />} />
+          <Route path={ROUTES.CLIENT_BOOKINGS} element={<ClientBookings />} />
           <Route path={ROUTES.CLIENT_TICKETS} element={<ClientTickets />} />
           <Route path={ROUTES.CLIENT_PROFILE} element={<ClientProfile />} />
           <Route path={ROUTES.CLIENT_SETTINGS} element={<ClientSettings />} />
