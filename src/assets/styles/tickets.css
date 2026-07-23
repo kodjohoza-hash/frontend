@@ -1,0 +1,1238 @@
+/* ================================================================
+   BUS TIX CONNECT — Tickets Page (tk-* prefix)
+   Premium e-ticket UI — fully self-contained
+   ================================================================ */
+
+:root {
+  --tk-primary: #0B1D51;
+  --tk-primary-50: #E8EBF3;
+  --tk-primary-100: #C5CCE5;
+  --tk-primary-400: #1E3A8A;
+  --tk-accent: #FF6B35;
+  --tk-accent-50: #FFF0E8;
+  --tk-success: #22C55E;
+  --tk-success-50: #F0FDF4;
+  --tk-info: #3B82F6;
+  --tk-info-50: #EFF6FF;
+  --tk-muted: #9CA3AF;
+  --tk-muted-50: #F3F4F6;
+  --tk-bg: #F4F6FA;
+  --tk-surface: #FFFFFF;
+  --tk-border: #E5E7EB;
+  --tk-border-light: #F3F4F6;
+  --tk-text: #111827;
+  --tk-text-secondary: #6B7280;
+  --tk-text-muted: #9CA3AF;
+  --tk-shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --tk-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --tk-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --tk-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.05);
+  --tk-shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.06);
+  --tk-radius: 20px;
+  --tk-radius-sm: 14px;
+  --tk-radius-xs: 10px;
+  --tk-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tk-page {
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+
+.tk-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 28px 32px 0;
+}
+
+.tk-page__title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tk-page__title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--tk-text);
+  margin: 0;
+}
+
+.tk-page__subtitle {
+  font-size: 0.85rem;
+  color: var(--tk-text-muted);
+  margin: 0;
+}
+
+.tk-page__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 12px;
+  background: var(--tk-accent);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--tk-transition);
+  font-family: inherit;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.tk-page__cta:hover {
+  background: #E55A25;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+.tk-page__content {
+  padding: 24px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ================================================================
+   STATS
+   ================================================================ */
+.tk-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.tk-stat {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: var(--tk-radius-sm);
+  background: var(--tk-surface);
+  border: 1px solid var(--tk-border);
+  box-shadow: var(--tk-shadow-sm);
+  transition: all var(--tk-transition);
+}
+
+.tk-stat:hover {
+  box-shadow: var(--tk-shadow-md);
+  transform: translateY(-2px);
+}
+
+.tk-stat__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.tk-stat__icon--success { background: var(--tk-success-50); color: var(--tk-success); }
+.tk-stat__icon--info { background: var(--tk-info-50); color: var(--tk-info); }
+.tk-stat__icon--muted { background: var(--tk-muted-50); color: var(--tk-muted); }
+.tk-stat__icon--accent { background: var(--tk-accent-50); color: var(--tk-accent); }
+
+.tk-stat__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.tk-stat__value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--tk-text);
+  line-height: 1.2;
+}
+
+.tk-stat__label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--tk-text-muted);
+}
+
+/* ================================================================
+   SEARCH
+   ================================================================ */
+.tk-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  height: 46px;
+  border: 1.5px solid var(--tk-border);
+  border-radius: 14px;
+  background: var(--tk-surface);
+  transition: all var(--tk-transition);
+}
+
+.tk-search--focus {
+  border-color: var(--tk-primary);
+  box-shadow: 0 0 0 3px var(--tk-primary-50);
+}
+
+.tk-search__icon {
+  color: var(--tk-text-muted);
+  font-size: 1rem;
+}
+
+.tk-search__input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.85rem;
+  color: var(--tk-text);
+  font-family: inherit;
+}
+
+.tk-search__input::placeholder {
+  color: var(--tk-text-muted);
+}
+
+.tk-search__clear {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  background: var(--tk-muted-50);
+  color: var(--tk-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.65rem;
+  transition: all var(--tk-transition);
+}
+
+.tk-search__clear:hover {
+  background: #FEE2E2;
+  color: #EF4444;
+}
+
+/* ================================================================
+   FILTERS
+   ================================================================ */
+.tk-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tk-filters__tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--tk-surface);
+  border: 1px solid var(--tk-border);
+}
+
+.tk-filters__tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--tk-text-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--tk-transition);
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.tk-filters__tab:hover {
+  background: var(--tk-primary-50);
+  color: var(--tk-primary);
+}
+
+.tk-filters__tab--active {
+  background: var(--tk-primary);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(11, 29, 81, 0.25);
+}
+
+.tk-filters__tab i {
+  font-size: 0.85rem;
+}
+
+.tk-filters__view-toggle {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--tk-surface);
+  border: 1px solid var(--tk-border);
+}
+
+.tk-filters__view-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--tk-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--tk-transition);
+  font-size: 0.9rem;
+}
+
+.tk-filters__view-btn--active {
+  background: var(--tk-primary);
+  color: #fff;
+}
+
+/* ================================================================
+   TICKET GRID
+   ================================================================ */
+.tk-ticket-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.tk-ticket-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ================================================================
+   TICKET CARD (Grid mode)
+   ================================================================ */
+.tk-ticket {
+  border-radius: var(--tk-radius);
+  background: var(--tk-surface);
+  border: 1px solid var(--tk-border);
+  box-shadow: var(--tk-shadow);
+  overflow: hidden;
+  transition: all var(--tk-transition);
+  position: relative;
+}
+
+.tk-ticket--hover {
+  box-shadow: var(--tk-shadow-lg);
+  transform: translateY(-3px);
+}
+
+.tk-ticket--success { border-top: 3px solid var(--tk-success); }
+.tk-ticket--info { border-top: 3px solid var(--tk-info); }
+.tk-ticket--muted { border-top: 3px solid var(--tk-muted); }
+
+.tk-ticket__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+}
+
+.tk-ticket__top-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tk-ticket__company-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--tk-primary), var(--tk-primary-400));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.tk-ticket__company-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--tk-text);
+}
+
+.tk-ticket__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.tk-ticket__status--success { background: var(--tk-success-50); color: var(--tk-success); }
+.tk-ticket__status--info { background: var(--tk-info-50); color: var(--tk-info); }
+.tk-ticket__status--muted { background: var(--tk-muted-50); color: var(--tk-muted); }
+
+.tk-ticket__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Route Section */
+.tk-ticket__route-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+}
+
+.tk-ticket__city {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tk-ticket__city--end {
+  text-align: right;
+}
+
+.tk-ticket__time {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--tk-text);
+}
+
+.tk-ticket__place {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--tk-text-secondary);
+}
+
+.tk-ticket__route-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  padding: 0 12px;
+}
+
+.tk-ticket__line {
+  flex: 1;
+  height: 1px;
+  background: var(--tk-border);
+}
+
+.tk-ticket__bus-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--tk-primary-50);
+  color: var(--tk-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+/* Details */
+.tk-ticket__details {
+  display: flex;
+  gap: 16px;
+  padding: 0 20px 14px;
+}
+
+.tk-ticket__detail {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: var(--tk-text-secondary);
+}
+
+.tk-ticket__detail i {
+  color: var(--tk-primary);
+  font-size: 0.75rem;
+}
+
+/* Divider (ticket tear) */
+.tk-ticket__divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 20px;
+}
+
+.tk-ticket__notch {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--tk-bg);
+  flex-shrink: 0;
+}
+
+.tk-ticket__notch--left { margin-left: -8px; }
+.tk-ticket__notch--right { margin-right: -8px; }
+
+.tk-ticket__divider-line {
+  flex: 1;
+  border-top: 2px dashed var(--tk-border);
+}
+
+/* Bottom (QR + price) */
+.tk-ticket__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+}
+
+.tk-ticket__qr {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tk-ticket__qr-placeholder {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1.5px solid var(--tk-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--tk-primary);
+}
+
+.tk-ticket__ref {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--tk-text-secondary);
+}
+
+.tk-ticket__price-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.tk-ticket__price {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--tk-accent);
+}
+
+.tk-ticket__bus-type {
+  font-size: 0.68rem;
+  color: var(--tk-text-muted);
+}
+
+/* Actions */
+.tk-ticket__actions {
+  display: flex;
+  gap: 4px;
+  padding: 0 20px 16px;
+}
+
+.tk-ticket__action {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--tk-border);
+  background: var(--tk-surface);
+  color: var(--tk-text-secondary);
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--tk-transition);
+  font-family: inherit;
+}
+
+.tk-ticket__action:hover {
+  background: var(--tk-primary-50);
+  border-color: var(--tk-primary-100);
+  color: var(--tk-primary);
+}
+
+.tk-ticket__action--primary {
+  background: var(--tk-primary);
+  border-color: var(--tk-primary);
+  color: #fff;
+}
+
+.tk-ticket__action--primary:hover {
+  background: var(--tk-primary-400);
+  color: #fff;
+}
+
+/* ================================================================
+   TICKET CARD (List mode)
+   ================================================================ */
+.tk-ticket--list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-top: none;
+  border-radius: var(--tk-radius-xs);
+}
+
+.tk-ticket--list:hover {
+  box-shadow: var(--tk-shadow-md);
+}
+
+.tk-ticket__list-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.tk-ticket__list-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tk-ticket__route {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--tk-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tk-ticket__meta-line {
+  font-size: 0.72rem;
+  color: var(--tk-text-secondary);
+  white-space: nowrap;
+}
+
+.tk-ticket__list-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.tk-ticket__view-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--tk-border);
+  background: var(--tk-surface);
+  color: var(--tk-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--tk-transition);
+  font-size: 0.85rem;
+}
+
+.tk-ticket__view-btn:hover {
+  background: var(--tk-primary);
+  color: #fff;
+}
+
+/* ================================================================
+   MODAL
+   ================================================================ */
+.tk-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 24px;
+  animation: tkModalOverlayIn 0.2s ease;
+}
+
+@keyframes tkModalOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tk-modal {
+  width: 100%;
+  max-width: 480px;
+  background: var(--tk-surface);
+  border-radius: var(--tk-radius);
+  box-shadow: var(--tk-shadow-xl);
+  overflow: hidden;
+  position: relative;
+  animation: tkModalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes tkModalIn {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.tk-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,0.9);
+  color: var(--tk-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: all var(--tk-transition);
+  font-size: 0.75rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.tk-modal__close:hover {
+  background: #FEE2E2;
+  color: #EF4444;
+}
+
+.tk-modal__ticket {
+  padding: 0;
+}
+
+.tk-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 16px;
+}
+
+.tk-modal__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tk-modal__company-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--tk-primary), var(--tk-primary-400));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.tk-modal__company-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--tk-text);
+}
+
+.tk-modal__bus-type {
+  font-size: 0.72rem;
+  color: var(--tk-text-muted);
+}
+
+.tk-modal__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.tk-modal__badge--success { background: var(--tk-success-50); color: var(--tk-success); }
+.tk-modal__badge--info { background: var(--tk-info-50); color: var(--tk-info); }
+.tk-modal__badge--muted { background: var(--tk-muted-50); color: var(--tk-muted); }
+
+.tk-modal__badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.tk-modal__route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px 20px;
+}
+
+.tk-modal__route-city {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tk-modal__route-city--end {
+  text-align: right;
+}
+
+.tk-modal__route-time {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--tk-text);
+}
+
+.tk-modal__route-place {
+  font-size: 0.82rem;
+  color: var(--tk-text-secondary);
+  font-weight: 500;
+}
+
+.tk-modal__route-visual {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  padding: 0 16px;
+}
+
+.tk-modal__route-line {
+  flex: 1;
+  height: 2px;
+  background: var(--tk-border);
+}
+
+.tk-modal__route-bus {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--tk-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.tk-modal__info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 0 24px;
+}
+
+.tk-modal__info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.tk-modal__info-item i {
+  color: var(--tk-primary);
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
+.tk-modal__info-label {
+  font-size: 0.68rem;
+  color: var(--tk-text-muted);
+  display: block;
+}
+
+.tk-modal__info-value {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--tk-text);
+  display: block;
+}
+
+.tk-modal__divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  height: 20px;
+}
+
+.tk-modal__notch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--tk-bg);
+  flex-shrink: 0;
+}
+
+.tk-modal__notch--left { margin-left: -9px; }
+.tk-modal__notch--right { margin-right: -9px; }
+
+.tk-modal__divider-dots {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tk-modal__divider-dots span {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--tk-border);
+}
+
+.tk-modal__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px 24px;
+}
+
+.tk-modal__qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.tk-modal__qr-box {
+  width: 72px;
+  height: 72px;
+  border: 2px solid var(--tk-primary);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--tk-primary);
+}
+
+.tk-modal__barcode {
+  display: flex;
+  gap: 1px;
+  height: 20px;
+  align-items: flex-end;
+}
+
+.tk-modal__barcode-line {
+  height: 100%;
+  background: var(--tk-text);
+}
+
+.tk-modal__ticket-id {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.tk-modal__id-label {
+  font-size: 0.68rem;
+  color: var(--tk-text-muted);
+}
+
+.tk-modal__id-value {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--tk-text);
+  letter-spacing: 0.02em;
+}
+
+.tk-modal__id-sub {
+  font-size: 0.68rem;
+  color: var(--tk-text-secondary);
+}
+
+.tk-modal__footer {
+  display: flex;
+  gap: 8px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid var(--tk-border-light);
+}
+
+.tk-modal__footer-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--tk-border);
+  background: var(--tk-surface);
+  color: var(--tk-text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--tk-transition);
+  font-family: inherit;
+}
+
+.tk-modal__footer-btn:hover {
+  background: var(--tk-primary-50);
+  border-color: var(--tk-primary-100);
+  color: var(--tk-primary);
+}
+
+.tk-modal__footer-btn--primary {
+  background: var(--tk-primary);
+  border-color: var(--tk-primary);
+  color: #fff;
+}
+
+.tk-modal__footer-btn--primary:hover {
+  background: var(--tk-primary-400);
+  color: #fff;
+}
+
+/* ================================================================
+   EMPTY STATE
+   ================================================================ */
+.tk-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 60px 24px;
+}
+
+.tk-empty__visual {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.tk-empty__ticket-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  background: var(--tk-primary-50);
+  color: var(--tk-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.tk-empty__bus-anim {
+  position: absolute;
+  bottom: -8px;
+  right: -16px;
+  font-size: 1.8rem;
+  animation: tkEmptyBus 2s ease-in-out infinite;
+}
+
+@keyframes tkEmptyBus {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(8px); }
+}
+
+.tk-empty__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--tk-text);
+  margin: 0 0 8px;
+}
+
+.tk-empty__text {
+  font-size: 0.85rem;
+  color: var(--tk-text-muted);
+  max-width: 360px;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.tk-empty__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 12px;
+  background: var(--tk-accent);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--tk-transition);
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.tk-empty__cta:hover {
+  background: #E55A25;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+/* ================================================================
+   SKELETON
+   ================================================================ */
+.tk-skeleton {
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tk-skeleton__header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tk-skeleton__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.tk-skeleton__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  border-radius: var(--tk-radius-sm);
+  background: var(--tk-surface);
+  animation: tkSkeletonPulse 1.5s ease-in-out infinite;
+}
+
+.tk-skeleton__search {
+  animation: tkSkeletonPulse 1.5s ease-in-out infinite;
+}
+
+.tk-skeleton__filters {
+  display: flex;
+  gap: 4px;
+}
+
+.tk-skeleton__tab {
+  width: 80px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--tk-surface);
+  animation: tkSkeletonPulse 1.5s ease-in-out infinite;
+}
+
+.tk-skeleton__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.tk-skeleton__card {
+  border-radius: var(--tk-radius);
+  background: var(--tk-surface);
+  overflow: hidden;
+  animation: tkSkeletonPulse 1.5s ease-in-out infinite;
+}
+
+.tk-skeleton__circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--tk-border-light);
+  animation: tkSkeletonPulse 1.5s ease-in-out infinite;
+}
+
+.tk-skeleton__bar {
+  border-radius: 6px;
+  background: var(--tk-border-light);
+  animation: tkSkeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes tkSkeletonPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 1100px) {
+  .tk-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .tk-page__header {
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px 16px 0;
+  }
+  .tk-page__content {
+    padding: 20px 16px 40px;
+  }
+  .tk-stats-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .tk-stat {
+    padding: 14px;
+  }
+  .tk-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tk-filters__tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tk-filters__tab {
+    padding: 7px 12px;
+    font-size: 0.75rem;
+  }
+  .tk-filters__tab i {
+    display: none;
+  }
+  .tk-ticket-grid {
+    grid-template-columns: 1fr;
+  }
+  .tk-skeleton__stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  .tk-skeleton__grid {
+    grid-template-columns: 1fr;
+  }
+  .tk-modal {
+    max-width: 100%;
+    border-radius: 16px;
+  }
+  .tk-modal__route {
+    padding: 8px 16px 16px;
+  }
+  .tk-modal__info-grid {
+    grid-template-columns: 1fr;
+    padding: 0 16px;
+  }
+  .tk-modal__bottom {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .tk-modal__ticket-id {
+    align-items: center;
+  }
+  .tk-modal__footer {
+    flex-direction: column;
+    padding: 12px 16px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tk-stats-row {
+    grid-template-columns: 1fr;
+  }
+}

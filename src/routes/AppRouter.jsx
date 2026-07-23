@@ -31,8 +31,12 @@ const ConfirmationPage = lazy(() => import('@pages/Booking/ConfirmationPage'));
 /* Placeholder Page */
 const PlaceholderPage = lazy(() => import('@pages/Shared/PlaceholderPage'));
 
-/* Role Dashboards */
+/* Client Pages */
 const ClientDashboard = lazy(() => import('@pages/Client/Dashboard'));
+const ClientTickets = lazy(() => import('@pages/Client/Tickets'));
+const ClientProfile = lazy(() => import('@pages/Client/Profile'));
+
+/* Role Dashboards */
 const CompanyDashboard = lazy(() => import('@pages/Company/Dashboard'));
 const CounterDashboard = lazy(() => import('@pages/Counter/Dashboard'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
@@ -98,8 +102,8 @@ const AppRouter = () => {
         }>
           <Route path={ROUTES.CLIENT_DASHBOARD} element={<ClientDashboard />} />
           <Route path={ROUTES.CLIENT_BOOKINGS} element={<PlaceholderPage title="Mes reservations" description="Consultez et gérez toutes vos reservations de voyage." icon="bi-ticket-perforated" backTo={ROUTES.CLIENT_DASHBOARD} />} />
-          <Route path={ROUTES.CLIENT_TICKETS} element={<PlaceholderPage title="Mes billets" description="Accédez à vos billets électroniques actifs et passés." icon="bi-postcard" backTo={ROUTES.CLIENT_DASHBOARD} />} />
-          <Route path={ROUTES.CLIENT_PROFILE} element={<PlaceholderPage title="Mon profil" description="Gérez vos informations personnelles et vos préférences." icon="bi-person" backTo={ROUTES.CLIENT_DASHBOARD} />} />
+          <Route path={ROUTES.CLIENT_TICKETS} element={<ClientTickets />} />
+          <Route path={ROUTES.CLIENT_PROFILE} element={<ClientProfile />} />
           <Route path={ROUTES.CLIENT_SETTINGS} element={<PlaceholderPage title="Paramètres" description="Configurez vos options de notification, langue et sécurité." icon="bi-gear" backTo={ROUTES.CLIENT_DASHBOARD} />} />
         </Route>
 
