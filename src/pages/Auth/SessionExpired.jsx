@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import useAuth from '@hooks/useAuth';
+import AppLogo from '@components/common/AppLogo';
 import { AuthCard, AuthLeftPanel } from '@components/auth';
 
 const SessionExpiredPage = () => {
@@ -17,8 +18,7 @@ const SessionExpiredPage = () => {
       <div className="auth-right">
         <div className="auth-right__inner">
           <div className="auth-mobile-logo">
-            <div className="auth-mobile-logo__icon"><i className="bi bi-bus-front-fill" /></div>
-            <span className="auth-mobile-logo__text">Bus Tix Connect</span>
+            <AppLogo size={28} variant="horizontal" textClassName="auth-mobile-logo__text" />
           </div>
           <AuthCard>
             <div className="auth-status">

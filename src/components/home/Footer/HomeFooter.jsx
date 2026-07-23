@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import AppLogo from '@components/common/AppLogo';
 import { NAV_LINKS, SERVICE_LINKS, SUPPORT_LINKS, LEGAL_LINKS, CONTACT_INFO } from '@data/footer';
 import NewsletterCard from './NewsletterCard';
 import FooterLinks from './FooterLinks';
@@ -40,10 +41,7 @@ const HomeFooter = () => {
             {/* Brand Column */}
             <div className="btc-footer-brand-col">
               <Link to="/" className="btc-footer-brand">
-                <div className="btc-footer-brand-icon">
-                  <i className="bi bi-bus-front-fill" />
-                </div>
-                <span className="btc-footer-brand-text">Bus Tix Connect</span>
+                <AppLogo size={32} variant="horizontal" textClassName="btc-footer-brand-text" />
               </Link>
               <p className="btc-footer-brand-desc">
                 BUS TIX CONNECT simplifie la réservation de billets de bus en mettant en relation les voyageurs et les compagnies de transport grâce à une plateforme moderne, rapide et sécurisée.

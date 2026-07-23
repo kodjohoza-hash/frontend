@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
+import AppLogo from '@components/common/AppLogo';
 import { useScrollPosition } from '@hooks/useLandingPage';
 import { NAV_LINKS } from '@data/landingPage';
 
@@ -49,10 +50,7 @@ const HomeNavbar = () => {
           {/* Logo — Left column */}
           <div className="btc-header-brand">
             <Link to="/" className="btc-home-brand" aria-label="Bus Tix Connect — Accueil">
-              <div className="btc-home-brand-icon">
-                <i className="bi bi-bus-front-fill" />
-              </div>
-              <span className="btc-home-brand-text">Bus Tix Connect</span>
+              <AppLogo size={32} variant="horizontal" textClassName="btc-home-brand-text" />
             </Link>
           </div>
 
@@ -106,10 +104,7 @@ const HomeNavbar = () => {
       >
         <div className="btc-offcanvas-header">
           <Link to="/" className="btc-home-brand" onClick={() => setMobileOpen(false)}>
-            <div className="btc-home-brand-icon">
-              <i className="bi bi-bus-front-fill" />
-            </div>
-            <span className="btc-home-brand-text">Bus Tix Connect</span>
+              <AppLogo size={28} variant="horizontal" textClassName="btc-home-brand-text" />
           </Link>
           <button
             className="btc-offcanvas-close"

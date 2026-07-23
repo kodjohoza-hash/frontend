@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import AppLogo from '@components/common/AppLogo';
 import { AuthCard, AuthHeader, AuthLeftPanel, LoginForm } from '@components/auth';
 
 const LoginPage = () => (
@@ -7,12 +8,11 @@ const LoginPage = () => (
     <div className="auth-right">
       <div className="auth-right__inner">
         <div className="auth-mobile-logo">
-          <div className="auth-mobile-logo__icon"><i className="bi bi-bus-front-fill" /></div>
-          <span className="auth-mobile-logo__text">Bus Tix Connect</span>
+          <AppLogo size={28} variant="horizontal" textClassName="auth-mobile-logo__text" />
         </div>
         <AuthCard>
           <AuthHeader
-            icon={<i className="bi bi-bus-front-fill" />}
+            icon={<AppLogo size={24} variant="icon" />}
             title="Bienvenue !"
             subtitle="Connectez-vous à votre compte."
           />

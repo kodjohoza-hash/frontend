@@ -1,3 +1,4 @@
+import AppLogo from '@components/common/AppLogo';
 import BenefitsSection from './BenefitsSection';
 import StatsSection from './StatsSection';
 
@@ -16,10 +17,7 @@ const AuthLeftPanel = () => (
 
     <div className="auth-left__content">
       <div className="auth-left__brand">
-        <div className="auth-left__logo">
-          <i className="bi bi-bus-front-fill" />
-        </div>
-        <span className="auth-left__name">Bus Tix Connect</span>
+        <AppLogo size={40} variant="horizontal" textClassName="auth-left__name" />
       </div>
 
       <div className="auth-left__badge">

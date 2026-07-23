@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
+import AppLogo from '@components/common/AppLogo';
 import { sidebarLinks } from '@data/clientDashboard';
 
 const HELP_PATH = '/client/support';
@@ -12,8 +13,11 @@ const DbSidebar = ({ collapsed, onToggle }) => {
     <aside className={clsx('db-sidebar', collapsed && 'db-sidebar--collapsed')}>
       <div className="db-sidebar__brand">
         <Link to="/client/dashboard" className="db-sidebar__logo">
-          <span className="db-sidebar__logo-icon">🚌</span>
-          {!collapsed && <span className="db-sidebar__logo-text">Bus Tix</span>}
+          <AppLogo
+            size={collapsed ? 28 : 32}
+            variant={collapsed ? 'icon' : 'horizontal'}
+            textClassName="db-sidebar__logo-text"
+          />
         </Link>
         <button
           type="button"

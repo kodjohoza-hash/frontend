@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { verifyEmailSchema } from '@schemas/auth.schema';
 import useAuth from '@hooks/useAuth';
+import AppLogo from '@components/common/AppLogo';
 import AuthInput from '@components/auth/AuthInput';
 import { AuthCard, AuthHeader, AuthLeftPanel } from '@components/auth';
 
@@ -46,8 +47,7 @@ const VerifyEmailPage = () => {
       <div className="auth-right">
         <div className="auth-right__inner">
           <div className="auth-mobile-logo">
-            <div className="auth-mobile-logo__icon"><i className="bi bi-bus-front-fill" /></div>
-            <span className="auth-mobile-logo__text">Bus Tix Connect</span>
+            <AppLogo size={28} variant="horizontal" textClassName="auth-mobile-logo__text" />
           </div>
           <AuthCard>
             <AuthHeader
