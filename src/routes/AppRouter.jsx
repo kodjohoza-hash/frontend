@@ -36,6 +36,7 @@ const ClientDashboard = lazy(() => import('@pages/Client/Dashboard'));
 const ClientTickets = lazy(() => import('@pages/Client/Tickets'));
 const ClientProfile = lazy(() => import('@pages/Client/Profile'));
 const ClientSettings = lazy(() => import('@pages/Client/Settings'));
+const ClientNotifications = lazy(() => import('@pages/Client/Notifications'));
 
 /* Role Dashboards */
 const CompanyDashboard = lazy(() => import('@pages/Company/Dashboard'));
@@ -165,7 +166,7 @@ const AppRouter = () => {
             <ClientLayout />
           </RoleGuard>
         }>
-          <Route path={ROUTES.NOTIFICATIONS} element={<PlaceholderPage title="Notifications" description="Consultez vos notifications et alertes récentes." icon="bi-bell" backTo="/" />} />
+          <Route path={ROUTES.NOTIFICATIONS} element={<ClientNotifications />} />
           <Route path={ROUTES.PROFILE} element={<PlaceholderPage title="Mon profil" description="Gérez vos informations personnelles et préférences." icon="bi-person" backTo="/" />} />
           <Route path={ROUTES.SETTINGS} element={<PlaceholderPage title="Paramètres" description="Configurez vos options de sécurité et préférences." icon="bi-gear" backTo="/" />} />
         </Route>
