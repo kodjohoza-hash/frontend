@@ -1,10 +1,12 @@
-import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { sidebarLinks } from '@data/clientDashboard';
 
+const HELP_PATH = '/client/support';
+
 const DbSidebar = ({ collapsed, onToggle }) => {
   const location = useLocation();
+  const isHelpActive = location.pathname === HELP_PATH;
 
   return (
     <aside className={clsx('db-sidebar', collapsed && 'db-sidebar--collapsed')}>
@@ -45,7 +47,10 @@ const DbSidebar = ({ collapsed, onToggle }) => {
 
       <div className="db-sidebar__footer">
         {!collapsed && (
-          <div className="db-sidebar__help">
+          <Link
+            to={HELP_PATH}
+            className={clsx('db-sidebar__help', isHelpActive && 'db-sidebar__help--active')}
+          >
             <div className="db-sidebar__help-icon">
               <i className="bi bi-headset" />
             </div>
@@ -53,7 +58,17 @@ const DbSidebar = ({ collapsed, onToggle }) => {
               <span className="db-sidebar__help-title">Besoin d'aide ?</span>
               <span className="db-sidebar__help-sub">Support 24h/24</span>
             </div>
-          </div>
+            <i className="bi bi-arrow-right-short db-sidebar__help-arrow" />
+          </Link>
+        )}
+        {collapsed && (
+          <Link
+            to={HELP_PATH}
+            className={clsx('db-sidebar__help-collapsed', isHelpActive && 'db-sidebar__help-collapsed--active')}
+            title="Centre d'aide"
+          >
+            <i className="bi bi-headset" />
+          </Link>
         )}
       </div>
     </aside>

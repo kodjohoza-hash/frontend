@@ -252,7 +252,6 @@ export const sidebarLinks = [
     label: 'Tableau de bord',
     icon: 'bi-grid-1x2-fill',
     path: '/client/dashboard',
-    active: true,
   },
   {
     id: 'sl-bookings',
@@ -267,8 +266,14 @@ export const sidebarLinks = [
     path: '/client/tickets',
   },
   {
+    id: 'sl-notifications',
+    label: 'Notifications',
+    icon: 'bi-bell',
+    path: '/notifications',
+  },
+  {
     id: 'sl-profile',
-    label: 'Profil',
+    label: 'Mon profil',
     icon: 'bi-person',
     path: '/client/profile',
   },
@@ -277,5 +282,11 @@ export const sidebarLinks = [
     label: 'Paramètres',
     icon: 'bi-gear',
     path: '/client/settings',
+  },
+  {
+    id: 'sl-support',
+    label: 'Centre d\'aide',
+    icon: 'bi-headset',
+    path: '/client/support',
   },
 ];
