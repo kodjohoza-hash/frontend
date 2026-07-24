@@ -1,6 +1,5 @@
-import { useState, Suspense } from 'react';
-import DbSidebar from '@components/client/DbSidebar';
-import DbHeader from '@components/client/DbHeader';
+import { Suspense } from 'react';
+import DashboardLayout from '@components/client/DashboardLayout';
 import DbWelcomeCard from '@components/client/DbWelcomeCard';
 import DbStatsCard from '@components/client/DbStatsCard';
 import DbUpcomingTrips from '@components/client/DbUpcomingTrips';
@@ -12,51 +11,29 @@ import DbSkeleton from '@components/client/DbSkeleton';
 import { stats } from '@data/clientDashboard';
 import '@assets/styles/dashboard.css';
 
-const ClientDashboard = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+const ClientDashboard = () => (
+  <DashboardLayout>
+    <DbWelcomeCard />
 
-  const toggleSidebar = () => {
-    if (window.innerWidth <= 768) {
-      setSidebarOpen(!sidebarOpen);
-    } else {
-      setSidebarCollapsed(!sidebarCollapsed);
-    }
-  };
+    <div className="db-stats-row">
+      {stats.map((s) => (
+        <DbStatsCard key={s.id} {...s} />
+      ))}
+    </div>
 
-  return (
-    <div className="db-layout">
-      <DbSidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
-      {sidebarOpen && (
-        <div className="db-overlay" onClick={() => setSidebarOpen(false)} />
-      )}
-      <div className={`db-layout__main ${sidebarCollapsed ? 'db-layout__main--collapsed' : ''}`}>
-        <DbHeader onToggleSidebar={toggleSidebar} />
-        <main className="db-layout__content">
-          <DbWelcomeCard />
-
-          <div className="db-stats-row">
-            {stats.map((s) => (
-              <DbStatsCard key={s.id} {...s} />
-            ))}
-          </div>
-
-          <div className="db-grid">
-            <div className="db-grid__left">
-              <DbUpcomingTrips />
-              <DbRecentBookings />
-            </div>
-            <div className="db-grid__right">
-              <DbQuickActions />
-              <DbNotifications />
-              <DbActivityTimeline />
-            </div>
-          </div>
-        </main>
+    <div className="db-grid">
+      <div className="db-grid__left">
+        <DbUpcomingTrips />
+        <DbRecentBookings />
+      </div>
+      <div className="db-grid__right">
+        <DbQuickActions />
+        <DbNotifications />
+        <DbActivityTimeline />
       </div>
     </div>
-  );
-};
+  </DashboardLayout>
+);
 
 const DashboardPage = () => (
   <Suspense fallback={<DbSkeleton />}>

@@ -42,7 +42,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 28px 32px 0;
+  padding: 0 0 20px;
 }
 
 .tk-page__title-group {
@@ -1170,7 +1170,7 @@
   .tk-page__header {
     flex-direction: column;
     gap: 14px;
-    padding: 20px 16px 0;
+    padding: 0 0 16px;
   }
   .tk-page__content {
     padding: 20px 16px 40px;

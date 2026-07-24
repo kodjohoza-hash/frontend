@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import useAuth from '@hooks/useAuth';
 import { notifications as initialNotifications } from '@data/notificationsData';
 
-const DbHeader = ({ onToggleSidebar }) => {
-  const { user, logout } = useAuth();
+const DbHeader = ({ onToggleSidebar, onLogout }) => {
+  const { user } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [notifOpen, setNotifOpen] = useState(false);
@@ -92,8 +92,7 @@ const DbHeader = ({ onToggleSidebar }) => {
 
   const handleLogout = () => {
     setProfileOpen(false);
-    logout();
-    navigate('/login', { replace: true });
+    onLogout?.();
   };
 
   const notifColorMap = {

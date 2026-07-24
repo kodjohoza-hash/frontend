@@ -1,6 +1,5 @@
-import { useState, useMemo, useCallback, Suspense } from 'react';
-import DbSidebar from '@components/client/DbSidebar';
-import DbHeader from '@components/client/DbHeader';
+import { useState, useMemo, Suspense } from 'react';
+import DashboardLayout from '@components/client/DashboardLayout';
 import {
   NotificationsHeader,
   NotificationsStats,
@@ -15,22 +14,12 @@ import { notifications as mockNotifications } from '@data/notificationsData';
 import '@assets/styles/notifications.css';
 
 const NotificationsPage = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [allNotifications, setAllNotifications] = useState(mockNotifications);
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [drawerNotification, setDrawerNotification] = useState(null);
-
-  const toggleSidebar = () => {
-    if (window.innerWidth <= 768) {
-      setSidebarOpen(!sidebarOpen);
-    } else {
-      setSidebarCollapsed(!sidebarCollapsed);
-    }
-  };
 
   const stats = useMemo(() => {
     const now = new Date();
@@ -89,77 +78,68 @@ const NotificationsPage = () => {
     return result;
   }, [allNotifications, activeFilter, dateFilter, priorityFilter, search]);
 
-  const handleMarkAllRead = useCallback(() => {
+  const handleMarkAllRead = () => {
     setAllNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-  }, []);
+  };
 
-  const handleDeleteRead = useCallback(() => {
+  const handleDeleteRead = () => {
     setAllNotifications((prev) => prev.filter((n) => !n.read));
-  }, []);
+  };
 
-  const handleMarkRead = useCallback((id) => {
+  const handleMarkRead = (id) => {
     setAllNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read: true } : n))
     );
-  }, []);
+  };
 
-  const handleDelete = useCallback((id) => {
+  const handleDelete = (id) => {
     setAllNotifications((prev) => prev.filter((n) => n.id !== id));
     if (drawerNotification?.id === id) {
       setDrawerNotification(null);
     }
-  }, [drawerNotification]);
+  };
 
-  const handleOpenDrawer = useCallback((notification) => {
+  const handleOpenDrawer = (notification) => {
     setDrawerNotification(notification);
-  }, []);
+  };
 
   return (
-    <div className="db-layout">
-      <DbSidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
-      {sidebarOpen && (
-        <div className="db-overlay" onClick={() => setSidebarOpen(false)} />
+    <DashboardLayout>
+      <NotificationsHeader
+        unreadCount={stats.unread}
+        totalCount={stats.total}
+        onMarkAllRead={handleMarkAllRead}
+        onDeleteRead={handleDeleteRead}
+      />
+
+      <NotificationsStats stats={stats} />
+
+      <NotificationsSearch value={search} onChange={setSearch} />
+
+      <NotificationsFilters
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+        dateFilter={dateFilter}
+        onDateChange={setDateFilter}
+        priorityFilter={priorityFilter}
+        onPriorityChange={setPriorityFilter}
+      />
+
+      {filtered.length === 0 ? (
+        <NotificationEmptyState isFiltered={activeFilter !== 'all' || search.trim() !== ''} />
+      ) : (
+        <div className="nf-list">
+          {filtered.map((notification) => (
+            <NotificationCard
+              key={notification.id}
+              notification={notification}
+              onOpen={handleOpenDrawer}
+              onMarkRead={handleMarkRead}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
       )}
-      <div className={`db-layout__main ${sidebarCollapsed ? 'db-layout__main--collapsed' : ''}`}>
-        <DbHeader onToggleSidebar={toggleSidebar} />
-        <main className="db-layout__content nf-page">
-          <NotificationsHeader
-            unreadCount={stats.unread}
-            totalCount={stats.total}
-            onMarkAllRead={handleMarkAllRead}
-            onDeleteRead={handleDeleteRead}
-          />
-
-          <NotificationsStats stats={stats} />
-
-          <NotificationsSearch value={search} onChange={setSearch} />
-
-          <NotificationsFilters
-            activeFilter={activeFilter}
-            onFilterChange={setActiveFilter}
-            dateFilter={dateFilter}
-            onDateChange={setDateFilter}
-            priorityFilter={priorityFilter}
-            onPriorityChange={setPriorityFilter}
-          />
-
-          {filtered.length === 0 ? (
-            <NotificationEmptyState isFiltered={activeFilter !== 'all' || search.trim() !== ''} />
-          ) : (
-            <div className="nf-list">
-              {filtered.map((notification) => (
-                <NotificationCard
-                  key={notification.id}
-                  notification={notification}
-                  onOpen={handleOpenDrawer}
-                  onMarkRead={handleMarkRead}
-                  onDelete={handleDelete}
-                />
-              ))}
-            </div>
-          )}
-        </main>
-      </div>
 
       {drawerNotification && (
         <NotificationDrawer
@@ -168,7 +148,7 @@ const NotificationsPage = () => {
           onMarkRead={handleMarkRead}
         />
       )}
-    </div>
+    </DashboardLayout>
   );
 };
 

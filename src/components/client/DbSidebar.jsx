@@ -5,7 +5,7 @@ import { sidebarLinks } from '@data/clientDashboard';
 
 const HELP_PATH = '/client/support';
 
-const DbSidebar = ({ collapsed, onToggle }) => {
+const DbSidebar = ({ collapsed, onToggle, onLogout }) => {
   const location = useLocation();
   const isHelpActive = location.pathname === HELP_PATH;
 
@@ -74,6 +74,15 @@ const DbSidebar = ({ collapsed, onToggle }) => {
             <i className="bi bi-headset" />
           </Link>
         )}
+        <button
+          type="button"
+          className="db-sidebar__logout"
+          onClick={onLogout}
+          title={collapsed ? 'Se déconnecter' : undefined}
+        >
+          <i className="bi bi-box-arrow-right" />
+          {!collapsed && <span>Se déconnecter</span>}
+        </button>
       </div>
     </aside>
   );

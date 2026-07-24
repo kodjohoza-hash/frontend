@@ -39,9 +39,9 @@
   --db-radius: 16px;
   --db-radius-sm: 10px;
   --db-radius-xs: 8px;
-  --db-sidebar-w: 260px;
-  --db-sidebar-collapsed-w: 72px;
-  --db-header-h: 72px;
+  --db-sidebar-w: 232px;
+  --db-sidebar-collapsed-w: 64px;
+  --db-header-h: 56px;
   --db-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -70,8 +70,8 @@
 
 .db-layout__content {
   flex: 1;
-  padding: 28px 32px 40px;
-  max-width: 1400px;
+  padding: 20px 24px 32px;
+  max-width: 1600px;
   width: 100%;
 }
 
@@ -100,9 +100,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 18px;
+  padding: 14px 14px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
-  min-height: 72px;
+  min-height: 56px;
 }
 
 .db-sidebar__logo {
@@ -152,7 +152,7 @@
 
 .db-sidebar__nav {
   flex: 1;
-  padding: 16px 12px;
+  padding: 12px 10px;
   overflow-y: auto;
 }
 
@@ -169,12 +169,12 @@
 .db-sidebar__link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 11px 14px;
+  gap: 10px;
+  padding: 9px 12px;
   border-radius: var(--db-radius-sm);
   text-decoration: none;
   color: rgba(255,255,255,0.6);
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 500;
   transition: all var(--db-transition);
   white-space: nowrap;
@@ -205,25 +205,25 @@
 
 .db-sidebar--collapsed .db-sidebar__link {
   justify-content: center;
-  padding: 12px;
+  padding: 10px;
 }
 
 .db-sidebar__footer {
-  padding: 16px 14px;
+  padding: 12px 12px;
   border-top: 1px solid rgba(255,255,255,0.08);
 }
 
 .db-sidebar--collapsed .db-sidebar__footer {
   display: flex;
   justify-content: center;
-  padding: 16px 8px;
+  padding: 12px 8px;
 }
 
 .db-sidebar__help {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px;
+  gap: 10px;
+  padding: 10px;
   background: rgba(255,255,255,0.06);
   border-radius: var(--db-radius-sm);
   text-decoration: none;
@@ -266,15 +266,15 @@
 }
 
 .db-sidebar__help-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
   background: var(--db-accent);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: 1rem;
+  font-size: 0.85rem;
   flex-shrink: 0;
   transition: background var(--db-transition);
 }
@@ -342,6 +342,53 @@
   box-shadow: 0 2px 10px rgba(255, 107, 53, 0.35);
 }
 
+/* Sidebar logout */
+.db-sidebar__logout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--db-radius-sm);
+  color: rgba(255,255,255,0.5);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--db-transition);
+  font-family: inherit;
+  text-align: left;
+  margin-top: 6px;
+}
+
+.db-sidebar__logout:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #FCA5A5;
+}
+
+.db-sidebar__logout:focus-visible {
+  outline: 2px solid var(--db-accent);
+  outline-offset: 2px;
+}
+
+.db-sidebar__logout i {
+  font-size: 1rem;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.db-sidebar--collapsed .db-sidebar__logout {
+  justify-content: center;
+  padding: 10px;
+  margin-top: 4px;
+}
+
+.db-sidebar--collapsed .db-sidebar__logout i {
+  width: auto;
+}
+
 /* ================================================================
    4. HEADER
    ================================================================ */
@@ -350,7 +397,7 @@
   align-items: center;
   justify-content: space-between;
   height: var(--db-header-h);
-  padding: 0 32px;
+  padding: 0 24px;
   background: var(--db-surface);
   border-bottom: 1px solid var(--db-border);
   position: sticky;
@@ -365,8 +412,8 @@
 }
 
 .db-header__menu-btn {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
   border: 1px solid var(--db-border);
   background: var(--db-surface);
@@ -390,15 +437,15 @@
 }
 
 .db-header__title {
-  font-size: 1.15rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--db-text);
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 .db-header__subtitle {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   color: var(--db-text-muted);
   margin: 0;
 }
@@ -415,9 +462,9 @@
 }
 
 .db-header__search-toggle {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   border: 1px solid var(--db-border);
   background: var(--db-surface);
   color: var(--db-text-secondary);
@@ -459,7 +506,7 @@
   gap: 8px;
   width: 320px;
   padding: 0 14px;
-  height: 40px;
+  height: 36px;
   border-radius: 10px;
   border: 1.5px solid var(--db-primary);
   background: var(--db-surface);
@@ -514,9 +561,9 @@
 /* Icon buttons */
 .db-header__icon-btn {
   position: relative;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   border: 1px solid var(--db-border);
   background: var(--db-surface);
   color: var(--db-text-secondary);
@@ -524,7 +571,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--db-shadow-sm);
   flex-shrink: 0;
@@ -606,9 +653,9 @@
 .db-header__profile-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 12px 6px 6px;
-  border-radius: 12px;
+  gap: 8px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 10px;
   border: 1px solid var(--db-border);
   background: var(--db-surface);
   cursor: pointer;
@@ -622,9 +669,9 @@
 }
 
 .db-header__avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   background: linear-gradient(135deg, var(--db-primary), var(--db-primary-400));
   color: #fff;
   display: flex;
@@ -643,10 +690,10 @@
 }
 
 .db-header__avatar--lg {
-  width: 48px;
-  height: 48px;
-  font-size: 1rem;
-  border-radius: 14px;
+  width: 42px;
+  height: 42px;
+  font-size: 0.9rem;
+  border-radius: 12px;
 }
 
 .db-header__profile-info {
@@ -657,20 +704,20 @@
 }
 
 .db-header__profile-name {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--db-text);
   line-height: 1.2;
 }
 
 .db-header__profile-tier {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: var(--db-text-muted);
   line-height: 1.2;
 }
 
 .db-header__profile-arrow {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   color: var(--db-text-muted);
   transition: transform var(--db-transition);
 }
@@ -684,7 +731,7 @@
    ================================================================ */
 .db-header__dropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 6px);
   right: 0;
   background: var(--db-surface);
   border: 1px solid var(--db-border);
@@ -715,7 +762,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 18px 12px;
+  padding: 12px 16px 10px;
   border-bottom: 1px solid var(--db-border-light);
 }
 
@@ -789,8 +836,8 @@
 .db-header__notif-item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 14px 18px;
+  gap: 10px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--db-border-light);
   transition: all var(--db-transition);
   cursor: pointer;
@@ -832,9 +879,9 @@
 }
 
 .db-header__notif-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -949,8 +996,8 @@
 .db-header__dropdown-profile-top {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 18px;
+  gap: 10px;
+  padding: 14px 16px;
 }
 
 .db-header__dropdown-profile-name {
@@ -975,13 +1022,13 @@
 .db-header__dropdown-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  padding: 11px 18px;
+  padding: 9px 16px;
   border: none;
   background: transparent;
   color: var(--db-text);
-  font-size: 0.825rem;
+  font-size: 0.78rem;
   cursor: pointer;
   transition: background var(--db-transition);
   font-family: inherit;
@@ -1014,7 +1061,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px 16px;
+  padding: 14px 20px 12px;
   border-bottom: 1px solid var(--db-border-light);
 }
 
@@ -1059,11 +1106,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 28px 32px;
+  padding: 22px 28px;
   border-radius: var(--db-radius);
   background: linear-gradient(135deg, var(--db-primary) 0%, #15286B 50%, var(--db-primary-400) 100%);
   color: #fff;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
   overflow: hidden;
   position: relative;
 }
@@ -1097,9 +1144,9 @@
 }
 
 .db-welcome__heading {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 800;
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   line-height: 1.3;
 }
 
@@ -1108,10 +1155,10 @@
 }
 
 .db-welcome__text {
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   opacity: 0.85;
-  margin: 0 0 20px;
-  line-height: 1.6;
+  margin: 0 0 16px;
+  line-height: 1.5;
 }
 
 .db-welcome__cta {
@@ -1178,15 +1225,15 @@
 .db-stats-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-bottom: 28px;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
 .db-stats {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  padding: 20px;
+  gap: 12px;
+  padding: 16px;
   border-radius: var(--db-radius);
   background: var(--db-surface);
   border: 1px solid var(--db-border);
@@ -1200,9 +1247,9 @@
 }
 
 .db-stats__icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1231,7 +1278,7 @@
 }
 
 .db-stats__value {
-  font-size: 1.45rem;
+  font-size: 1.3rem;
   font-weight: 800;
   color: var(--db-text);
   line-height: 1.2;
@@ -1262,35 +1309,35 @@
    ================================================================ */
 .db-grid {
   display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 24px;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
 }
 
 .db-grid__left {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
   min-width: 0;
 }
 
 .db-grid__right {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 /* ================================================================
    10. UPCOMING TRIPS
    ================================================================ */
 .db-trips__list {
-  padding: 8px 20px 20px;
+  padding: 6px 16px 16px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .db-trips__item {
-  padding: 16px;
+  padding: 12px;
   border-radius: var(--db-radius-sm);
   border: 1px solid var(--db-border-light);
   background: var(--db-surface-hover);
@@ -1306,7 +1353,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .db-trips__cities {
@@ -1317,7 +1364,7 @@
 
 .db-trips__from,
 .db-trips__to {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: var(--db-text);
 }
@@ -1338,8 +1385,8 @@
 
 .db-trips__meta {
   display: flex;
-  gap: 16px;
-  margin-bottom: 10px;
+  gap: 14px;
+  margin-bottom: 8px;
 }
 
 .db-trips__datetime,
@@ -1360,8 +1407,8 @@
 .db-trips__bottom {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding-top: 10px;
+  gap: 10px;
+  padding-top: 8px;
   border-top: 1px dashed var(--db-border);
 }
 
@@ -1411,19 +1458,19 @@
    ================================================================ */
 .db-bookings__table-wrap {
   overflow-x: auto;
-  padding: 0 20px 20px;
+  padding: 0 16px 16px;
 }
 
 .db-bookings__table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
 }
 
 .db-bookings__table thead th {
-  padding: 12px 14px;
-  font-size: 0.72rem;
+  padding: 10px 12px;
+  font-size: 0.68rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -1434,7 +1481,7 @@
 }
 
 .db-bookings__table tbody td {
-  padding: 14px;
+  padding: 11px 12px;
   color: var(--db-text-secondary);
   border-bottom: 1px solid var(--db-border-light);
   white-space: nowrap;
@@ -1498,16 +1545,16 @@
 .db-actions__grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  padding: 16px 20px 20px;
+  gap: 10px;
+  padding: 14px 16px 16px;
 }
 
 .db-actions__item {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
-  padding: 16px;
+  gap: 6px;
+  padding: 12px;
   border-radius: var(--db-radius-sm);
   border: 1px solid var(--db-border-light);
   text-decoration: none;
@@ -1521,9 +1568,9 @@
 }
 
 .db-actions__icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1556,8 +1603,8 @@
 .db-notifs__item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 14px 20px;
+  gap: 10px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--db-border-light);
   transition: background var(--db-transition);
 }
@@ -1571,9 +1618,9 @@
 }
 
 .db-notifs__icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1660,14 +1707,14 @@
    14. ACTIVITY TIMELINE
    ================================================================ */
 .db-timeline__list {
-  padding: 16px 20px 20px;
+  padding: 14px 16px 16px;
 }
 
 .db-timeline__item {
   position: relative;
   display: flex;
-  gap: 14px;
-  padding-bottom: 20px;
+  gap: 12px;
+  padding-bottom: 16px;
 }
 
 .db-timeline__item:last-child {
@@ -1675,9 +1722,9 @@
 }
 
 .db-timeline__node {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1695,8 +1742,8 @@
 
 .db-timeline__line {
   position: absolute;
-  left: 15px;
-  top: 36px;
+  left: 13px;
+  top: 32px;
   bottom: 0;
   width: 2px;
   background: var(--db-border);
@@ -1739,7 +1786,7 @@
 .db-skeleton__sidebar {
   width: var(--db-sidebar-w);
   background: var(--db-primary);
-  padding: 24px 16px;
+  padding: 18px 12px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -1763,10 +1810,10 @@
 
 .db-skeleton__main {
   flex: 1;
-  padding: 28px 32px;
+  padding: 20px 24px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
 }
 
 .db-skeleton__header {
@@ -1778,8 +1825,8 @@
 .db-skeleton__welcome {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 32px;
+  gap: 10px;
+  padding: 24px;
   border-radius: var(--db-radius);
   background: rgba(11, 29, 81, 0.08);
   animation: dbSkeletonPulse 1.5s ease-in-out infinite;
@@ -1788,14 +1835,14 @@
 .db-skeleton__stats-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 16px;
 }
 
 .db-skeleton__stat-card {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 20px;
+  gap: 8px;
+  padding: 16px;
   border-radius: var(--db-radius);
   background: var(--db-surface);
   animation: dbSkeletonPulse 1.5s ease-in-out infinite;
@@ -1803,16 +1850,16 @@
 
 .db-skeleton__content-row {
   display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 24px;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
 }
 
 .db-skeleton__card-wide,
 .db-skeleton__card-narrow {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 24px;
+  gap: 12px;
+  padding: 18px;
   border-radius: var(--db-radius);
   background: var(--db-surface);
   animation: dbSkeletonPulse 1.5s ease-in-out infinite;
@@ -1887,15 +1934,15 @@
     display: none;
   }
   .db-header {
-    padding: 0 16px;
+    padding: 0 14px;
   }
   .db-layout__content {
-    padding: 20px 16px;
+    padding: 14px 12px;
   }
   .db-welcome {
     flex-direction: column;
     text-align: center;
-    padding: 24px 20px;
+    padding: 18px 16px;
   }
   .db-welcome__content {
     max-width: 100%;
@@ -1905,18 +1952,18 @@
   }
   .db-stats-row {
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 10px;
   }
   .db-stats {
-    padding: 14px;
+    padding: 12px;
   }
   .db-stats__icon {
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
+    width: 34px;
+    height: 34px;
+    font-size: 0.85rem;
   }
   .db-stats__value {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
   }
   .db-grid__right {
     grid-template-columns: 1fr;
@@ -1925,16 +1972,16 @@
     grid-template-columns: 1fr;
   }
   .db-header__dropdown--notif {
-    width: 340px;
-    right: -60px;
+    width: 320px;
+    right: -40px;
   }
   .db-header__search-form {
-    width: 260px;
+    width: 240px;
   }
   .db-header__icon-btn {
-    width: 38px;
-    height: 38px;
-    font-size: 1.1rem;
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
   }
   .db-header__notif-actions {
     opacity: 1;
@@ -1949,18 +1996,152 @@
     grid-template-columns: 1fr;
   }
   .db-header__icon-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 1rem;
-    border-radius: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+    border-radius: 8px;
   }
   .db-header__badge {
-    min-width: 16px;
-    height: 16px;
-    font-size: 0.6rem;
+    min-width: 14px;
+    height: 14px;
+    font-size: 0.55rem;
     top: -3px;
     right: -3px;
   }
+}
+
+/* ================================================================
+   18. LOGOUT CONFIRM MODAL
+   ================================================================ */
+.db-logout-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: dbOverlayIn 0.18s ease;
+  backdrop-filter: blur(4px);
+  padding: 20px;
+}
+
+.db-logout-modal {
+  background: var(--db-surface);
+  border-radius: var(--db-radius);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 380px;
+  animation: dbLogoutModalIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+
+@keyframes dbLogoutModalIn {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.db-logout-modal__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 28px 24px 20px;
+  gap: 12px;
+}
+
+.db-logout-modal__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--db-danger-50);
+  color: var(--db-danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+}
+
+.db-logout-modal__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--db-text);
+  margin: 0;
+}
+
+.db-logout-modal__desc {
+  font-size: 0.8rem;
+  color: var(--db-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.db-logout-modal__actions {
+  display: flex;
+  gap: 10px;
+  padding: 0 24px 24px;
+}
+
+.db-logout-modal__btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: var(--db-radius-xs);
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--db-transition);
+  font-family: inherit;
+}
+
+.db-logout-modal__btn--cancel {
+  background: var(--db-surface-hover);
+  color: var(--db-text);
+  border: 1px solid var(--db-border);
+}
+
+.db-logout-modal__btn--cancel:hover {
+  background: var(--db-border-light);
+}
+
+.db-logout-modal__btn--confirm {
+  background: var(--db-danger);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.db-logout-modal__btn--confirm:hover {
+  background: #DC2626;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  transform: translateY(-1px);
+}
+
+.db-logout-modal__btn--confirm:active {
+  transform: translateY(0);
+}
+
+.db-logout-modal__btn--confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.db-logout-modal__spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: dbLogoutSpin 0.6s linear infinite;
+}
+
+@keyframes dbLogoutSpin {
+  to { transform: rotate(360deg); }
 }
 
 /* ================================================================

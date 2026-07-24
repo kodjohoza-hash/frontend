@@ -41,8 +41,8 @@
   font-family: 'Poppins', system-ui, sans-serif;
 }
 
-.sp-page.db-layout__content {
-  padding: 16px 24px 32px;
+.db-layout__content .sp-page {
+  padding: 0;
 }
 
 /* ================================================================
@@ -1143,8 +1143,8 @@
 }
 
 @media (max-width: 768px) {
-  .sp-page.db-layout__content {
-    padding: 12px 16px 24px;
+  .db-layout__content .sp-page {
+    padding: 0;
   }
   .sp-page__header {
     flex-direction: column;

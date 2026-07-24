@@ -1,7 +1,6 @@
 import { useState, useMemo, Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import DbSidebar from '@components/client/DbSidebar';
-import DbHeader from '@components/client/DbHeader';
+import DashboardLayout from '@components/client/DashboardLayout';
 import {
   ReservationStats,
   ReservationSearch,
@@ -15,21 +14,11 @@ import { mockReservations, mockReservationStats, mockCompanies } from '@data/res
 import '@assets/styles/reservations.css';
 
 const BookingsPage = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedCompany, setSelectedCompany] = useState('');
   const [selectedReservation, setSelectedReservation] = useState(null);
   const [cancelTarget, setCancelTarget] = useState(null);
-
-  const toggleSidebar = () => {
-    if (window.innerWidth <= 768) {
-      setSidebarOpen(!sidebarOpen);
-    } else {
-      setSidebarCollapsed(!sidebarCollapsed);
-    }
-  };
 
   const filteredReservations = useMemo(() => {
     let result = mockReservations;
@@ -82,103 +71,94 @@ const BookingsPage = () => {
   };
 
   return (
-    <div className="db-layout">
-      <DbSidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
-      {sidebarOpen && (
-        <div className="db-overlay" onClick={() => setSidebarOpen(false)} />
-      )}
-      <div className={`db-layout__main ${sidebarCollapsed ? 'db-layout__main--collapsed' : ''}`}>
-        <DbHeader onToggleSidebar={toggleSidebar} />
-        <main className="db-layout__content rv-page">
-          <Suspense fallback={<ReservationSkeleton />}>
-            <div className="rv-page__header">
-              <div className="rv-page__title-group">
-                <h1 className="rv-page__title">Mes Réservations</h1>
-                <p className="rv-page__subtitle">
-                  Retrouvez toutes vos réservations et suivez leur évolution.
-                </p>
-              </div>
-              <Link to="/" className="rv-page__action">
-                <i className="bi bi-plus-circle" />
-                Réserver un nouveau voyage
-              </Link>
-            </div>
+    <DashboardLayout>
+      <Suspense fallback={<ReservationSkeleton />}>
+        <div className="rv-page__header">
+          <div className="rv-page__title-group">
+            <h1 className="rv-page__title">Mes Réservations</h1>
+            <p className="rv-page__subtitle">
+              Retrouvez toutes vos réservations et suivez leur évolution.
+            </p>
+          </div>
+          <Link to="/" className="rv-page__action">
+            <i className="bi bi-plus-circle" />
+            Réserver un nouveau voyage
+          </Link>
+        </div>
 
-            <ReservationStats stats={mockReservationStats} />
+        <ReservationStats stats={mockReservationStats} />
 
-            <ReservationSearch value={search} onChange={setSearch} />
+        <ReservationSearch value={search} onChange={setSearch} />
 
-            <ReservationFilters
-              active={activeFilter}
-              onFilterChange={setActiveFilter}
-              companies={mockCompanies}
-              selectedCompany={selectedCompany}
-              onCompanyChange={setSelectedCompany}
-            />
+        <ReservationFilters
+          active={activeFilter}
+          onFilterChange={setActiveFilter}
+          companies={mockCompanies}
+          selectedCompany={selectedCompany}
+          onCompanyChange={setSelectedCompany}
+        />
 
-            {filteredReservations.length > 0 ? (
-              <div className="rv-list">
-                {filteredReservations.map((reservation, i) => (
-                  <ReservationCard
-                    key={reservation.id}
-                    reservation={reservation}
-                    onViewDetails={handleViewDetails}
-                    onCancel={handleCancel}
-                    onDownload={handleDownload}
-                    onRebook={handleRebook}
-                    onContact={handleContact}
-                    style={{ animationDelay: `${i * 0.06}s` }}
-                  />
-                ))}
-              </div>
-            ) : (
-              <ReservationEmptyState />
-            )}
-          </Suspense>
-        </main>
-
-        {selectedReservation && (
-          <ReservationDetailsDrawer
-            reservation={selectedReservation}
-            onClose={() => setSelectedReservation(null)}
-            onCancel={handleCancel}
-            onDownload={handleDownload}
-            onContact={handleContact}
-          />
+        {filteredReservations.length > 0 ? (
+          <div className="rv-list">
+            {filteredReservations.map((reservation, i) => (
+              <ReservationCard
+                key={reservation.id}
+                reservation={reservation}
+                onViewDetails={handleViewDetails}
+                onCancel={handleCancel}
+                onDownload={handleDownload}
+                onRebook={handleRebook}
+                onContact={handleContact}
+                style={{ animationDelay: `${i * 0.06}s` }}
+              />
+            ))}
+          </div>
+        ) : (
+          <ReservationEmptyState />
         )}
+      </Suspense>
 
-        {cancelTarget && (
-          <div className="rv-confirm-overlay" onClick={() => setCancelTarget(null)}>
-            <div className="rv-confirm" onClick={(e) => e.stopPropagation()}>
-              <div className="rv-confirm__icon">
-                <i className="bi bi-exclamation-triangle" />
-              </div>
-              <h4 className="rv-confirm__title">Annuler la réservation ?</h4>
-              <p className="rv-confirm__desc">
-                Êtes-vous sûr de vouloir annuler la réservation <strong>{cancelTarget.id}</strong> ?
-                Cette action est irréversible.
-              </p>
-              <div className="rv-confirm__actions">
-                <button
-                  type="button"
-                  className="rv-card__btn rv-card__btn--outline"
-                  onClick={() => setCancelTarget(null)}
-                >
-                  Non, garder
-                </button>
-                <button
-                  type="button"
-                  className="rv-card__btn rv-card__btn--danger"
-                  onClick={confirmCancel}
-                >
-                  Oui, annuler
-                </button>
-              </div>
+      {selectedReservation && (
+        <ReservationDetailsDrawer
+          reservation={selectedReservation}
+          onClose={() => setSelectedReservation(null)}
+          onCancel={handleCancel}
+          onDownload={handleDownload}
+          onContact={handleContact}
+        />
+      )}
+
+      {cancelTarget && (
+        <div className="rv-confirm-overlay" onClick={() => setCancelTarget(null)}>
+          <div className="rv-confirm" onClick={(e) => e.stopPropagation()}>
+            <div className="rv-confirm__icon">
+              <i className="bi bi-exclamation-triangle" />
+            </div>
+            <h4 className="rv-confirm__title">Annuler la réservation ?</h4>
+            <p className="rv-confirm__desc">
+              Êtes-vous sûr de vouloir annuler la réservation <strong>{cancelTarget.id}</strong> ?
+              Cette action est irréversible.
+            </p>
+            <div className="rv-confirm__actions">
+              <button
+                type="button"
+                className="rv-card__btn rv-card__btn--outline"
+                onClick={() => setCancelTarget(null)}
+              >
+                Non, garder
+              </button>
+              <button
+                type="button"
+                className="rv-card__btn rv-card__btn--danger"
+                onClick={confirmCancel}
+              >
+                Oui, annuler
+              </button>
             </div>
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </DashboardLayout>
   );
 };
 
