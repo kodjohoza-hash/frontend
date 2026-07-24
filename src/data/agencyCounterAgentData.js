@@ -1,0 +1,222 @@
+export const agentStatuses = [
+  { value: 'actif', label: 'Actif', color: 'success', icon: 'bi-check-circle-fill' },
+  { value: 'hors_ligne', label: 'Hors ligne', color: 'muted', icon: 'bi-moon-fill' },
+  { value: 'en_service', label: 'En service', color: 'info', icon: 'bi-play-circle-fill' },
+  { value: 'conge', label: 'En congé', color: 'warning', icon: 'bi-calendar-check' },
+  { value: 'suspendu', label: 'Suspendu', color: 'danger', icon: 'bi-shield-x' },
+  { value: 'desactive', label: 'Désactivé', color: 'danger', icon: 'bi-person-x' },
+];
+
+export const agentRoles = [
+  { value: 'agent_vente', label: 'Agent de vente' },
+  { value: 'agent_comptoir', label: 'Agent comptoir' },
+  { value: 'superviseur', label: 'Superviseur' },
+  { value: 'manager', label: 'Manager' },
+];
+
+export const agentPositions = [
+  'Agent de guichet', 'Agent de salle', 'Superviseur', 'Manager',
+  'Agent VIP', 'Agent de contrôle', 'Agent d\'accueil', 'Responsable point de vente',
+];
+
+export const agencies = [
+  { id: 'AG-001', name: 'Agence Douala Centre', city: 'Douala', address: 'Place de la Liberté' },
+  { id: 'AG-002', name: 'Agence Yaoundé Nord', city: 'Yaoundé', address: 'Bastos' },
+  { id: 'AG-003', name: 'Agence Bafoussam', city: 'Bafoussam', address: 'Route de Dschang' },
+  { id: 'AG-004', name: 'Agence Bamenda', city: 'Bamenda', address: 'Commercial Avenue' },
+];
+
+export const pointsDeVente = [
+  { id: 'PDV-001', name: 'Gare Routière Douala', agency: 'AG-001', type: 'gare', counters: 4, open: true },
+  { id: 'PDV-002', name: 'Place de la Liberté', agency: 'AG-001', type: 'bouette', counters: 2, open: true },
+  { id: 'PDV-003', name: 'Akwa Nord', agency: 'AG-001', type: 'bouette', counters: 1, open: true },
+  { id: 'PDV-004', name: 'Gare Centrale Yaoundé', agency: 'AG-002', type: 'gare', counters: 6, open: true },
+  { id: 'PDV-005', name: 'Mvog-Mbi', agency: 'AG-002', type: 'bouette', counters: 2, open: false },
+  { id: 'PDV-006', name: 'Gare Bafoussam', agency: 'AG-003', type: 'gare', counters: 3, open: true },
+  { id: 'PDV-007', name: 'Gare Bamenda', agency: 'AG-004', type: 'gare', counters: 3, open: true },
+];
+
+export const permissionList = [
+  { key: 'create_booking', label: 'Créer une réservation', icon: 'bi-ticket-perforated' },
+  { key: 'edit_booking', label: 'Modifier une réservation', icon: 'bi-pencil' },
+  { key: 'cancel_booking', label: 'Annuler une réservation', icon: 'bi-x-circle' },
+  { key: 'collect_payment', label: 'Encaisser un paiement', icon: 'bi-cash-stack' },
+  { key: 'print_ticket', label: 'Imprimer un billet', icon: 'bi-printer' },
+  { key: 'view_stats', label: 'Consulter les statistiques', icon: 'bi-bar-chart-line' },
+  { key: 'manage_clients', label: 'Gérer les clients', icon: 'bi-people' },
+  { key: 'access_reports', label: 'Accéder aux rapports', icon: 'bi-file-earmark-bar-graph' },
+  { key: 'manage_agents', label: 'Gérer les agents', icon: 'bi-person-gear' },
+  { key: 'view_trips', label: 'Consulter les voyages', icon: 'bi-signpost-2' },
+  { key: 'view_buses', label: 'Consulter la flotte', icon: 'bi-bus-front' },
+  { key: 'manage_settings', label: 'Gérer les paramètres', icon: 'bi-gear' },
+];
+
+export const mockCounterAgents = [
+  {
+    id: 'AGT-001', firstName: 'Sophie', lastName: 'Mbida', gender: 'F',
+    phone: '+237699111222', email: 'sophie.mbida@guillaumeexpress.cm',
+    address: 'Akwa Sud', city: 'Douala', country: 'Cameroun', dateOfBirth: '1992-04-15',
+    agency: 'AG-001', pointDeVente: 'PDV-001', position: 'Agent de guichet', role: 'agent_vente',
+    hireDate: '2023-03-10', username: 'sophie.m', tempPassword: 'Temp@2023!',
+    status: 'actif', observations: '', photoUrl: null,
+    lastLogin: '2026-07-25T08:30:00Z',
+    permissions: ['create_booking', 'edit_booking', 'cancel_booking', 'collect_payment', 'print_ticket', 'view_stats', 'manage_clients'],
+    stats: { totalSales: 1247, totalRevenue: 18500000, ticketsPrinted: 1198, bookingsCreated: 1342, cancellations: 45, avgDailySales: 8.2 },
+    history: [
+      { type: 'connexion', date: '2026-07-25T08:30:00Z', detail: 'Connexion au point de vente PDV-001' },
+      { type: 'vente', date: '2026-07-25T09:15:00Z', detail: 'Billet VYG-2026-001 Douala→Yaoundé — 8 500 FCFA' },
+      { type: 'vente', date: '2026-07-25T09:45:00Z', detail: 'Billet VYG-2026-011 Douala→Yaoundé — 8 500 FCFA' },
+      { type: 'reservation', date: '2026-07-25T10:20:00Z', detail: 'Réservation BK-2026-1847 pour Fatima Souleymane' },
+      { type: 'annulation', date: '2026-07-25T11:00:00Z', detail: 'Annulation BK-2026-1842 — remboursement 17 000 FCFA' },
+      { type: 'paiement', date: '2026-07-25T11:30:00Z', detail: 'Encaissement BK-2026-1845 — 8 500 FCFA' },
+    ],
+  },
+  {
+    id: 'AGT-002', firstName: 'Paul', lastName: 'Atangana', gender: 'M',
+    phone: '+237698222333', email: 'paul.atangana@guillaumeexpress.cm',
+    address: 'Bonapriso', city: 'Douala', country: 'Cameroun', dateOfBirth: '1989-08-22',
+    agency: 'AG-001', pointDeVente: 'PDV-001', position: 'Superviseur', role: 'superviseur',
+    hireDate: '2022-06-01', username: 'paul.a', tempPassword: 'Temp@2022!',
+    status: 'en_service', observations: 'Superviseur senior, excellente gestion d\'équipe.', photoUrl: null,
+    lastLogin: '2026-07-25T07:45:00Z',
+    permissions: ['create_booking', 'edit_booking', 'cancel_booking', 'collect_payment', 'print_ticket', 'view_stats', 'manage_clients', 'manage_agents', 'access_reports'],
+    stats: { totalSales: 856, totalRevenue: 12300000, ticketsPrinted: 820, bookingsCreated: 890, cancellations: 28, avgDailySales: 5.6 },
+    history: [
+      { type: 'connexion', date: '2026-07-25T07:45:00Z', detail: 'Connexion au point de vente PDV-001' },
+      { type: 'vente', date: '2026-07-25T08:00:00Z', detail: 'Billet VYG-2026-002 Yaoundé→Bafoussam — 6 500 FCFA' },
+      { type: 'vente', date: '2026-07-25T08:30:00Z', detail: 'Billet VYG-2026-004 Yaoundé→Kribi — 7 000 FCFA' },
+    ],
+  },
+  {
+    id: 'AGT-003', firstName: 'Aminata', lastName: 'Diallo', gender: 'F',
+    phone: '+237697333444', email: 'aminata.diallo@guillaumeexpress.cm',
+    address: 'Centre-ville', city: 'Yaoundé', country: 'Cameroun', dateOfBirth: '1995-01-30',
+    agency: 'AG-002', pointDeVente: 'PDV-004', position: 'Agent de guichet', role: 'agent_vente',
+    hireDate: '2024-01-15', username: 'aminata.d', tempPassword: 'Temp@2024!',
+    status: 'actif', observations: '', photoUrl: null,
+    lastLogin: '2026-07-25T08:00:00Z',
+    permissions: ['create_booking', 'edit_booking', 'collect_payment', 'print_ticket', 'view_stats'],
+    stats: { totalSales: 634, totalRevenue: 8900000, ticketsPrinted: 610, bookingsCreated: 670, cancellations: 22, avgDailySales: 6.8 },
+    history: [
+      { type: 'connexion', date: '2026-07-25T08:00:00Z', detail: 'Connexion au point de vente PDV-004' },
+      { type: 'vente', date: '2026-07-25T08:45:00Z', detail: 'Billet VYG-2026-003 Douala→Bamenda — 9 000 FCFA' },
+    ],
+  },
+  {
+    id: 'AGT-004', firstName: 'Emmanuel', lastName: 'Nkoumou', gender: 'M',
+    phone: '+237696444555', email: 'emmanuel.nkoumou@guillaumeexpress.cm',
+    address: 'Bastos', city: 'Yaoundé', country: 'Cameroun', dateOfBirth: '1991-11-05',
+    agency: 'AG-002', pointDeVente: 'PDV-004', position: 'Agent comptoir', role: 'agent_comptoir',
+    hireDate: '2023-09-01', username: 'emmanuel.n', tempPassword: 'Temp@2023!',
+    status: 'conge', observations: 'En congé du 23/07 au 03/08.', photoUrl: null,
+    lastLogin: '2026-07-23T17:30:00Z',
+    permissions: ['create_booking', 'print_ticket', 'view_stats'],
+    stats: { totalSales: 423, totalRevenue: 5600000, ticketsPrinted: 410, bookingsCreated: 445, cancellations: 15, avgDailySales: 4.5 },
+    history: [
+      { type: 'connexion', date: '2026-07-23T08:00:00Z', detail: 'Connexion au point de vente PDV-004' },
+      { type: 'vente', date: '2026-07-23T09:00:00Z', detail: 'Billet VYG-2026-006 Yaoundé→Ebolowa — 5 500 FCFA' },
+      { type: 'deconnexion', date: '2026-07-23T17:30:00Z', detail: 'Déconnexion fin de service' },
+    ],
+  },
+  {
+    id: 'AGT-005', firstName: 'Claudine', lastName: 'Fotso', gender: 'F',
+    phone: '+237695555666', email: 'claudine.fotso@guillaumeexpress.cm',
+    address: 'Marché Central', city: 'Bafoussam', country: 'Cameroun', dateOfBirth: '1993-06-18',
+    agency: 'AG-003', pointDeVente: 'PDV-006', position: 'Manager', role: 'manager',
+    hireDate: '2022-01-10', username: 'claudine.f', tempPassword: 'Temp@2022!',
+    status: 'actif', observations: 'Manager de l\'agence Bafoussam.', photoUrl: null,
+    lastLogin: '2026-07-25T07:30:00Z',
+    permissions: ['create_booking', 'edit_booking', 'cancel_booking', 'collect_payment', 'print_ticket', 'view_stats', 'manage_clients', 'manage_agents', 'access_reports', 'manage_settings'],
+    stats: { totalSales: 1089, totalRevenue: 15200000, ticketsPrinted: 1050, bookingsCreated: 1130, cancellations: 38, avgDailySales: 7.4 },
+    history: [
+      { type: 'connexion', date: '2026-07-25T07:30:00Z', detail: 'Connexion au point de vente PDV-006' },
+      { type: 'vente', date: '2026-07-25T08:15:00Z', detail: 'Billet VYG-2026-009 Douala→Kumba — 4 000 FCFA' },
+    ],
+  },
+  {
+    id: 'AGT-006', firstName: 'Jean-Pierre', lastName: 'Mbianda', gender: 'M',
+    phone: '+237694666777', email: 'jp.mbianda@guillaumeexpress.cm',
+    address: 'Up Station', city: 'Bamenda', country: 'Cameroun', dateOfBirth: '1987-09-12',
+    agency: 'AG-004', pointDeVente: 'PDV-007', position: 'Agent de guichet', role: 'agent_vente',
+    hireDate: '2021-05-15', username: 'jp.mbianda', tempPassword: 'Temp@2021!',
+    status: 'actif', observations: '', photoUrl: null,
+    lastLogin: '2026-07-25T08:15:00Z',
+    permissions: ['create_booking', 'edit_booking', 'collect_payment', 'print_ticket', 'view_stats', 'manage_clients'],
+    stats: { totalSales: 1567, totalRevenue: 21800000, ticketsPrinted: 1520, bookingsCreated: 1610, cancellations: 52, avgDailySales: 9.8 },
+    history: [
+      { type: 'connexion', date: '2026-07-25T08:15:00Z', detail: 'Connexion au point de vente PDV-007' },
+      { type: 'vente', date: '2026-07-25T09:00:00Z', detail: 'Billet VYG-2026-008 Yaoundé→Bamenda — 8 500 FCFA' },
+    ],
+  },
+  {
+    id: 'AGT-007', firstName: 'Marie-Claire', lastName: 'Ngo', gender: 'F',
+    phone: '+237693777888', email: 'mc.ngo@guillaumeexpress.cm',
+    address: 'Akwa Nord', city: 'Douala', country: 'Cameroun', dateOfBirth: '1994-03-25',
+    agency: 'AG-001', pointDeVente: 'PDV-003', position: 'Agent d\'accueil', role: 'agent_vente',
+    hireDate: '2024-07-01', username: 'mc.ngo', tempPassword: 'Temp@2024!',
+    status: 'hors_ligne', observations: 'Hors ligne — fin de service.', photoUrl: null,
+    lastLogin: '2026-07-24T18:00:00Z',
+    permissions: ['create_booking', 'print_ticket', 'view_stats'],
+    stats: { totalSales: 234, totalRevenue: 3200000, ticketsPrinted: 225, bookingsCreated: 248, cancellations: 8, avgDailySales: 3.8 },
+    history: [
+      { type: 'connexion', date: '2026-07-24T08:00:00Z', detail: 'Connexion au point de vente PDV-003' },
+      { type: 'vente', date: '2026-07-24T09:30:00Z', detail: 'Billet VYG-2026-005 Douala→Garoua — 12 000 FCFA' },
+      { type: 'deconnexion', date: '2026-07-24T18:00:00Z', detail: 'Déconnexion fin de service' },
+    ],
+  },
+  {
+    id: 'AGT-008', firstName: 'Thierry', lastName: 'Kamga', gender: 'M',
+    phone: '+237692888999', email: 'thierry.kamga@guillaumeexpress.cm',
+    address: 'Marché Mokolo', city: 'Yaoundé', country: 'Cameroun', dateOfBirth: '1990-07-08',
+    agency: 'AG-002', pointDeVente: 'PDV-005', position: 'Agent de contrôle', role: 'agent_comptoir',
+    hireDate: '2023-02-15', username: 'thierry.k', tempPassword: 'Temp@2023!',
+    status: 'suspendu', observations: 'Suspendu pour absence non justifiée.', photoUrl: null,
+    lastLogin: '2026-07-20T14:00:00Z',
+    permissions: ['view_stats', 'view_trips'],
+    stats: { totalSales: 312, totalRevenue: 4100000, ticketsPrinted: 298, bookingsCreated: 330, cancellations: 12, avgDailySales: 3.2 },
+    history: [
+      { type: 'connexion', date: '2026-07-20T08:00:00Z', detail: 'Connexion au point de vente PDV-005' },
+      { type: 'deconnexion', date: '2026-07-20T14:00:00Z', detail: 'Déconnexion anticipée' },
+    ],
+  },
+  {
+    id: 'AGT-009', firstName: 'Vanessa', lastName: 'Tabi', gender: 'F',
+    phone: '+237691999000', email: 'vanessa.tabi@guillaumeexpress.cm',
+    address: 'Nlongkak', city: 'Yaoundé', country: 'Cameroun', dateOfBirth: '1996-12-03',
+    agency: 'AG-002', pointDeVente: 'PDV-004', position: 'Agent de guichet', role: 'agent_vente',
+    hireDate: '2025-01-20', username: 'vanessa.t', tempPassword: 'Temp@2025!',
+    status: 'actif', observations: '', photoUrl: null,
+    lastLogin: '2026-07-25T08:10:00Z',
+    permissions: ['create_booking', 'edit_booking', 'collect_payment', 'print_ticket', 'view_stats'],
+    stats: { totalSales: 156, totalRevenue: 2100000, ticketsPrinted: 148, bookingsCreated: 165, cancellations: 5, avgDailySales: 5.2 },
+    history: [
+      { type: 'connexion', date: '2026-07-25T08:10:00Z', detail: 'Connexion au point de vente PDV-004' },
+      { type: 'vente', date: '2026-07-25T08:50:00Z', detail: 'Billet VYG-2026-012 Yaoundé→Bertoua — 7 500 FCFA' },
+    ],
+  },
+  {
+    id: 'AGT-010', firstName: 'Bruno', lastName: 'Essomba', gender: 'M',
+    phone: '+237690100111', email: 'bruno.essomba@guillaumeexpress.cm',
+    address: 'Bonanjo', city: 'Douala', country: 'Cameroun', dateOfBirth: '1988-02-14',
+    agency: 'AG-001', pointDeVente: 'PDV-002', position: 'Agent de vente', role: 'agent_vente',
+    hireDate: '2022-11-01', username: 'bruno.e', tempPassword: 'Temp@2022!',
+    status: 'desactive', observations: 'Compte désactivé — départ de l\'entreprise.', photoUrl: null,
+    lastLogin: '2026-06-15T16:00:00Z',
+    permissions: [],
+    stats: { totalSales: 789, totalRevenue: 10800000, ticketsPrinted: 760, bookingsCreated: 820, cancellations: 25, avgDailySales: 5.4 },
+    history: [
+      { type: 'connexion', date: '2026-06-15T08:00:00Z', detail: 'Connexion au point de vente PDV-002' },
+      { type: 'deconnexion', date: '2026-06-15T16:00:00Z', detail: 'Dernière connexion' },
+    ],
+  },
+];
+
+export const counterAgentStats = {
+  total: mockCounterAgents.length,
+  actif: mockCounterAgents.filter((a) => a.status === 'actif').length,
+  hors_ligne: mockCounterAgents.filter((a) => a.status === 'hors_ligne').length,
+  en_service: mockCounterAgents.filter((a) => a.status === 'en_service').length,
+  conge: mockCounterAgents.filter((a) => a.status === 'conge').length,
+  guichetsOuverts: pointsDeVente.filter((p) => p.open).length,
+  guichetsFermes: pointsDeVente.filter((p) => !p.open).length,
+};

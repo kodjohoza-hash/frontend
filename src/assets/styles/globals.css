@@ -12,7 +12,9 @@
 @import './agency.css';
 @import './agency-trips.css';
 @import './agency-buses.css';
-@import './agency-drivers.css';
+  @import './agency-drivers.css';
+
+  @import './agency-counter-agents.css';
 @import './search.css';
 @import './seats.css';
 @import './payment.css';
