@@ -21,8 +21,8 @@ export const sidebarMenus = [
     { id: 'pricing', label: 'Tarifs', icon: 'bi-cash-stack', to: '/company/pricing' },
   ]},
   { section: 'Points de vente', items: [
-    { id: 'counters', label: 'Agents de guichet', icon: 'bi-shop', to: '/company/counters' },
-    { id: 'outlets', label: 'Points de vente', icon: 'bi-geo-alt', to: '/company/outlets' },
+    { id: 'counters', label: 'Agents de guichet', icon: 'bi-shop', to: '/company/counter-agents' },
+    { id: 'outlets', label: 'Points de vente', icon: 'bi-geo-alt', to: '/company/branches' },
   ]},
   { section: 'Finance', items: [
     { id: 'clients', label: 'Clients', icon: 'bi-people', to: '/company/clients' },

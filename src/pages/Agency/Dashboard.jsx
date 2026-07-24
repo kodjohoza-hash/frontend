@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import AgencyLayout from '@layouts/AgencyLayout';
 import AgencyWelcome from '@components/agency/AgencyWelcome';
 import AgencyStatCard from '@components/agency/AgencyStatCard';
 import AgencyActivity from '@components/agency/AgencyActivity';
@@ -7,10 +6,9 @@ import AgencyTripCard from '@components/agency/AgencyTripCard';
 import AgencyAlerts from '@components/agency/AgencyAlerts';
 import AgencySkeleton from '@components/agency/AgencySkeleton';
 import { statCards, todayTrips } from '@data/agencyData';
-import '@assets/styles/agency.css';
 
 const AgencyDashboard = () => (
-  <AgencyLayout>
+  <>
     <AgencyWelcome />
 
     <div className="ag-stats-row">
@@ -42,7 +40,7 @@ const AgencyDashboard = () => (
         <AgencyActivity />
       </div>
     </div>
-  </AgencyLayout>
+  </>
 );
 
 const DashboardPage = () => (

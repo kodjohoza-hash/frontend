@@ -15,7 +15,7 @@ const AgencySidebar = ({ collapsed, onToggle, onLogout, mobileOpen }) => {
     }
   }, [location.pathname]);
 
-  const isActive = (to) => location.pathname === to;
+  const isActive = (to) => location.pathname === to || location.pathname.startsWith(to + '/');
 
   return (
     <aside className={clsx('ag-sidebar', collapsed && 'ag-sidebar--collapsed', mobileOpen && 'ag-sidebar--mobile-open')}>
