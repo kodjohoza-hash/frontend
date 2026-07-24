@@ -51,6 +51,8 @@ const AgencyDrivers = lazy(() => import('@pages/Agency/Drivers'));
 const AgencyDriverDetail = lazy(() => import('@pages/Agency/DriverDetail'));
 const AgencyCounterAgents = lazy(() => import('@pages/Agency/CounterAgents'));
 const AgencyCounterAgentDetail = lazy(() => import('@pages/Agency/CounterAgentDetail'));
+const AgencyBranches = lazy(() => import('@pages/Agency/Branches'));
+const AgencyBranchDetail = lazy(() => import('@pages/Agency/BranchDetail'));
 const CounterDashboard = lazy(() => import('@pages/Counter/Dashboard'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 
@@ -142,6 +144,8 @@ const AppRouter = () => {
           <Route path={ROUTES.COMPANY_COUNTERS} element={<PlaceholderPage title="Guichets" description="Gérez vos points de vente et agents de guichet." icon="bi-shop" backTo={ROUTES.COMPANY_DASHBOARD} />} />
           <Route path={ROUTES.COMPANY_COUNTER_AGENTS} element={<AgencyCounterAgents />} />
           <Route path={`${ROUTES.COMPANY_COUNTER_AGENTS}/:id`} element={<AgencyCounterAgentDetail />} />
+          <Route path={ROUTES.COMPANY_BRANCHES} element={<AgencyBranches />} />
+          <Route path={`${ROUTES.COMPANY_BRANCHES}/:id`} element={<AgencyBranchDetail />} />
           <Route path={ROUTES.COMPANY_REPORTS} element={<PlaceholderPage title="Rapports" description="Consultez les statistiques et rapports de votre compagnie." icon="bi-bar-chart-line" backTo={ROUTES.COMPANY_DASHBOARD} />} />
           <Route path={ROUTES.COMPANY_SETTINGS} element={<PlaceholderPage title="Paramètres" description="Configurez les options de votre compagnie." icon="bi-gear" backTo={ROUTES.COMPANY_DASHBOARD} />} />
         </Route>

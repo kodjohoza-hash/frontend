@@ -15,6 +15,8 @@
   @import './agency-drivers.css';
 
   @import './agency-counter-agents.css';
+
+  @import './agency-branches.css';
 @import './search.css';
 @import './seats.css';
 @import './payment.css';
