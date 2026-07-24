@@ -42,7 +42,7 @@ const ClientSupport = lazy(() => import('@pages/Client/Support'));
 const ClientMessages = lazy(() => import('@pages/Client/Messages'));
 
 /* Role Dashboards */
-const CompanyDashboard = lazy(() => import('@pages/Company/Dashboard'));
+const AgencyDashboard = lazy(() => import('@pages/Agency/Dashboard'));
 const CounterDashboard = lazy(() => import('@pages/Counter/Dashboard'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 
@@ -122,7 +122,7 @@ const AppRouter = () => {
             <CompanyLayout />
           </RoleGuard>
         }>
-          <Route path={ROUTES.COMPANY_DASHBOARD} element={<CompanyDashboard />} />
+          <Route path={ROUTES.COMPANY_DASHBOARD} element={<AgencyDashboard />} />
           <Route path={ROUTES.COMPANY_ROUTES} element={<PlaceholderPage title="Trajets" description="Gérez les itinéraires et horaires de vos bus." icon="bi-signpost-2" backTo={ROUTES.COMPANY_DASHBOARD} />} />
           <Route path={ROUTES.COMPANY_BUSES} element={<PlaceholderPage title="Bus" description="Gérez votre flotte de véhicules et leur maintenance." icon="bi-bus-front-fill" backTo={ROUTES.COMPANY_DASHBOARD} />} />
           <Route path={ROUTES.COMPANY_DRIVERS} element={<PlaceholderPage title="Chauffeurs" description="Gérez les chauffeurs assignés à vos bus." icon="bi-person-badge" backTo={ROUTES.COMPANY_DASHBOARD} />} />
