@@ -45,6 +45,8 @@ const ClientMessages = lazy(() => import('@pages/Client/Messages'));
 const AgencyDashboard = lazy(() => import('@pages/Agency/Dashboard'));
 const AgencyTrips = lazy(() => import('@pages/Agency/Trips'));
 const AgencyTripDetail = lazy(() => import('@pages/Agency/TripDetail'));
+const AgencyBuses = lazy(() => import('@pages/Agency/Bus'));
+const AgencyBusDetail = lazy(() => import('@pages/Agency/BusDetail'));
 const CounterDashboard = lazy(() => import('@pages/Counter/Dashboard'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 
@@ -128,7 +130,8 @@ const AppRouter = () => {
           <Route path={ROUTES.COMPANY_TRIPS} element={<AgencyTrips />} />
           <Route path={ROUTES.COMPANY_TRIP_DETAIL} element={<AgencyTripDetail />} />
           <Route path={ROUTES.COMPANY_ROUTES} element={<PlaceholderPage title="Trajets" description="Gérez les itinéraires et horaires de vos bus." icon="bi-signpost-2" backTo={ROUTES.COMPANY_DASHBOARD} />} />
-          <Route path={ROUTES.COMPANY_BUSES} element={<PlaceholderPage title="Bus" description="Gérez votre flotte de véhicules et leur maintenance." icon="bi-bus-front-fill" backTo={ROUTES.COMPANY_DASHBOARD} />} />
+          <Route path={ROUTES.COMPANY_BUSES} element={<AgencyBuses />} />
+          <Route path={`${ROUTES.COMPANY_BUSES}/:id`} element={<AgencyBusDetail />} />
           <Route path={ROUTES.COMPANY_DRIVERS} element={<PlaceholderPage title="Chauffeurs" description="Gérez les chauffeurs assignés à vos bus." icon="bi-person-badge" backTo={ROUTES.COMPANY_DASHBOARD} />} />
           <Route path={ROUTES.COMPANY_BOOKINGS} element={<PlaceholderPage title="Réservations" description="Suivez et gérez les réservations de vos clients." icon="bi-ticket-perforated" backTo={ROUTES.COMPANY_DASHBOARD} />} />
           <Route path={ROUTES.COMPANY_COUNTERS} element={<PlaceholderPage title="Guichets" description="Gérez vos points de vente et agents de guichet." icon="bi-shop" backTo={ROUTES.COMPANY_DASHBOARD} />} />
