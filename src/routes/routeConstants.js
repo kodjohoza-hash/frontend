@@ -32,6 +32,8 @@ export const ROUTES = {
      ================================================ */
   COMPANY_DASHBOARD: '/company/dashboard',
   COMPANY_ROUTES: '/company/routes',
+  COMPANY_TRIPS: '/company/trips',
+  COMPANY_TRIP_DETAIL: '/company/trips/:id',
   COMPANY_BUSES: '/company/buses',
   COMPANY_DRIVERS: '/company/drivers',
   COMPANY_BOOKINGS: '/company/bookings',
