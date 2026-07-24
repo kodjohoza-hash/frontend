@@ -164,7 +164,7 @@ export const CLIENT_ROUTES = [
 export const COMPANY_ROUTES = [
   {
     id: 'company-dashboard',
-    path: '/company/dashboard',
+    path: '/agency/dashboard',
     name: 'Tableau de bord',
     title: 'Espace compagnie — Bus Tix Connect',
     component: CompanyDashboard,

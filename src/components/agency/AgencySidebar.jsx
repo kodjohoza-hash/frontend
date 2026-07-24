@@ -20,7 +20,7 @@ const AgencySidebar = ({ collapsed, onToggle, onLogout, mobileOpen }) => {
   return (
     <aside className={clsx('ag-sidebar', collapsed && 'ag-sidebar--collapsed', mobileOpen && 'ag-sidebar--mobile-open')}>
       <div className="ag-sidebar__brand">
-        <Link to="/company/dashboard" className="ag-sidebar__logo">
+        <Link to="/agency/dashboard" className="ag-sidebar__logo">
           <AppLogo size={collapsed ? 30 : 34} variant={collapsed ? 'icon-only' : 'horizontal'} textClassName="ag-sidebar__logo-text" />
         </Link>
         <button type="button" className="ag-sidebar__toggle" onClick={onToggle} aria-label={collapsed ? 'Développer la sidebar' : 'Réduire la sidebar'}>

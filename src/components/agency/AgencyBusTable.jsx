@@ -85,7 +85,7 @@ export default function AgencyBusTable({ buses, sortField, sortDir, onSort, onDe
         </thead>
         <tbody>
           {buses.map((bus) => (
-            <tr key={bus.id} className="ab-table__row" onClick={() => navigate(`/company/buses/${bus.id}`)}>
+            <tr key={bus.id} className="ab-table__row" onClick={() => navigate(`/agency/buses/${bus.id}`)}>
               <td>
                 <div className="ab-table__photo" style={{ borderColor: bus.color || '#E5E7EB' }}>
                   <i className="bi bi-bus-front-fill" style={{ color: bus.color || '#6B7280' }} />
@@ -139,7 +139,7 @@ export default function AgencyBusTable({ buses, sortField, sortDir, onSort, onDe
               </td>
               <td>
                 <div className="ab-table__actions-cell">
-                  <button className="ab-table__action" onClick={(e) => { e.stopPropagation(); navigate(`/company/buses/${bus.id}`); }} title="Voir">
+                  <button className="ab-table__action" onClick={(e) => { e.stopPropagation(); navigate(`/agency/buses/${bus.id}`); }} title="Voir">
                     <i className="bi bi-eye" />
                   </button>
                   <button className="ab-table__action ab-table__action--edit" onClick={(e) => { e.stopPropagation(); }} title="Modifier">

@@ -36,7 +36,7 @@ export default function BranchDetail() {
       <div className="abr-page">
         <div className="abr-page__empty">
           <i className="bi bi-building" /><h2>Agence introuvable</h2><p>Le point de vente {id} n'existe pas ou a été supprimé.</p>
-          <button className="abr-btn abr-btn--primary" onClick={() => navigate('/company/branches')}><i className="bi bi-arrow-left" /> Retour à la liste</button>
+          <button className="abr-btn abr-btn--primary" onClick={() => navigate('/agency/branches')}><i className="bi bi-arrow-left" /> Retour à la liste</button>
         </div>
       </div>
     );
@@ -46,14 +46,14 @@ export default function BranchDetail() {
     <div className="abr-page">
       <div className="abr-page__header">
         <div className="abr-page__title-group">
-          <button className="abr-page__back" onClick={() => navigate('/company/branches')}><i className="bi bi-arrow-left" /></button>
+          <button className="abr-page__back" onClick={() => navigate('/agency/branches')}><i className="bi bi-arrow-left" /></button>
           <h1 className="abr-page__title"><i className="bi bi-building" /> Détails du point de vente</h1>
         </div>
         <div className="abr-page__header-actions">
           <button className="abr-btn abr-btn--outline" onClick={() => setModalOpen(true)}><i className="bi bi-pencil" /> Modifier</button>
         </div>
       </div>
-      <AgencyBranchDetails branch={branch} onBack={() => navigate('/company/branches')} onAction={handleAction} />
+      <AgencyBranchDetails branch={branch} onBack={() => navigate('/agency/branches')} onAction={handleAction} />
       <AgencyBranchModal isOpen={modalOpen} onClose={() => setModalOpen(false)} branch={branch} onSave={handleSave} />
     </div>
   );

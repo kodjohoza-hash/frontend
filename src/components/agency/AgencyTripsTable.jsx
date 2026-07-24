@@ -65,7 +65,7 @@ export default function AgencyTripsTable({ trips, sortField, sortDir, onSort }) 
         </thead>
         <tbody>
           {trips.map((trip) => (
-            <tr key={trip.id} className="at-table__row" onClick={() => navigate(`/company/trips/${trip.id}`)}>
+            <tr key={trip.id} className="at-table__row" onClick={() => navigate(`/agency/trips/${trip.id}`)}>
               <td>
                 <span className="at-table__id">{trip.id}</span>
               </td>
@@ -124,7 +124,7 @@ export default function AgencyTripsTable({ trips, sortField, sortDir, onSort }) 
                 <div className="at-table__actions">
                   <button
                     className="at-table__action"
-                    onClick={(e) => { e.stopPropagation(); navigate(`/company/trips/${trip.id}`); }}
+                    onClick={(e) => { e.stopPropagation(); navigate(`/agency/trips/${trip.id}`); }}
                     title="Voir les détails"
                   >
                     <i className="bi bi-eye" />

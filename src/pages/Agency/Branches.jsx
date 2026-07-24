@@ -50,7 +50,7 @@ export default function Branches() {
   const handleAction = (action, branchId) => {
     const branch = branches.find((b) => b.id === branchId);
     if (action === 'view') {
-      window.location.href = `/company/branches/${branchId}`;
+      window.location.href = `/agency/branches/${branchId}`;
     } else if (action === 'edit') {
       setEditingBranch(branch);
       setModalOpen(true);
@@ -61,7 +61,7 @@ export default function Branches() {
     } else if (action === 'suspend' && branch) {
       setBranches((prev) => prev.map((b) => b.id === branchId ? { ...b, status: 'temporairement_ferme' } : b));
     } else if (action === 'agents') {
-      window.location.href = `/company/counter-agents?branch=${branchId}`;
+      window.location.href = `/agency/counter-agents?branch=${branchId}`;
     } else if (action === 'map') {
       if (branch?.lat && branch?.lng) {
         window.open(`https://www.google.com/maps?q=${branch.lat},${branch.lng}`, '_blank');

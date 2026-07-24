@@ -30,21 +30,21 @@ export const ROUTES = {
   /* ================================================
      COMPANY
      ================================================ */
-  COMPANY_DASHBOARD: '/company/dashboard',
-  COMPANY_ROUTES: '/company/routes',
-  COMPANY_TRIPS: '/company/trips',
-  COMPANY_TRIP_DETAIL: '/company/trips/:id',
-  COMPANY_BUSES: '/company/buses',
-  COMPANY_DRIVERS: '/company/drivers',
-  COMPANY_BOOKINGS: '/company/bookings',
-  COMPANY_COUNTERS: '/company/counters',
-  COMPANY_BRANCHES: '/company/branches',
-  COMPANY_BRANCH_DETAIL: '/company/branches/:id',
-  COMPANY_COUNTER_AGENTS: '/company/counter-agents',
-  COMPANY_COUNTER_AGENT_DETAIL: '/company/counter-agents/:id',
-  COMPANY_REPORTS: '/company/reports',
-  COMPANY_SETTINGS: '/company/settings',
-  COMPANY_PROFILE: '/company/profile',
+  COMPANY_DASHBOARD: '/agency/dashboard',
+  COMPANY_ROUTES: '/agency/routes',
+  COMPANY_TRIPS: '/agency/trips',
+  COMPANY_TRIP_DETAIL: '/agency/trips/:id',
+  COMPANY_BUSES: '/agency/buses',
+  COMPANY_DRIVERS: '/agency/drivers',
+  COMPANY_BOOKINGS: '/agency/bookings',
+  COMPANY_COUNTERS: '/agency/counters',
+  COMPANY_BRANCHES: '/agency/branches',
+  COMPANY_BRANCH_DETAIL: '/agency/branches/:id',
+  COMPANY_COUNTER_AGENTS: '/agency/counter-agents',
+  COMPANY_COUNTER_AGENT_DETAIL: '/agency/counter-agents/:id',
+  COMPANY_REPORTS: '/agency/reports',
+  COMPANY_SETTINGS: '/agency/settings',
+  COMPANY_PROFILE: '/agency/profile',
 
   /* ================================================
      COUNTER

@@ -7,7 +7,7 @@ export default function AgencyDriverCard({ driver }) {
   const genderColor = (g) => g === 'F' ? '#EC4899' : '#3B82F6';
 
   return (
-    <div className="ad-card" onClick={() => navigate(`/company/drivers/${driver.id}`)}>
+    <div className="ad-card" onClick={() => navigate(`/agency/drivers/${driver.id}`)}>
       <div className="ad-card__header">
         <div className="ad-card__avatar" style={{ background: genderColor(driver.gender) }}>{getInitials(driver)}</div>
         <div className="ad-card__title-group">
@@ -25,7 +25,7 @@ export default function AgencyDriverCard({ driver }) {
         {driver.currentTrip && <div className="ad-card__info-row"><span className="ad-card__info-label">Voyage</span><span className="ad-card__info-value">{driver.currentTrip}</span></div>}
       </div>
       <div className="ad-card__footer">
-        <button className="ad-card__btn ad-card__btn--primary" onClick={(e) => { e.stopPropagation(); navigate(`/company/drivers/${driver.id}`); }}><i className="bi bi-eye" /> Voir</button>
+        <button className="ad-card__btn ad-card__btn--primary" onClick={(e) => { e.stopPropagation(); navigate(`/agency/drivers/${driver.id}`); }}><i className="bi bi-eye" /> Voir</button>
         <button className="ad-card__btn ad-card__btn--outline" onClick={(e) => e.stopPropagation()}><i className="bi bi-pencil" /> Modifier</button>
       </div>
     </div>

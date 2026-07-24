@@ -46,7 +46,7 @@ export default function AgencyDriverTable({ drivers, sortField, sortDir, onSort,
         </thead>
         <tbody>
           {drivers.map((d) => (
-            <tr key={d.id} className="ad-table__row" onClick={() => navigate(`/company/drivers/${d.id}`)}>
+            <tr key={d.id} className="ad-table__row" onClick={() => navigate(`/agency/drivers/${d.id}`)}>
               <td>
                 <div className="ad-table__avatar" style={{ background: genderColor(d.gender) }}>
                   {getInitials(d)}
@@ -76,7 +76,7 @@ export default function AgencyDriverTable({ drivers, sortField, sortDir, onSort,
               <td><AgencyDriverStatus status={d.status} /></td>
               <td>
                 <div className="ad-table__actions-cell">
-                  <button className="ad-table__action" onClick={(e) => { e.stopPropagation(); navigate(`/company/drivers/${d.id}`); }} title="Voir"><i className="bi bi-eye" /></button>
+                  <button className="ad-table__action" onClick={(e) => { e.stopPropagation(); navigate(`/agency/drivers/${d.id}`); }} title="Voir"><i className="bi bi-eye" /></button>
                   <button className="ad-table__action ad-table__action--edit" onClick={(e) => e.stopPropagation()} title="Modifier"><i className="bi bi-pencil" /></button>
                   <button className="ad-table__action ad-table__action--danger" onClick={(e) => { e.stopPropagation(); onDelete?.(d); }} title="Supprimer"><i className="bi bi-trash" /></button>
                 </div>

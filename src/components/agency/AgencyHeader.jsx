@@ -28,22 +28,22 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
   }, []);
 
   const breadcrumbMap = {
-    '/company/dashboard': 'Tableau de bord',
-    '/company/trips': 'Voyages',
-    '/company/bookings': 'Réservations',
-    '/company/buses': 'Bus',
-    '/company/drivers': 'Chauffeurs',
-    '/company/counters': 'Agents de guichet',
-    '/company/outlets': 'Points de vente',
-    '/company/schedules': 'Horaires',
-    '/company/pricing': 'Tarifs',
-    '/company/clients': 'Clients',
-    '/company/payments': 'Paiements',
-    '/company/reports': 'Rapports',
-    '/company/notifications': 'Notifications',
-    '/company/messages': 'Messagerie',
-    '/company/settings': 'Paramètres',
-    '/company/support': 'Centre d\'aide',
+    '/agency/dashboard': 'Tableau de bord',
+    '/agency/trips': 'Voyages',
+    '/agency/bookings': 'Réservations',
+    '/agency/buses': 'Bus',
+    '/agency/drivers': 'Chauffeurs',
+    '/agency/counters': 'Agents de guichet',
+    '/agency/outlets': 'Points de vente',
+    '/agency/schedules': 'Horaires',
+    '/agency/pricing': 'Tarifs',
+    '/agency/clients': 'Clients',
+    '/agency/payments': 'Paiements',
+    '/agency/reports': 'Rapports',
+    '/agency/notifications': 'Notifications',
+    '/agency/messages': 'Messagerie',
+    '/agency/settings': 'Paramètres',
+    '/agency/support': 'Centre d\'aide',
   };
 
   const pageName = breadcrumbMap[location.pathname] || 'Tableau de bord';
@@ -63,7 +63,7 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
           <i className="bi bi-list" />
         </button>
         <nav className="ag-header__breadcrumb" aria-label="Fil d'Ariane">
-          <Link to="/company/dashboard" className="ag-header__breadcrumb-home">
+          <Link to="/agency/dashboard" className="ag-header__breadcrumb-home">
             <i className="bi bi-house" />
           </Link>
           <i className="bi bi-chevron-right ag-header__breadcrumb-sep" />
@@ -94,7 +94,7 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
           )}
         </div>
 
-        <Link to="/company/messages" className="ag-header__icon-btn" title="Messagerie">
+        <Link to="/agency/messages" className="ag-header__icon-btn" title="Messagerie">
           <i className="bi bi-chat-dots" />
           <span className="ag-header__badge">2</span>
         </Link>
@@ -125,7 +125,7 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
                   </div>
                 ))}
               </div>
-              <button type="button" className="ag-header__dropdown-footer" onClick={() => { navigate('/company/notifications'); setNotifOpen(false); }}>
+              <button type="button" className="ag-header__dropdown-footer" onClick={() => { navigate('/agency/notifications'); setNotifOpen(false); }}>
                 <i className="bi bi-bell" /> Voir toutes les notifications
               </button>
             </div>
@@ -155,10 +155,10 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
                 </div>
               </div>
               <div className="ag-header__dropdown-divider" />
-              <button type="button" className="ag-header__dropdown-item" onClick={() => { navigate('/company/settings'); setProfileOpen(false); }}>
+              <button type="button" className="ag-header__dropdown-item" onClick={() => { navigate('/agency/settings'); setProfileOpen(false); }}>
                 <i className="bi bi-person" /> Mon profil
               </button>
-              <button type="button" className="ag-header__dropdown-item" onClick={() => { navigate('/company/settings'); setProfileOpen(false); }}>
+              <button type="button" className="ag-header__dropdown-item" onClick={() => { navigate('/agency/settings'); setProfileOpen(false); }}>
                 <i className="bi bi-gear" /> Paramètres
               </button>
               <div className="ag-header__dropdown-divider" />

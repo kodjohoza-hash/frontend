@@ -35,7 +35,7 @@ export default function TripDetail() {
           <i className="bi bi-signpost-2" />
           <h2>Voyage introuvable</h2>
           <p>Le voyage {id} n'existe pas ou a été supprimé.</p>
-          <button className="at-btn at-btn--primary" onClick={() => navigate('/company/trips')}>
+          <button className="at-btn at-btn--primary" onClick={() => navigate('/agency/trips')}>
             <i className="bi bi-arrow-left" /> Retour à la liste
           </button>
         </div>
@@ -47,7 +47,7 @@ export default function TripDetail() {
     <div className="at-page">
       <div className="at-page__header">
         <div className="at-page__title-group">
-          <button className="at-page__back" onClick={() => navigate('/company/trips')}>
+          <button className="at-page__back" onClick={() => navigate('/agency/trips')}>
             <i className="bi bi-arrow-left" />
           </button>
           <h1 className="at-page__title">

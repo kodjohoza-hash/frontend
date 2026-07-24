@@ -10,32 +10,32 @@ export const companyInfo = {
 
 export const sidebarMenus = [
   { section: 'Principal', items: [
-    { id: 'dashboard', label: 'Tableau de bord', icon: 'bi-speedometer2', to: '/company/dashboard' },
-    { id: 'trips', label: 'Voyages', icon: 'bi-signpost-2', to: '/company/trips', badge: 12 },
-    { id: 'bookings', label: 'Réservations', icon: 'bi-ticket-perforated', to: '/company/bookings', badge: 48 },
+    { id: 'dashboard', label: 'Tableau de bord', icon: 'bi-speedometer2', to: '/agency/dashboard' },
+    { id: 'trips', label: 'Voyages', icon: 'bi-signpost-2', to: '/agency/trips', badge: 12 },
+    { id: 'bookings', label: 'Réservations', icon: 'bi-ticket-perforated', to: '/agency/bookings', badge: 48 },
   ]},
   { section: 'Flotte', items: [
-    { id: 'buses', label: 'Bus', icon: 'bi-bus-front-fill', to: '/company/buses' },
-    { id: 'drivers', label: 'Chauffeurs', icon: 'bi-person-badge', to: '/company/drivers' },
-    { id: 'schedules', label: 'Horaires', icon: 'bi-calendar-week', to: '/company/schedules' },
-    { id: 'pricing', label: 'Tarifs', icon: 'bi-cash-stack', to: '/company/pricing' },
+    { id: 'buses', label: 'Bus', icon: 'bi-bus-front-fill', to: '/agency/buses' },
+    { id: 'drivers', label: 'Chauffeurs', icon: 'bi-person-badge', to: '/agency/drivers' },
+    { id: 'schedules', label: 'Horaires', icon: 'bi-calendar-week', to: '/agency/schedules' },
+    { id: 'pricing', label: 'Tarifs', icon: 'bi-cash-stack', to: '/agency/pricing' },
   ]},
   { section: 'Points de vente', items: [
-    { id: 'counters', label: 'Agents de guichet', icon: 'bi-shop', to: '/company/counter-agents' },
-    { id: 'outlets', label: 'Points de vente', icon: 'bi-geo-alt', to: '/company/branches' },
+    { id: 'counters', label: 'Agents de guichet', icon: 'bi-shop', to: '/agency/counter-agents' },
+    { id: 'outlets', label: 'Points de vente', icon: 'bi-geo-alt', to: '/agency/branches' },
   ]},
   { section: 'Finance', items: [
-    { id: 'clients', label: 'Clients', icon: 'bi-people', to: '/company/clients' },
-    { id: 'payments', label: 'Paiements', icon: 'bi-credit-card', to: '/company/payments' },
-    { id: 'reports', label: 'Rapports', icon: 'bi-bar-chart-line', to: '/company/reports' },
+    { id: 'clients', label: 'Clients', icon: 'bi-people', to: '/agency/clients' },
+    { id: 'payments', label: 'Paiements', icon: 'bi-credit-card', to: '/agency/payments' },
+    { id: 'reports', label: 'Rapports', icon: 'bi-bar-chart-line', to: '/agency/reports' },
   ]},
   { section: 'Communication', items: [
-    { id: 'notifications', label: 'Notifications', icon: 'bi-bell', to: '/company/notifications', badge: 5 },
-    { id: 'messages', label: 'Messagerie', icon: 'bi-chat-dots', to: '/company/messages', badge: 2 },
+    { id: 'notifications', label: 'Notifications', icon: 'bi-bell', to: '/agency/notifications', badge: 5 },
+    { id: 'messages', label: 'Messagerie', icon: 'bi-chat-dots', to: '/agency/messages', badge: 2 },
   ]},
   { section: 'Système', items: [
-    { id: 'settings', label: 'Paramètres', icon: 'bi-gear', to: '/company/settings' },
-    { id: 'support', label: 'Centre d\'aide', icon: 'bi-question-circle', to: '/company/support' },
+    { id: 'settings', label: 'Paramètres', icon: 'bi-gear', to: '/agency/settings' },
+    { id: 'support', label: 'Centre d\'aide', icon: 'bi-question-circle', to: '/agency/support' },
   ]},
 ];
 

@@ -30,7 +30,7 @@ export default function DriverDetail() {
   if (!driver) {
     return (
       <div className="ad-page">
-        <div className="ad-page__empty"><i className="bi bi-person-badge" /><h2>Chauffeur introuvable</h2><p>Le chauffeur {id} n'existe pas ou a été supprimé.</p><button className="ad-btn ad-btn--primary" onClick={() => navigate('/company/drivers')}><i className="bi bi-arrow-left" /> Retour à la liste</button></div>
+        <div className="ad-page__empty"><i className="bi bi-person-badge" /><h2>Chauffeur introuvable</h2><p>Le chauffeur {id} n'existe pas ou a été supprimé.</p><button className="ad-btn ad-btn--primary" onClick={() => navigate('/agency/drivers')}><i className="bi bi-arrow-left" /> Retour à la liste</button></div>
       </div>
     );
   }
@@ -39,7 +39,7 @@ export default function DriverDetail() {
     <div className="ad-page">
       <div className="ad-page__header">
         <div className="ad-page__title-group">
-          <button className="ad-page__back" onClick={() => navigate('/company/drivers')}><i className="bi bi-arrow-left" /></button>
+          <button className="ad-page__back" onClick={() => navigate('/agency/drivers')}><i className="bi bi-arrow-left" /></button>
           <h1 className="ad-page__title"><i className="bi bi-person-badge" /> Détails du chauffeur</h1>
         </div>
         <div className="ad-page__actions">

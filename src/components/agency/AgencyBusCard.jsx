@@ -8,7 +8,7 @@ export default function AgencyBusCard({ bus }) {
   const getAmenitiesCount = (bus) => Object.values(bus.amenities).filter(Boolean).length;
 
   return (
-    <div className="ab-card" onClick={() => navigate(`/company/buses/${bus.id}`)}>
+    <div className="ab-card" onClick={() => navigate(`/agency/buses/${bus.id}`)}>
       <div className="ab-card__header">
         <div className="ab-card__photo" style={{ borderColor: bus.color || '#E5E7EB' }}>
           <i className="bi bi-bus-front-fill" style={{ color: bus.color || '#6B7280' }} />
@@ -44,7 +44,7 @@ export default function AgencyBusCard({ bus }) {
         )}
       </div>
       <div className="ab-card__footer">
-        <button className="ab-card__btn ab-card__btn--primary" onClick={(e) => { e.stopPropagation(); navigate(`/company/buses/${bus.id}`); }}>
+        <button className="ab-card__btn ab-card__btn--primary" onClick={(e) => { e.stopPropagation(); navigate(`/agency/buses/${bus.id}`); }}>
           <i className="bi bi-eye" /> Voir
         </button>
         <button className="ab-card__btn ab-card__btn--outline" onClick={(e) => e.stopPropagation()}>

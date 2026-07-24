@@ -45,7 +45,7 @@ export const ROLE_BADGE_VARIANTS = {
 export const getRoleDashboard = (role) => {
   const dashboards = {
     [ROLES.CLIENT]: '/client/dashboard',
-    [ROLES.COMPANY_ADMIN]: '/company/dashboard',
+    [ROLES.COMPANY_ADMIN]: '/agency/dashboard',
     [ROLES.COUNTER_AGENT]: '/counter/dashboard',
     [ROLES.SUPER_ADMIN]: '/super-admin/dashboard',
   };

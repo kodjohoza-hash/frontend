@@ -50,7 +50,7 @@ export default function CounterAgents() {
   const handleAction = (action, agentId) => {
     const agent = agents.find((a) => a.id === agentId);
     if (action === 'view') {
-      window.location.href = `/company/counter-agents/${agentId}`;
+      window.location.href = `/agency/counter-agents/${agentId}`;
     } else if (action === 'edit') {
       setEditingAgent(agent);
       setModalOpen(true);

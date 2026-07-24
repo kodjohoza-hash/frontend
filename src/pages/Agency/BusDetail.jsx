@@ -35,7 +35,7 @@ export default function BusDetail() {
           <i className="bi bi-bus-front" />
           <h2>Bus introuvable</h2>
           <p>Le bus {id} n'existe pas ou a été supprimé.</p>
-          <button className="ab-btn ab-btn--primary" onClick={() => navigate('/company/buses')}>
+          <button className="ab-btn ab-btn--primary" onClick={() => navigate('/agency/buses')}>
             <i className="bi bi-arrow-left" /> Retour à la flotte
           </button>
         </div>
@@ -47,7 +47,7 @@ export default function BusDetail() {
     <div className="ab-page">
       <div className="ab-page__header">
         <div className="ab-page__title-group">
-          <button className="ab-page__back" onClick={() => navigate('/company/buses')}>
+          <button className="ab-page__back" onClick={() => navigate('/agency/buses')}>
             <i className="bi bi-arrow-left" />
           </button>
           <h1 className="ab-page__title">

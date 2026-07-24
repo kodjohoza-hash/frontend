@@ -40,7 +40,7 @@ export default function CounterAgentDetail() {
           <i className="bi bi-people" />
           <h2>Agent introuvable</h2>
           <p>L'agent {id} n'existe pas ou a été supprimé.</p>
-          <button className="ac-btn ac-btn--primary" onClick={() => navigate('/company/counter-agents')}>
+          <button className="ac-btn ac-btn--primary" onClick={() => navigate('/agency/counter-agents')}>
             <i className="bi bi-arrow-left" /> Retour à la liste
           </button>
         </div>
@@ -52,7 +52,7 @@ export default function CounterAgentDetail() {
     <div className="ac-page">
       <div className="ac-page__header">
         <div className="ac-page__title-group">
-          <button className="ac-page__back" onClick={() => navigate('/company/counter-agents')}>
+          <button className="ac-page__back" onClick={() => navigate('/agency/counter-agents')}>
             <i className="bi bi-arrow-left" />
           </button>
           <h1 className="ac-page__title"><i className="bi bi-person-badge" /> Détails de l'agent</h1>
@@ -63,7 +63,7 @@ export default function CounterAgentDetail() {
           </button>
         </div>
       </div>
-      <AgencyCounterAgentDetails agent={agent} onBack={() => navigate('/company/counter-agents')} onAction={handleAction} />
+      <AgencyCounterAgentDetails agent={agent} onBack={() => navigate('/agency/counter-agents')} onAction={handleAction} />
       <AgencyCounterAgentModal isOpen={modalOpen} onClose={() => setModalOpen(false)} agent={agent} onSave={handleSave} />
     </div>
   );
