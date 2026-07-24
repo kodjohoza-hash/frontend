@@ -272,6 +272,12 @@ export const sidebarLinks = [
     path: '/notifications',
   },
   {
+    id: 'sl-messages',
+    label: 'Messagerie',
+    icon: 'bi-chat-dots',
+    path: '/client/messages',
+  },
+  {
     id: 'sl-profile',
     label: 'Mon profil',
     icon: 'bi-person',
