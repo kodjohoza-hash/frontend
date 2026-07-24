@@ -52,12 +52,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 12px;
+  gap: 20px;
+  margin-bottom: 24px;
 }
 
 .sp-page__title {
-  font-size: 1.35rem;
+  font-size: 1.65rem;
   font-weight: 800;
   color: var(--sp-text);
   margin: 0;
@@ -70,16 +70,16 @@
 .sp-section-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.92rem;
+  gap: 10px;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--sp-text);
-  margin: 0 0 10px;
+  margin: 0 0 16px;
 }
 
 .sp-section-title i {
   color: var(--sp-primary);
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
 /* ================================================================
@@ -105,10 +105,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 9px 18px;
-  border-radius: 10px;
-  font-size: 0.8rem;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 12px;
+  font-size: 0.88rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
@@ -150,12 +150,12 @@
 .sp-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: 32px;
   align-items: center;
   background: linear-gradient(135deg, var(--sp-primary) 0%, var(--sp-primary-400) 100%);
   border-radius: var(--sp-radius);
-  padding: 20px 24px;
-  margin-bottom: 16px;
+  padding: 32px 36px;
+  margin-bottom: 28px;
   position: relative;
   overflow: hidden;
 }
@@ -188,27 +188,27 @@
 .sp-hero__left {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
   position: relative;
   z-index: 1;
 }
 
 .sp-hero__icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   color: #fff;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .sp-hero__title {
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   font-weight: 800;
   color: #fff;
   margin: 0;
@@ -216,18 +216,18 @@
 }
 
 .sp-hero__desc {
-  font-size: 0.76rem;
+  font-size: 0.92rem;
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
-  line-height: 1.45;
-  max-width: 380px;
+  line-height: 1.55;
+  max-width: 420px;
 }
 
 /* Hero Right */
 .sp-hero__right {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
   position: relative;
   z-index: 1;
 }
@@ -236,22 +236,22 @@
 .sp-hero__search {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: #fff;
-  border-radius: 10px;
-  padding: 0 6px 0 14px;
-  height: 44px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 0 8px 0 18px;
+  height: 52px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   transition: box-shadow var(--sp-transition);
 }
 
 .sp-hero__search:focus-within {
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.2);
 }
 
 .sp-hero__search i {
   color: var(--sp-text-muted);
-  font-size: 1rem;
+  font-size: 1.15rem;
   flex-shrink: 0;
 }
 
@@ -260,7 +260,7 @@
   border: none;
   outline: none;
   background: transparent;
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   font-family: inherit;
   color: var(--sp-text);
   min-width: 0;
@@ -271,12 +271,12 @@
 }
 
 .sp-hero__search button {
-  padding: 8px 18px;
+  padding: 10px 22px;
   background: var(--sp-primary);
   color: #fff;
   border: none;
-  border-radius: 8px;
-  font-size: 0.78rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: background var(--sp-transition);
@@ -293,22 +293,22 @@
 .sp-hero__tags {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .sp-hero__tags-label {
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.5);
   font-weight: 500;
 }
 
 .sp-hero__tag {
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.85);
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   font-weight: 500;
   border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
@@ -325,20 +325,20 @@
    CATEGORIES — uniform grid
    ================================================================ */
 .sp-categories {
-  margin-bottom: 16px;
+  margin-bottom: 28px;
 }
 
 .sp-categories__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 14px;
 }
 
 .sp-category {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
+  gap: 12px;
+  padding: 16px 18px;
   border-radius: var(--sp-radius-sm);
   background: var(--sp-surface);
   border: 1px solid var(--sp-border);
@@ -347,7 +347,7 @@
   transition: all var(--sp-transition);
   text-align: left;
   font-family: inherit;
-  min-height: 64px;
+  min-height: 76px;
 }
 
 .sp-category:hover {
@@ -361,13 +361,13 @@
 }
 
 .sp-category__icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.92rem;
+  font-size: 1.1rem;
   flex-shrink: 0;
   transition: transform var(--sp-transition);
 }
@@ -393,13 +393,13 @@
 }
 
 .sp-category__label {
-  font-size: 0.82rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: var(--sp-text);
 }
 
 .sp-category__desc {
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   color: var(--sp-text-muted);
   white-space: nowrap;
   overflow: hidden;
@@ -408,7 +408,7 @@
 
 .sp-category__arrow {
   color: var(--sp-text-muted);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   flex-shrink: 0;
   transition: all var(--sp-transition);
   opacity: 0;
@@ -424,13 +424,13 @@
    FAQ ACCORDION
    ================================================================ */
 .sp-faq {
-  margin-bottom: 16px;
+  margin-bottom: 28px;
 }
 
 .sp-faq__list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .sp-faq__item {
@@ -454,9 +454,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
-  padding: 12px 16px;
+  padding: 16px 20px;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -470,7 +470,7 @@
 }
 
 .sp-faq__question-text {
-  font-size: 0.84rem;
+  font-size: 0.92rem;
   font-weight: 600;
   color: var(--sp-text);
   flex: 1;
@@ -482,7 +482,7 @@
 
 .sp-faq__chevron {
   color: var(--sp-text-muted);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   flex-shrink: 0;
   transition: all var(--sp-transition);
 }
@@ -503,41 +503,41 @@
 }
 
 .sp-faq__answer-text {
-  padding: 0 16px 14px;
-  font-size: 0.78rem;
+  padding: 0 20px 18px;
+  font-size: 0.88rem;
   color: var(--sp-text-secondary);
-  line-height: 1.65;
+  line-height: 1.7;
   margin: 0;
 }
 
 .sp-faq__empty {
   text-align: center;
-  padding: 32px 20px;
+  padding: 40px 24px;
   color: var(--sp-text-muted);
 }
 
 .sp-faq__empty i {
-  font-size: 1.8rem;
-  margin-bottom: 10px;
+  font-size: 2rem;
+  margin-bottom: 12px;
   display: block;
 }
 
 .sp-faq__empty p {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: 0.9rem;
 }
 
 /* ================================================================
    CONTACT CARDS
    ================================================================ */
 .sp-contact {
-  margin-bottom: 16px;
+  margin-bottom: 28px;
 }
 
 .sp-contact__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 14px;
 }
 
 .sp-contact-card {
@@ -545,14 +545,14 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 8px;
-  padding: 16px 14px;
+  gap: 10px;
+  padding: 22px 18px;
   border-radius: var(--sp-radius-sm);
   background: var(--sp-surface);
   border: 1px solid var(--sp-border);
   box-shadow: var(--sp-shadow-sm);
   transition: all var(--sp-transition);
-  min-height: 180px;
+  min-height: 200px;
 }
 
 .sp-contact-card:hover {
@@ -566,13 +566,13 @@
 }
 
 .sp-contact-card__icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
 
 .sp-contact-card__icon--success { background: var(--sp-success-50); color: var(--sp-success); }
@@ -580,14 +580,14 @@
 .sp-contact-card__icon--accent { background: var(--sp-accent-50); color: var(--sp-accent); }
 
 .sp-contact-card__label {
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--sp-text);
   margin: 0;
 }
 
 .sp-contact-card__value {
-  font-size: 0.78rem;
+  font-size: 0.85rem;
   color: var(--sp-text-secondary);
   margin: 0;
 }
@@ -595,27 +595,27 @@
 .sp-contact-card__meta {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 
 .sp-contact-card__meta-item {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  font-size: 0.68rem;
+  gap: 5px;
+  font-size: 0.75rem;
   color: var(--sp-text-muted);
 }
 
 .sp-contact-card__meta-item i {
-  font-size: 0.7rem;
+  font-size: 0.78rem;
 }
 
 .sp-contact-card__btn {
   margin-top: auto;
-  padding: 7px 18px;
-  border-radius: 8px;
-  font-size: 0.75rem;
+  padding: 9px 22px;
+  border-radius: 10px;
+  font-size: 0.82rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
@@ -641,19 +641,19 @@
    FORM
    ================================================================ */
 .sp-ticket-form {
-  margin-bottom: 16px;
+  margin-bottom: 28px;
 }
 
 .sp-form {
-  padding: 16px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 18px;
 }
 
 .sp-form__row {
   display: flex;
-  gap: 12px;
+  gap: 16px;
 }
 
 .sp-form__row--2 > * {
@@ -663,11 +663,11 @@
 .sp-field {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 .sp-field__label {
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--sp-text-secondary);
 }
@@ -684,11 +684,11 @@
 .sp-field__input-wrapper {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 12px;
-  height: 42px;
+  gap: 10px;
+  padding: 0 14px;
+  height: 48px;
   border: 1.5px solid var(--sp-border);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--sp-surface);
   transition: all var(--sp-transition);
 }
@@ -700,13 +700,13 @@
 
 .sp-field__input-wrapper--textarea {
   height: auto;
-  padding: 10px 12px;
+  padding: 12px 14px;
   align-items: flex-start;
 }
 
 .sp-field__icon {
   color: var(--sp-text-muted);
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   flex-shrink: 0;
 }
 
@@ -717,7 +717,7 @@
   border: none;
   outline: none;
   background: transparent;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   color: var(--sp-text);
   font-family: inherit;
   min-width: 0;
@@ -762,25 +762,25 @@
 .sp-form__upload-box {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px;
+  gap: 12px;
+  padding: 18px;
   border: 2px dashed var(--sp-border);
-  border-radius: 10px;
+  border-radius: 12px;
   color: var(--sp-text-muted);
-  font-size: 0.8rem;
+  font-size: 0.88rem;
   cursor: not-allowed;
 }
 
 .sp-form__upload-box i {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
 }
 
 .sp-form__upload-note {
   margin-left: auto;
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   font-weight: 600;
   background: var(--sp-muted-50);
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 6px;
 }
 
@@ -792,7 +792,7 @@
 /* Success */
 .sp-ticket-form__success {
   text-align: center;
-  padding: 32px 20px;
+  padding: 40px 24px;
   animation: spFadeIn 0.4s ease;
 }
 
@@ -802,30 +802,30 @@
 }
 
 .sp-ticket-form__success-icon {
-  font-size: 2.5rem;
+  font-size: 3rem;
   color: var(--sp-success);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .sp-ticket-form__success h4 {
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--sp-text);
-  margin: 0 0 6px;
+  margin: 0 0 8px;
 }
 
 .sp-ticket-form__success p {
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   color: var(--sp-text-secondary);
-  margin: 0 0 10px;
+  margin: 0 0 14px;
 }
 
 .sp-ticket-form__success-id {
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--sp-primary);
   background: var(--sp-primary-50);
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 6px;
 }
 
@@ -833,7 +833,7 @@
    TICKETS TABLE
    ================================================================ */
 .sp-tickets {
-  margin-bottom: 16px;
+  margin-bottom: 28px;
 }
 
 .sp-tickets__table-wrapper {
@@ -847,8 +847,8 @@
 
 .sp-tickets__table th {
   text-align: left;
-  padding: 12px 16px;
-  font-size: 0.7rem;
+  padding: 14px 20px;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--sp-text-muted);
   text-transform: uppercase;
@@ -857,8 +857,8 @@
 }
 
 .sp-tickets__table td {
-  padding: 12px 16px;
-  font-size: 0.8rem;
+  padding: 14px 20px;
+  font-size: 0.88rem;
   color: var(--sp-text);
   border-bottom: 1px solid var(--sp-border-light);
 }
@@ -874,12 +874,12 @@
 .sp-tickets__id {
   font-weight: 700;
   font-family: monospace;
-  font-size: 0.75rem;
+  font-size: 0.82rem;
 }
 
 .sp-tickets__subject {
   font-weight: 500;
-  max-width: 260px;
+  max-width: 300px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -893,10 +893,10 @@
 .sp-status {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.7rem;
+  gap: 5px;
+  font-size: 0.78rem;
   font-weight: 600;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 20px;
 }
 
@@ -905,9 +905,9 @@
 .sp-status--danger { background: var(--sp-danger-50); color: var(--sp-danger); }
 
 .sp-priority {
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 6px;
 }
 
@@ -916,9 +916,9 @@
 .sp-priority--muted { background: var(--sp-muted-50); color: var(--sp-muted); }
 
 .sp-tickets__view-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
   border: 1px solid var(--sp-border);
   background: var(--sp-surface);
   color: var(--sp-primary);
@@ -926,7 +926,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   transition: all var(--sp-transition);
 }
 
@@ -939,20 +939,20 @@
    RESOURCES
    ================================================================ */
 .sp-resources {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .sp-resources__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
 }
 
 .sp-resource {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px;
+  gap: 14px;
+  padding: 18px;
   border-radius: var(--sp-radius-sm);
   background: var(--sp-surface);
   border: 1px solid var(--sp-border);
@@ -966,15 +966,15 @@
 }
 
 .sp-resource__icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
   background: var(--sp-primary-50);
   color: var(--sp-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   flex-shrink: 0;
 }
 
@@ -982,24 +982,24 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
   min-width: 0;
 }
 
 .sp-resource__label {
-  font-size: 0.8rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--sp-text);
 }
 
 .sp-resource__desc {
-  font-size: 0.68rem;
+  font-size: 0.76rem;
   color: var(--sp-text-muted);
 }
 
 .sp-resource__arrow {
   color: var(--sp-text-muted);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   flex-shrink: 0;
   transition: all var(--sp-transition);
 }
@@ -1114,8 +1114,8 @@
 @media (max-width: 1100px) {
   .sp-hero {
     grid-template-columns: 1fr;
-    gap: 14px;
-    padding: 16px 20px;
+    gap: 18px;
+    padding: 24px 28px;
   }
   .sp-hero__left {
     text-align: center;
@@ -1149,27 +1149,27 @@
   .sp-page__header {
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
+    gap: 12px;
   }
   .sp-page__header .sp-btn {
     align-self: flex-start;
   }
   .sp-hero {
-    padding: 14px 16px;
+    padding: 20px 22px;
   }
   .sp-hero__title {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
   .sp-hero__search {
     flex-direction: column;
     height: auto;
-    padding: 10px;
-    gap: 8px;
+    padding: 12px;
+    gap: 10px;
   }
   .sp-hero__search input {
     width: 100%;
     text-align: center;
-    padding: 6px;
+    padding: 8px;
   }
   .sp-hero__search button {
     width: 100%;
@@ -1182,7 +1182,7 @@
   }
   .sp-form__row--2 {
     flex-direction: column;
-    gap: 10px;
+    gap: 14px;
   }
   .sp-tickets__table th:nth-child(4),
   .sp-tickets__table td:nth-child(4),
@@ -1198,11 +1198,11 @@
 
 @media (max-width: 480px) {
   .sp-page__title {
-    font-size: 1.15rem;
+    font-size: 1.3rem;
   }
   .sp-hero__search button {
-    font-size: 0.8rem;
-    padding: 10px 16px;
+    font-size: 0.85rem;
+    padding: 12px 18px;
   }
   .sp-resources__grid {
     grid-template-columns: 1fr;
