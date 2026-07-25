@@ -20,6 +20,7 @@
   @import './agency-counter-agents.css';
   @import './agency-branches.css';
 @import './agency-bookings.css';
+@import './agency-payments.css';
 
 @import './search.css';
 @import './seats.css';
