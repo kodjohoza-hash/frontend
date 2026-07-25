@@ -1,12 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { companyRegisterSchema } from '@schemas/auth.schema';
 import useAuth from '@hooks/useAuth';
-import useAuthStore from '@store/auth.store';
-import { ROLES } from '@utils/roles';
-import { ROLE_PERMISSIONS } from '@utils/permissions';
 import AuthInput from '@components/auth/AuthInput';
 import AuthPasswordInput from '@components/auth/AuthPasswordInput';
 import AuthShell from '@components/auth/AuthShell';
@@ -14,8 +11,11 @@ import AppLogo from '@components/common/AppLogo';
 
 const CompanyRegister = () => {
   const navigate = useNavigate();
-  const storeLogin = useAuthStore((s) => s.login);
+  const { registerCompanyAsync, isRegisteringCompany, registerCompanyError } = useAuth();
   const [success, setSuccess] = useState(false);
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const fileInputRef = useRef(null);
 
   const {
     register,
@@ -26,39 +26,28 @@ const CompanyRegister = () => {
     defaultValues: {
       companyName: '', managerFirstName: '', managerLastName: '',
       phone: '', email: '', address: '', city: '', country: 'CM',
-      rccm: '', taxpayerNumber: '', password: '', confirmPassword: '',
+      rccm: '', taxpayerNumber: '', website: '', description: '',
+      password: '', confirmPassword: '',
     },
   });
 
-  const onSubmit = (data) => {
-    const user = {
-      id: 'usr_mock_' + Math.random().toString(36).slice(2, 8),
-      firstName: data.managerFirstName,
-      lastName: data.managerLastName,
-      email: data.email,
-      role: ROLES.COMPANY_ADMIN,
-      companyName: data.companyName,
-      rccm: data.rccm,
-      taxpayerNumber: data.taxpayerNumber,
-      phone: data.phone,
-      address: data.address,
-      city: data.city,
-      country: data.country,
-      status: 'pending_validation',
-      permissions: ROLE_PERMISSIONS[ROLES.COMPANY_ADMIN] || [],
-      avatar: null,
-      emailVerified: false,
-      createdAt: new Date().toISOString(),
-    };
+  const handleLogoChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setLogoPreview(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
-    storeLogin({
-      user,
-      token: 'pending_token_' + Date.now().toString(36),
-      refreshToken: 'pending_refresh_' + Date.now().toString(36),
-      expiresAt: Date.now() + 24 * 60 * 60 * 1000,
-    });
-
-    setSuccess(true);
+  const onSubmit = async (data) => {
+    setShowAlert(false);
+    try {
+      await registerCompanyAsync(data);
+      setSuccess(true);
+    } catch {
+      setShowAlert(true);
+    }
   };
 
   if (success) {
@@ -71,12 +60,22 @@ const CompanyRegister = () => {
             </div>
             <h2 className="auth-status__title">Demande en attente</h2>
             <p className="auth-status__text">
-              Votre demande de cr&eacute;ation de compte compagnie a &eacute;t&eacute; enregistr&eacute;e.
-              Notre &eacute;quipe va valider vos informations dans les plus brefs d&eacute;laps.
-              Vous recevrez un email de confirmation une fois votre compte valid&eacute;.
+              Votre demande de création de compte compagnie a été enregistrée.
+              Notre équipe va valider vos informations dans les plus brefs délais.
+              Vous recevrez un email de confirmation une fois votre compte validé.
             </p>
-            <Link to="/auth/login/company" className="btn btn-primary" style={{ width: '100%' }}>
-              Retour &agrave; la connexion
+            <div className="auth-status__details">
+              <div className="auth-status__detail-item">
+                <i className="bi bi-check-circle-fill" style={{ color: 'var(--color-success)' }} />
+                <span>Compte en attente de validation</span>
+              </div>
+              <div className="auth-status__detail-item">
+                <i className="bi bi-envelope-fill" style={{ color: 'var(--color-info)' }} />
+                <span>Email de confirmation envoyé</span>
+              </div>
+            </div>
+            <Link to="/auth/login/company" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
+              Retour à la connexion
             </Link>
           </div>
         </div>
@@ -92,16 +91,53 @@ const CompanyRegister = () => {
             <AppLogo size={28} variant="icon" />
           </div>
           <h2 className="auth-header__title">Inscription Compagnie</h2>
-          <p className="auth-header__subtitle">Cr&eacute;ez votre espace de gestion de transport</p>
+          <p className="auth-header__subtitle">Créez votre espace de gestion de transport</p>
         </div>
 
+        {showAlert && registerCompanyError && (
+          <div className="auth-alert auth-alert--error" role="alert">
+            <i className="bi bi-exclamation-circle-fill auth-alert__icon" />
+            <div className="auth-alert__content">
+              <p className="auth-alert__message">
+                {registerCompanyError?.response?.data?.message || 'Erreur lors de l\'inscription. Veuillez réessayer.'}
+              </p>
+            </div>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit(onSubmit)} className="auth-form" noValidate>
+          {/* Logo Upload */}
+          <div className="auth-field" style={{ textAlign: 'center' }}>
+            <label className="auth-field__label" style={{ textAlign: 'left' }}>Logo de la compagnie</label>
+            <div
+              className="auth-logo-upload"
+              onClick={() => fileInputRef.current?.click()}
+              style={{
+                width: '80px', height: '80px', margin: '0 auto 0.5rem',
+                borderRadius: '16px', border: '2px dashed var(--border-strong)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', overflow: 'hidden', transition: 'border-color 0.2s',
+                background: '#fafbfc',
+              }}
+            >
+              {logoPreview ? (
+                <img src={logoPreview} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
+                  <i className="bi bi-camera-fill" style={{ fontSize: '1.2rem' }} />
+                  <div style={{ fontSize: '0.6rem', marginTop: '2px' }}>Logo</div>
+                </div>
+              )}
+            </div>
+            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleLogoChange} style={{ display: 'none' }} />
+          </div>
+
           <AuthInput label="Nom de la compagnie" name="companyName" placeholder="Ex: Guillaume Express"
             leftIcon={<i className="bi bi-building" />} error={errors.companyName?.message}
             required {...register('companyName')} />
 
           <div className="auth-form__row">
-            <AuthInput label="Responsable (pr&eacute;nom)" name="managerFirstName" placeholder="Pr&eacute;nom"
+            <AuthInput label="Responsable (prénom)" name="managerFirstName" placeholder="Prénom"
               leftIcon={<i className="bi bi-person-fill" />} error={errors.managerFirstName?.message}
               required {...register('managerFirstName')} />
             <AuthInput label="Responsable (nom)" name="managerLastName" placeholder="Nom"
@@ -109,7 +145,7 @@ const CompanyRegister = () => {
               required {...register('managerLastName')} />
           </div>
 
-          <AuthInput label="T&eacute;l&eacute;phone" type="tel" name="phone" placeholder="6XX XXX XXX"
+          <AuthInput label="Téléphone" type="tel" name="phone" placeholder="6XX XXX XXX"
             leftIcon={<i className="bi bi-telephone-fill" />} error={errors.phone?.message}
             required {...register('phone')} />
 
@@ -138,6 +174,8 @@ const CompanyRegister = () => {
                   <option value="CG">Congo</option>
                   <option value="NG">Nigeria</option>
                   <option value="TD">Tchad</option>
+                  <option value="CF">Centrafrique</option>
+                  <option value="GQ">Guinée Équatoriale</option>
                 </select>
               </div>
               {errors.country?.message && <p className="auth-field__error">{errors.country.message}</p>}
@@ -145,15 +183,34 @@ const CompanyRegister = () => {
           </div>
 
           <div className="auth-form__row">
-            <AuthInput label="RCCM" name="rccm" placeholder="Num&eacute;ro RCCM"
+            <AuthInput label="RCCM" name="rccm" placeholder="Numéro RCCM"
               leftIcon={<i className="bi bi-file-earmark-text-fill" />} error={errors.rccm?.message}
               required {...register('rccm')} />
-            <AuthInput label="N&deg; Contribuable" name="taxpayerNumber" placeholder="Num&eacute;ro contribuable"
+            <AuthInput label="N° Contribuable" name="taxpayerNumber" placeholder="Numéro contribuable"
               leftIcon={<i className="bi bi-hash" />} error={errors.taxpayerNumber?.message}
               required {...register('taxpayerNumber')} />
           </div>
 
-          <AuthPasswordInput label="Mot de passe" name="password" placeholder="Minimum 8 caract&egrave;res"
+          <AuthInput label="Site Web (optionnel)" type="url" name="website" placeholder="https://www.compagnie.com"
+            leftIcon={<i className="bi bi-globe" />} error={errors.website?.message}
+            {...register('website')} />
+
+          <div className="auth-field">
+            <label htmlFor="company-description" className="auth-field__label">
+              Description (optionnel)
+            </label>
+            <textarea
+              id="company-description"
+              className="auth-field__input"
+              placeholder="Décrivez brièvement votre compagnie de transport..."
+              rows={3}
+              style={{ height: 'auto', padding: '12px 16px', resize: 'vertical', minHeight: '80px' }}
+              {...register('description')}
+            />
+            {errors.description?.message && <p className="auth-field__error">{errors.description.message}</p>}
+          </div>
+
+          <AuthPasswordInput label="Mot de passe" name="password" placeholder="Minimum 8 caractères"
             leftIcon={<i className="bi bi-lock-fill" />} error={errors.password?.message}
             required {...register('password')} />
 
@@ -161,19 +218,20 @@ const CompanyRegister = () => {
             placeholder="Retapez votre mot de passe" leftIcon={<i className="bi bi-lock-fill" />}
             error={errors.confirmPassword?.message} required {...register('confirmPassword')} />
 
-          <button type="submit" className="btn btn-primary">
-            Cr&eacute;er le compte compagnie
+          <button type="submit" className="btn btn-primary" disabled={isRegisteringCompany}>
+            {isRegisteringCompany && <span className="spinner-border spinner-border-sm" />}
+            Créer la compagnie
           </button>
         </form>
 
         <p className="auth-form__alt" style={{ marginTop: '1rem' }}>
-          D&eacute;j&agrave; inscrit ?{' '}
+          Déjà inscrit ?{' '}
           <Link to="/auth/login/company" className="auth-form__alt-link">Se connecter</Link>
         </p>
         <p className="auth-form__alt" style={{ marginTop: '0.5rem' }}>
           <Link to="/auth" className="auth-form__alt-link">
             <i className="bi bi-arrow-left" style={{ marginRight: '0.25rem' }} />
-            Changer d&rsquo;espace
+            Changer d'espace
           </Link>
         </p>
       </div>

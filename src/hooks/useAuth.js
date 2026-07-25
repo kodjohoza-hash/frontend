@@ -30,6 +30,10 @@ export const useAuth = () => {
     mutationFn: authService.register,
   });
 
+  const registerCompanyMutation = useMutation({
+    mutationFn: authService.registerCompany,
+  });
+
   const logoutMutation = useMutation({
     mutationFn: authService.logout,
     onSettled: () => {
@@ -90,6 +94,13 @@ export const useAuth = () => {
     isRegistering: registerMutation.isPending,
     registerError: registerMutation.error,
     registerSuccess: registerMutation.isSuccess,
+
+    /* Register Company */
+    registerCompany: registerCompanyMutation.mutate,
+    registerCompanyAsync: registerCompanyMutation.mutateAsync,
+    isRegisteringCompany: registerCompanyMutation.isPending,
+    registerCompanyError: registerCompanyMutation.error,
+    registerCompanySuccess: registerCompanyMutation.isSuccess,
 
     /* Logout */
     logout: logoutMutation.mutate,

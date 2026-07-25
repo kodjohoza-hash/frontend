@@ -1,4 +1,4 @@
-import { mockLogin, mockRegister, mockLogout, mockGetProfile, mockForgotPassword, mockResetPassword, mockVerifyEmail, mockResendVerification } from '@mock/authService';
+import { mockLogin, mockRegister, mockRegisterCompany, mockLogout, mockGetProfile, mockForgotPassword, mockResetPassword, mockVerifyEmail, mockResendVerification } from '@mock/authService';
 
 /**
  * BUS TIX CONNECT — Mock Auth Service
@@ -7,11 +7,21 @@ import { mockLogin, mockRegister, mockLogout, mockGetProfile, mockForgotPassword
  *
  * When the real Express.js backend is ready, swap this file for the original
  * auth.service.js that uses axios — no other changes needed.
+ *
+ * Endpoint structure (future Express.js):
+ *   POST /api/auth/client/login
+ *   POST /api/auth/client/register
+ *   POST /api/auth/company/login
+ *   POST /api/auth/company/register
+ *   POST /api/auth/counter/login
+ *   POST /api/auth/admin/login
  */
 const authService = {
   login: (credentials) => mockLogin(credentials),
 
   register: (data) => mockRegister(data),
+
+  registerCompany: (data) => mockRegisterCompany(data),
 
   logout: () => mockLogout(),
 

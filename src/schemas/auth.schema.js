@@ -1,7 +1,13 @@
 import { z } from 'zod';
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+const cameroonPhoneRegex = /^(\+?237)?[69]\d{8}$/;
 
+/* ================================================
+   LOGIN SCHEMAS — One per role
+   ================================================ */
+
+/** Client / Company login (email + password) */
 export const loginSchema = z.object({
   email: z
     .string()
@@ -12,6 +18,33 @@ export const loginSchema = z.object({
     .min(1, 'Le mot de passe est requis'),
   rememberMe: z.boolean().optional().default(false),
 });
+
+/** Counter agent login (email or employee ID + password) */
+export const counterLoginSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'L\'identifiant est requis'),
+  password: z
+    .string()
+    .min(1, 'Le mot de passe est requis'),
+  rememberMe: z.boolean().optional().default(false),
+});
+
+/** Super admin login (email + password) */
+export const adminLoginSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'L\'email est requis')
+    .email('Adresse email invalide'),
+  password: z
+    .string()
+    .min(1, 'Le mot de passe est requis'),
+  rememberMe: z.boolean().optional().default(false),
+});
+
+/* ================================================
+   CLIENT REGISTRATION
+   ================================================ */
 
 export const registerSchema = z.object({
   lastName: z
@@ -27,7 +60,7 @@ export const registerSchema = z.object({
   phone: z
     .string()
     .min(1, 'Le numéro de téléphone est requis')
-    .regex(/^(\+?237)?[69]\d{8}$/, 'Numéro camerounais invalide (ex: 6XX XXX XXX)'),
+    .regex(cameroonPhoneRegex, 'Numéro camerounais invalide (ex: 6XX XXX XXX)'),
   email: z
     .string()
     .min(1, 'L\'email est requis')
@@ -58,6 +91,77 @@ export const registerSchema = z.object({
   path: ['confirmPassword'],
 });
 
+/* ================================================
+   COMPANY REGISTRATION
+   ================================================ */
+
+export const companyRegisterSchema = z.object({
+  companyName: z
+    .string()
+    .min(1, 'Le nom de la compagnie est requis')
+    .min(2, 'Le nom doit contenir au moins 2 caractères')
+    .max(100, 'Le nom ne peut pas dépasser 100 caractères'),
+  managerFirstName: z
+    .string()
+    .min(1, 'Le prénom du responsable est requis')
+    .min(2, 'Le prénom doit contenir au moins 2 caractères'),
+  managerLastName: z
+    .string()
+    .min(1, 'Le nom du responsable est requis')
+    .min(2, 'Le nom doit contenir au moins 2 caractères'),
+  phone: z
+    .string()
+    .min(1, 'Le numéro de téléphone est requis')
+    .regex(cameroonPhoneRegex, 'Numéro camerounais invalide (ex: 6XX XXX XXX)'),
+  email: z
+    .string()
+    .min(1, 'L\'email est requis')
+    .email('Adresse email invalide'),
+  address: z
+    .string()
+    .min(1, 'L\'adresse est requise'),
+  city: z
+    .string()
+    .min(1, 'La ville est requise'),
+  country: z
+    .string()
+    .min(1, 'Le pays est requis'),
+  rccm: z
+    .string()
+    .min(1, 'Le numéro RCCM est requis'),
+  taxpayerNumber: z
+    .string()
+    .min(1, 'Le numéro contribuable est requis'),
+  website: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .refine((val) => {
+      if (!val || val === '') return true;
+      try { new URL(val); return true; } catch { return false; }
+    }, 'URL invalide'),
+  description: z
+    .string()
+    .max(500, 'La description ne peut pas dépasser 500 caractères')
+    .optional()
+    .or(z.literal('')),
+  password: z
+    .string()
+    .min(1, 'Le mot de passe est requis')
+    .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
+    .regex(passwordRegex, 'Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre'),
+  confirmPassword: z
+    .string()
+    .min(1, 'La confirmation du mot de passe est requise'),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'Les mots de passe ne correspondent pas',
+  path: ['confirmPassword'],
+});
+
+/* ================================================
+   PASSWORD FLOW SCHEMAS
+   ================================================ */
+
 export const forgotPasswordSchema = z.object({
   email: z
     .string()
@@ -85,53 +189,4 @@ export const verifyEmailSchema = z.object({
     .min(1, 'Le code de vérification est requis')
     .length(6, 'Le code doit contenir 6 chiffres')
     .regex(/^\d+$/, 'Le code ne doit contenir que des chiffres'),
-});
-
-export const companyRegisterSchema = z.object({
-  companyName: z
-    .string()
-    .min(1, 'Le nom de la compagnie est requis')
-    .min(2, 'Le nom doit contenir au moins 2 caractères')
-    .max(100, 'Le nom ne peut pas dépasser 100 caractères'),
-  managerFirstName: z
-    .string()
-    .min(1, 'Le prénom du responsable est requis')
-    .min(2, 'Le prénom doit contenir au moins 2 caractères'),
-  managerLastName: z
-    .string()
-    .min(1, 'Le nom du responsable est requis')
-    .min(2, 'Le nom doit contenir au moins 2 caractères'),
-  phone: z
-    .string()
-    .min(1, 'Le numéro de téléphone est requis'),
-  email: z
-    .string()
-    .min(1, 'L\'email est requis')
-    .email('Adresse email invalide'),
-  address: z
-    .string()
-    .min(1, 'L\'adresse est requise'),
-  city: z
-    .string()
-    .min(1, 'La ville est requise'),
-  country: z
-    .string()
-    .min(1, 'Le pays est requis'),
-  rccm: z
-    .string()
-    .min(1, 'Le numéro RCCM est requis'),
-  taxpayerNumber: z
-    .string()
-    .min(1, 'Le numéro contribuable est requis'),
-  password: z
-    .string()
-    .min(1, 'Le mot de passe est requis')
-    .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
-    .regex(passwordRegex, 'Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre'),
-  confirmPassword: z
-    .string()
-    .min(1, 'La confirmation du mot de passe est requise'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Les mots de passe ne correspondent pas',
-  path: ['confirmPassword'],
 });
