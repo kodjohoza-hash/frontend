@@ -957,3 +957,114 @@
     flex-direction: column;
   }
 }
+
+/* ================================================
+   COMPANY WIZARD — 4-step registration
+   ================================================ */
+.company-wizard-progress {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+  position: relative;
+}
+
+.company-wizard-progress::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 24px;
+  right: 24px;
+  height: 2px;
+  background: var(--border-default);
+  z-index: 0;
+}
+
+.company-wizard-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+
+.company-wizard-step__number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  background: #fff;
+  border: 2px solid var(--border-default);
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.company-wizard-step.active .company-wizard-step__number {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.3);
+}
+
+.company-wizard-step.completed .company-wizard-step__number {
+  border-color: var(--color-success);
+  background: var(--color-success);
+  color: #fff;
+}
+
+.company-wizard-step__label {
+  font-size: 0.65rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.company-wizard-step.active .company-wizard-step__label {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.company-wizard-step.completed .company-wizard-step__label {
+  color: var(--color-success);
+}
+
+.company-wizard-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  animation: alFadeIn 0.3s ease-out;
+}
+
+.company-wizard-nav .btn-secondary {
+  background: #fff;
+  border: 1.5px solid var(--border-default);
+  color: var(--text-primary);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.company-wizard-nav .btn-secondary:hover {
+  border-color: var(--border-strong);
+  background: #fafbfc;
+}
+
+@media (max-width: 575.98px) {
+  .company-wizard-step__label {
+    font-size: 0.55rem;
+  }
+  .company-wizard-step__number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.65rem;
+  }
+  .company-wizard-progress::before {
+    top: 14px;
+    left: 18px;
+    right: 18px;
+  }
+}

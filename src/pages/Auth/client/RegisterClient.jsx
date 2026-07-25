@@ -1,7 +1,7 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { registerSchema } from '@schemas/auth.schema';
+import { clientRegisterSchema } from '@schemas/auth.schema';
 import useAuth from '@hooks/useAuth';
 import useAuthStore from '@store/auth.store';
 import AuthInput from '@components/auth/AuthInput';
@@ -10,19 +10,19 @@ import AuthShell from '@components/auth/AuthShell';
 import AppLogo from '@components/common/AppLogo';
 
 const COUNTRIES = [
-  { value: '', label: 'S&eacute;lectionnez un pays' },
+  { value: '', label: 'Sélectionnez un pays' },
   { value: 'CM', label: 'Cameroun' },
   { value: 'GA', label: 'Gabon' },
   { value: 'CG', label: 'Congo' },
   { value: 'NG', label: 'Nigeria' },
   { value: 'TD', label: 'Tchad' },
   { value: 'CF', label: 'Centrafrique' },
-  { value: 'GQ', label: 'Guin&eacute;e &Eacute;quatoriale' },
-  { value: 'SN', label: 'S&eacute;n&eacute;gal' },
-  { value: 'CI', label: 'C&ocirc;te d\'Ivoire' },
+  { value: 'GQ', label: 'Guinée Équatoriale' },
+  { value: 'SN', label: 'Sénégal' },
+  { value: 'CI', label: 'Côte d\'Ivoire' },
 ];
 
-const ClientRegister = () => {
+const RegisterClient = () => {
   const navigate = useNavigate();
   const { registerAsync, isRegistering, registerError } = useAuth();
   const storeLogin = useAuthStore((s) => s.login);
@@ -33,7 +33,7 @@ const ClientRegister = () => {
     watch,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(clientRegisterSchema),
     defaultValues: {
       lastName: '', firstName: '', phone: '', email: '',
       password: '', confirmPassword: '', country: '', city: '',
@@ -81,7 +81,7 @@ const ClientRegister = () => {
           <div className="auth-header__icon auth-header__icon--blue">
             <AppLogo size={28} variant="icon" />
           </div>
-          <h2 className="auth-header__title">Cr&eacute;er un compte client</h2>
+          <h2 className="auth-header__title">Créer un compte client</h2>
           <p className="auth-header__subtitle">Rejoignez des milliers de voyageurs au Cameroun</p>
         </div>
 
@@ -101,12 +101,12 @@ const ClientRegister = () => {
             <AuthInput label="Nom" name="lastName" placeholder="Votre nom"
               leftIcon={<i className="bi bi-person-fill" />} error={errors.lastName?.message}
               disabled={isRegistering} required {...register('lastName')} />
-            <AuthInput label="Pr&eacute;nom" name="firstName" placeholder="Votre pr&eacute;nom"
+            <AuthInput label="Prénom" name="firstName" placeholder="Votre prénom"
               leftIcon={<i className="bi bi-person-fill" />} error={errors.firstName?.message}
               disabled={isRegistering} required {...register('firstName')} />
           </div>
 
-          <AuthInput label="T&eacute;l&eacute;phone" type="tel" name="phone" placeholder="6XX XXX XXX"
+          <AuthInput label="Téléphone" type="tel" name="phone" placeholder="6XX XXX XXX"
             leftIcon={<i className="bi bi-telephone-fill" />} error={errors.phone?.message}
             disabled={isRegistering} required {...register('phone')} />
 
@@ -114,7 +114,7 @@ const ClientRegister = () => {
             leftIcon={<i className="bi bi-envelope-fill" />} error={errors.email?.message}
             disabled={isRegistering} required {...register('email')} />
 
-          <AuthPasswordInput label="Mot de passe" name="password" placeholder="Minimum 8 caract&egrave;res"
+          <AuthPasswordInput label="Mot de passe" name="password" placeholder="Minimum 8 caractères"
             leftIcon={<i className="bi bi-lock-fill" />} error={errors.password?.message}
             disabled={isRegistering} required {...register('password')} />
 
@@ -134,12 +134,12 @@ const ClientRegister = () => {
 
           <div className="auth-form__row">
             <div className="auth-field">
-              <label htmlFor="auth-input-country" className="auth-field__label">
+              <label htmlFor="auth-client-country" className="auth-field__label">
                 Pays<span className="auth-field__required">*</span>
               </label>
               <div className="auth-field__wrapper">
                 <span className="auth-field__icon auth-field__icon--left"><i className="bi bi-globe2" /></span>
-                <select id="auth-input-country" className="auth-field__input auth-field__input--has-left"
+                <select id="auth-client-country" className="auth-field__input auth-field__input--has-left"
                   disabled={isRegistering} style={{ cursor: 'pointer', appearance: 'none' }}
                   {...register('country')}>
                   {COUNTRIES.map((c) => (
@@ -150,7 +150,7 @@ const ClientRegister = () => {
               {errors.country?.message && <p className="auth-field__error">{errors.country.message}</p>}
             </div>
 
-            <AuthInput label="Ville" name="city" placeholder="Ex: Douala, Yaound&eacute;..."
+            <AuthInput label="Ville" name="city" placeholder="Ex: Douala, Yaoundé..."
               leftIcon={<i className="bi bi-geo-alt-fill" />} error={errors.city?.message}
               disabled={isRegistering} required {...register('city')} />
           </div>
@@ -158,8 +158,8 @@ const ClientRegister = () => {
           <div className="auth-terms">
             <input type="checkbox" id="acceptsTerms" disabled={isRegistering} {...register('acceptsTerms')} />
             <label htmlFor="acceptsTerms" className="auth-terms__label">
-              J&rsquo;accepte les <a href="/conditions" target="_blank" rel="noopener noreferrer">conditions d&rsquo;utilisation</a>
-              {' '}et la <a href="/politique" target="_blank" rel="noopener noreferrer">politique de confidentialit&eacute;</a>
+              J'accepte les <a href="/conditions" target="_blank" rel="noopener noreferrer">conditions d'utilisation</a>
+              {' '}et la <a href="/politique" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>
             </label>
           </div>
           {errors.acceptsTerms?.message && (
@@ -168,18 +168,18 @@ const ClientRegister = () => {
 
           <button type="submit" className="btn btn-primary" disabled={isRegistering}>
             {isRegistering && <span className="spinner-border spinner-border-sm" />}
-            Cr&eacute;er mon compte
+            Créer mon compte
           </button>
         </form>
 
         <p className="auth-form__alt" style={{ marginTop: '1rem' }}>
-          D&eacute;j&agrave; inscrit ?{' '}
+          Déjà inscrit ?{' '}
           <Link to="/auth/login/client" className="auth-form__alt-link">Se connecter</Link>
         </p>
         <p className="auth-form__alt" style={{ marginTop: '0.5rem' }}>
           <Link to="/auth" className="auth-form__alt-link">
             <i className="bi bi-arrow-left" style={{ marginRight: '0.25rem' }} />
-            Changer d&rsquo;espace
+            Changer d'espace
           </Link>
         </p>
       </div>
@@ -187,4 +187,4 @@ const ClientRegister = () => {
   );
 };
 
-export default ClientRegister;
+export default RegisterClient;

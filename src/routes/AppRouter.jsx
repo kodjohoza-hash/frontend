@@ -12,17 +12,28 @@ import CounterLayout from '@layouts/CounterLayout';
 import SuperAdminLayout from '@layouts/SuperAdminLayout';
 import RouteLoader from './RouteLoader';
 
-/* Auth Pages */
-const Login = lazy(() => import('@pages/Auth/Login'));
-const Register = lazy(() => import('@pages/Auth/Register'));
+/* Auth Pages — Role Selector */
+const RoleSelector = lazy(() => import('@pages/Auth/RoleSelector'));
+
+/* Auth Pages — Client (independent) */
+const LoginClient = lazy(() => import('@pages/auth/client/LoginClient'));
+const RegisterClient = lazy(() => import('@pages/auth/client/RegisterClient'));
+
+/* Auth Pages — Company (independent) */
+const LoginCompany = lazy(() => import('@pages/auth/company/LoginCompany'));
+const RegisterCompany = lazy(() => import('@pages/auth/company/RegisterCompany'));
+
+/* Auth Pages — Counter Agent (login only) */
+const LoginCounter = lazy(() => import('@pages/auth/counter/LoginCounter'));
+
+/* Auth Pages — Super Admin (login only) */
+const LoginAdmin = lazy(() => import('@pages/auth/admin/LoginAdmin'));
+
+/* Auth Pages — Shared */
 const ForgotPassword = lazy(() => import('@pages/Auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('@pages/Auth/ResetPassword'));
 const VerifyEmail = lazy(() => import('@pages/Auth/VerifyEmail'));
 const SessionExpired = lazy(() => import('@pages/Auth/SessionExpired'));
-const RoleSelector = lazy(() => import('@pages/Auth/RoleSelector'));
-const AuthRoleForm = lazy(() => import('@pages/Auth/AuthRoleForm'));
-const ClientRegister = lazy(() => import('@pages/Auth/ClientRegister'));
-const CompanyRegister = lazy(() => import('@pages/Auth/CompanyRegister'));
 
 /* Guest Pages */
 const HomePage = lazy(() => import('@pages/Home/HomePage'));
@@ -87,37 +98,49 @@ const AppRouter = () => {
         </Route>
 
         {/* ================================================
-            AUTH — Login, Register, etc. (AuthLayout: Split screen)
-            Guest-only: redirects to dashboard if already authenticated
+            AUTH — Role Selector + Independent Auth per Role
             ================================================ */}
         <Route element={<AuthLayout />}>
+          {/* Role Selector */}
           <Route path={ROUTES.AUTH} element={
             <PublicRoute restricted><RoleSelector /></PublicRoute>
           } />
+
+          {/* CLIENT — Independent Auth */}
           <Route path={ROUTES.AUTH_LOGIN_CLIENT} element={
-            <PublicRoute restricted><AuthRoleForm /></PublicRoute>
-          } />
-          <Route path={ROUTES.AUTH_LOGIN_COMPANY} element={
-            <PublicRoute restricted><AuthRoleForm /></PublicRoute>
-          } />
-          <Route path={ROUTES.AUTH_LOGIN_COUNTER} element={
-            <PublicRoute restricted><AuthRoleForm /></PublicRoute>
-          } />
-          <Route path={ROUTES.AUTH_LOGIN_SUPER_ADMIN} element={
-            <PublicRoute restricted><AuthRoleForm /></PublicRoute>
+            <PublicRoute restricted><LoginClient /></PublicRoute>
           } />
           <Route path={ROUTES.AUTH_REGISTER_CLIENT} element={
-            <PublicRoute restricted><ClientRegister /></PublicRoute>
+            <PublicRoute restricted><RegisterClient /></PublicRoute>
+          } />
+
+          {/* COMPANY — Independent Auth */}
+          <Route path={ROUTES.AUTH_LOGIN_COMPANY} element={
+            <PublicRoute restricted><LoginCompany /></PublicRoute>
           } />
           <Route path={ROUTES.AUTH_REGISTER_COMPANY} element={
-            <PublicRoute restricted><CompanyRegister /></PublicRoute>
+            <PublicRoute restricted><RegisterCompany /></PublicRoute>
           } />
+
+          {/* COUNTER — Login only */}
+          <Route path={ROUTES.AUTH_LOGIN_COUNTER} element={
+            <PublicRoute restricted><LoginCounter /></PublicRoute>
+          } />
+
+          {/* SUPER ADMIN — Login only */}
+          <Route path={ROUTES.AUTH_LOGIN_SUPER_ADMIN} element={
+            <PublicRoute restricted><LoginAdmin /></PublicRoute>
+          } />
+
+          {/* Legacy redirects */}
           <Route path={ROUTES.LOGIN} element={
             <PublicRoute restricted><RoleSelector /></PublicRoute>
           } />
           <Route path={ROUTES.REGISTER} element={
             <PublicRoute restricted><RoleSelector /></PublicRoute>
           } />
+
+          {/* Shared auth pages */}
           <Route path={ROUTES.FORGOT_PASSWORD} element={
             <PublicRoute restricted><ForgotPassword /></PublicRoute>
           } />

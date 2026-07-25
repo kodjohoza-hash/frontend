@@ -11,8 +11,6 @@ export { default as ForgotPasswordForm } from './ForgotPasswordForm';
 export { default as LoadingAuth } from './LoadingAuth';
 export { default as AuthShell } from './AuthShell';
 export { default as DemoAccounts } from './DemoAccounts';
-export { default as LoginForm } from './LoginForm';
-export { default as RegisterForm } from './RegisterForm';
 export { default as ResetPasswordForm } from './ResetPasswordForm';
 export { default as SocialLogin } from './SocialLogin';
 export { default as StatsSection } from './StatsSection';
