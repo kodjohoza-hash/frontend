@@ -72,6 +72,7 @@ const AgencyBookings = lazy(() => import('@pages/Agency/Bookings'));
 const AgencyBookingDetail = lazy(() => import('@pages/Agency/BookingDetail'));
 const AgencyPayments = lazy(() => import('@pages/Agency/Payments'));
 const AgencyPaymentDetail = lazy(() => import('@pages/Agency/PaymentDetail'));
+const AgencyReports = lazy(() => import('@pages/Agency/Reports'));
 const CounterDashboard = lazy(() => import('@pages/Counter/Dashboard'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 
@@ -201,7 +202,7 @@ const AppRouter = () => {
           <Route path={`${ROUTES.COMPANY_COUNTER_AGENTS}/:id`} element={<AgencyCounterAgentDetail />} />
           <Route path={ROUTES.COMPANY_BRANCHES} element={<AgencyBranches />} />
           <Route path={`${ROUTES.COMPANY_BRANCHES}/:id`} element={<AgencyBranchDetail />} />
-          <Route path={ROUTES.COMPANY_REPORTS} element={<PlaceholderPage title="Rapports" description="Consultez les statistiques et rapports de votre compagnie." icon="bi-bar-chart-line" backTo={ROUTES.COMPANY_DASHBOARD} />} />
+          <Route path={ROUTES.COMPANY_REPORTS} element={<AgencyReports />} />
           <Route path={ROUTES.COMPANY_SETTINGS} element={<PlaceholderPage title="Paramètres" description="Configurez les options de votre compagnie." icon="bi-gear" backTo={ROUTES.COMPANY_DASHBOARD} />} />
         </Route>
 

@@ -1,32 +1,33 @@
 import clsx from 'clsx';
-import { alerts } from '@data/agencyData';
 
-const AgencyAlerts = () => {
+const alertIcons = {
+  warning: 'bi-exclamation-triangle',
+  danger: 'bi-x-octagon',
+  info: 'bi-info-circle',
+  success: 'bi-check-circle',
+};
+
+const AgencyAlerts = ({ alerts }) => {
   return (
-    <div className="ag-card ag-alerts">
-      <div className="ag-card__header">
-        <h3 className="ag-card__title">
-          <i className="bi bi-exclamation-diamond" />
-          Alertes importantes
-        </h3>
-        <span className="ag-card__badge ag-card__badge--danger">{alerts.length}</span>
-      </div>
-      <div className="ag-alerts__list">
-        {alerts.map((alert) => (
-          <div key={alert.id} className={clsx('ag-alert', `ag-alert--${alert.level}`)}>
-            <div className={clsx('ag-alert__icon', `ag-alert__icon--${alert.level}`)}>
-              <i className={`bi ${alert.icon}`} />
-            </div>
-            <div className="ag-alert__body">
-              <span className="ag-alert__title">{alert.title}</span>
-              <span className="ag-alert__msg">{alert.message}</span>
-            </div>
-            <button type="button" className={clsx('ag-alert__btn', `ag-alert__btn--${alert.level}`)}>
-              {alert.action}
-            </button>
+    <div className="aa-alerts-grid">
+      {alerts.map((alert) => (
+        <div key={alert.id} className={clsx('aa-alert', `aa-alert--${alert.type}`)}>
+          <div className="aa-alert__icon">
+            <i className={`bi ${alertIcons[alert.type] || 'bi-bell'}`} />
           </div>
-        ))}
-      </div>
+          <div className="aa-alert__content">
+            <div
+              className="aa-alert__text"
+              dangerouslySetInnerHTML={{ __html: alert.text }}
+            />
+            {alert.action && (
+              <a href="#" className="aa-alert__action">
+                {alert.action}
+              </a>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
