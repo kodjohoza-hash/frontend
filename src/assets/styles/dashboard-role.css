@@ -1,0 +1,139 @@
+/* ================================================
+   BUS TIX CONNECT — Dashboard Accent Colors per Role
+   ================================================ */
+
+/* ================================================
+   ROLE ACCENT CSS VARIABLES
+   Applied via [data-role] attribute on root
+   ================================================ */
+
+/* Client — Blue */
+[data-role="client"] {
+  --role-accent: #3B82F6;
+  --role-accent-hover: #2563EB;
+  --role-accent-active: #1D4ED8;
+  --role-accent-light: #DBEAFE;
+  --role-accent-rgb: 59, 130, 246;
+}
+
+/* Company Admin — Green */
+[data-role="company_admin"] {
+  --role-accent: #10B981;
+  --role-accent-hover: #059669;
+  --role-accent-active: #047857;
+  --role-accent-light: #D1FAE5;
+  --role-accent-rgb: 16, 185, 129;
+}
+
+/* Counter Agent — Orange */
+[data-role="counter_agent"] {
+  --role-accent: #F59E0B;
+  --role-accent-hover: #D97706;
+  --role-accent-active: #B45309;
+  --role-accent-light: #FEF3C7;
+  --role-accent-rgb: 245, 158, 11;
+}
+
+/* Super Admin — Violet */
+[data-role="super_admin"] {
+  --role-accent: #8B5CF6;
+  --role-accent-hover: #7C3AED;
+  --role-accent-active: #6D28D9;
+  --role-accent-light: #EDE9FE;
+  --role-accent-rgb: 139, 92, 246;
+}
+
+/* ================================================
+   SIDEBAR ACTIVE LINK — Role accent
+   ================================================ */
+[data-role] .ag-sidebar__link--active {
+  background: linear-gradient(135deg, rgba(var(--role-accent-rgb), 0.12), rgba(var(--role-accent-rgb), 0.06));
+  color: var(--role-accent);
+  border-left-color: var(--role-accent);
+}
+
+[data-role] .ag-sidebar__link--active .ag-sidebar__icon {
+  color: var(--role-accent);
+}
+
+[data-role] .ag-sidebar__link:hover {
+  background: rgba(var(--role-accent-rgb), 0.06);
+}
+
+/* ================================================
+   SIDEBAR BADGE — Role accent
+   ================================================ */
+[data-role] .ag-sidebar__badge--accent {
+  background: var(--role-accent);
+}
+
+/* ================================================
+   HEADER — Role accent for active elements
+   ================================================ */
+[data-role] .ag-header__icon-btn--active {
+  color: var(--role-accent);
+}
+
+[data-role] .ag-header__profile-btn--active .ag-header__profile-name {
+  color: var(--role-accent);
+}
+
+/* ================================================
+   STAT CARDS — Role accent gradient
+   ================================================ */
+[data-role] .ag-stat-card--primary .ag-stat-card__icon {
+  background: linear-gradient(135deg, rgba(var(--role-accent-rgb), 0.15), rgba(var(--role-accent-rgb), 0.08));
+  color: var(--role-accent);
+}
+
+[data-role] .ag-stat-card--primary .ag-stat-card__value {
+  color: var(--role-accent);
+}
+
+/* ================================================
+   BUTTONS — Role accent primary button
+   ================================================ */
+[data-role] .ag-btn--primary,
+[data-role] .at-btn--primary,
+[data-role] .ab-btn--primary,
+[data-role] .ad-btn--primary,
+[data-role] .ac-btn--primary,
+[data-role] .abr-btn--primary {
+  background: var(--role-accent);
+  border-color: var(--role-accent);
+}
+
+[data-role] .ag-btn--primary:hover,
+[data-role] .at-btn--primary:hover,
+[data-role] .ab-btn--primary:hover,
+[data-role] .ad-btn--primary:hover,
+[data-role] .ac-btn--primary:hover,
+[data-role] .abr-btn--primary:hover {
+  background: var(--role-accent-hover);
+  border-color: var(--role-accent-hover);
+}
+
+/* ================================================
+   PAGINATION — Active page uses role accent
+   ================================================ */
+[data-role] .ac-pagination__btn--active,
+[data-role] .abr-pagination__btn--active {
+  background: var(--role-accent);
+  border-color: var(--role-accent);
+  color: #fff;
+}
+
+/* ================================================
+   CLIENT DASHBOARD — Blue accent
+   ================================================ */
+[data-role="client"] .db-stats-card--highlight {
+  border-left-color: #3B82F6;
+}
+
+[data-role="client"] .db-welcome-card__btn {
+  background: #3B82F6;
+}
+
+[data-role="client"] .db-welcome-card__btn:hover {
+  background: #2563EB;
+}

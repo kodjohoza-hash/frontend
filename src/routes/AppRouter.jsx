@@ -19,6 +19,10 @@ const ForgotPassword = lazy(() => import('@pages/Auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('@pages/Auth/ResetPassword'));
 const VerifyEmail = lazy(() => import('@pages/Auth/VerifyEmail'));
 const SessionExpired = lazy(() => import('@pages/Auth/SessionExpired'));
+const RoleSelector = lazy(() => import('@pages/Auth/RoleSelector'));
+const AuthRoleForm = lazy(() => import('@pages/Auth/AuthRoleForm'));
+const ClientRegister = lazy(() => import('@pages/Auth/ClientRegister'));
+const CompanyRegister = lazy(() => import('@pages/Auth/CompanyRegister'));
 
 /* Guest Pages */
 const HomePage = lazy(() => import('@pages/Home/HomePage'));
@@ -87,11 +91,32 @@ const AppRouter = () => {
             Guest-only: redirects to dashboard if already authenticated
             ================================================ */}
         <Route element={<AuthLayout />}>
+          <Route path={ROUTES.AUTH} element={
+            <PublicRoute restricted><RoleSelector /></PublicRoute>
+          } />
+          <Route path={ROUTES.AUTH_LOGIN_CLIENT} element={
+            <PublicRoute restricted><AuthRoleForm /></PublicRoute>
+          } />
+          <Route path={ROUTES.AUTH_LOGIN_COMPANY} element={
+            <PublicRoute restricted><AuthRoleForm /></PublicRoute>
+          } />
+          <Route path={ROUTES.AUTH_LOGIN_COUNTER} element={
+            <PublicRoute restricted><AuthRoleForm /></PublicRoute>
+          } />
+          <Route path={ROUTES.AUTH_LOGIN_SUPER_ADMIN} element={
+            <PublicRoute restricted><AuthRoleForm /></PublicRoute>
+          } />
+          <Route path={ROUTES.AUTH_REGISTER_CLIENT} element={
+            <PublicRoute restricted><ClientRegister /></PublicRoute>
+          } />
+          <Route path={ROUTES.AUTH_REGISTER_COMPANY} element={
+            <PublicRoute restricted><CompanyRegister /></PublicRoute>
+          } />
           <Route path={ROUTES.LOGIN} element={
-            <PublicRoute restricted><Login /></PublicRoute>
+            <PublicRoute restricted><RoleSelector /></PublicRoute>
           } />
           <Route path={ROUTES.REGISTER} element={
-            <PublicRoute restricted><Register /></PublicRoute>
+            <PublicRoute restricted><RoleSelector /></PublicRoute>
           } />
           <Route path={ROUTES.FORGOT_PASSWORD} element={
             <PublicRoute restricted><ForgotPassword /></PublicRoute>

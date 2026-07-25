@@ -16,6 +16,17 @@ export const ROUTES = {
   SESSION_EXPIRED: '/session-expired',
 
   /* ================================================
+     AUTH — Multi-role entry
+     ================================================ */
+  AUTH: '/auth',
+  AUTH_LOGIN_CLIENT: '/auth/login/client',
+  AUTH_LOGIN_COMPANY: '/auth/login/company',
+  AUTH_LOGIN_COUNTER: '/auth/login/counter',
+  AUTH_LOGIN_SUPER_ADMIN: '/auth/login/super-admin',
+  AUTH_REGISTER_CLIENT: '/auth/register/client',
+  AUTH_REGISTER_COMPANY: '/auth/register/company',
+
+  /* ================================================
      CLIENT
      ================================================ */
   CLIENT_DASHBOARD: '/client/dashboard',

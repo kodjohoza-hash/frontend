@@ -1,25 +1,25 @@
+import { Link } from 'react-router-dom';
+import { AuthCard, AuthHeader, ForgotPasswordForm } from '@components/auth';
+import AuthShell from '@components/auth/AuthShell';
 import AppLogo from '@components/common/AppLogo';
-import { AuthCard, AuthHeader, AuthLeftPanel, ForgotPasswordForm } from '@components/auth';
 
 const ForgotPasswordPage = () => (
-  <>
-    <AuthLeftPanel />
-    <div className="auth-right">
-      <div className="auth-right__inner">
-        <div className="auth-mobile-logo">
-          <AppLogo size={32} variant="horizontal" textClassName="auth-mobile-logo__text" />
-        </div>
-        <AuthCard>
-          <AuthHeader
-            icon={<i className="bi bi-key-fill" />}
-            title="Mot de passe oublié ?"
-            subtitle="Entrez votre email pour recevoir un lien de réinitialisation"
-          />
-          <ForgotPasswordForm />
-        </AuthCard>
-      </div>
-    </div>
-  </>
+  <AuthShell>
+    <AuthCard>
+      <AuthHeader
+        icon={<AppLogo size={28} variant="icon" />}
+        title="Mot de passe oubli&eacute; ?"
+        subtitle="Entrez votre email pour recevoir un lien de r&eacute;initialisation"
+      />
+      <ForgotPasswordForm />
+      <p className="auth-form__alt" style={{ marginTop: '1rem' }}>
+        <Link to="/auth" className="auth-form__alt-link">
+          <i className="bi bi-arrow-left" style={{ marginRight: '0.25rem' }} />
+          Retour &agrave; la connexion
+        </Link>
+      </p>
+    </AuthCard>
+  </AuthShell>
 );
 
 export default ForgotPasswordPage;
