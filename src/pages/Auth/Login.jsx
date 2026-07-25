@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import AppLogo from '@components/common/AppLogo';
 import { AuthCard, AuthHeader, AuthLeftPanel, LoginForm } from '@components/auth';
+import DemoAccounts from '@components/auth/DemoAccounts';
 
 const LoginPage = () => (
   <>
@@ -17,6 +18,7 @@ const LoginPage = () => (
             subtitle="Connectez-vous à votre compte."
           />
           <LoginForm />
+          <DemoAccounts />
         </AuthCard>
       </div>
     </div>

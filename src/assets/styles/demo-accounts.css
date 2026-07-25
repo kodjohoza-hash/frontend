@@ -1,0 +1,180 @@
+/* ================================================
+   BUS TIX CONNECT — Demo Accounts (Dev Mode)
+   ================================================ */
+
+/* ================================================
+   SECTION
+   ================================================ */
+.demo-accounts {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px dashed var(--border-default);
+}
+
+/* ================================================
+   BANNER
+   ================================================ */
+.demo-accounts__banner {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 5px 14px;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 1px solid #f59e0b;
+  border-radius: var(--radius-pill);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #92400e;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-3);
+}
+
+.demo-accounts__banner i {
+  font-size: 0.7rem;
+  color: #d97706;
+}
+
+/* ================================================
+   INTRO
+   ================================================ */
+.demo-accounts__intro {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+  line-height: 1.4;
+}
+
+/* ================================================
+   GRID
+   ================================================ */
+.demo-accounts__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+/* ================================================
+   CARD
+   ================================================ */
+.demo-accounts__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: 14px;
+  border: 1.5px solid var(--border-default);
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
+  font-family: inherit;
+}
+
+.demo-accounts__card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  border-color: var(--border-strong);
+}
+
+.demo-accounts__card:active {
+  transform: translateY(0);
+}
+
+.demo-accounts__card--info:hover { border-color: #0ea5e9; }
+.demo-accounts__card--primary:hover { border-color: var(--color-primary); }
+.demo-accounts__card--warning:hover { border-color: #f59e0b; }
+.demo-accounts__card--danger:hover { border-color: #ef4444; }
+
+/* ================================================
+   CARD HEADER
+   ================================================ */
+.demo-accounts__card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ================================================
+   AVATAR
+   ================================================ */
+.demo-accounts__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: #fff;
+}
+
+.demo-accounts__avatar--info { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+.demo-accounts__avatar--primary { background: linear-gradient(135deg, var(--color-primary), var(--color-primary-700)); }
+.demo-accounts__avatar--warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.demo-accounts__avatar--danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+/* ================================================
+   BADGE
+   ================================================ */
+.demo-accounts__badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.demo-accounts__badge--info { background: #e0f2fe; color: #0369a1; }
+.demo-accounts__badge--primary { background: #e8edf5; color: var(--color-primary); }
+.demo-accounts__badge--warning { background: #fef3c7; color: #92400e; }
+.demo-accounts__badge--danger { background: #fee2e2; color: #991b1b; }
+
+/* ================================================
+   CARD BODY
+   ================================================ */
+.demo-accounts__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.demo-accounts__name {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.demo-accounts__email {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+/* ================================================
+   CARD FOOTER
+   ================================================ */
+.demo-accounts__card-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.demo-accounts__card--info:hover .demo-accounts__card-footer { color: #0ea5e9; }
+.demo-accounts__card--primary:hover .demo-accounts__card-footer { color: var(--color-primary); }
+.demo-accounts__card--warning:hover .demo-accounts__card-footer { color: #f59e0b; }
+.demo-accounts__card--danger:hover .demo-accounts__card-footer { color: #ef4444; }
+
+/* ================================================
+   RESPONSIVE — Mobile (≤575px)
+   ================================================ */
+@media (max-width: 575.98px) {
+  .demo-accounts__grid {
+    grid-template-columns: 1fr;
+  }
+}
