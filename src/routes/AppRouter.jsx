@@ -75,6 +75,7 @@ const AgencyPaymentDetail = lazy(() => import('@pages/Agency/PaymentDetail'));
 const AgencyReports = lazy(() => import('@pages/Agency/Reports'));
 const AgencyClients = lazy(() => import('@pages/Agency/Clients'));
 const AgencyClientDetail = lazy(() => import('@pages/Agency/ClientDetail'));
+const AgencySettings = lazy(() => import('@pages/Agency/Settings'));
 const CounterDashboard = lazy(() => import('@pages/Counter/Dashboard'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 
@@ -207,7 +208,7 @@ const AppRouter = () => {
           <Route path={ROUTES.COMPANY_BRANCHES} element={<AgencyBranches />} />
           <Route path={`${ROUTES.COMPANY_BRANCHES}/:id`} element={<AgencyBranchDetail />} />
           <Route path={ROUTES.COMPANY_REPORTS} element={<AgencyReports />} />
-          <Route path={ROUTES.COMPANY_SETTINGS} element={<PlaceholderPage title="Paramètres" description="Configurez les options de votre compagnie." icon="bi-gear" backTo={ROUTES.COMPANY_DASHBOARD} />} />
+          <Route path={ROUTES.COMPANY_SETTINGS} element={<AgencySettings />} />
         </Route>
 
         {/* ================================================
