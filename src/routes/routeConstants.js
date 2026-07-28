@@ -58,6 +58,7 @@ export const ROUTES = {
   COMPANY_REPORTS: '/agency/reports',
   COMPANY_SETTINGS: '/agency/settings',
   COMPANY_PROFILE: '/agency/profile',
+  COMPANY_NOTIFICATIONS: '/agency/notifications',
 
   /* ================================================
      COUNTER
@@ -135,6 +136,7 @@ export const ROUTE_NAMES = {
   [ROUTES.COMPANY_REPORTS]: 'Rapports',
   [ROUTES.COMPANY_SETTINGS]: 'Paramètres',
   [ROUTES.COMPANY_PROFILE]: 'Profil',
+  [ROUTES.COMPANY_NOTIFICATIONS]: 'Notifications',
   [ROUTES.COUNTER_DASHBOARD]: 'Tableau de bord',
   [ROUTES.COUNTER_SALE]: 'Vente',
   [ROUTES.COUNTER_BOOKINGS]: 'Réservations',

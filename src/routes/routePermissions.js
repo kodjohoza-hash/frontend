@@ -27,6 +27,7 @@ export const ROUTE_PERMISSIONS = {
   [ROUTES.COMPANY_REPORTS]: { roles: ['company_admin'], permissions: [PERMISSIONS.REPORTS_VIEW] },
   [ROUTES.COMPANY_SETTINGS]: { roles: ['company_admin'], permissions: [PERMISSIONS.SETTINGS_VIEW] },
   [ROUTES.COMPANY_PROFILE]: { roles: ['company_admin'], permissions: [PERMISSIONS.PROFILE_VIEW] },
+  [ROUTES.COMPANY_NOTIFICATIONS]: { roles: ['company_admin'], permissions: [PERMISSIONS.NOTIFICATIONS_VIEW] },
 
   /* Counter */
   [ROUTES.COUNTER_DASHBOARD]: { roles: ['counter_agent'], permissions: [PERMISSIONS.DASHBOARD_VIEW] },
