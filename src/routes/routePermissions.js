@@ -22,6 +22,7 @@ export const ROUTE_PERMISSIONS = {
   [ROUTES.COMPANY_DRIVERS]: { roles: ['company_admin'], permissions: [PERMISSIONS.DRIVERS_VIEW] },
   [ROUTES.COMPANY_BOOKINGS]: { roles: ['company_admin'], permissions: [PERMISSIONS.BOOKINGS_VIEW] },
   [ROUTES.COMPANY_PAYMENTS]: { roles: ['company_admin'], permissions: [PERMISSIONS.PAYMENTS_VIEW] },
+  [ROUTES.COMPANY_CLIENTS]: { roles: ['company_admin'], permissions: [PERMISSIONS.BOOKINGS_VIEW] },
   [ROUTES.COMPANY_COUNTERS]: { roles: ['company_admin'], permissions: [PERMISSIONS.COUNTERS_VIEW] },
   [ROUTES.COMPANY_REPORTS]: { roles: ['company_admin'], permissions: [PERMISSIONS.REPORTS_VIEW] },
   [ROUTES.COMPANY_SETTINGS]: { roles: ['company_admin'], permissions: [PERMISSIONS.SETTINGS_VIEW] },

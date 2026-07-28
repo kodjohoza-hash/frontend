@@ -73,6 +73,8 @@ const AgencyBookingDetail = lazy(() => import('@pages/Agency/BookingDetail'));
 const AgencyPayments = lazy(() => import('@pages/Agency/Payments'));
 const AgencyPaymentDetail = lazy(() => import('@pages/Agency/PaymentDetail'));
 const AgencyReports = lazy(() => import('@pages/Agency/Reports'));
+const AgencyClients = lazy(() => import('@pages/Agency/Clients'));
+const AgencyClientDetail = lazy(() => import('@pages/Agency/ClientDetail'));
 const CounterDashboard = lazy(() => import('@pages/Counter/Dashboard'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 
@@ -197,6 +199,8 @@ const AppRouter = () => {
           <Route path={`${ROUTES.COMPANY_BOOKINGS}/:id`} element={<AgencyBookingDetail />} />
           <Route path={ROUTES.COMPANY_PAYMENTS} element={<AgencyPayments />} />
           <Route path={`${ROUTES.COMPANY_PAYMENTS}/:id`} element={<AgencyPaymentDetail />} />
+          <Route path={ROUTES.COMPANY_CLIENTS} element={<AgencyClients />} />
+          <Route path={`${ROUTES.COMPANY_CLIENTS}/:id`} element={<AgencyClientDetail />} />
           <Route path={ROUTES.COMPANY_COUNTERS} element={<PlaceholderPage title="Guichets" description="Gérez vos points de vente et agents de guichet." icon="bi-shop" backTo={ROUTES.COMPANY_DASHBOARD} />} />
           <Route path={ROUTES.COMPANY_COUNTER_AGENTS} element={<AgencyCounterAgents />} />
           <Route path={`${ROUTES.COMPANY_COUNTER_AGENTS}/:id`} element={<AgencyCounterAgentDetail />} />
