@@ -17,8 +17,6 @@ export const sidebarMenus = [
   { section: 'Flotte', items: [
     { id: 'buses', label: 'Bus', icon: 'bi-bus-front-fill', to: '/agency/buses' },
     { id: 'drivers', label: 'Chauffeurs', icon: 'bi-person-badge', to: '/agency/drivers' },
-    { id: 'schedules', label: 'Horaires', icon: 'bi-calendar-week', to: '/agency/schedules' },
-    { id: 'pricing', label: 'Tarifs', icon: 'bi-cash-stack', to: '/agency/pricing' },
   ]},
   { section: 'Points de vente', items: [
     { id: 'counters', label: 'Agents de guichet', icon: 'bi-shop', to: '/agency/counter-agents' },
@@ -35,7 +33,6 @@ export const sidebarMenus = [
   ]},
   { section: 'Système', items: [
     { id: 'settings', label: 'Paramètres', icon: 'bi-gear', to: '/agency/settings' },
-    { id: 'support', label: 'Centre d\'aide', icon: 'bi-question-circle', to: '/agency/support' },
   ]},
 ];
 

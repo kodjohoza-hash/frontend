@@ -1,11 +1,13 @@
+const widths = [85, 65, 75, 55, 80, 60, 70, 50];
+
 const AgencySkeleton = () => {
   return (
     <div className="ag-skeleton">
       <div className="ag-skeleton__sidebar">
         <div className="ag-skeleton__bar" style={{ width: '70%', height: 24 }} />
         <div className="ag-skeleton__bars">
-          {[...Array(8)].map((_, i) => (
-            <div key={i} className="ag-skeleton__bar" style={{ width: `${60 + Math.random() * 30}%`, height: 14 }} />
+          {widths.map((w, i) => (
+            <div key={i} className="ag-skeleton__bar" style={{ width: `${w}%`, height: 14 }} />
           ))}
         </div>
       </div>

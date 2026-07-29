@@ -1,5 +1,5 @@
 import { PAYMENT_METHOD_LABELS, PAYMENT_STATUS_LABELS } from '@data/paymentData';
-import logo from '@assets/logos/bus-tix-connect-logo.png';
+import AppLogo from '@components/common/AppLogo';
 
 function formatAmount(n) {
   return (n || 0).toLocaleString('fr-FR') + ' FCFA';
@@ -34,7 +34,7 @@ export default function AgencyPaymentReceipt({ payment, onClose }) {
     <div className="ap-receipt-overlay">
       <div className="ap-receipt">
         <div className="ap-receipt__header">
-          <img src={logo} alt="Bus Tix Connect" className="ap-receipt__logo" />
+          <AppLogo size={40} variant="icon-only" />
           <h2 className="ap-receipt__brand">BUS TIX CONNECT</h2>
           <p className="ap-receipt__title">Reçu de paiement</p>
         </div>

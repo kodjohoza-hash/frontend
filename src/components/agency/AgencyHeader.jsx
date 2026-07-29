@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import useAuth from '@hooks/useAuth';
+import AppLogo from '@components/common/AppLogo';
 
 const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
   const { user } = useAuth();
@@ -33,17 +34,15 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
     '/agency/bookings': 'Réservations',
     '/agency/buses': 'Bus',
     '/agency/drivers': 'Chauffeurs',
-    '/agency/counters': 'Agents de guichet',
-    '/agency/outlets': 'Points de vente',
-    '/agency/schedules': 'Horaires',
-    '/agency/pricing': 'Tarifs',
+    '/agency/counter-agents': 'Agents de guichet',
+    '/agency/branches': 'Points de vente',
     '/agency/clients': 'Clients',
     '/agency/payments': 'Paiements',
     '/agency/reports': 'Rapports',
+    '/agency/settings': 'Paramètres',
+    '/agency/profile': 'Profil',
     '/agency/notifications': 'Notifications',
     '/agency/messages': 'Messagerie',
-    '/agency/settings': 'Paramètres',
-    '/agency/support': 'Centre d\'aide',
   };
 
   const pageName = breadcrumbMap[location.pathname] || 'Tableau de bord';
@@ -62,6 +61,9 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
         <button type="button" className="ag-header__menu-btn" onClick={onToggleSidebar}>
           <i className="bi bi-list" />
         </button>
+        <Link to="/agency/dashboard" className="ag-header__logo-link">
+          <AppLogo size={28} variant="icon-only" />
+        </Link>
         <nav className="ag-header__breadcrumb" aria-label="Fil d'Ariane">
           <Link to="/agency/dashboard" className="ag-header__breadcrumb-home">
             <i className="bi bi-house" />
@@ -155,7 +157,7 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
                 </div>
               </div>
               <div className="ag-header__dropdown-divider" />
-              <button type="button" className="ag-header__dropdown-item" onClick={() => { navigate('/agency/settings'); setProfileOpen(false); }}>
+              <button type="button" className="ag-header__dropdown-item" onClick={() => { navigate('/agency/profile'); setProfileOpen(false); }}>
                 <i className="bi bi-person" /> Mon profil
               </button>
               <button type="button" className="ag-header__dropdown-item" onClick={() => { navigate('/agency/settings'); setProfileOpen(false); }}>
