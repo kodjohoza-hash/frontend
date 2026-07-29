@@ -78,6 +78,7 @@ const AgencyClientDetail = lazy(() => import('@pages/Agency/ClientDetail'));
 const AgencySettings = lazy(() => import('@pages/Agency/Settings'));
 const AgencyProfile = lazy(() => import('@pages/Agency/Profile'));
 const AgencyNotifications = lazy(() => import('@pages/Agency/Notifications'));
+const AgencyMessages = lazy(() => import('@pages/Agency/Messages'));
 const CounterDashboard = lazy(() => import('@pages/Counter/Dashboard'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 
@@ -213,6 +214,7 @@ const AppRouter = () => {
           <Route path={ROUTES.COMPANY_SETTINGS} element={<AgencySettings />} />
           <Route path={ROUTES.COMPANY_PROFILE} element={<AgencyProfile />} />
           <Route path={ROUTES.COMPANY_NOTIFICATIONS} element={<AgencyNotifications />} />
+          <Route path={ROUTES.COMPANY_MESSAGES} element={<AgencyMessages />} />
         </Route>
 
         {/* ================================================

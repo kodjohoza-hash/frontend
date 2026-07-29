@@ -29,6 +29,7 @@ export const RESOURCES = {
   SEARCH: 'search',
   AGENCIES: 'agencies',
   SUPPORT: 'support',
+  MESSAGES: 'messages',
 };
 
 export const ACTIONS = {
@@ -152,6 +153,11 @@ export const PERMISSIONS = {
 
   /* Support */
   SUPPORT_VIEW: `${RESOURCES.SUPPORT}.${ACTIONS.READ}`,
+
+  /* Messages */
+  MESSAGES_VIEW: `${RESOURCES.MESSAGES}.${ACTIONS.READ}`,
+  MESSAGES_SEND: `${RESOURCES.MESSAGES}.${ACTIONS.CREATE}`,
+  MESSAGES_MANAGE: `${RESOURCES.MESSAGES}.${ACTIONS.MANAGE}`,
 };
 
 /* ================================================
@@ -209,6 +215,8 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.SETTINGS_VIEW,
     PERMISSIONS.SETTINGS_MANAGE,
     PERMISSIONS.NOTIFICATIONS_VIEW,
+    PERMISSIONS.MESSAGES_VIEW,
+    PERMISSIONS.MESSAGES_SEND,
   ],
 
   /* COUNTER_AGENT — Vente en guichet */
