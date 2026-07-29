@@ -81,6 +81,7 @@ const AgencyNotifications = lazy(() => import('@pages/Agency/Notifications'));
 const AgencyMessages = lazy(() => import('@pages/Agency/Messages'));
 const CounterDashboard = lazy(() => import('@pages/Counter/Dashboard'));
 const CounterSalePage = lazy(() => import('@pages/Counter/Sale'));
+const CounterBookingPage = lazy(() => import('@pages/Counter/Bookings'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 
 /* Error Pages */
@@ -228,7 +229,7 @@ const AppRouter = () => {
         }>
           <Route path={ROUTES.COUNTER_DASHBOARD} element={<CounterDashboard />} />
           <Route path={ROUTES.COUNTER_SALE} element={<CounterSalePage />} />
-          <Route path={ROUTES.COUNTER_BOOKINGS} element={<PlaceholderPage title="Réservations" description="Consultez et gérez les réservations de votre guichet." icon="bi-ticket-perforated" backTo={ROUTES.COUNTER_DASHBOARD} />} />
+          <Route path={ROUTES.COUNTER_BOOKINGS} element={<CounterBookingPage />} />
           <Route path={ROUTES.COUNTER_TICKETS} element={<PlaceholderPage title="Billets" description="Imprimez et gérez les billets émis depuis votre guichet." icon="bi-postcard" backTo={ROUTES.COUNTER_DASHBOARD} />} />
           <Route path={ROUTES.COUNTER_PROFILE} element={<PlaceholderPage title="Mon profil" description="Gérez vos informations personnelles." icon="bi-person" backTo={ROUTES.COUNTER_DASHBOARD} />} />
         </Route>
