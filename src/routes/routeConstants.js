@@ -82,8 +82,13 @@ export const ROUTES = {
   SUPER_ADMIN_COMPANIES: '/super-admin/companies',
   SUPER_ADMIN_USERS: '/super-admin/users',
   SUPER_ADMIN_ROLES: '/super-admin/roles',
+  SUPER_ADMIN_APPROVAL: '/super-admin/approval',
+  SUPER_ADMIN_SUBSCRIPTIONS: '/super-admin/subscriptions',
+  SUPER_ADMIN_COMMISSIONS: '/super-admin/commissions',
   SUPER_ADMIN_REPORTS: '/super-admin/reports',
+  SUPER_ADMIN_AUDIT: '/super-admin/audit',
   SUPER_ADMIN_SETTINGS: '/super-admin/settings',
+  SUPER_ADMIN_NOTIFICATIONS: '/super-admin/notifications',
 
   /* ================================================
      SHARED / BOOKING FLOW
@@ -162,8 +167,13 @@ export const ROUTE_NAMES = {
   [ROUTES.SUPER_ADMIN_COMPANIES]: 'Compagnies',
   [ROUTES.SUPER_ADMIN_USERS]: 'Utilisateurs',
   [ROUTES.SUPER_ADMIN_ROLES]: 'Rôles',
+  [ROUTES.SUPER_ADMIN_APPROVAL]: 'Approbations',
+  [ROUTES.SUPER_ADMIN_SUBSCRIPTIONS]: 'Abonnements',
+  [ROUTES.SUPER_ADMIN_COMMISSIONS]: 'Commissions',
   [ROUTES.SUPER_ADMIN_REPORTS]: 'Rapports',
+  [ROUTES.SUPER_ADMIN_AUDIT]: 'Audit',
   [ROUTES.SUPER_ADMIN_SETTINGS]: 'Paramètres',
+  [ROUTES.SUPER_ADMIN_NOTIFICATIONS]: 'Notifications',
   [ROUTES.BOOKING]: 'Réservation',
   [ROUTES.BOOKING_SEARCH]: 'Recherche',
   [ROUTES.BOOKING_TRIPS]: 'Trajets',

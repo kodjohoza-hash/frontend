@@ -40,6 +40,13 @@
 @import './admin-companies.css';
 @import './admin-users.css';
 @import './admin-roles.css';
+@import './admin-approval.css';
+@import './admin-subscription.css';
+@import './admin-commission.css';
+@import './admin-reports.css';
+@import './admin-audit.css';
+@import './admin-settings.css';
+@import './admin-notifications.css';
 
 @import './search.css';
 @import './seats.css';

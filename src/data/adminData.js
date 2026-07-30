@@ -145,7 +145,7 @@ export const quickActions = [
   { id: 5, label: 'Utilisateurs', icon: 'bi-people', desc: 'Gérer les utilisateurs', color: 'info', link: '/super-admin/users' },
   { id: 6, label: 'Transactions', icon: 'bi-credit-card', desc: 'Voir les transactions', color: 'warning', link: '/super-admin/reports' },
   { id: 7, label: 'Incidents', icon: 'bi-exclamation-triangle', desc: 'Voir les incidents', color: 'danger', link: '/super-admin/settings' },
-  { id: 8, label: 'Abonnements', icon: 'bi-box-seam', desc: 'Gérer les abonnements', color: 'primary', link: '/super-admin/settings' },
+  { id: 8, label: 'Abonnements', icon: 'bi-box-seam', desc: 'Gérer les abonnements', color: 'primary', link: '/super-admin/subscriptions' },
 ];
 
 export const adminSidebarMenus = [
@@ -161,6 +161,9 @@ export const adminSidebarMenus = [
       { id: 'companies', label: 'Compagnies', icon: 'bi-building', to: '/super-admin/companies' },
       { id: 'users', label: 'Utilisateurs', icon: 'bi-people', to: '/super-admin/users' },
       { id: 'roles', label: 'Rôles', icon: 'bi-shield-lock', to: '/super-admin/roles' },
+      { id: 'approval', label: 'Approbations', icon: 'bi-clipboard-check', to: '/super-admin/approval' },
+      { id: 'subscriptions', label: 'Abonnements', icon: 'bi-box-seam', to: '/super-admin/subscriptions' },
+      { id: 'commissions', label: 'Commissions', icon: 'bi-percent', to: '/super-admin/commissions' },
     ],
   },
   {
@@ -170,8 +173,15 @@ export const adminSidebarMenus = [
     ],
   },
   {
+    section: 'Communications',
+    items: [
+      { id: 'notifications', label: 'Notifications', icon: 'bi-bell', to: '/super-admin/notifications' },
+    ],
+  },
+  {
     section: 'Système',
     items: [
+      { id: 'audit', label: 'Audit & Surveillance', icon: 'bi-shield-check', to: '/super-admin/audit' },
       { id: 'settings', label: 'Paramètres', icon: 'bi-gear', to: '/super-admin/settings' },
     ],
   },

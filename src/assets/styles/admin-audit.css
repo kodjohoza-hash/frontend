@@ -1,0 +1,369 @@
+/* ══════════════════════════════════════════════════════════════
+   BUS TIX CONNECT — AUDIT & MONITORING CENTER
+   Prefix: ada-
+   Inspirations: Microsoft Entra, AWS CloudTrail, Datadog
+   ══════════════════════════════════════════════════════════════ */
+
+.ada-dashboard { padding: 1.5rem 2rem 2rem; min-height: 100vh; background: #0B0B1A; }
+
+/* ─── Hero ─── */
+.ada-hero {
+  background: linear-gradient(135deg, #1E1B4B 0%, #2D2A6E 50%, #4C1D95 100%);
+  border-radius: 20px; padding: 2rem 2.5rem; margin-bottom: 2rem;
+  position: relative; overflow: hidden;
+}
+.ada-hero::before {
+  content: ''; position: absolute; top: -50%; right: -10%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.ada-hero-content { position: relative; z-index: 1; }
+.ada-hero h1 {
+  font-size: 2rem; font-weight: 700; color: #fff; margin: 0 0 0.25rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.ada-hero p { color: rgba(255,255,255,0.7); font-size: 0.95rem; margin: 0; }
+.ada-hero-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 100px; padding: 0.35rem 1rem;
+  font-size: 0.8rem; color: rgba(255,255,255,0.85); margin-top: 0.75rem;
+}
+.ada-hero-badge i.live { color: #10B981; animation: ada-pulse 2s infinite; }
+@keyframes ada-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* ─── KPI Grid ─── */
+.ada-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.85rem; margin-bottom: 2rem;
+}
+.ada-kpi-card {
+  background: linear-gradient(135deg, #13132B 0%, #1A1A35 100%);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px; padding: 1rem 1rem 0.85rem;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  position: relative; overflow: hidden; cursor: default;
+}
+.ada-kpi-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(59,130,246,0.2);
+  box-shadow: 0 8px 30px rgba(59,130,246,0.08);
+}
+.ada-kpi-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; margin-bottom: 0.6rem;
+}
+.ada-kpi-label { font-size: 0.72rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 0.25rem; }
+.ada-kpi-value { font-size: 1.2rem; font-weight: 700; color: #fff; }
+.ada-kpi-trend { font-size: 0.7rem; display: flex; align-items: center; gap: 0.2rem; margin-top: 0.2rem; }
+.ada-kpi-trend.up { color: #10B981; }
+.ada-kpi-trend.down { color: #EF4444; }
+.ada-kpi-trend.neutral { color: #94A3B8; }
+
+/* ─── Controls ─── */
+.ada-controls {
+  display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;
+  background: #13132B; border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;
+}
+.ada-control-group { display: flex; align-items: center; gap: 0.4rem; }
+.ada-control-group label { font-size: 0.78rem; color: rgba(255,255,255,0.45); font-weight: 500; white-space: nowrap; }
+.ada-control-group select, .ada-control-group input {
+  background: #1A1A35; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 0.4rem 0.65rem;
+  color: rgba(255,255,255,0.85); font-size: 0.8rem; outline: none; min-width: 100px;
+}
+.ada-control-group select:focus, .ada-control-group input:focus {
+  border-color: #3B82F6; box-shadow: 0 0 0 2px rgba(59,130,246,0.15);
+}
+.ada-control-input {
+  background: #1A1A35; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 0.4rem 0.75rem;
+  color: rgba(255,255,255,0.85); font-size: 0.8rem; outline: none; min-width: 180px;
+}
+.ada-control-btn {
+  background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 8px; padding: 0.4rem 0.9rem;
+  color: #60A5FA; font-size: 0.8rem; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+}
+.ada-control-btn:hover { background: rgba(59,130,246,0.2); border-color: #3B82F6; }
+.ada-control-btn-outline { background: transparent; border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.ada-control-btn-outline:hover { border-color: rgba(255,255,255,0.2); color: #fff; }
+
+/* ─── Table ─── */
+.ada-table-wrapper {
+  background: #13132B; border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px; overflow: auto; margin-bottom: 1.5rem;
+}
+.ada-table { width: 100%; border-collapse: collapse; min-width: 1100px; }
+.ada-table th {
+  text-align: left; padding: 0.75rem 0.85rem;
+  font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.4);
+  text-transform: uppercase; letter-spacing: 0.4px;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  white-space: nowrap;
+}
+.ada-table td { padding: 0.65rem 0.85rem; font-size: 0.82rem; color: rgba(255,255,255,0.7); border-bottom: 1px solid rgba(255,255,255,0.04); }
+.ada-table tr:hover td { background: rgba(59,130,246,0.03); }
+.ada-table tr:last-child td { border-bottom: none; }
+.ada-table .ada-user-cell { display: flex; align-items: center; gap: 0.5rem; }
+.ada-table .ada-user-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; color: #fff; font-weight: 600;
+}
+
+/* Severity badges */
+.ada-severity-badge {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  padding: 0.15rem 0.55rem; border-radius: 100px;
+  font-size: 0.7rem; font-weight: 600;
+}
+
+/* Status badges */
+.ada-status-badge {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  padding: 0.15rem 0.5rem; border-radius: 100px;
+  font-size: 0.7rem; font-weight: 500;
+}
+
+/* Action buttons */
+.ada-table-action {
+  width: 26px; height: 26px; border: none; border-radius: 6px;
+  background: transparent; color: rgba(255,255,255,0.3);
+  cursor: pointer; transition: all 0.2s;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+}
+.ada-table-action:hover { background: rgba(59,130,246,0.1); color: #60A5FA; }
+
+/* ─── Timeline ─── */
+.ada-timeline { padding: 1rem 0; position: relative; }
+.ada-timeline::before {
+  content: ''; position: absolute; left: 24px; top: 0; bottom: 0;
+  width: 2px; background: rgba(255,255,255,0.06);
+}
+.ada-timeline-item { display: flex; gap: 1rem; padding: 0.75rem 0; position: relative; }
+.ada-timeline-icon {
+  width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; z-index: 1; border: 2px solid #13132B;
+}
+.ada-timeline-content { flex: 1; min-width: 0; }
+.ada-timeline-header { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.ada-timeline-title { font-size: 0.9rem; color: #fff; font-weight: 500; }
+.ada-timeline-meta { font-size: 0.75rem; color: rgba(255,255,255,0.35); display: flex; gap: 0.75rem; }
+.ada-timeline-desc { font-size: 0.82rem; color: rgba(255,255,255,0.55); margin-top: 0.25rem; }
+
+/* ─── Detail Drawer ─── */
+.ada-drawer-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  z-index: 9998; animation: ada-fade-in 0.2s;
+}
+@keyframes ada-fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+.ada-drawer {
+  position: fixed; top: 0; right: 0; width: 520px; max-width: 100vw;
+  height: 100vh; background: #13132B; border-left: 1px solid rgba(255,255,255,0.08);
+  z-index: 9999; overflow-y: auto;
+  animation: ada-slide-in 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes ada-slide-in { 0% { transform: translateX(100%); } 100% { transform: translateX(0); } }
+.ada-drawer-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.ada-drawer-header h3 { font-size: 1.1rem; font-weight: 600; color: #fff; margin: 0; }
+.ada-drawer-close {
+  width: 32px; height: 32px; border-radius: 8px; border: none;
+  background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.ada-drawer-close:hover { background: rgba(239,68,68,0.15); color: #EF4444; }
+.ada-drawer-body { padding: 1.5rem; }
+.ada-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.ada-detail-field { }
+.ada-detail-label { font-size: 0.72rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 0.2rem; }
+.ada-detail-value { font-size: 0.88rem; color: rgba(255,255,255,0.8); }
+.ada-detail-section { margin-top: 1.5rem; }
+.ada-detail-section-title { font-size: 0.85rem; color: #fff; font-weight: 600; margin-bottom: 0.75rem; }
+
+/* ─── Alerts ─── */
+.ada-alerts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem; margin-bottom: 1.5rem;
+}
+.ada-alert-card {
+  background: #13132B; border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px; padding: 1.25rem;
+  transition: all 0.3s;
+}
+.ada-alert-card:hover { border-color: rgba(59,130,246,0.12); transform: translateY(-2px); }
+.ada-alert-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+.ada-alert-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+}
+.ada-alert-info { flex: 1; }
+.ada-alert-label { font-size: 0.9rem; color: #fff; font-weight: 500; }
+.ada-alert-user { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+.ada-alert-desc { font-size: 0.82rem; color: rgba(255,255,255,0.55); margin-bottom: 0.75rem; }
+.ada-alert-footer { display: flex; align-items: center; justify-content: space-between; }
+.ada-alert-time { font-size: 0.72rem; color: rgba(255,255,255,0.3); }
+.ada-alert-status {
+  font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 100px;
+  font-weight: 500;
+}
+.ada-alert-status.active { background: rgba(239,68,68,0.1); color: #EF4444; }
+.ada-alert-status.resolved { background: rgba(16,185,129,0.1); color: #10B981; }
+
+/* ─── Sessions ─── */
+.ada-sessions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem; margin-bottom: 1.5rem;
+}
+.ada-session-card {
+  background: #13132B; border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px; padding: 1.25rem;
+}
+.ada-session-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+.ada-session-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 0.8rem; font-weight: 600;
+}
+.ada-session-name { font-size: 0.9rem; color: #fff; font-weight: 500; }
+.ada-session-role { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+.ada-session-details { display: flex; flex-direction: column; gap: 0.35rem; }
+.ada-session-detail { display: flex; justify-content: space-between; font-size: 0.78rem; }
+.ada-session-detail-label { color: rgba(255,255,255,0.35); }
+.ada-session-detail-value { color: rgba(255,255,255,0.7); }
+.ada-session-status {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  font-size: 0.7rem; font-weight: 600;
+}
+.ada-session-status.active { color: #10B981; }
+.ada-session-status.idle { color: #F59E0B; }
+
+/* ─── Export Panel ─── */
+.ada-export-panel { display: flex; gap: 0.5rem; }
+.ada-export-btn {
+  display: flex; align-items: center; gap: 0.35rem;
+  padding: 0.4rem 0.85rem; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: #1A1A35; color: rgba(255,255,255,0.6);
+  font-size: 0.75rem; cursor: pointer; transition: all 0.2s;
+}
+.ada-export-btn:hover { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.2); color: #60A5FA; }
+
+/* ─── Pagination ─── */
+.ada-pagination {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.5rem; padding: 1rem 0;
+}
+.ada-page-btn {
+  width: 32px; height: 32px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: transparent; color: rgba(255,255,255,0.5);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 0.78rem; transition: all 0.2s;
+}
+.ada-page-btn:hover { border-color: rgba(59,130,246,0.2); color: #60A5FA; }
+.ada-page-btn.active { background: rgba(59,130,246,0.15); border-color: #3B82F6; color: #60A5FA; }
+.ada-page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.ada-page-info { font-size: 0.78rem; color: rgba(255,255,255,0.35); }
+
+/* ─── Section header ─── */
+.ada-section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1rem; margin-top: 1.5rem;
+}
+.ada-section-header h2 {
+  font-size: 1.05rem; font-weight: 600; color: #fff; margin: 0;
+}
+.ada-section-header h2 i { margin-right: 0.5rem; }
+
+/* ─── Tabs ─── */
+.ada-tabs { display: flex; gap: 0.25rem; margin-bottom: 1.5rem; background: #13132B; border-radius: 12px; padding: 0.3rem; border: 1px solid rgba(255,255,255,0.06); }
+.ada-tab {
+  padding: 0.5rem 1.1rem; border-radius: 8px; border: none;
+  background: transparent; color: rgba(255,255,255,0.4);
+  cursor: pointer; font-size: 0.82rem; transition: all 0.2s;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.ada-tab:hover { color: rgba(255,255,255,0.7); }
+.ada-tab.active { background: rgba(59,130,246,0.12); color: #60A5FA; }
+
+/* ─── Skeleton ─── */
+.ada-skeleton {
+  background: #13132B; border-radius: 14px;
+  padding: 1.5rem; border: 1px solid rgba(255,255,255,0.04);
+}
+.ada-skeleton-pulse {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: ada-shimmer 1.5s ease-in-out infinite;
+  border-radius: 6px;
+}
+@keyframes ada-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ─── Toast ─── */
+.ada-toast {
+  position: fixed; bottom: 2rem; right: 2rem;
+  background: #13132B; border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 12px; padding: 1rem 1.5rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  color: #fff; font-size: 0.85rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  z-index: 99999; animation: ada-toast-in 0.3s ease-out;
+}
+@keyframes ada-toast-in { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+.ada-toast.success i { color: #10B981; }
+.ada-toast.error i { color: #EF4444; }
+.ada-toast.info i { color: #3B82F6; }
+
+/* ─── Counter badges ─── */
+.ada-count-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; height: 20px; padding: 0 6px;
+  border-radius: 100px; font-size: 0.65rem; font-weight: 700;
+}
+
+/* ─── Empty state ─── */
+.ada-empty {
+  text-align: center; padding: 3rem; color: rgba(255,255,255,0.3);
+}
+.ada-empty i { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
+.ada-empty p { margin: 0; font-size: 0.9rem; }
+
+/* ─── Responsive ─── */
+@media (max-width: 1200px) {
+  .ada-drawer { width: 420px; }
+}
+@media (max-width: 992px) {
+  .ada-dashboard { padding: 1rem; }
+  .ada-hero { padding: 1.5rem; }
+  .ada-hero h1 { font-size: 1.4rem; }
+  .ada-controls { flex-direction: column; align-items: stretch; }
+  .ada-detail-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .ada-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .ada-alerts-grid { grid-template-columns: 1fr; }
+  .ada-sessions-grid { grid-template-columns: 1fr; }
+  .ada-drawer { width: 100vw; }
+}
+@media (max-width: 480px) {
+  .ada-kpi-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .ada-tabs { flex-wrap: wrap; }
+}

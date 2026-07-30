@@ -93,6 +93,13 @@ const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 const SuperAdminCompanies = lazy(() => import('@pages/SuperAdmin/Companies'));
 const SuperAdminUsers = lazy(() => import('@pages/SuperAdmin/Users'));
 const SuperAdminRoles = lazy(() => import('@pages/SuperAdmin/Roles'));
+const SuperAdminApprovals = lazy(() => import('@pages/SuperAdmin/Approval'));
+const SuperAdminSubscriptions = lazy(() => import('@pages/SuperAdmin/Subscriptions'));
+const SuperAdminCommissions = lazy(() => import('@pages/SuperAdmin/Commissions'));
+const SuperAdminReports = lazy(() => import('@pages/SuperAdmin/Reports'));
+const SuperAdminAudit = lazy(() => import('@pages/SuperAdmin/Audit'));
+const SuperAdminSettings = lazy(() => import('@pages/SuperAdmin/Settings'));
+const SuperAdminNotifications = lazy(() => import('@pages/SuperAdmin/Notifications'));
 
 /* Error Pages */
 const NotFound = lazy(() => import('@pages/Errors/NotFound'));
@@ -261,8 +268,13 @@ const AppRouter = () => {
           <Route path={ROUTES.SUPER_ADMIN_COMPANIES} element={<SuperAdminCompanies />} />
           <Route path={ROUTES.SUPER_ADMIN_USERS} element={<SuperAdminUsers />} />
           <Route path={ROUTES.SUPER_ADMIN_ROLES} element={<SuperAdminRoles />} />
-          <Route path={ROUTES.SUPER_ADMIN_REPORTS} element={<PlaceholderPage title="Rapports" description="Consultez les statistiques globales de la plateforme." icon="bi-bar-chart-line" backTo={ROUTES.SUPER_ADMIN_DASHBOARD} />} />
-          <Route path={ROUTES.SUPER_ADMIN_SETTINGS} element={<PlaceholderPage title="Paramètres" description="Configurez les paramètres globaux de la plateforme." icon="bi-gear" backTo={ROUTES.SUPER_ADMIN_DASHBOARD} />} />
+          <Route path={ROUTES.SUPER_ADMIN_APPROVAL} element={<SuperAdminApprovals />} />
+          <Route path={ROUTES.SUPER_ADMIN_SUBSCRIPTIONS} element={<SuperAdminSubscriptions />} />
+          <Route path={ROUTES.SUPER_ADMIN_COMMISSIONS} element={<SuperAdminCommissions />} />
+          <Route path={ROUTES.SUPER_ADMIN_REPORTS} element={<SuperAdminReports />} />
+          <Route path={ROUTES.SUPER_ADMIN_AUDIT} element={<SuperAdminAudit />} />
+          <Route path={ROUTES.SUPER_ADMIN_SETTINGS} element={<SuperAdminSettings />} />
+          <Route path={ROUTES.SUPER_ADMIN_NOTIFICATIONS} element={<SuperAdminNotifications />} />
         </Route>
 
         {/* ================================================
