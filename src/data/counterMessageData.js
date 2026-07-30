@@ -147,7 +147,7 @@ export const conversations = [
   conv('conv-004', { id: 'ADM-003', ...participant('Léa Mengue', 'Superviseur d\'agence', 'Express Bus Cameroun', 'Douala Central', 'busy', { phone: '+237699112233', email: 'lea.mengue@bustixconnect.cm', lastActivity: ago(0, 0, 45) }) }, [
     msg({ senderId: 'ADM-003', text: 'Marie, pouvez-vous me faire le rapport de la matinée dès que possible ?', date: ago(0, 5) }),
     msg({ senderId: AGT, text: 'Bien sûr Léa. Je vous l\'envoie dans 15 minutes.', date: ago(0, 4, 55) }),
-    msg({ senderId: ADM, text: 'Merci. Et n\'oubliez pas de vérifier les stocks de tickets prépayés.', date: ago(0, 4, 50) }),
+    msg({ senderId: 'ADM-003', text: 'Merci. Et n\'oubliez pas de vérifier les stocks de tickets prépayés.', date: ago(0, 4, 50) }),
     msg({ senderId: AGT, text: 'C\'est déjà fait. Il nous reste 120 tickets prépayés. Je vais commander un réapprovisionnement.', date: ago(0, 4, 40) }),
     msg({ senderId: 'ADM-003', text: 'Parfait. Faites la demande via le formulaire avant 14h.', date: ago(0, 4, 30) }),
     msg({ senderId: AGT, text: 'C\'est noté. Le rapport de la matinée : 35 billets vendus, 12 départs traités, aucun incident.', date: ago(0, 3, 45) }),
