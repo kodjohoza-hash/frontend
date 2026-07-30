@@ -73,7 +73,8 @@ export const ROUTES = {
   COUNTER_PAYMENTS: '/counter/payments',
   COUNTER_TICKETS: '/counter/tickets',
   COUNTER_PROFILE: '/counter/profile',
-
+  COUNTER_SETTINGS: '/counter/settings',
+ 
   /* ================================================
      SUPER ADMIN
      ================================================ */
@@ -156,6 +157,7 @@ export const ROUTE_NAMES = {
   [ROUTES.COUNTER_MESSAGES]: 'Messagerie',
   [ROUTES.COUNTER_TICKETS]: 'Billets',
   [ROUTES.COUNTER_PROFILE]: 'Profil',
+  [ROUTES.COUNTER_SETTINGS]: 'Paramètres',
   [ROUTES.SUPER_ADMIN_DASHBOARD]: 'Tableau de bord',
   [ROUTES.SUPER_ADMIN_COMPANIES]: 'Compagnies',
   [ROUTES.SUPER_ADMIN_USERS]: 'Utilisateurs',

@@ -88,6 +88,7 @@ const CounterCustomersPage = lazy(() => import('@pages/Counter/Customers'));
 const CounterNotificationsPage = lazy(() => import('@pages/Counter/Notifications'));
 const CounterMessagesPage = lazy(() => import('@pages/Counter/Messages'));
 const CounterProfilePage = lazy(() => import('@pages/Counter/Profile'));
+const CounterSettingsPage = lazy(() => import('@pages/Counter/Settings'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 
 /* Error Pages */
@@ -242,6 +243,7 @@ const AppRouter = () => {
           <Route path={ROUTES.COUNTER_PAYMENTS} element={<CounterPaymentsPage />} />
           <Route path={ROUTES.COUNTER_TICKETS} element={<CounterScannerPage />} />
           <Route path={ROUTES.COUNTER_PROFILE} element={<CounterProfilePage />} />
+          <Route path={ROUTES.COUNTER_SETTINGS} element={<CounterSettingsPage />} />
         </Route>
 
         {/* ================================================

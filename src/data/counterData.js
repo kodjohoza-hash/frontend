@@ -78,13 +78,23 @@ export const sidebarMenus = [
       { id: 'dashboard', label: 'Tableau de bord', icon: 'bi-speedometer2', to: '/counter/dashboard' },
       { id: 'sale', label: 'Nouvelle vente', icon: 'bi-cart-plus', to: '/counter/sale' },
       { id: 'bookings', label: 'Réservations', icon: 'bi-ticket-perforated', to: '/counter/bookings' },
-      { id: 'tickets', label: 'Billets', icon: 'bi-postcard', to: '/counter/tickets' },
+      { id: 'payments', label: 'Encaissements', icon: 'bi-cash-coin', to: '/counter/payments' },
+      { id: 'customers', label: 'Clients', icon: 'bi-people', to: '/counter/customers' },
+      { id: 'tickets', label: 'Contrôle billets', icon: 'bi-upc-scan', to: '/counter/tickets' },
+    ],
+  },
+  {
+    section: 'Communication',
+    items: [
+      { id: 'notifications', label: 'Notifications', icon: 'bi-bell', to: '/counter/notifications' },
+      { id: 'messages', label: 'Messages', icon: 'bi-chat-dots', to: '/counter/messages' },
     ],
   },
   {
     section: 'Compte',
     items: [
       { id: 'profile', label: 'Mon profil', icon: 'bi-person', to: '/counter/profile' },
+      { id: 'settings', label: 'Paramètres', icon: 'bi-gear', to: '/counter/settings' },
     ],
   },
 ];

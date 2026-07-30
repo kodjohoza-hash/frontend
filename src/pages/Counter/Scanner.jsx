@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import CounterScannerStats from '@components/counter/CounterScannerStats';
 import CounterScannerCamera from '@components/counter/CounterScannerCamera';
 import CounterScannerManual from '@components/counter/CounterScannerManual';
@@ -21,10 +21,10 @@ const CounterScannerPage = () => {
   const [alerts, setAlerts] = useState([]);
   const [toasts, setToasts] = useState([]);
 
-  useState(() => {
+  useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 600);
     return () => clearTimeout(timer);
-  });
+  }, []);
 
   const addToast = useCallback((message, type = 'success') => {
     const id = Date.now();

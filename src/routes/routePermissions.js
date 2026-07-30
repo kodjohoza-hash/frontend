@@ -46,7 +46,8 @@ export const ROUTE_PERMISSIONS = {
   [ROUTES.COUNTER_PAYMENTS]: { roles: ['counter_agent'], permissions: [PERMISSIONS.PAYMENTS_VIEW] },
   [ROUTES.COUNTER_TICKETS]: { roles: ['counter_agent'], permissions: [PERMISSIONS.TICKETS_VIEW] },
   [ROUTES.COUNTER_PROFILE]: { roles: ['counter_agent'], permissions: [PERMISSIONS.PROFILE_VIEW] },
-
+  [ROUTES.COUNTER_SETTINGS]: { roles: ['counter_agent'], permissions: [PERMISSIONS.SETTINGS_VIEW] },
+ 
   /* Super Admin */
   [ROUTES.SUPER_ADMIN_DASHBOARD]: { roles: ['super_admin'], permissions: [PERMISSIONS.DASHBOARD_VIEW] },
   [ROUTES.SUPER_ADMIN_COMPANIES]: { roles: ['super_admin'], permissions: [PERMISSIONS.COMPANIES_VIEW] },

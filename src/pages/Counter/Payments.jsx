@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import CounterCashStats from '@components/counter/CounterCashStats';
 import CounterPaymentFilters from '@components/counter/CounterPaymentFilters';
 import CounterPaymentTable from '@components/counter/CounterPaymentTable';
@@ -32,16 +32,16 @@ const CounterPaymentsPage = () => {
   const [showReport, setShowReport] = useState(false);
   const [toasts, setToasts] = useState([]);
 
-  useState(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       setPayments(allPayments);
       setFiltered(allPayments);
       setLoading(false);
     }, 600);
     return () => clearTimeout(timer);
-  });
+  }, []);
 
-  useState(() => {
+  useEffect(() => {
     let result = filterPayments(payments, filters);
     result = sortPayments(result, sortBy);
     setFiltered(result);

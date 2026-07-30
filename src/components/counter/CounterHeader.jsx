@@ -30,8 +30,14 @@ const CounterHeader = ({ onToggleSidebar, onLogout }) => {
     '/counter/dashboard': 'Tableau de bord',
     '/counter/sale': 'Nouvelle vente',
     '/counter/bookings': 'Réservations',
+    '/counter/customers': 'Clients',
     '/counter/tickets': 'Billets',
+    '/counter/payments': 'Encaissements',
+    '/counter/scanner': 'Scanner',
+    '/counter/notifications': 'Notifications',
+    '/counter/messages': 'Messagerie',
     '/counter/profile': 'Mon profil',
+    '/counter/settings': 'Paramètres',
   };
 
   const pageName = breadcrumbMap[location.pathname] || 'Tableau de bord';
@@ -63,7 +69,7 @@ const CounterHeader = ({ onToggleSidebar, onLogout }) => {
       </div>
 
       <div className="act-header__right">
-        <Link to="/counter/profile" className="act-header__icon-btn" title="Messagerie">
+        <Link to="/counter/messages" className="act-header__icon-btn" title="Messagerie">
           <i className="bi bi-chat-dots" />
           <span className="act-header__badge">2</span>
         </Link>
