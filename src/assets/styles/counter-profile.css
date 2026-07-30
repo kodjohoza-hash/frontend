@@ -1,0 +1,1092 @@
+/* ================================================================
+   BUS TIX CONNECT — Counter Agent Profile (acpr-* prefix)
+   Self-contained CSS — no Bootstrap dependency
+   Brand: #0B1D51 navy | #FF6B35 accent orange
+   ================================================================ */
+
+:root {
+  --acpr-primary: #0B1D51;
+  --acpr-primary-50: #E8EBF3;
+  --acpr-primary-100: #C5CCE5;
+  --acpr-primary-400: #1E3A8A;
+  --acpr-accent: #FF6B35;
+  --acpr-accent-50: #FFF0E8;
+  --acpr-success: #22C55E;
+  --acpr-success-50: #D1FAE5;
+  --acpr-warning: #F59E0B;
+  --acpr-warning-50: #FEF3C7;
+  --acpr-warning-100: #FDE68A;
+  --acpr-danger: #EF4444;
+  --acpr-danger-50: #FEF2F2;
+  --acpr-info: #06B6D4;
+  --acpr-info-50: #ECFEFF;
+  --acpr-purple: #8B5CF6;
+  --acpr-purple-50: #F5F3FF;
+  --acpr-bg: #F4F6FA;
+  --acpr-surface: #FFFFFF;
+  --acpr-border: #E5E7EB;
+  --acpr-border-light: #F3F4F6;
+  --acpr-text: #1F2937;
+  --acpr-text-secondary: #6B7280;
+  --acpr-text-muted: #9CA3AF;
+  --acpr-shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --acpr-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --acpr-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --acpr-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.05);
+  --acpr-radius: 16px;
+  --acpr-radius-sm: 12px;
+  --acpr-radius-xs: 8px;
+  --acpr-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ================================================================
+   LAYOUT
+   ================================================================ */
+.acpr-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.acpr-section {
+  margin-bottom: 28px;
+}
+
+/* ================================================================
+   HEADER / HERO
+   ================================================================ */
+.acpr-header {
+  background: var(--acpr-surface);
+  border-radius: var(--acpr-radius);
+  padding: 32px;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  border: 1px solid var(--acpr-border);
+  margin-bottom: 28px;
+}
+
+.acpr-header-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--acpr-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 700;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.acpr-header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.acpr-header-name {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--acpr-primary);
+  margin: 0 0 2px;
+  line-height: 1.2;
+}
+
+.acpr-header-role {
+  font-size: 15px;
+  color: var(--acpr-text-secondary);
+  margin: 0 0 8px;
+}
+
+.acpr-header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--acpr-text);
+}
+
+.acpr-header-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.acpr-header-meta-item i {
+  color: var(--acpr-accent);
+  font-size: 14px;
+}
+
+.acpr-header-badge {
+  display: inline-flex;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  align-items: center;
+  gap: 4px;
+}
+
+.acpr-header-badge.verified {
+  background: var(--acpr-success-50);
+  color: #065F46;
+}
+
+.acpr-header-status {
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.acpr-header-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.acpr-header-status.actif {
+  background: var(--acpr-success-50);
+  color: #065F46;
+}
+.acpr-header-status.actif::before {
+  background: #065F46;
+}
+
+.acpr-header-status.en_conge {
+  background: var(--acpr-warning-50);
+  color: #92400E;
+}
+.acpr-header-status.en_conge::before {
+  background: #92400E;
+}
+
+.acpr-header-status.hors_ligne {
+  background: #F3F4F6;
+  color: var(--acpr-text-secondary);
+}
+.acpr-header-status.hors_ligne::before {
+  background: #6B7280;
+}
+
+.acpr-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ================================================================
+   STATS
+   ================================================================ */
+.acpr-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.acpr-stat-card {
+  background: var(--acpr-surface);
+  border-radius: var(--acpr-radius-sm);
+  padding: 20px;
+  border: 1px solid var(--acpr-border);
+  box-shadow: var(--acpr-shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all var(--acpr-transition);
+  animation: acprFadeIn 0.4s ease both;
+  cursor: default;
+}
+
+.acpr-stat-card:nth-child(1) { animation-delay: 0.03s; }
+.acpr-stat-card:nth-child(2) { animation-delay: 0.06s; }
+.acpr-stat-card:nth-child(3) { animation-delay: 0.09s; }
+.acpr-stat-card:nth-child(4) { animation-delay: 0.12s; }
+.acpr-stat-card:nth-child(5) { animation-delay: 0.15s; }
+.acpr-stat-card:nth-child(6) { animation-delay: 0.18s; }
+.acpr-stat-card:nth-child(7) { animation-delay: 0.21s; }
+.acpr-stat-card:nth-child(8) { animation-delay: 0.24s; }
+
+.acpr-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--acpr-shadow-lg);
+  border-color: var(--acpr-primary-100);
+}
+
+.acpr-stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.acpr-stat-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.acpr-stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--acpr-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.acpr-stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--acpr-primary);
+  line-height: 1.2;
+}
+
+/* ================================================================
+   INFO SECTIONS
+   ================================================================ */
+.acpr-info-card {
+  background: var(--acpr-surface);
+  border-radius: var(--acpr-radius-sm);
+  padding: 24px;
+  border: 1px solid var(--acpr-border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.acpr-info-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--acpr-primary);
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.acpr-info-title i {
+  color: var(--acpr-accent);
+  font-size: 20px;
+}
+
+.acpr-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.acpr-info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.acpr-info-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--acpr-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.acpr-info-value {
+  font-size: 14px;
+  color: var(--acpr-text);
+}
+
+/* ================================================================
+   CHARTS / PERFORMANCE
+   ================================================================ */
+.acpr-performance {
+  background: var(--acpr-surface);
+  border-radius: var(--acpr-radius-sm);
+  padding: 24px;
+  border: 1px solid var(--acpr-border);
+  box-shadow: var(--acpr-shadow-sm);
+}
+
+.acpr-perf-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--acpr-border);
+  padding-bottom: 12px;
+  overflow-x: auto;
+}
+
+.acpr-perf-tab {
+  padding: 8px 16px;
+  border-radius: var(--acpr-radius-xs);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--acpr-text-secondary);
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  transition: all var(--acpr-transition);
+  white-space: nowrap;
+}
+
+.acpr-perf-tab:hover {
+  background: var(--acpr-primary-50);
+  color: var(--acpr-primary);
+}
+
+.acpr-perf-tab.active {
+  background: var(--acpr-primary);
+  color: #fff;
+}
+
+.acpr-chart-container {
+  height: 300px;
+  width: 100%;
+  position: relative;
+}
+
+.acpr-perf-summary {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--acpr-border);
+  flex-wrap: wrap;
+}
+
+.acpr-perf-stat {
+  text-align: center;
+  flex: 1;
+  min-width: 100px;
+}
+
+.acpr-perf-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--acpr-primary);
+}
+
+.acpr-perf-stat-label {
+  font-size: 11px;
+  color: var(--acpr-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+}
+
+/* ================================================================
+   TIMELINE
+   ================================================================ */
+.acpr-timeline {
+  position: relative;
+  padding-left: 28px;
+}
+
+.acpr-timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--acpr-border);
+}
+
+.acpr-timeline-item {
+  position: relative;
+  margin-bottom: 24px;
+  animation: acprFadeIn 0.3s both;
+}
+
+.acpr-timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.acpr-timeline-dot {
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  left: -22px;
+  top: 4px;
+  border-radius: 50%;
+  border: 2px solid var(--acpr-surface);
+  z-index: 1;
+}
+
+.acpr-timeline-dot--login { background: var(--acpr-primary); }
+.acpr-timeline-dot--sale { background: var(--acpr-accent); }
+.acpr-timeline-dot--booking { background: var(--acpr-purple); }
+.acpr-timeline-dot--payment { background: var(--acpr-success); }
+.acpr-timeline-dot--logout { background: var(--acpr-text-muted); }
+.acpr-timeline-dot--profile_update { background: var(--acpr-info); }
+
+.acpr-timeline-content {
+  padding-left: 0;
+}
+
+.acpr-timeline-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--acpr-text);
+  margin: 0 0 2px;
+}
+
+.acpr-timeline-desc {
+  font-size: 13px;
+  color: var(--acpr-text-secondary);
+  margin: 0 0 2px;
+  line-height: 1.4;
+}
+
+.acpr-timeline-date {
+  font-size: 11px;
+  color: var(--acpr-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ================================================================
+   DOCUMENTS
+   ================================================================ */
+.acpr-docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.acpr-doc-card {
+  background: var(--acpr-surface);
+  border-radius: var(--acpr-radius-sm);
+  border: 1px solid var(--acpr-border);
+  padding: 20px;
+  text-align: center;
+  transition: all var(--acpr-transition);
+}
+
+.acpr-doc-card:hover {
+  box-shadow: var(--acpr-shadow-md);
+  border-color: var(--acpr-primary-100);
+  transform: translateY(-2px);
+}
+
+.acpr-doc-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--acpr-primary);
+}
+
+.acpr-doc-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--acpr-text);
+  word-break: break-all;
+  line-height: 1.3;
+}
+
+.acpr-doc-category {
+  font-size: 11px;
+  color: var(--acpr-text-muted);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+}
+
+.acpr-doc-meta {
+  font-size: 11px;
+  color: var(--acpr-text-muted);
+  margin-top: 8px;
+}
+
+.acpr-doc-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 7px 16px;
+  border-radius: var(--acpr-radius-xs);
+  background: var(--acpr-primary-50);
+  color: var(--acpr-primary);
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--acpr-transition);
+}
+
+.acpr-doc-download:hover {
+  background: var(--acpr-primary);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* ================================================================
+   LOGIN HISTORY
+   ================================================================ */
+.acpr-login-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.acpr-login-table thead th {
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--acpr-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-bottom: 2px solid var(--acpr-border);
+  background: var(--acpr-border-light);
+}
+
+.acpr-login-table tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--acpr-border-light);
+  color: var(--acpr-text);
+}
+
+.acpr-login-table tbody tr {
+  transition: background var(--acpr-transition);
+}
+
+.acpr-login-table tbody tr:hover {
+  background: var(--acpr-primary-50);
+}
+
+.acpr-login-mobile-cards {
+  display: none;
+}
+
+/* ================================================================
+   QUICK ACTIONS
+   ================================================================ */
+.acpr-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.acpr-action-card {
+  background: var(--acpr-surface);
+  border-radius: var(--acpr-radius-sm);
+  border: 1px solid var(--acpr-border);
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.acpr-action-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  border-color: var(--acpr-accent);
+}
+
+.acpr-action-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  margin: 0 auto 12px;
+}
+
+.acpr-action-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--acpr-text);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.acpr-action-desc {
+  font-size: 11px;
+  color: var(--acpr-text-muted);
+  display: block;
+  line-height: 1.4;
+}
+
+/* ================================================================
+   BUTTONS
+   ================================================================ */
+.acpr-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--acpr-radius-xs);
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all var(--acpr-transition);
+  font-family: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.acpr-btn--primary {
+  background: var(--acpr-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(11, 29, 81, 0.2);
+}
+
+.acpr-btn--primary:hover {
+  background: var(--acpr-primary-400);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(11, 29, 81, 0.3);
+}
+
+.acpr-btn--accent {
+  background: var(--acpr-accent);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.25);
+}
+
+.acpr-btn--accent:hover {
+  background: #e55a2b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(255, 107, 53, 0.4);
+}
+
+.acpr-btn--secondary {
+  background: var(--acpr-border-light);
+  color: var(--acpr-text);
+  border: 1px solid var(--acpr-border);
+}
+
+.acpr-btn--secondary:hover {
+  background: var(--acpr-border);
+}
+
+.acpr-btn--sm {
+  padding: 6px 14px;
+  font-size: 12px;
+}
+
+/* ================================================================
+   SKELETON
+   ================================================================ */
+.acpr-skeleton {
+  animation: acprPulse 1.5s ease-in-out infinite;
+}
+
+.acpr-skel-header {
+  height: 164px;
+  border-radius: var(--acpr-radius);
+  background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 50%, #e2e8f0 100%);
+  margin-bottom: 28px;
+}
+
+.acpr-skel-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.acpr-skel-card {
+  height: 84px;
+  border-radius: var(--acpr-radius-sm);
+  background: #e2e8f0;
+}
+
+.acpr-skel-chart {
+  height: 380px;
+  border-radius: var(--acpr-radius-sm);
+  background: #e2e8f0;
+  margin-bottom: 28px;
+}
+
+.acpr-skel-timeline {
+  height: 320px;
+  border-radius: var(--acpr-radius-sm);
+  background: #e2e8f0;
+  margin-bottom: 28px;
+}
+
+/* ================================================================
+   TOAST
+   ================================================================ */
+.acpr-toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 380px;
+}
+
+.acpr-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: var(--acpr-radius-xs);
+  box-shadow: var(--acpr-shadow-lg);
+  animation: acprToastIn 0.3s ease;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.acpr-toast--success {
+  background: var(--acpr-success-50);
+  color: #065F46;
+  border-left: 4px solid var(--acpr-success);
+}
+
+.acpr-toast--info {
+  background: var(--acpr-info-50);
+  color: #0369a1;
+  border-left: 4px solid var(--acpr-info);
+}
+
+.acpr-toast--warning {
+  background: var(--acpr-warning-50);
+  color: #92400E;
+  border-left: 4px solid var(--acpr-warning);
+}
+
+.acpr-toast i {
+  font-size: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.acpr-toast-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.6;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.acpr-toast-close:hover {
+  opacity: 1;
+}
+
+@keyframes acprToastIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ================================================================
+   MODAL
+   ================================================================ */
+.acpr-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+  animation: acprFadeIn 0.2s ease;
+  padding: 20px;
+}
+
+.acpr-modal {
+  background: var(--acpr-surface);
+  border-radius: var(--acpr-radius);
+  box-shadow: var(--acpr-shadow-lg);
+  width: 540px;
+  max-width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: acprModalSlide 0.3s ease;
+}
+
+@keyframes acprModalSlide {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.acpr-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--acpr-border);
+}
+
+.acpr-modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--acpr-primary);
+  margin: 0;
+}
+
+.acpr-modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: var(--acpr-border-light);
+  color: var(--acpr-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all var(--acpr-transition);
+}
+
+.acpr-modal-close:hover {
+  background: var(--acpr-danger-50);
+  color: var(--acpr-danger);
+}
+
+.acpr-modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.acpr-modal-footer {
+  display: flex;
+  gap: 10px;
+  padding: 16px 24px 24px;
+  justify-content: flex-end;
+}
+
+.acpr-modal-footer .acpr-btn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* ================================================================
+   FORM FIELDS (Modal)
+   ================================================================ */
+.acpr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.acpr-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--acpr-text);
+}
+
+.acpr-field input,
+.acpr-field select,
+.acpr-field textarea {
+  padding: 10px 14px;
+  border: 1.5px solid var(--acpr-border);
+  border-radius: var(--acpr-radius-xs);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--acpr-text);
+  background: var(--acpr-surface);
+  transition: border-color var(--acpr-transition), box-shadow var(--acpr-transition);
+  outline: none;
+}
+
+.acpr-field input:focus,
+.acpr-field select:focus,
+.acpr-field textarea:focus {
+  border-color: var(--acpr-primary);
+  box-shadow: 0 0 0 3px var(--acpr-primary-50);
+}
+
+.acpr-field input::placeholder {
+  color: var(--acpr-text-muted);
+}
+
+/* ================================================================
+   ANIMATIONS
+   ================================================================ */
+@keyframes acprFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes acprPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 992px) {
+  .acpr-header {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: center;
+  }
+  .acpr-header-avatar {
+    margin: 0 auto;
+  }
+  .acpr-header-info {
+    text-align: center;
+    width: 100%;
+  }
+  .acpr-header-meta {
+    justify-content: center;
+  }
+  .acpr-header-right {
+    margin-left: 0;
+    align-items: center;
+    width: 100%;
+  }
+  .acpr-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .acpr-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .acpr-wrapper {
+    padding: 16px;
+  }
+  .acpr-header {
+    padding: 24px;
+    gap: 20px;
+  }
+  .acpr-header-name {
+    font-size: 22px;
+  }
+  .acpr-header-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 28px;
+  }
+  .acpr-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .acpr-stat-card {
+    padding: 16px;
+  }
+  .acpr-stat-value {
+    font-size: 18px;
+  }
+  .acpr-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .acpr-docs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .acpr-login-table {
+    display: none;
+  }
+  .acpr-login-mobile-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .acpr-perf-tabs {
+    gap: 2px;
+  }
+  .acpr-perf-tab {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  .acpr-chart-container {
+    height: 220px;
+  }
+  .acpr-perf-summary {
+    gap: 16px;
+  }
+  .acpr-modal {
+    width: 100%;
+    margin: 10px;
+  }
+  .acpr-modal-body {
+    padding: 16px;
+  }
+  .acpr-modal-header {
+    padding: 16px 16px 12px;
+  }
+  .acpr-modal-footer {
+    padding: 12px 16px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .acpr-wrapper {
+    padding: 12px;
+  }
+  .acpr-section {
+    margin-bottom: 20px;
+  }
+  .acpr-header {
+    padding: 16px;
+    gap: 16px;
+  }
+  .acpr-header-name {
+    font-size: 20px;
+  }
+  .acpr-header-avatar {
+    width: 72px;
+    height: 72px;
+    font-size: 24px;
+  }
+  .acpr-header-meta {
+    gap: 10px;
+    font-size: 12px;
+  }
+  .acpr-stats {
+    grid-template-columns: 1fr;
+  }
+  .acpr-actions-grid {
+    grid-template-columns: 1fr;
+  }
+  .acpr-docs-grid {
+    grid-template-columns: 1fr;
+  }
+  .acpr-info-card {
+    padding: 16px;
+  }
+  .acpr-info-grid {
+    gap: 12px;
+  }
+  .acpr-performance {
+    padding: 16px;
+  }
+  .acpr-chart-container {
+    height: 200px;
+  }
+  .acpr-toast-container {
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+}
