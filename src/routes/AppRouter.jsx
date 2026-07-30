@@ -103,6 +103,7 @@ const SuperAdminNotifications = lazy(() => import('@pages/SuperAdmin/Notificatio
 const SuperAdminSupport = lazy(() => import('@pages/SuperAdmin/Support'));
 const SuperAdminIntegrations = lazy(() => import('@pages/SuperAdmin/Integrations'));
 const SuperAdminBackup = lazy(() => import('@pages/SuperAdmin/Backup'));
+const SuperAdminAI = lazy(() => import('@pages/SuperAdmin/AI'));
 
 /* Error Pages */
 const NotFound = lazy(() => import('@pages/Errors/NotFound'));
@@ -281,6 +282,7 @@ const AppRouter = () => {
           <Route path={ROUTES.SUPER_ADMIN_SUPPORT} element={<SuperAdminSupport />} />
           <Route path={ROUTES.SUPER_ADMIN_INTEGRATIONS} element={<SuperAdminIntegrations />} />
           <Route path={ROUTES.SUPER_ADMIN_BACKUP} element={<SuperAdminBackup />} />
+          <Route path={ROUTES.SUPER_ADMIN_AI} element={<SuperAdminAI />} />
         </Route>
 
         {/* ================================================

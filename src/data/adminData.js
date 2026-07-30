@@ -178,6 +178,7 @@ export const adminSidebarMenus = [
       { id: 'notifications', label: 'Notifications', icon: 'bi-bell', to: '/super-admin/notifications' },
       { id: 'support', label: 'Support', icon: 'bi-headset', to: '/super-admin/support' },
       { id: 'integrations', label: 'Intégrations & API', icon: 'bi-puzzle', to: '/super-admin/integrations' },
+      { id: 'ai', label: 'IA & Automatisation', icon: 'bi-stars', to: '/super-admin/ai' },
     ],
   },
   {
