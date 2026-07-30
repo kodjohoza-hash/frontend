@@ -3,7 +3,7 @@ import { companySettings, settingsSidebarItems } from '@data/settingsData';
 import AgencySettingsLayout from '@components/agency/AgencySettingsLayout';
 import AgencySettingsSkeleton from '@components/agency/AgencySettingsSkeleton';
 import AgencySettingsConfirm from '@components/agency/AgencySettingsConfirm';
-import { useToast } from '@components/agency/AgencySettingsToast';
+import { useToast, ToastProvider } from '@components/agency/AgencySettingsToast';
 import AgencyGeneralSettings from '@components/agency/AgencyGeneralSettings';
 import AgencyManagerInfo from '@components/agency/AgencyManagerInfo';
 import AgencyAppearanceSettings from '@components/agency/AgencyAppearanceSettings';
@@ -41,7 +41,7 @@ const SECTION_DATA_KEYS = {
   integrations: 'integrations',
 };
 
-export default function AgencySettings() {
+function AgencySettingsContent() {
   const [loading, setLoading] = useState(false);
   const [activeSection, setActiveSection] = useState('general');
   const [confirm, setConfirm] = useState(null);
@@ -135,5 +135,13 @@ export default function AgencySettings() {
         />
       )}
     </>
+  );
+}
+
+export default function AgencySettings() {
+  return (
+    <ToastProvider>
+      <AgencySettingsContent />
+    </ToastProvider>
   );
 }
