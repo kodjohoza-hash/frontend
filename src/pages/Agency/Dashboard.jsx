@@ -5,7 +5,7 @@ import AgencyActivity from '@components/agency/AgencyActivity';
 import AgencyTripCard from '@components/agency/AgencyTripCard';
 import AgencyAlerts from '@components/agency/AgencyAlerts';
 import AgencySkeleton from '@components/agency/AgencySkeleton';
-import { statCards, todayTrips } from '@data/agencyData';
+import { statCards, todayTrips, alerts } from '@data/agencyData';
 
 const AgencyDashboard = () => (
   <>
@@ -36,7 +36,7 @@ const AgencyDashboard = () => (
       </div>
 
       <div className="ag-grid__right">
-        <AgencyAlerts />
+        <AgencyAlerts alerts={alerts} />
         <AgencyActivity />
       </div>
     </div>

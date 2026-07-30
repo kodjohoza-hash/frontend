@@ -103,7 +103,9 @@
 .aa-alert--danger .aa-alert__icon { color: var(--ag-danger); }
 .aa-alert--info .aa-alert__icon { color: var(--ag-info); }
 .aa-alert--success .aa-alert__icon { color: var(--ag-success); }
-.aa-alert__text { flex: 1; font-size: 0.82rem; color: var(--ag-text); }
+.aa-alert__content { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.aa-alert__title { font-size: 0.85rem; font-weight: 600; color: var(--ag-text); }
+.aa-alert__text { font-size: 0.82rem; color: var(--ag-text-secondary, #6B7280); }
 .aa-alert__text strong { font-weight: 700; }
 .aa-alert__action { font-size: 0.78rem; font-weight: 600; cursor: pointer; text-decoration: underline; white-space: nowrap; }
 .aa-alert--warning .aa-alert__action { color: var(--ag-warning); }
