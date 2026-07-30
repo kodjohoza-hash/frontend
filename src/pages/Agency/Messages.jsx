@@ -1,22 +1,29 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import clsx from 'clsx';
-import { conversations, folders, getConversationsByFolder, getContact, conversationsMap } from '@data/messageData';
+import { conversations, folders, getConversationsByFolder, getContact, conversationsMap, getPinnedConversations } from '@data/messageData';
 import AgencyMessageSidebar from '@components/agency/AgencyMessageSidebar';
 import AgencyConversationList from '@components/agency/AgencyConversationList';
 import AgencyChatWindow from '@components/agency/AgencyChatWindow';
 import AgencyConversationInfo from '@components/agency/AgencyConversationInfo';
 import AgencySupportPanel from '@components/agency/AgencySupportPanel';
+import AgencyMessageSkeleton from '@components/agency/AgencyMessageSkeleton';
 
 export default function Messages() {
+  const [loading, setLoading] = useState(true);
   const [activeFolder, setActiveFolder] = useState('inbox');
   const [activeConversationId, setActiveConversationId] = useState(null);
-  const [showInfo, setShowInfo] = useState(false);
+  const [showInfo, setShowInfo] = useState(true);
   const [showSupport, setShowSupport] = useState(false);
   const [mobileView, setMobileView] = useState('list');
   const [isMobile, setIsMobile] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewModal, setShowNewModal] = useState(false);
   const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 600);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -43,6 +50,14 @@ export default function Messages() {
     return convs;
   }, [activeFolder, searchQuery]);
 
+  const pinnedConvs = useMemo(() => {
+    if (activeFolder === 'inbox') {
+      const pinned = getPinnedConversations();
+      return pinned.filter((c) => c.folder === 'inbox' || c.folder === 'internal' || c.folder === 'important' || c.folder === 'client');
+    }
+    return [];
+  }, [activeFolder]);
+
   const activeConversation = useMemo(() => {
     if (!activeConversationId) return null;
     return conversationsMap[activeConversationId] || null;
@@ -51,105 +66,146 @@ export default function Messages() {
   const handleSelectFolder = useCallback((folder) => {
     setActiveFolder(folder);
     setActiveConversationId(null);
-    setShowInfo(false);
     setShowSupport(folder === 'support');
+    setShowInfo(false);
     if (isMobile) setMobileView(folder === 'support' ? 'chat' : 'list');
   }, [isMobile]);
 
   const handleSelectConversation = useCallback((convId) => {
     setActiveConversationId(convId);
-    setShowInfo(false);
     setShowSupport(false);
+    setShowInfo(true);
     if (isMobile) setMobileView('chat');
   }, [isMobile]);
 
-  const handleBackToList = useCallback(() => { setMobileView('list'); setShowInfo(false); }, []);
-  const handleToggleInfo = useCallback(() => { setShowInfo((p) => !p); if (isMobile) setMobileView('info'); }, [isMobile]);
+  const handleBackToList = useCallback(() => {
+    setMobileView('list');
+    setShowInfo(false);
+  }, []);
+
+  const handleToggleInfo = useCallback(() => {
+    setShowInfo((p) => !p);
+    if (isMobile) setMobileView('info');
+  }, [isMobile]);
+
+  const showList = !isMobile || mobileView === 'list';
+  const showChat = !isMobile || mobileView !== 'list';
+
+  if (loading) {
+    return (
+      <div className="amsg-container">
+        <div className="amsg-topbar">
+          <div className="amsg-topbar__left">
+            <h2 className="amsg-topbar__title">Messagerie</h2>
+          </div>
+        </div>
+        <div style={{ display: 'flex', flex: 1, overflow: 'hidden', paddingTop: 56 }}>
+          <div className="amsg-sidebar"><AgencyMessageSkeleton count={6} /></div>
+          <div className="amsg-list"><AgencyMessageSkeleton count={8} /></div>
+          <div className="amsg-chat" style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <div className="amsg-empty">
+              <div className="amsg-empty__spinner"><i className="bi bi-arrow-clockwise amsg-empty__spin" /></div>
+              <p className="amsg-empty__desc">Chargement de la messagerie...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="amsg-container">
       {toast && <div className="amsg-toast"><i className="bi bi-check-circle" /> {toast}</div>}
 
       {/* TOPBAR */}
-      <div className="amsg-topbar" style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
+      <div className="amsg-topbar">
         <div className="amsg-topbar__left">
           {isMobile && (mobileView === 'chat' || mobileView === 'info') && (
             <button className="amsg-topbar__btn" onClick={handleBackToList}><i className="bi bi-arrow-left" /></button>
           )}
-          <h2 className="amsg-topbar__title">Messagerie</h2>
+          <div className="amsg-topbar__brand">
+            <div className="amsg-topbar__brand-icon"><i className="bi bi-chat-dots" /></div>
+            <h2 className="amsg-topbar__title">Messagerie</h2>
+          </div>
         </div>
         <div className="amsg-topbar__right">
-          <select className="amsg-topbar__filter" value={activeFolder} onChange={(e) => handleSelectFolder(e.target.value)}
-            style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, background: 'white', color: '#374151' }}>
-            {folders.map((f) => (<option key={f.id} value={f.id}>{f.label}</option>))}
-          </select>
+          <div className="amsg-topbar__folder-select">
+            <i className="bi bi-folder2" />
+            <select value={activeFolder} onChange={(e) => handleSelectFolder(e.target.value)}>
+              {folders.map((f) => (<option key={f.id} value={f.id}>{f.label}</option>))}
+            </select>
+          </div>
           <button className="amsg-topbar__btn amsg-topbar__btn--primary" onClick={() => setShowNewModal(true)}>
-            <i className="bi bi-plus-lg" /> Nouvelle conversation
+            <i className="bi bi-plus-lg" /> <span className="amsg-topbar__btn-text">Nouveau message</span>
           </button>
-          <button className="amsg-topbar__btn" onClick={() => showToast('Messages actualisés')}><i className="bi bi-arrow-clockwise" /></button>
+          <button className="amsg-topbar__btn" onClick={() => showToast('Messages actualisés')} title="Actualiser">
+            <i className="bi bi-arrow-clockwise" />
+          </button>
         </div>
       </div>
 
       {/* LAYOUT BODY */}
-      <div style={{ display: 'flex', flex: 1, paddingTop: 56, overflow: 'hidden' }}>
-        {/* SIDEBAR */}
-        {(!isMobile || mobileView === 'list') && (
-          <div style={{ display: isMobile && mobileView !== 'list' ? 'none' : 'flex' }}>
-            <AgencyMessageSidebar activeFolder={activeFolder} onSelectFolder={handleSelectFolder} />
-          </div>
-        )}
-
-        {/* CONVERSATION LIST */}
-        {(!isMobile || mobileView === 'list') && (
-          <div style={{ display: isMobile && mobileView !== 'list' ? 'none' : 'flex' }}>
-            <AgencyConversationList
-              conversations={filteredConvs}
-              activeConversationId={activeConversationId}
-              onSelectConversation={handleSelectConversation}
-              loading={false}
-            />
-          </div>
-        )}
-
-        {/* CHAT / CONTENT */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-          {(!isMobile || mobileView !== 'list') && (
-            <>
-              {activeConversation ? (
-                <AgencyChatWindow
-                  conversation={activeConversation}
-                  onSendMessage={(msg) => showToast('Message envoyé')}
-                  onBack={handleBackToList}
-                  showInfo={showInfo}
-                  onToggleInfo={handleToggleInfo}
-                />
-              ) : showSupport ? (
-                <div className="amsg-chat">
-                  <AgencySupportPanel onSelectTicket={(id) => showToast(`Ticket ${id} sélectionné`)} />
-                </div>
-              ) : (
-                <div className="amsg-chat">
-                  <div className="amsg-empty">
-                    <i className="bi bi-chat-dots amsg-empty__icon" />
-                    <h3 className="amsg-empty__title">Sélectionnez une conversation</h3>
-                    <p className="amsg-empty__desc">Choisissez une conversation dans la liste pour commencer à discuter</p>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
+      <div className="amsg-body">
+        {/* SIDEBAR — Column 0 */}
+        <div className={clsx('amsg-sidebar', { 'amsg-sidebar--hidden': isMobile && mobileView !== 'list' })}>
+          <AgencyMessageSidebar activeFolder={activeFolder} onSelectFolder={handleSelectFolder} />
         </div>
 
-        {/* RIGHT INFO PANEL */}
-        {showInfo && activeConversation && (!isMobile || mobileView === 'info') && (
-          <div style={isMobile ? { position: 'fixed', right: 0, top: 56, bottom: 0, width: 300, zIndex: 50, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' } : {}}>
-            <AgencyConversationInfo
-              conversation={activeConversation}
-              contact={getContact(activeConversation.contactId)}
-              onClose={handleToggleInfo}
-            />
-          </div>
-        )}
+        {/* CONVERSATION LIST — Column 1 */}
+        <div className={clsx('amsg-list', { 'amsg-list--hidden': isMobile && !showList })}>
+          <AgencyConversationList
+            conversations={filteredConvs}
+            pinnedConversations={pinnedConvs}
+            activeConversationId={activeConversationId}
+            onSelectConversation={handleSelectConversation}
+            loading={false}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+          />
+        </div>
+
+        {/* CHAT + INFO — Column 2+3 */}
+        <div className={clsx('amsg-main', { 'amsg-main--hidden': isMobile && !showChat })}>
+          {activeConversation ? (
+            <>
+              <AgencyChatWindow
+                conversation={activeConversation}
+                onSendMessage={(msg) => showToast('Message envoyé')}
+                onBack={handleBackToList}
+                showInfo={showInfo}
+                onToggleInfo={handleToggleInfo}
+              />
+              <div className={clsx('amsg-info-panel', { 'amsg-info-panel--open': showInfo })}>
+                <AgencyConversationInfo
+                  conversation={activeConversation}
+                  contact={getContact(activeConversation.contactId)}
+                  onClose={() => { setShowInfo(false); if (isMobile) setMobileView('chat'); }}
+                />
+              </div>
+            </>
+          ) : showSupport ? (
+            <div className="amsg-chat amsg-chat--full">
+              <AgencySupportPanel onSelectTicket={(id) => showToast(`Ticket ${id} sélectionné`)} />
+            </div>
+          ) : (
+            <div className="amsg-chat amsg-chat--full">
+              <div className="amsg-empty">
+                <div className="amsg-empty__illustration">
+                  <i className="bi bi-chat-dots" />
+                  <i className="bi bi-chat-quote" />
+                  <i className="bi bi-chat-square" />
+                </div>
+                <h3 className="amsg-empty__title">Bienvenue dans la Messagerie</h3>
+                <p className="amsg-empty__desc">
+                  Sélectionnez une conversation dans la liste ou créez un nouveau message pour commencer à discuter avec vos clients et collaborateurs.
+                </p>
+                <button className="amsg-empty__cta" onClick={() => setShowNewModal(true)}>
+                  <i className="bi bi-plus-lg" /> Nouvelle conversation
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* NEW CONVERSATION MODAL */}
@@ -157,16 +213,42 @@ export default function Messages() {
         <div className="amsg-modal-overlay" onClick={() => setShowNewModal(false)}>
           <div className="amsg-modal" onClick={(e) => e.stopPropagation()}>
             <div className="amsg-modal__header">
-              <h3 className="amsg-modal__title">Nouvelle conversation</h3>
+              <h3 className="amsg-modal__title">
+                <i className="bi bi-pencil-square" /> Nouvelle conversation
+              </h3>
               <button type="button" className="amsg-modal__close" onClick={() => setShowNewModal(false)}><i className="bi bi-x-lg" /></button>
             </div>
             <div className="amsg-modal__body">
-              <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 12 }}>Recherchez un contact pour démarrer une nouvelle conversation.</p>
-              <input type="text" placeholder="Nom du contact..." style={{ width: '100%', padding: '10px 14px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13 }} />
+              <p className="amsg-modal__hint">
+                Recherchez un contact pour démarrer une nouvelle conversation. Vous pouvez envoyer un message à un client, un agent ou un collaborateur.
+              </p>
+              <div className="amsg-modal__search">
+                <i className="bi bi-search" />
+                <input type="text" placeholder="Nom du contact, email ou téléphone..." autoFocus />
+              </div>
+              <div className="amsg-modal__recent">
+                <div className="amsg-modal__recent-title">Contacts récents</div>
+                {['co_001', 'co_003', 'co_010', 'co_007'].map((id) => {
+                  const c = getContact(id);
+                  if (!c) return null;
+                  return (
+                    <button key={id} className="amsg-modal__contact" onClick={() => { showToast(`Conversation avec ${c.name} créée`); setShowNewModal(false); }}>
+                      <div className="amsg-modal__contact-avatar">{c.initials}</div>
+                      <div className="amsg-modal__contact-info">
+                        <div className="amsg-modal__contact-name">{c.name}</div>
+                        <div className="amsg-modal__contact-role">{c.role}{c.company ? ` — ${c.company}` : ''}</div>
+                      </div>
+                      <i className="bi bi-chevron-right" />
+                    </button>
+                  );
+                })}
+              </div>
             </div>
             <div className="amsg-modal__footer">
-              <button type="button" style={{ padding: '8px 20px', border: '1px solid #e5e7eb', borderRadius: 8, background: 'white', color: '#374151', cursor: 'pointer', fontSize: 13 }} onClick={() => setShowNewModal(false)}>Annuler</button>
-              <button type="button" style={{ padding: '8px 20px', border: 'none', borderRadius: 8, background: '#FF6B35', color: 'white', cursor: 'pointer', fontSize: 13, fontWeight: 600 }} onClick={() => { showToast('Conversation créée'); setShowNewModal(false); }}>Créer</button>
+              <button type="button" className="amsg-btn amsg-btn--outline" onClick={() => setShowNewModal(false)}>Annuler</button>
+              <button type="button" className="amsg-btn amsg-btn--primary" onClick={() => { showToast('Nouvelle conversation créée'); setShowNewModal(false); }}>
+                <i className="bi bi-send" /> Créer la conversation
+              </button>
             </div>
           </div>
         </div>
