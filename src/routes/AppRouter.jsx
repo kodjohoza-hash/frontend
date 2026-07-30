@@ -90,6 +90,7 @@ const CounterMessagesPage = lazy(() => import('@pages/Counter/Messages'));
 const CounterProfilePage = lazy(() => import('@pages/Counter/Profile'));
 const CounterSettingsPage = lazy(() => import('@pages/Counter/Settings'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
+const SuperAdminCompanies = lazy(() => import('@pages/SuperAdmin/Companies'));
 
 /* Error Pages */
 const NotFound = lazy(() => import('@pages/Errors/NotFound'));
@@ -255,7 +256,7 @@ const AppRouter = () => {
           </RoleGuard>
         }>
           <Route path={ROUTES.SUPER_ADMIN_DASHBOARD} element={<SuperAdminDashboard />} />
-          <Route path={ROUTES.SUPER_ADMIN_COMPANIES} element={<PlaceholderPage title="Compagnies" description="Gérez les compagnies de transport enregistrées." icon="bi-building" backTo={ROUTES.SUPER_ADMIN_DASHBOARD} />} />
+          <Route path={ROUTES.SUPER_ADMIN_COMPANIES} element={<SuperAdminCompanies />} />
           <Route path={ROUTES.SUPER_ADMIN_USERS} element={<PlaceholderPage title="Utilisateurs" description="Gérez les comptes utilisateurs de la plateforme." icon="bi-people" backTo={ROUTES.SUPER_ADMIN_DASHBOARD} />} />
           <Route path={ROUTES.SUPER_ADMIN_ROLES} element={<PlaceholderPage title="Rôles et permissions" description="Configurez les rôles et permissions du système." icon="bi-shield-lock" backTo={ROUTES.SUPER_ADMIN_DASHBOARD} />} />
           <Route path={ROUTES.SUPER_ADMIN_REPORTS} element={<PlaceholderPage title="Rapports" description="Consultez les statistiques globales de la plateforme." icon="bi-bar-chart-line" backTo={ROUTES.SUPER_ADMIN_DASHBOARD} />} />
