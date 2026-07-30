@@ -38,6 +38,7 @@
 @import './counter-settings.css';
 @import './admin-dashboard.css';
 @import './admin-companies.css';
+@import './admin-users.css';
 
 @import './search.css';
 @import './seats.css';
