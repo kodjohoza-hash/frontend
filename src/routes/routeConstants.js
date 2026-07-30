@@ -5,6 +5,12 @@
 
 export const ROUTES = {
   /* ================================================
+     DEV
+     ================================================ */
+  DEV: '/dev',
+
+  /* ================================================
+  /* ================================================
      PUBLIC / GUEST
      ================================================ */
   HOME: '/',
@@ -93,6 +99,7 @@ export const ROUTES = {
   SUPER_ADMIN_INTEGRATIONS: '/super-admin/integrations',
   SUPER_ADMIN_BACKUP: '/super-admin/backup',
   SUPER_ADMIN_AI: '/super-admin/ai',
+  SUPER_ADMIN_HEALTH: '/super-admin/health',
 
   /* ================================================
      SHARED / BOOKING FLOW
@@ -125,6 +132,7 @@ export const ROUTES = {
 };
 
 export const ROUTE_NAMES = {
+  [ROUTES.DEV]: 'Portail développement',
   [ROUTES.HOME]: 'Accueil',
   [ROUTES.LOGIN]: 'Connexion',
   [ROUTES.REGISTER]: 'Inscription',
@@ -182,6 +190,7 @@ export const ROUTE_NAMES = {
   [ROUTES.SUPER_ADMIN_INTEGRATIONS]: 'Intégrations & API',
   [ROUTES.SUPER_ADMIN_BACKUP]: 'Sauvegarde & Reprise',
   [ROUTES.SUPER_ADMIN_AI]: 'IA & Automatisation',
+  [ROUTES.SUPER_ADMIN_HEALTH]: 'Rapport de santé',
   [ROUTES.BOOKING]: 'Réservation',
   [ROUTES.BOOKING_SEARCH]: 'Recherche',
   [ROUTES.BOOKING_TRIPS]: 'Trajets',

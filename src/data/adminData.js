@@ -186,6 +186,7 @@ export const adminSidebarMenus = [
     items: [
       { id: 'audit', label: 'Audit & Surveillance', icon: 'bi-shield-check', to: '/super-admin/audit' },
       { id: 'backup', label: 'Sauvegarde & Reprise', icon: 'bi-shield-fill-check', to: '/super-admin/backup' },
+      { id: 'health', label: 'Rapport de santé', icon: 'bi-heart-pulse', to: '/super-admin/health' },
       { id: 'settings', label: 'Paramètres', icon: 'bi-gear', to: '/super-admin/settings' },
     ],
   },

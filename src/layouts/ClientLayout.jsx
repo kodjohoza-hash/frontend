@@ -1,9 +1,11 @@
 import { Outlet } from 'react-router-dom';
+import DevBanner from '@components/dev/DevBanner';
 
-/**
- * ClientLayout — Passthrough wrapper for /client/* routes
- * Each page (Dashboard, Bookings, etc.) manages its own layout.
- */
-const ClientLayout = () => <Outlet />;
+const ClientLayout = () => (
+  <>
+    <DevBanner />
+    <Outlet />
+  </>
+);
 
 export default ClientLayout;

@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import AgencySidebar from '@components/agency/AgencySidebar';
 import AgencyHeader from '@components/agency/AgencyHeader';
 import useAuth from '@hooks/useAuth';
+import DevBanner from '@components/dev/DevBanner';
 
 const CompanyLayout = () => {
   const { logout, isLoggingOut } = useAuth();
@@ -36,6 +37,7 @@ const CompanyLayout = () => {
       <AgencySidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} onLogout={openLogout} mobileOpen={sidebarOpen} />
       {sidebarOpen && <div className="ag-overlay is-open" onClick={() => setSidebarOpen(false)} />}
       <div className={`ag-layout__main ${sidebarCollapsed ? 'ag-layout__main--collapsed' : ''}`}>
+        <DevBanner />
         <AgencyHeader onToggleSidebar={toggleSidebar} onLogout={openLogout} />
         <main className="ag-layout__content">
           <Outlet />

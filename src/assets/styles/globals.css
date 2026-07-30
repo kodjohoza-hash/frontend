@@ -51,6 +51,7 @@
 @import './admin-integrations.css';
 @import './admin-backup.css';
 @import './admin-ai.css';
+@import './admin-health.css';
 
 @import './search.css';
 @import './seats.css';

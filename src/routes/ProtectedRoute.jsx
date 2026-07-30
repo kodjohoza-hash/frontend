@@ -2,6 +2,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import useAuth from '@hooks/useAuth';
 import { getRoleDashboard } from '@utils/roles';
 import LoadingAuth from '@components/auth/LoadingAuth';
+import { DEV_MODE } from '@config/devMode';
 
 /**
  * ProtectedRoute — Guard for authenticated routes
@@ -12,6 +13,8 @@ import LoadingAuth from '@components/auth/LoadingAuth';
 const ProtectedRoute = ({ children, allowedRoles = [], redirectTo }) => {
   const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
+
+  if (DEV_MODE) return children;
 
   /* Show loading skeleton during initial auth check */
   if (loading && !isAuthenticated) {

@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import CounterSidebar from '@components/counter/CounterSidebar';
 import CounterHeader from '@components/counter/CounterHeader';
 import useAuth from '@hooks/useAuth';
+import DevBanner from '@components/dev/DevBanner';
 
 const CounterLayout = () => {
   const { logout, isLoggingOut } = useAuth();
@@ -36,6 +37,7 @@ const CounterLayout = () => {
       <CounterSidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} onLogout={openLogout} mobileOpen={sidebarOpen} />
       {sidebarOpen && <div className="act-overlay is-open" onClick={() => setSidebarOpen(false)} />}
       <div className={`act-layout__main ${sidebarCollapsed ? 'act-layout__main--collapsed' : ''}`}>
+        <DevBanner />
         <CounterHeader onToggleSidebar={toggleSidebar} onLogout={openLogout} />
         <main className="act-layout__content">
           <Outlet />

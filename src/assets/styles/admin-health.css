@@ -1,0 +1,381 @@
+/* ================================================
+   BUS TIX CONNECT — Frontend Health Report
+   Prefix: adh (admin-dashboard-health)
+   ================================================ */
+
+.adh-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.adh-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.adh-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1E1B4B;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.adh-header h1 svg {
+  width: 32px;
+  height: 32px;
+  color: #8B5CF6;
+}
+
+.adh-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: #10B981;
+  color: #fff;
+}
+
+.adh-status-badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* KPI Grid */
+.adh-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.adh-kpi-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  border: 1px solid #E5E7EB;
+  transition: all 0.2s ease;
+}
+
+.adh-kpi-card:hover {
+  border-color: #8B5CF6;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+  transform: translateY(-2px);
+}
+
+.adh-kpi-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6B7280;
+  margin-bottom: 0.5rem;
+}
+
+.adh-kpi-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1E1B4B;
+}
+
+.adh-kpi-sub {
+  font-size: 0.75rem;
+  color: #9CA3AF;
+  margin-top: 0.25rem;
+}
+
+/* Section */
+.adh-section {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.adh-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #E5E7EB;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+
+.adh-section-header:hover {
+  background: #F9FAFB;
+}
+
+.adh-section-header h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1E1B4B;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.adh-section-header h2 svg {
+  width: 20px;
+  height: 20px;
+  color: #8B5CF6;
+}
+
+.adh-section-count {
+  font-size: 0.875rem;
+  color: #6B7280;
+  background: #F3F4F6;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.adh-section-chevron {
+  width: 20px;
+  height: 20px;
+  color: #9CA3AF;
+  transition: transform 0.2s;
+}
+
+.adh-section-chevron.open {
+  transform: rotate(180deg);
+}
+
+.adh-section-body {
+  padding: 1.5rem;
+}
+
+/* Module Grid */
+.adh-module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.adh-module-card {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 1.25rem;
+  transition: all 0.2s;
+}
+
+.adh-module-card:hover {
+  border-color: #8B5CF6;
+  background: #F5F3FF;
+}
+
+.adh-module-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1E1B4B;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.adh-module-name .adh-badge {
+  font-size: 0.6875rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+}
+
+.adh-badge-complete {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.adh-module-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.adh-module-detail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+}
+
+.adh-module-detail-label {
+  color: #6B7280;
+}
+
+.adh-module-detail-value {
+  color: #374151;
+  font-weight: 600;
+}
+
+/* Route Table */
+.adh-route-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.adh-route-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6B7280;
+  border-bottom: 2px solid #E5E7EB;
+  background: #F9FAFB;
+}
+
+.adh-route-table td {
+  padding: 0.75rem 1rem;
+  font-size: 0.8125rem;
+  color: #374151;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.adh-route-table tr:hover td {
+  background: #F9FAFB;
+}
+
+.adh-route-path {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.75rem;
+  color: #6B7280;
+}
+
+.adh-route-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.adh-route-live {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.adh-route-pending {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.adh-route-ok {
+  background: #DBEAFE;
+  color: #1E40AF;
+}
+
+/* Dependency list */
+.adh-dep-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.75rem;
+}
+
+.adh-dep-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: #F9FAFB;
+  border-radius: 8px;
+  border: 1px solid #E5E7EB;
+  font-size: 0.8125rem;
+}
+
+.adh-dep-name {
+  color: #374151;
+  font-weight: 500;
+}
+
+.adh-dep-version {
+  color: #6B7280;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.75rem;
+}
+
+.adh-dep-version.latest {
+  color: #059669;
+}
+
+.adh-dep-version.outdated {
+  color: #D97706;
+}
+
+/* File tree */
+.adh-file-tree {
+  column-count: 3;
+  column-gap: 2rem;
+}
+
+.adh-file-category {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+}
+
+.adh-file-category h4 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #1E1B4B;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.adh-file-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0;
+  font-size: 0.75rem;
+  color: #6B7280;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.adh-file-item svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.adh-file-item.file-js { color: #F7DF1E; }
+.adh-file-item.file-css { color: #1572B6; }
+.adh-file-item.file-json { color: #7C3AED; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .adh-container {
+    padding: 1rem;
+  }
+
+  .adh-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .adh-module-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .adh-file-tree {
+    column-count: 1;
+  }
+
+  .adh-route-table {
+    font-size: 0.75rem;
+  }
+}

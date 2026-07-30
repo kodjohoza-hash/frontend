@@ -104,6 +104,10 @@ const SuperAdminSupport = lazy(() => import('@pages/SuperAdmin/Support'));
 const SuperAdminIntegrations = lazy(() => import('@pages/SuperAdmin/Integrations'));
 const SuperAdminBackup = lazy(() => import('@pages/SuperAdmin/Backup'));
 const SuperAdminAI = lazy(() => import('@pages/SuperAdmin/AI'));
+const SuperAdminHealth = lazy(() => import('@pages/SuperAdmin/HealthReport'));
+
+/* Dev Portal */
+const DevPortal = lazy(() => import('@pages/Dev/DevPage'));
 
 /* Error Pages */
 const NotFound = lazy(() => import('@pages/Errors/NotFound'));
@@ -283,6 +287,7 @@ const AppRouter = () => {
           <Route path={ROUTES.SUPER_ADMIN_INTEGRATIONS} element={<SuperAdminIntegrations />} />
           <Route path={ROUTES.SUPER_ADMIN_BACKUP} element={<SuperAdminBackup />} />
           <Route path={ROUTES.SUPER_ADMIN_AI} element={<SuperAdminAI />} />
+          <Route path={ROUTES.SUPER_ADMIN_HEALTH} element={<SuperAdminHealth />} />
         </Route>
 
         {/* ================================================
@@ -297,6 +302,11 @@ const AppRouter = () => {
           <Route path={ROUTES.PROFILE} element={<PlaceholderPage title="Mon profil" description="Gérez vos informations personnelles et préférences." icon="bi-person" backTo="/" />} />
           <Route path={ROUTES.SETTINGS} element={<PlaceholderPage title="Paramètres" description="Configurez vos options de sécurité et préférences." icon="bi-gear" backTo="/" />} />
         </Route>
+
+        {/* ================================================
+            DEV PORTAL
+            ================================================ */}
+        <Route path={ROUTES.DEV} element={<DevPortal />} />
 
         {/* ================================================
             ERROR PAGES
