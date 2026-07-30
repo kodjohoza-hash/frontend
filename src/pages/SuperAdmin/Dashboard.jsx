@@ -1,10 +1,29 @@
-const SuperAdminDashboard = () => {
-  return (
-    <div className="super-admin-dashboard-page">
-      <h1 className="mb-4">Tableau de bord - Administration</h1>
-      <p className="text-muted">Espace administration en cours de développement</p>
+import { Suspense } from 'react';
+import {
+  AdminWelcome, AdminStats, AdminCharts, AdminActivityTimeline,
+  AdminAlerts, AdminQuickActions, AdminTopCompanies, AdminTransactions,
+  AdminSkeleton,
+} from '@components/admin/';
+
+const AdminDashboardContent = () => (
+  <>
+    <AdminWelcome />
+    <AdminQuickActions />
+    <AdminStats />
+    <AdminCharts />
+    <div className="adm-bottom-grid">
+      <AdminActivityTimeline />
+      <AdminAlerts />
     </div>
-  );
-};
+    <AdminTopCompanies />
+    <AdminTransactions />
+  </>
+);
+
+const SuperAdminDashboard = () => (
+  <Suspense fallback={<AdminSkeleton />}>
+    <AdminDashboardContent />
+  </Suspense>
+);
 
 export default SuperAdminDashboard;
