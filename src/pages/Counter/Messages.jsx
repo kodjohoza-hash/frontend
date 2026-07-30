@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+﻿import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import clsx from 'clsx';
 import {
   CounterMessageSidebar,
@@ -99,7 +99,7 @@ function Messages() {
   const filtered = useMemo(() => {
     if (!conversations.length) return [];
     const raw = getConversationsByFolder(activeFolder);
-    let result = filterConversations(raw, { search, folder: activeFolder });
+    let result = filterConversations(raw, { search });
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(
