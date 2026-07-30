@@ -31,6 +31,8 @@
 @import './counter-sale.css';
 @import './counter-bookings.css';
 @import './counter-scanner.css';
+@import './counter-payments.css';
+@import './counter-customers.css';
 
 @import './search.css';
 @import './seats.css';

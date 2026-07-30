@@ -67,6 +67,8 @@ export const ROUTES = {
   COUNTER_DASHBOARD: '/counter/dashboard',
   COUNTER_SALE: '/counter/sale',
   COUNTER_BOOKINGS: '/counter/bookings',
+  COUNTER_CUSTOMERS: '/counter/customers',
+  COUNTER_PAYMENTS: '/counter/payments',
   COUNTER_TICKETS: '/counter/tickets',
   COUNTER_PROFILE: '/counter/profile',
 
@@ -146,6 +148,8 @@ export const ROUTE_NAMES = {
   [ROUTES.COUNTER_DASHBOARD]: 'Tableau de bord',
   [ROUTES.COUNTER_SALE]: 'Vente',
   [ROUTES.COUNTER_BOOKINGS]: 'Réservations',
+  [ROUTES.COUNTER_PAYMENTS]: 'Paiements',
+  [ROUTES.COUNTER_CUSTOMERS]: 'Clients',
   [ROUTES.COUNTER_TICKETS]: 'Billets',
   [ROUTES.COUNTER_PROFILE]: 'Profil',
   [ROUTES.SUPER_ADMIN_DASHBOARD]: 'Tableau de bord',
