@@ -39,6 +39,7 @@
 @import './admin-dashboard.css';
 @import './admin-companies.css';
 @import './admin-users.css';
+@import './admin-roles.css';
 
 @import './search.css';
 @import './seats.css';
