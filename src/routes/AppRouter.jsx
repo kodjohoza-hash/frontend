@@ -8,7 +8,7 @@ import GuestLayout from '@layouts/GuestLayout';
 import AuthLayout from '@layouts/AuthLayout';
 import ClientLayout from '@layouts/ClientLayout';
 import CompanyLayout from '@layouts/CompanyLayout';
-import CounterLayout from '@layouts/CounterLayout';
+import CounterRoutes from './CounterRoutes';
 import SuperAdminLayout from '@layouts/SuperAdminLayout';
 import RouteLoader from './RouteLoader';
 
@@ -80,16 +80,6 @@ const AgencySettings = lazy(() => import('@pages/Agency/Settings'));
 const AgencyProfile = lazy(() => import('@pages/Agency/Profile'));
 const AgencyNotifications = lazy(() => import('@pages/Agency/Notifications'));
 const AgencyMessages = lazy(() => import('@pages/Agency/Messages'));
-const CounterDashboard = lazy(() => import('@pages/Counter/Dashboard'));
-const CounterSalePage = lazy(() => import('@pages/Counter/Sale'));
-const CounterBookingPage = lazy(() => import('@pages/Counter/Bookings'));
-const CounterScannerPage = lazy(() => import('@pages/Counter/Scanner'));
-const CounterPaymentsPage = lazy(() => import('@pages/Counter/Payments'));
-const CounterCustomersPage = lazy(() => import('@pages/Counter/Customers'));
-const CounterNotificationsPage = lazy(() => import('@pages/Counter/Notifications'));
-const CounterMessagesPage = lazy(() => import('@pages/Counter/Messages'));
-const CounterProfilePage = lazy(() => import('@pages/Counter/Profile'));
-const CounterSettingsPage = lazy(() => import('@pages/Counter/Settings'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 const SuperAdminCompanies = lazy(() => import('@pages/SuperAdmin/Companies'));
 const SuperAdminUsers = lazy(() => import('@pages/SuperAdmin/Users'));
@@ -247,24 +237,9 @@ const AppRouter = () => {
         </Route>
 
         {/* ================================================
-            COUNTER — Espace guichet (RoleGuard + CounterLayout)
+            COUNTER — Espace guichet
             ================================================ */}
-        <Route element={
-          <RoleGuard allowedRoles={[ROLES.COUNTER_AGENT]}>
-            <CounterLayout />
-          </RoleGuard>
-        }>
-          <Route path={ROUTES.COUNTER_DASHBOARD} element={<CounterDashboard />} />
-          <Route path={ROUTES.COUNTER_SALE} element={<CounterSalePage />} />
-          <Route path={ROUTES.COUNTER_BOOKINGS} element={<CounterBookingPage />} />
-          <Route path={ROUTES.COUNTER_CUSTOMERS} element={<CounterCustomersPage />} />
-          <Route path={ROUTES.COUNTER_NOTIFICATIONS} element={<CounterNotificationsPage />} />
-          <Route path={ROUTES.COUNTER_MESSAGES} element={<CounterMessagesPage />} />
-          <Route path={ROUTES.COUNTER_PAYMENTS} element={<CounterPaymentsPage />} />
-          <Route path={ROUTES.COUNTER_TICKETS} element={<CounterScannerPage />} />
-          <Route path={ROUTES.COUNTER_PROFILE} element={<CounterProfilePage />} />
-          <Route path={ROUTES.COUNTER_SETTINGS} element={<CounterSettingsPage />} />
-        </Route>
+        {CounterRoutes()}
 
         {/* ================================================
             SUPER ADMIN — Administration (RoleGuard + SuperAdminLayout)
