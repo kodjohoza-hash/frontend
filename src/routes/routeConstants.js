@@ -91,6 +91,7 @@ export const ROUTES = {
   SUPER_ADMIN_NOTIFICATIONS: '/super-admin/notifications',
   SUPER_ADMIN_SUPPORT: '/super-admin/support',
   SUPER_ADMIN_INTEGRATIONS: '/super-admin/integrations',
+  SUPER_ADMIN_BACKUP: '/super-admin/backup',
 
   /* ================================================
      SHARED / BOOKING FLOW
@@ -178,6 +179,7 @@ export const ROUTE_NAMES = {
   [ROUTES.SUPER_ADMIN_NOTIFICATIONS]: 'Notifications',
   [ROUTES.SUPER_ADMIN_SUPPORT]: 'Centre de support',
   [ROUTES.SUPER_ADMIN_INTEGRATIONS]: 'Intégrations & API',
+  [ROUTES.SUPER_ADMIN_BACKUP]: 'Sauvegarde & Reprise',
   [ROUTES.BOOKING]: 'Réservation',
   [ROUTES.BOOKING_SEARCH]: 'Recherche',
   [ROUTES.BOOKING_TRIPS]: 'Trajets',
