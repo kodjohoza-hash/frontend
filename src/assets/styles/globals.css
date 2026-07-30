@@ -48,6 +48,7 @@
 @import './admin-settings.css';
 @import './admin-notifications.css';
 @import './admin-support.css';
+@import './admin-integrations.css';
 
 @import './search.css';
 @import './seats.css';
