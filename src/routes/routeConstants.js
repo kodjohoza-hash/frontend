@@ -89,6 +89,7 @@ export const ROUTES = {
   SUPER_ADMIN_AUDIT: '/super-admin/audit',
   SUPER_ADMIN_SETTINGS: '/super-admin/settings',
   SUPER_ADMIN_NOTIFICATIONS: '/super-admin/notifications',
+  SUPER_ADMIN_SUPPORT: '/super-admin/support',
 
   /* ================================================
      SHARED / BOOKING FLOW
@@ -174,6 +175,7 @@ export const ROUTE_NAMES = {
   [ROUTES.SUPER_ADMIN_AUDIT]: 'Audit',
   [ROUTES.SUPER_ADMIN_SETTINGS]: 'Paramètres',
   [ROUTES.SUPER_ADMIN_NOTIFICATIONS]: 'Notifications',
+  [ROUTES.SUPER_ADMIN_SUPPORT]: 'Centre de support',
   [ROUTES.BOOKING]: 'Réservation',
   [ROUTES.BOOKING_SEARCH]: 'Recherche',
   [ROUTES.BOOKING_TRIPS]: 'Trajets',
