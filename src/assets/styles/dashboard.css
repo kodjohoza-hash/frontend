@@ -1161,6 +1161,13 @@
   line-height: 1.5;
 }
 
+.db-welcome__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .db-welcome__cta {
   display: inline-flex;
   align-items: center;
@@ -1182,18 +1189,38 @@
   box-shadow: 0 4px 12px rgba(255, 107, 53, 0.45);
 }
 
+.db-welcome__cta:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.db-welcome__cta--outline {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  box-shadow: none;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  backdrop-filter: blur(4px);
+}
+
+.db-welcome__cta--outline:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: var(--db-accent);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+  transform: translateY(-1px);
+}
+
 .db-welcome__visual {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
 }
 
 .db-welcome__bus {
-  font-size: 4rem;
+  font-size: 3.2rem;
   line-height: 1;
+  color: var(--db-accent);
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
   animation: dbBusBounce 2s ease-in-out infinite;
 }
@@ -1203,20 +1230,42 @@
   50% { transform: translateY(-6px); }
 }
 
-.db-welcome__dots {
+.db-welcome__stats-mini {
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
-.db-welcome__dots span {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.3);
+.db-welcome__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
 
-.db-welcome__dots span:nth-child(2) {
-  background: var(--db-accent);
+.db-welcome__stat-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.db-welcome__stat-label {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.db-welcome__stat-divider {
+  width: 1px;
+  height: 30px;
+  background: rgba(255,255,255,0.15);
 }
 
 /* ================================================================
@@ -2165,4 +2214,224 @@
 .db-header__dropdown-list::-webkit-scrollbar-thumb {
   background: var(--db-border);
   border-radius: 4px;
+}
+
+/* ================================================================
+    19. STAGGERED ENTRY ANIMATIONS
+    ================================================================ */
+.db-stats-row--visible .db-stats-anim {
+  animation: dbStatsSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.db-stats-anim {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+@keyframes dbStatsSlideUp {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ================================================================
+    20. TOAST SYSTEM
+    ================================================================ */
+.db-toast-container {
+  position: fixed;
+  top: 64px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.db-toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--db-surface);
+  border: 1px solid var(--db-border);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  min-width: 300px;
+  max-width: 420px;
+  pointer-events: auto;
+  animation: dbToastSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(12px);
+}
+
+@keyframes dbToastSlideIn {
+  from { opacity: 0; transform: translateX(100%) scale(0.9); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.db-toast--success { border-left: 3px solid var(--db-success); }
+.db-toast--error { border-left: 3px solid var(--db-danger); }
+.db-toast--warning { border-left: 3px solid var(--db-warning); }
+.db-toast--info { border-left: 3px solid var(--db-primary); }
+
+.db-toast-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  display: flex;
+}
+
+.db-toast--success .db-toast-icon { color: var(--db-success); }
+.db-toast--error .db-toast-icon { color: var(--db-danger); }
+.db-toast--warning .db-toast-icon { color: var(--db-warning); }
+.db-toast--info .db-toast-icon { color: var(--db-primary); }
+
+.db-toast-message {
+  flex: 1;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--db-text);
+  line-height: 1.4;
+}
+
+.db-toast-close {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--db-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all var(--db-transition);
+  flex-shrink: 0;
+}
+
+.db-toast-close:hover {
+  background: var(--db-primary-50);
+  color: var(--db-primary);
+}
+
+/* ================================================================
+    21. SIDEBAR ENHANCED ANIMATIONS
+    ================================================================ */
+.db-sidebar__link {
+  position: relative;
+  overflow: hidden;
+}
+
+.db-sidebar__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.db-sidebar__link:hover::after {
+  transform: translateX(100%);
+}
+
+.db-sidebar__link--active::after {
+  display: none;
+}
+
+.db-sidebar__link--active {
+  animation: dbActivePulse 0.3s ease;
+}
+
+@keyframes dbActivePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.db-sidebar__link i {
+  transition: transform var(--db-transition);
+}
+
+.db-sidebar__link:hover i {
+  transform: scale(1.15);
+}
+
+.db-sidebar__link--active i {
+  transform: scale(1.1);
+}
+
+/* ================================================================
+    22. CARD ENHANCEMENTS
+    ================================================================ */
+.db-card {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+
+.db-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--db-shadow-md);
+}
+
+.db-stats {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+
+.db-stats:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--db-shadow-lg);
+}
+
+/* ================================================================
+    23. RESPONSIVE ENHANCEMENTS
+    ================================================================ */
+@media (max-width: 1200px) {
+  .db-stats-anim {
+    animation-delay: 0s !important;
+  }
+  .db-toast-container {
+    right: 12px;
+  }
+  .db-toast {
+    min-width: 260px;
+    max-width: 360px;
+  }
+}
+
+@media (max-width: 768px) {
+  .db-toast-container {
+    top: 56px;
+    right: 8px;
+    left: 8px;
+  }
+  .db-toast {
+    min-width: auto;
+    max-width: 100%;
+    padding: 10px 14px;
+  }
+  .db-welcome__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .db-welcome__cta {
+    width: 100%;
+    justify-content: center;
+  }
+  .db-welcome__stats-mini {
+    padding: 6px 12px;
+    gap: 10px;
+  }
+  .db-welcome__stat-value {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .db-toast-container {
+    top: 48px;
+  }
+  .db-toast {
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+  }
 }

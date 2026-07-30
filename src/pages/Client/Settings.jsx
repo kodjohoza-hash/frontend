@@ -1,5 +1,4 @@
 import { useState, useCallback, Suspense } from 'react';
-import DashboardLayout from '@components/client/DashboardLayout';
 import useAuth from '@hooks/useAuth';
 import {
   SettingsTabs,
@@ -27,120 +26,59 @@ const SettingsPage = () => {
     setSettings((prev) => {
       const key = Object.keys(update)[0];
       const currentSection = prev[key] || {};
-      const newSection = typeof update[key] === 'object' && !Array.isArray(update[key])
-        ? { ...currentSection, ...update[key] }
-        : update[key];
+      const newSection = typeof update[key] === 'object' && !Array.isArray(update[key]) ? { ...currentSection, ...update[key] } : update[key];
       return { ...prev, [key]: newSection };
     });
     setHasChanges(true);
   }, []);
 
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      await new Promise((r) => setTimeout(r, 800));
-      setHasChanges(false);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleReset = () => {
-    setSettings(defaultSettings);
-    setHasChanges(false);
-  };
-
-  const handleRestoreDefaults = () => {
-    setSettings(defaultSettings);
-    setHasChanges(true);
-  };
+  const handleSave = async () => { setSaving(true); try { await new Promise((r) => setTimeout(r, 800)); setHasChanges(false); } finally { setSaving(false); } };
+  const handleReset = () => { setSettings(defaultSettings); setHasChanges(false); };
+  const handleRestoreDefaults = () => { setSettings(defaultSettings); setHasChanges(true); };
 
   const renderTab = () => {
     switch (activeTab) {
-      case 'general':
-        return <GeneralSettings settings={settings} onChange={handleSettingChange} />;
-      case 'notifications':
-        return <NotificationSettings settings={settings} onChange={handleSettingChange} />;
-      case 'privacy':
-        return <PrivacySettings settings={settings} onChange={handleSettingChange} />;
-      case 'security':
-        return <SecuritySettings user={user} />;
-      case 'appearance':
-        return <AppearanceSettings settings={settings} onChange={handleSettingChange} />;
-      case 'language':
-        return <LanguageSettings settings={settings} onChange={handleSettingChange} />;
-      case 'travel':
-        return <TravelPreferences settings={settings} onChange={handleSettingChange} />;
-      case 'sessions':
-        return <ActiveSessions />;
-      default:
-        return <GeneralSettings settings={settings} onChange={handleSettingChange} />;
+      case 'general': return <GeneralSettings settings={settings} onChange={handleSettingChange} />;
+      case 'notifications': return <NotificationSettings settings={settings} onChange={handleSettingChange} />;
+      case 'privacy': return <PrivacySettings settings={settings} onChange={handleSettingChange} />;
+      case 'security': return <SecuritySettings user={user} />;
+      case 'appearance': return <AppearanceSettings settings={settings} onChange={handleSettingChange} />;
+      case 'language': return <LanguageSettings settings={settings} onChange={handleSettingChange} />;
+      case 'travel': return <TravelPreferences settings={settings} onChange={handleSettingChange} />;
+      case 'sessions': return <ActiveSessions />;
+      default: return <GeneralSettings settings={settings} onChange={handleSettingChange} />;
     }
   };
 
   return (
-    <DashboardLayout>
+    <>
       <div className="st-page__header">
         <div className="st-page__title-group">
           <h1 className="st-page__title">Paramètres</h1>
           <p className="st-page__subtitle">Personnalisez votre expérience BUS TIX CONNECT.</p>
         </div>
         <div className="st-page__actions">
-          <button
-            type="button"
-            className="st-page__save"
-            onClick={handleSave}
-            disabled={!hasChanges || saving}
-          >
-            {saving ? (
-              <>
-                <i className="bi bi-arrow-repeat st-page__save-spin" />
-                Enregistrement...
-              </>
-            ) : (
-              <>
-                <i className="bi bi-check-lg" />
-                Enregistrer les modifications
-              </>
-            )}
+          <button type="button" className="st-page__save" onClick={handleSave} disabled={!hasChanges || saving}>
+            {saving ? <><i className="bi bi-arrow-repeat st-page__save-spin" /> Enregistrement...</> : <><i className="bi bi-check-lg" /> Enregistrer les modifications</>}
           </button>
         </div>
       </div>
-
       <div className="st-layout">
-        <div className="st-layout__sidebar">
-          <SettingsTabs activeTab={activeTab} onTabChange={setActiveTab} />
-        </div>
-
+        <div className="st-layout__sidebar"><SettingsTabs activeTab={activeTab} onTabChange={setActiveTab} /></div>
         <div className="st-layout__content">
           {renderTab()}
-
           <div className="st-actions">
             <div className="st-actions__group">
-              <button type="button" className="st-btn st-btn--secondary" onClick={handleReset}>
-                <i className="bi bi-arrow-counterclockwise" />
-                Réinitialiser
-              </button>
-              <button type="button" className="st-btn st-btn--secondary" onClick={handleRestoreDefaults}>
-                <i className="bi bi-arrow-return-left" />
-                Restaurer les défauts
-              </button>
+              <button type="button" className="st-btn st-btn--secondary" onClick={handleReset}><i className="bi bi-arrow-counterclockwise" /> Réinitialiser</button>
+              <button type="button" className="st-btn st-btn--secondary" onClick={handleRestoreDefaults}><i className="bi bi-arrow-return-left" /> Restaurer les défauts</button>
             </div>
             <div className="st-actions__group">
-              <button
-                type="button"
-                className="st-btn st-btn--primary"
-                onClick={handleSave}
-                disabled={!hasChanges || saving}
-                style={!hasChanges ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
-              >
-                {saving ? 'Enregistrement...' : 'Enregistrer'}
-              </button>
+              <button type="button" className="st-btn st-btn--primary" onClick={handleSave} disabled={!hasChanges || saving}>{saving ? 'Enregistrement...' : 'Enregistrer'}</button>
             </div>
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 
