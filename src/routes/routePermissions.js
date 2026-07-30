@@ -41,6 +41,7 @@ export const ROUTE_PERMISSIONS = {
   [ROUTES.COUNTER_SALE]: { roles: ['counter_agent'], permissions: [PERMISSIONS.BOOKINGS_CREATE] },
   [ROUTES.COUNTER_BOOKINGS]: { roles: ['counter_agent'], permissions: [PERMISSIONS.BOOKINGS_VIEW] },
   [ROUTES.COUNTER_CUSTOMERS]: { roles: ['counter_agent'], permissions: [PERMISSIONS.BOOKINGS_VIEW] },
+  [ROUTES.COUNTER_NOTIFICATIONS]: { roles: ['counter_agent'], permissions: [PERMISSIONS.NOTIFICATIONS_VIEW] },
   [ROUTES.COUNTER_PAYMENTS]: { roles: ['counter_agent'], permissions: [PERMISSIONS.PAYMENTS_VIEW] },
   [ROUTES.COUNTER_TICKETS]: { roles: ['counter_agent'], permissions: [PERMISSIONS.TICKETS_VIEW] },
   [ROUTES.COUNTER_PROFILE]: { roles: ['counter_agent'], permissions: [PERMISSIONS.PROFILE_VIEW] },

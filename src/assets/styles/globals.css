@@ -33,6 +33,7 @@
 @import './counter-scanner.css';
 @import './counter-payments.css';
 @import './counter-customers.css';
+@import './counter-notifications.css';
 
 @import './search.css';
 @import './seats.css';
