@@ -34,6 +34,7 @@
 @import './counter-payments.css';
 @import './counter-customers.css';
 @import './counter-notifications.css';
+@import './counter-messaging.css';
 
 @import './search.css';
 @import './seats.css';

@@ -86,6 +86,7 @@ const CounterScannerPage = lazy(() => import('@pages/Counter/Scanner'));
 const CounterPaymentsPage = lazy(() => import('@pages/Counter/Payments'));
 const CounterCustomersPage = lazy(() => import('@pages/Counter/Customers'));
 const CounterNotificationsPage = lazy(() => import('@pages/Counter/Notifications'));
+const CounterMessagesPage = lazy(() => import('@pages/Counter/Messages'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 
 /* Error Pages */
@@ -236,6 +237,7 @@ const AppRouter = () => {
           <Route path={ROUTES.COUNTER_BOOKINGS} element={<CounterBookingPage />} />
           <Route path={ROUTES.COUNTER_CUSTOMERS} element={<CounterCustomersPage />} />
           <Route path={ROUTES.COUNTER_NOTIFICATIONS} element={<CounterNotificationsPage />} />
+          <Route path={ROUTES.COUNTER_MESSAGES} element={<CounterMessagesPage />} />
           <Route path={ROUTES.COUNTER_PAYMENTS} element={<CounterPaymentsPage />} />
           <Route path={ROUTES.COUNTER_TICKETS} element={<CounterScannerPage />} />
           <Route path={ROUTES.COUNTER_PROFILE} element={<PlaceholderPage title="Mon profil" description="Gérez vos informations personnelles." icon="bi-person" backTo={ROUTES.COUNTER_DASHBOARD} />} />
