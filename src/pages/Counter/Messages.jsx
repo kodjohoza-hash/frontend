@@ -1,60 +1,85 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import clsx from 'clsx';
 import {
   CounterMessageSidebar,
   CounterConversationList,
-  CounterConversationCard,
   CounterChatWindow,
-  CounterMessageBubble,
-  CounterComposer,
   CounterConversationInfo,
   CounterSupportPanel,
-  CounterAttachmentPreview,
   CounterMessageSearch,
-  CounterMessageSkeleton
+  CounterMessageSkeleton,
 } from '@components/counter/';
 import {
   conversations as allConversations,
   folders,
   currentUser,
   tickets,
+  getPinnedConversations,
+  getConversationsByFolder,
   filterConversations,
   sortConversations,
   formatDate,
-  formatTime
+  formatTime,
 } from '@data/counterMessageData';
 
 import '@assets/styles/counter-messaging.css';
 
-const STORAGE_DRAFT_KEY = 'acm_drafts';
+const AGT_ID = currentUser.id;
+
+function adaptConversation(conv) {
+  const p = conv.participant || {};
+  return {
+    id: conv.id,
+    name: p.name || '',
+    role: p.role || '',
+    avatar: p.avatar || null,
+    status: p.status || 'offline',
+    lastMessage: conv.lastMessage?.text || '',
+    lastMessageTime: conv.lastMessage?.date ? formatDate(conv.lastMessage.date) : '',
+    unread: conv.unreadCount || 0,
+    important: conv.isImportant || false,
+    pinned: conv.pinned || false,
+    participant: p,
+    messages: conv.messages || [],
+    sharedFiles: conv.sharedFiles || [],
+    folder: conv.folder || 'inbox',
+  };
+}
 
 function Messages() {
   const [loading, setLoading] = useState(true);
   const [conversations, setConversations] = useState([]);
-  const [filtered, setFiltered] = useState([]);
   const [activeFolder, setActiveFolder] = useState('inbox');
   const [activeConversationId, setActiveConversationId] = useState(null);
+  const [search, setSearch] = useState('');
   const [showInfoPanel, setShowInfoPanel] = useState(false);
   const [showSupport, setShowSupport] = useState(false);
-  const [search, setSearch] = useState('');
-  const [sortBy, setSortBy] = useState('newest');
-  const [drafts, setDrafts] = useState({});
   const [toasts, setToasts] = useState([]);
   const [mobileView, setMobileView] = useState('list');
+  const [showNewModal, setShowNewModal] = useState(false);
 
   const chatEndRef = useRef(null);
-  const draftTimer = useRef(null);
 
-  const activeConversation = conversations.find(
-    (c) => c.id === activeConversationId
-  );
+  const rawActiveConv = useMemo(() => {
+    if (!activeConversationId) return null;
+    return allConversations.find((c) => c.id === activeConversationId) || null;
+  }, [activeConversationId]);
+
+  const pinnedConvs = useMemo(() => {
+    const raw = getPinnedConversations();
+    return raw.map(adaptConversation);
+  }, []);
+
+  const activeConv = useMemo(() => {
+    if (!rawActiveConv) return null;
+    return adaptConversation(rawActiveConv);
+  }, [rawActiveConv]);
 
   const addToast = useCallback((message, type = 'info', duration = 4000) => {
     const id = Date.now() + Math.random();
     setToasts((prev) => [...prev, { id, message, type }]);
     if (duration > 0) {
-      setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== id));
-      }, duration);
+      setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), duration);
     }
     return id;
   }, []);
@@ -71,166 +96,108 @@ function Messages() {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    if (!conversations.length) return;
-    let result = filterConversations
-      ? filterConversations(conversations, activeFolder, search)
-      : conversations;
-
+  const filtered = useMemo(() => {
+    if (!conversations.length) return [];
+    const raw = getConversationsByFolder(activeFolder);
+    let result = filterConversations(raw, { search, folder: activeFolder });
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(
         (c) =>
-          (c.name && c.name.toLowerCase().includes(q)) ||
-          (c.lastMessage && c.lastMessage.toLowerCase().includes(q))
+          (c.participant?.name || '').toLowerCase().includes(q) ||
+          (c.lastMessage?.text || '').toLowerCase().includes(q)
       );
     }
-
-    result = result.filter((c) => {
-      if (activeFolder === 'inbox') return !c.archived;
-      if (activeFolder === 'unread') return c.unread > 0;
-      if (activeFolder === 'archived') return c.archived;
-      return true;
-    });
-
-    result = sortConversations
-      ? sortConversations(result, sortBy)
-      : result;
-
-    setFiltered(result);
-  }, [conversations, activeFolder, search, sortBy]);
+    result = sortConversations(result, 'newest');
+    return result.map(adaptConversation);
+  }, [conversations, activeFolder, search]);
 
   useEffect(() => {
     if (activeConversationId && chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [activeConversationId, conversations]);
-
-  useEffect(() => {
-    if (draftTimer.current) clearTimeout(draftTimer.current);
-    draftTimer.current = setTimeout(() => {
-      try {
-        localStorage.setItem(STORAGE_DRAFT_KEY, JSON.stringify(drafts));
-      } catch {
-        /* storage full */
-      }
-    }, 500);
-    return () => {
-      if (draftTimer.current) clearTimeout(draftTimer.current);
-    };
-  }, [drafts]);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_DRAFT_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        setDrafts((prev) => ({ ...prev, ...parsed }));
-      }
-    } catch {
-      /* ignore */
-    }
-  }, []);
+  }, [activeConversationId]);
 
   const handleFolderChange = useCallback((folder) => {
     setActiveFolder(folder);
     setActiveConversationId(null);
     setShowInfoPanel(false);
     setShowSupport(false);
+    setMobileView('list');
   }, []);
 
-  const handleSelectConversation = useCallback(
-    (conversationId) => {
-      setActiveConversationId(conversationId);
-      setShowSupport(false);
-      setMobileView('chat');
-
-      setConversations((prev) =>
-        prev.map((c) =>
-          c.id === conversationId ? { ...c, unread: 0 } : c
-        )
-      );
-    },
-    []
-  );
+  const handleSelectConversation = useCallback((conversationId) => {
+    setActiveConversationId(conversationId);
+    setShowSupport(false);
+    setMobileView('chat');
+    setConversations((prev) =>
+      prev.map((c) => (c.id === conversationId ? { ...c, unreadCount: 0 } : c))
+    );
+  }, []);
 
   const handleSendMessage = useCallback(
-    (text, attachments) => {
-      if (!activeConversationId || !text.trim()) return;
+    (convId, text, attachments) => {
+      if (!convId || !text?.trim()) return;
 
       const newMessage = {
         id: `msg-${Date.now()}`,
-        content: text.trim(),
-        sender: 'me',
-        timestamp: new Date().toISOString(),
-        status: 'sending',
+        text: text.trim(),
+        senderId: AGT_ID,
+        date: new Date().toISOString(),
+        status: 'sent',
+        reactions: [],
+        attachments: attachments || [],
       };
+
+      const idx = allConversations.findIndex((c) => c.id === convId);
+      if (idx >= 0) {
+        allConversations[idx].messages.push(newMessage);
+        allConversations[idx].lastMessage = { text: text.trim(), date: new Date().toISOString(), senderId: AGT_ID, status: 'sent' };
+      }
 
       setConversations((prev) =>
         prev.map((c) => {
-          if (c.id !== activeConversationId) return c;
+          if (c.id !== convId) return c;
           return {
             ...c,
             messages: [...(c.messages || []), newMessage],
-            lastMessage: text.trim(),
-            lastTime: new Date().toISOString(),
+            lastMessage: { text: text.trim(), date: new Date().toISOString(), senderId: AGT_ID, status: 'sent' },
           };
         })
       );
 
-      setDrafts((prev) => {
-        const next = { ...prev };
-        delete next[activeConversationId];
-        return next;
-      });
-
-      setTimeout(() => {
-        setConversations((prev) =>
-          prev.map((c) => {
-            if (c.id !== activeConversationId) return c;
-            return {
-              ...c,
-              messages: c.messages.map((m) =>
-                m.id === newMessage.id ? { ...m, status: 'sent' } : m
-              ),
-            };
-          })
-        );
-      }, 800);
-
       addToast('Message envoyé', 'success');
     },
-    [activeConversationId, addToast]
+    [addToast]
   );
 
   const handleMessageAction = useCallback(
-    (action, messageId, conversationId) => {
-      const cId = conversationId || activeConversationId;
-      if (!cId) return;
+    (convId, msgId, action) => {
+      if (!convId || !msgId) return;
 
       setConversations((prev) =>
         prev.map((c) => {
-          if (c.id !== cId) return c;
-          const updatedMessages = (c.messages || []).map((m) => {
-            if (m.id !== messageId) return m;
-            switch (action) {
-              case 'delete':
-                return { ...m, deleted: true, content: 'Message supprimé' };
-              case 'pin':
-                return { ...m, pinned: !m.pinned };
-              case 'reply':
-                return { ...m, replying: true };
-              default:
-                return m;
-            }
-          });
-          return { ...c, messages: updatedMessages };
+          if (c.id !== convId) return c;
+          return {
+            ...c,
+            messages: (c.messages || []).map((m) => {
+              if (m.id !== msgId) return m;
+              switch (action) {
+                case 'delete':
+                  return { ...m, deleted: true, text: 'Message supprimé' };
+                case 'pin':
+                  return { ...m, pinned: !m.pinned };
+                default:
+                  return m;
+              }
+            }),
+          };
         })
       );
 
       const labels = {
         delete: 'Message supprimé',
-        pin: 'Message épinglé',
+        pin: 'Message épinglé/désépinglé',
         copy: 'Copié dans le presse-papier',
         reply: 'Réponse',
       };
@@ -238,30 +205,38 @@ function Messages() {
         addToast(labels[action], action === 'delete' ? 'error' : 'info');
       }
     },
-    [activeConversationId, addToast]
+    [addToast]
   );
 
   const handleNewConversation = useCallback(() => {
-    addToast('Nouvelle conversation — à implémenter', 'info');
-  }, [addToast]);
+    setShowNewModal(true);
+  }, []);
 
   const handleNewTicket = useCallback(() => {
     setShowSupport(true);
     setActiveConversationId(null);
-  }, []);
-
-  const handleSearch = useCallback((value) => {
-    setSearch(value);
-  }, []);
-
-  const handleDraftChange = useCallback((conversationId, text) => {
-    setDrafts((prev) => ({ ...prev, [conversationId]: text }));
+    setMobileView('chat');
   }, []);
 
   const handleBackToList = useCallback(() => {
     setMobileView('list');
     setShowInfoPanel(false);
   }, []);
+
+  const handleInfoToggle = useCallback(() => {
+    setShowInfoPanel((s) => !s);
+  }, []);
+
+  const unreadCounts = useMemo(() => {
+    const counts = {};
+    folders.forEach((f) => { counts[f.id] = 0; });
+    conversations.forEach((c) => {
+      counts[c.folder] = (counts[c.folder] || 0) + (c.unreadCount || 0);
+      if (c.isImportant) counts.important = (counts.important || 0) + (c.unreadCount || 0);
+    });
+    counts.unread = conversations.reduce((s, c) => s + (c.unreadCount || 0), 0);
+    return counts;
+  }, [conversations]);
 
   if (loading) {
     return (
@@ -273,205 +248,252 @@ function Messages() {
 
   return (
     <div className="acm-wrapper">
-      <CounterMessageSidebar
-        folders={folders}
-        activeFolder={activeFolder}
-        onFolderChange={handleFolderChange}
-        currentUser={currentUser}
-      />
+      <div className="acm-topbar">
+        <div className="acm-topbar__left">
+          <div className="acm-topbar__brand">
+            <div className="acm-topbar__brand-icon">
+              <i className="bi bi-chat-square-dots" />
+            </div>
+            <h2 className="acm-topbar__title">Messagerie</h2>
+          </div>
+          <div className="acm-topbar__folder-info">
+            <span className="acm-topbar__folder-label">
+              {folders.find((f) => f.id === activeFolder)?.label || 'Boîte de réception'}
+            </span>
+            <span className="acm-topbar__folder-count">
+              {filtered.length} conversation{filtered.length !== 1 ? 's' : ''}
+            </span>
+          </div>
+        </div>
+        <div className="acm-topbar__right">
+          <button
+            type="button"
+            className="acm-topbar__btn acm-topbar__btn--support"
+            onClick={handleNewTicket}
+            title="Support technique"
+          >
+            <i className="bi bi-headset" />
+            <span className="acm-topbar__btn-label">Support</span>
+          </button>
+          <button
+            type="button"
+            className="acm-topbar__btn acm-topbar__btn--primary"
+            onClick={handleNewConversation}
+          >
+            <i className="bi bi-pencil-square" />
+            <span className="acm-topbar__btn-label">Nouveau</span>
+          </button>
+        </div>
+      </div>
 
-      <div
-        className={`acm-middle ${
-          mobileView === 'chat' ? 'acm-middle-hidden' : ''
-        }`}
-      >
-        <div className="acm-middle-header">
-          <CounterMessageSearch
-            value={search}
-            onSearch={handleSearch}
-          />
-          <div className="acm-middle-actions">
-            <button onClick={handleNewConversation}>
-              <i className="bi bi-plus-lg" />
-              Nouveau
-            </button>
-            <button
-              className="acm-btn-support"
-              onClick={handleNewTicket}
-            >
-              <i className="bi bi-headset" />
-              Support
-            </button>
+      <div className="acm-body">
+        <CounterMessageSidebar
+          folders={folders}
+          activeFolder={activeFolder}
+          onFolderChange={handleFolderChange}
+          unreadCounts={unreadCounts}
+        />
+
+        <div className={clsx('acm-middle', mobileView === 'chat' && 'acm-middle--hidden')}>
+          <div className="acm-middle__header">
+            <CounterMessageSearch
+              search={search}
+              onSearchChange={setSearch}
+              placeholder="Rechercher une conversation..."
+            />
+          </div>
+
+          <div className="acm-middle__list">
+            {pinnedConvs.length > 0 && !search && (
+              <div className="acm-middle__section">
+                <div className="acm-middle__section-title">
+                  <i className="bi bi-pin-fill" /> Épinglés
+                </div>
+                {pinnedConvs.map((conv) => (
+                  <button
+                    key={conv.id}
+                    type="button"
+                    className={clsx('acm-conv-card', activeConversationId === conv.id && 'acm-conv-card--active')}
+                    onClick={() => handleSelectConversation(conv.id)}
+                  >
+                    <div className="acm-conv-card__avatar">
+                      <span className="acm-conv-card__initials">
+                        {conv.name.split(' ').map((s) => s.charAt(0)).join('').toUpperCase().slice(0, 2)}
+                      </span>
+                      <span className={clsx('acm-conv-card__dot', `acm-conv-card__dot--${conv.status}`)} />
+                    </div>
+                    <div className="acm-conv-card__body">
+                      <div className="acm-conv-card__top">
+                        <span className="acm-conv-card__name">{conv.name}</span>
+                        <span className="acm-conv-card__time">{conv.lastMessageTime}</span>
+                      </div>
+                      <span className="acm-conv-card__role">{conv.role}</span>
+                      <div className="acm-conv-card__preview">
+                        {conv.lastMessage?.length > 60 ? conv.lastMessage.slice(0, 60) + '...' : conv.lastMessage}
+                      </div>
+                    </div>
+                    <div className="acm-conv-card__right">
+                      {conv.unread > 0 && (
+                        <span className="acm-conv-card__badge">{conv.unread > 99 ? '99+' : conv.unread}</span>
+                      )}
+                    </div>
+                  </button>
+                ))}
+                <div className="acm-middle__divider" />
+              </div>
+            )}
+
+            <CounterConversationList
+              conversations={filtered.filter((c) => !c.pinned || search)}
+              activeId={activeConversationId}
+              onSelect={handleSelectConversation}
+              loading={false}
+            />
           </div>
         </div>
 
-        <CounterConversationList
-          conversations={filtered}
-          activeConversationId={activeConversationId}
-          onSelectConversation={handleSelectConversation}
-          formatDate={formatDate}
-        >
-          {(conv) => (
-            <CounterConversationCard
-              key={conv.id}
-              conversation={conv}
-              isActive={conv.id === activeConversationId}
-              onClick={() => handleSelectConversation(conv.id)}
-              formatDate={formatDate}
-              formatTime={formatTime}
+        <div className={clsx('acm-main', mobileView === 'chat' && 'acm-main--visible')}>
+          {showSupport ? (
+            <CounterSupportPanel
+              tickets={tickets}
+              onNewTicket={() => addToast('Nouveau ticket — mock', 'info')}
+              onTicketSelect={() => {}}
+              onStatusChange={() => addToast('Statut mis à jour', 'info')}
             />
-          )}
-        </CounterConversationList>
-      </div>
-
-      <div
-        className={`acm-main ${
-          mobileView === 'chat' ? 'acm-main-visible' : ''
-        }`}
-      >
-        {activeConversation ? (
-          <>
-            <div className="acm-chat-header">
-              <div className="acm-chat-header-left">
-                <button
-                  className="acm-mobile-back"
-                  onClick={handleBackToList}
-                >
-                  <i className="bi bi-arrow-left" />
-                </button>
-                <div className="acm-chat-avatar">
-                  {activeConversation.name
-                    ? activeConversation.name.charAt(0).toUpperCase()
-                    : '?'}
-                </div>
-                <div className="acm-chat-info">
-                  <div className="acm-chat-name">
-                    {activeConversation.name}
+          ) : activeConv ? (
+            <>
+              <div className="acm-chat__header">
+                <div className="acm-chat__header-left">
+                  <button className="acm-mobile-back" onClick={handleBackToList}>
+                    <i className="bi bi-arrow-left" />
+                  </button>
+                  <div className="acm-chat__header-avatar">
+                    {activeConv.name.split(' ').map((s) => s.charAt(0)).join('').toUpperCase().slice(0, 2)}
                   </div>
-                  <div
-                    className={`acm-chat-status ${
-                      activeConversation.status || 'offline'
-                    }`}
-                  >
-                    {activeConversation.status === 'online'
-                      ? 'En ligne'
-                      : activeConversation.status === 'busy'
-                      ? 'Occupé'
-                      : 'Hors ligne'}
+                  <div className="acm-chat__header-info">
+                    <div className="acm-chat__header-name">{activeConv.name}</div>
+                    <div className={clsx('acm-chat__header-status', `acm-chat__header-status--${activeConv.status}`)}>
+                      {activeConv.status === 'online' ? 'En ligne' : activeConv.status === 'busy' ? 'Occupé' : 'Hors ligne'}
+                    </div>
                   </div>
                 </div>
+                <div className="acm-chat__header-actions">
+                  <button type="button" className="acm-chat__action-btn" onClick={handleInfoToggle} title="Informations">
+                    <i className={clsx('bi', showInfoPanel ? 'bi-info-circle-fill' : 'bi-info-circle')} />
+                  </button>
+                  <button type="button" className="acm-chat__action-btn" title="Appel vocal">
+                    <i className="bi bi-telephone" />
+                  </button>
+                  <button type="button" className="acm-chat__action-btn" title="Appel vidéo">
+                    <i className="bi bi-camera-video" />
+                  </button>
+                </div>
               </div>
-              <div className="acm-chat-actions">
-                <button
-                  onClick={() => setShowInfoPanel(!showInfoPanel)}
-                  title="Informations"
-                >
-                  <i className="bi bi-info-circle" />
-                </button>
-                <button
-                  onClick={() => {
-                    handleMessageAction(
-                      'copy',
-                      null,
-                      activeConversationId
-                    );
-                  }}
-                  title="Copier la conversation"
-                >
-                  <i className="bi bi-link-45deg" />
-                </button>
-              </div>
-            </div>
 
-            <div className="acm-chat-messages">
-              {activeConversation.messages &&
-              activeConversation.messages.length > 0 ? (
-                <>
-                  {activeConversation.messages.map((msg, idx) => (
-                    <CounterMessageBubble
-                      key={msg.id || idx}
-                      message={msg}
-                      isOutgoing={msg.sender === 'me'}
-                      onAction={(action) =>
-                        handleMessageAction(
-                          action,
-                          msg.id,
-                          activeConversationId
-                        )
-                      }
-                      formatTime={formatTime}
-                    />
-                  ))}
-                  <div ref={chatEndRef} />
-                </>
-              ) : (
-                <div className="acm-chat-empty">
-                  <i className="bi bi-chat-dots" />
-                  <p>
-                    Aucun message dans cette conversation.
-                    <br />
-                    Écrivez votre premier message ci-dessous.
-                  </p>
+              <CounterChatWindow
+                conversation={activeConv}
+                currentUserId={AGT_ID}
+                onSendMessage={handleSendMessage}
+                onMessageAction={handleMessageAction}
+                hideHeader
+                hideInfo
+              />
+
+              {showInfoPanel && (
+                <div className={clsx('acm-info-panel', showInfoPanel && 'acm-info-panel--open')}>
+                  <CounterConversationInfo
+                    conversation={activeConv}
+                    onClose={() => setShowInfoPanel(false)}
+                  />
                 </div>
               )}
+            </>
+          ) : (
+            <div className="acm-empty">
+              <div className="acm-empty__illustration">
+                <i className="bi bi-chat-square-dots" />
+              </div>
+              <h3 className="acm-empty__title">Bienvenue dans la messagerie</h3>
+              <p className="acm-empty__text">
+                Sélectionnez une conversation dans la liste ou commencez une nouvelle discussion.
+              </p>
+              <div className="acm-empty__actions">
+                <button className="acm-empty__cta" onClick={handleNewConversation}>
+                  <i className="bi bi-pencil-square" /> Nouveau message
+                </button>
+                <button className="acm-empty__cta acm-empty__cta--secondary" onClick={handleNewTicket}>
+                  <i className="bi bi-headset" /> Support technique
+                </button>
+              </div>
             </div>
-
-            <CounterComposer
-              draft={drafts[activeConversationId] || ''}
-              onSend={handleSendMessage}
-              onDraftChange={(text) =>
-                handleDraftChange(activeConversationId, text)
-              }
-              attachments={[]}
-            />
-
-            {showInfoPanel && (
-              <CounterConversationInfo
-                conversation={activeConversation}
-                onClose={() => setShowInfoPanel(false)}
-                formatDate={formatDate}
-              />
-            )}
-          </>
-        ) : showSupport ? (
-          <CounterSupportPanel
-            tickets={tickets}
-            onClose={() => setShowSupport(false)}
-            formatDate={formatDate}
-          />
-        ) : (
-          <div className="acm-chat-empty">
-            <i className="bi bi-chat-dots" />
-            <p>Sélectionnez une conversation</p>
-            <span style={{ fontSize: '12px', color: '#D1D5DB' }}>
-              Choisissez une conversation dans la liste pour commencer
-            </span>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <div className="acm-toast-container">
         {toasts.map((toast) => (
-          <div
-            key={toast.id}
-            className={`acm-toast ${toast.type}`}
-          >
-            <span className="acm-toast-icon">
-              {toast.type === 'success' && <i className="bi bi-check-circle" />}
-              {toast.type === 'error' && <i className="bi bi-exclamation-circle" />}
-              {toast.type === 'warning' && <i className="bi bi-exclamation-triangle" />}
-              {toast.type === 'info' && <i className="bi bi-info-circle" />}
+          <div key={toast.id} className={clsx('acm-toast', `acm-toast--${toast.type}`)}>
+            <span className="acm-toast__icon">
+              {toast.type === 'success' && <i className="bi bi-check-circle-fill" />}
+              {toast.type === 'error' && <i className="bi bi-exclamation-circle-fill" />}
+              {toast.type === 'warning' && <i className="bi bi-exclamation-triangle-fill" />}
+              {toast.type === 'info' && <i className="bi bi-info-circle-fill" />}
             </span>
-            <span className="acm-toast-message">{toast.message}</span>
-            <button
-              className="acm-toast-close"
-              onClick={() => removeToast(toast.id)}
-            >
+            <span className="acm-toast__message">{toast.message}</span>
+            <button className="acm-toast__close" onClick={() => removeToast(toast.id)}>
               <i className="bi bi-x" />
             </button>
           </div>
         ))}
       </div>
+
+      {showNewModal && (
+        <div className="acm-modal-overlay" onClick={() => setShowNewModal(false)}>
+          <div className="acm-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="acm-modal__header">
+              <h3 className="acm-modal__title">Nouvelle conversation</h3>
+              <button className="acm-modal__close" onClick={() => setShowNewModal(false)}>
+                <i className="bi bi-x-lg" />
+              </button>
+            </div>
+            <div className="acm-modal__body">
+              <p className="acm-modal__hint">
+                Sélectionnez un contact pour démarrer une nouvelle conversation.
+              </p>
+              <div className="acm-modal__search">
+                <i className="bi bi-search" />
+                <input type="text" placeholder="Rechercher un contact..." />
+              </div>
+              <div className="acm-modal__recent">
+                <div className="acm-modal__recent-title">Contacts récents</div>
+                {[
+                  { name: 'Léa Mengue', role: 'Superviseur', color: '#0B1D51' },
+                  { name: 'Paul Bello', role: 'Support technique', color: '#FF6B35' },
+                  { name: 'Jean-Pierre Mvogo', role: 'Agent de guichet', color: '#10B981' },
+                ].map((contact, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    className="acm-modal__contact"
+                    onClick={() => {
+                      setShowNewModal(false);
+                      addToast(`Nouvelle conversation avec ${contact.name} — mock`, 'info');
+                    }}
+                  >
+                    <div className="acm-modal__contact-avatar" style={{ background: contact.color }}>
+                      {contact.name.split(' ').map((s) => s.charAt(0)).join('').toUpperCase().slice(0, 2)}
+                    </div>
+                    <div className="acm-modal__contact-info">
+                      <div className="acm-modal__contact-name">{contact.name}</div>
+                      <div className="acm-modal__contact-role">{contact.role}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

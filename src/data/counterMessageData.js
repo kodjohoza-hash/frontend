@@ -279,6 +279,14 @@ export const conversations = [
   ], 0, 'inbox', false),
 ];
 
+// Ajout de conversations épinglées (pinned)
+conversations.forEach((c, idx) => {
+  if (c.isImportant) c.pinned = true;
+});
+// Épingler aussi conv-010 (Richard) et conv-003 (JP Mvogo) car conversations internes fréquentes
+conversations[9].pinned = true; // Richard Onguéné
+conversations[2].pinned = true; // Jean-Pierre Mvogo
+
 // Ajout de partages de fichiers sur quelques conversations
 conversations[0].sharedFiles = [
   fileObj('Bon_intervention_technique.pdf', '245 Ko', 'application/pdf', ago(0, 2)),
@@ -422,6 +430,17 @@ export const tickets = [
 ];
 
 // ─── Fonctions utilitaires ─────────────────────
+
+export function getPinnedConversations() {
+  return conversations.filter((c) => c.pinned && c.folder !== 'archived' && c.folder !== 'trash');
+}
+
+export function getConversationsByFolder(folderId) {
+  if (folderId === 'inbox') return conversations.filter((c) => c.folder !== 'archived' && c.folder !== 'trash');
+  if (folderId === 'unread') return conversations.filter((c) => c.unreadCount > 0);
+  if (folderId === 'important') return conversations.filter((c) => c.isImportant);
+  return conversations.filter((c) => c.folder === folderId);
+}
 
 export function filterConversations(conversations, filters = {}) {
   return conversations.filter((conv) => {

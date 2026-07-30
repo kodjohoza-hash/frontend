@@ -10,7 +10,7 @@ const STATUS_LABEL = {
   busy: 'Occupé',
 };
 
-const CounterChatWindow = ({ conversation, currentUserId, onSendMessage, onMessageAction }) => {
+const CounterChatWindow = ({ conversation, currentUserId, onSendMessage, onMessageAction, hideHeader, hideInfo }) => {
   const [showInfo, setShowInfo] = useState(false);
   const messagesEndRef = useRef(null);
 
@@ -48,36 +48,38 @@ const CounterChatWindow = ({ conversation, currentUserId, onSendMessage, onMessa
 
   return (
     <div className="acm-chat">
-      <div className="acm-chat__header">
-        <div className="acm-chat__header-left">
-          <div className="acm-chat__header-avatar">{initials}</div>
-          <div className="acm-chat__header-info">
-            <span className="acm-chat__header-name">{participant?.name || name}</span>
-            <span className="acm-chat__header-status">
-              <span
-                className={clsx('acm-chat__header-dot', `acm-chat__header-dot--${status}`)}
-              />
-              {STATUS_LABEL[status] || 'Hors ligne'}
-            </span>
+      {!hideHeader && (
+        <div className="acm-chat__header">
+          <div className="acm-chat__header-left">
+            <div className="acm-chat__header-avatar">{initials}</div>
+            <div className="acm-chat__header-info">
+              <span className="acm-chat__header-name">{participant?.name || name}</span>
+              <span className="acm-chat__header-status">
+                <span
+                  className={clsx('acm-chat__header-dot', `acm-chat__header-dot--${status}`)}
+                />
+                {STATUS_LABEL[status] || 'Hors ligne'}
+              </span>
+            </div>
+          </div>
+          <div className="acm-chat__header-actions">
+            <button type="button" className="acm-chat__action-btn" title="Appeler">
+              <i className="bi bi-telephone" />
+            </button>
+            <button type="button" className="acm-chat__action-btn" title="Vidéo">
+              <i className="bi bi-camera-video" />
+            </button>
+            <button
+              type="button"
+              className={clsx('acm-chat__action-btn', showInfo && 'acm-chat__action-btn--active')}
+              onClick={() => setShowInfo((s) => !s)}
+              title="Informations"
+            >
+              <i className="bi bi-info-circle" />
+            </button>
           </div>
         </div>
-        <div className="acm-chat__header-actions">
-          <button type="button" className="acm-chat__action-btn" title="Appeler">
-            <i className="bi bi-telephone" />
-          </button>
-          <button type="button" className="acm-chat__action-btn" title="Vidéo">
-            <i className="bi bi-camera-video" />
-          </button>
-          <button
-            type="button"
-            className={clsx('acm-chat__action-btn', showInfo && 'acm-chat__action-btn--active')}
-            onClick={() => setShowInfo((s) => !s)}
-            title="Informations"
-          >
-            <i className="bi bi-info-circle" />
-          </button>
-        </div>
-      </div>
+      )}
       <div className="acm-chat__messages">
         {messages.map((msg) => (
           <CounterMessageBubble
@@ -93,7 +95,7 @@ const CounterChatWindow = ({ conversation, currentUserId, onSendMessage, onMessa
         onSend={(text, attachments) => onSendMessage?.(convId, text, attachments)}
         disabled={false}
       />
-      {showInfo && (
+      {!hideInfo && showInfo && (
         <CounterConversationInfo
           conversation={conversation}
           onClose={() => setShowInfo(false)}
