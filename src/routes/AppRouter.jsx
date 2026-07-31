@@ -86,6 +86,7 @@ const SuperAdminUsers = lazy(() => import('@pages/SuperAdmin/Users'));
 const SuperAdminRoles = lazy(() => import('@pages/SuperAdmin/Roles'));
 const SuperAdminApprovals = lazy(() => import('@pages/SuperAdmin/Approval'));
 const SuperAdminSubscriptions = lazy(() => import('@pages/SuperAdmin/Subscriptions'));
+const SuperAdminAgencySubscriptions = lazy(() => import('@pages/SuperAdmin/AgencySubscriptions'));
 const SuperAdminCommissions = lazy(() => import('@pages/SuperAdmin/Commissions'));
 const SuperAdminReports = lazy(() => import('@pages/SuperAdmin/Reports'));
 const SuperAdminAudit = lazy(() => import('@pages/SuperAdmin/Audit'));
@@ -255,6 +256,7 @@ const AppRouter = () => {
           <Route path={ROUTES.SUPER_ADMIN_ROLES} element={<SuperAdminRoles />} />
           <Route path={ROUTES.SUPER_ADMIN_APPROVAL} element={<SuperAdminApprovals />} />
           <Route path={ROUTES.SUPER_ADMIN_SUBSCRIPTIONS} element={<SuperAdminSubscriptions />} />
+          <Route path={ROUTES.SUPER_ADMIN_AGENCY_SUBSCRIPTIONS} element={<SuperAdminAgencySubscriptions />} />
           <Route path={ROUTES.SUPER_ADMIN_COMMISSIONS} element={<SuperAdminCommissions />} />
           <Route path={ROUTES.SUPER_ADMIN_REPORTS} element={<SuperAdminReports />} />
           <Route path={ROUTES.SUPER_ADMIN_AUDIT} element={<SuperAdminAudit />} />

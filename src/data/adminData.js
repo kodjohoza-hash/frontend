@@ -163,6 +163,7 @@ export const adminSidebarMenus = [
       { id: 'roles', label: 'Rôles', icon: 'bi-shield-lock', to: '/super-admin/roles' },
       { id: 'approval', label: 'Approbations', icon: 'bi-clipboard-check', to: '/super-admin/approval' },
       { id: 'subscriptions', label: 'Abonnements', icon: 'bi-box-seam', to: '/super-admin/subscriptions' },
+      { id: 'agency-subscriptions', label: 'Abonnements agences', icon: 'bi-card-checklist', to: '/super-admin/agency-subscriptions' },
       { id: 'commissions', label: 'Commissions', icon: 'bi-percent', to: '/super-admin/commissions' },
     ],
   },

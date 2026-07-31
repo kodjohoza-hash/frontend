@@ -8,6 +8,7 @@ export { default as AdminAlerts } from './AdminAlerts';
 export { default as AdminQuickActions } from './AdminQuickActions';
 export { default as AdminTopCompanies } from './AdminTopCompanies';
 export { default as AdminTransactions } from './AdminTransactions';
+export { default as AdminSubscriptionRevenue } from './AdminSubscriptionRevenue';
 export { default as AdminSkeleton } from './AdminSkeleton';
 export { default as AdminCompanyStats } from './AdminCompanyStats';
 export { default as AdminCompanyFilters } from './AdminCompanyFilters';

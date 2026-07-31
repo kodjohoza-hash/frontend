@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import {
   AdminWelcome, AdminStats, AdminCharts, AdminActivityTimeline,
   AdminAlerts, AdminQuickActions, AdminTopCompanies, AdminTransactions,
-  AdminSkeleton,
+  AdminSubscriptionRevenue, AdminSkeleton,
 } from '@components/admin/';
 
 const AdminDashboardContent = () => (
@@ -15,6 +15,7 @@ const AdminDashboardContent = () => (
       <AdminActivityTimeline />
       <AdminAlerts />
     </div>
+    <AdminSubscriptionRevenue />
     <AdminTopCompanies />
     <AdminTransactions />
   </>
