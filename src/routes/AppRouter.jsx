@@ -80,6 +80,7 @@ const AgencySettings = lazy(() => import('@pages/Agency/Settings'));
 const AgencyProfile = lazy(() => import('@pages/Agency/Profile'));
 const AgencyNotifications = lazy(() => import('@pages/Agency/Notifications'));
 const AgencyMessages = lazy(() => import('@pages/Agency/Messages'));
+const AgencySubscription = lazy(() => import('@pages/Agency/Subscription'));
 const SuperAdminDashboard = lazy(() => import('@pages/SuperAdmin/Dashboard'));
 const SuperAdminCompanies = lazy(() => import('@pages/SuperAdmin/Companies'));
 const SuperAdminUsers = lazy(() => import('@pages/SuperAdmin/Users'));
@@ -87,6 +88,7 @@ const SuperAdminRoles = lazy(() => import('@pages/SuperAdmin/Roles'));
 const SuperAdminApprovals = lazy(() => import('@pages/SuperAdmin/Approval'));
 const SuperAdminSubscriptions = lazy(() => import('@pages/SuperAdmin/Subscriptions'));
 const SuperAdminAgencySubscriptions = lazy(() => import('@pages/SuperAdmin/AgencySubscriptions'));
+const SuperAdminRevenue = lazy(() => import('@pages/SuperAdmin/Revenue'));
 const SuperAdminCommissions = lazy(() => import('@pages/SuperAdmin/Commissions'));
 const SuperAdminReports = lazy(() => import('@pages/SuperAdmin/Reports'));
 const SuperAdminAudit = lazy(() => import('@pages/SuperAdmin/Audit'));
@@ -235,6 +237,7 @@ const AppRouter = () => {
           <Route path={ROUTES.COMPANY_PROFILE} element={<AgencyProfile />} />
           <Route path={ROUTES.COMPANY_NOTIFICATIONS} element={<AgencyNotifications />} />
           <Route path={ROUTES.COMPANY_MESSAGES} element={<AgencyMessages />} />
+          <Route path={ROUTES.COMPANY_SUBSCRIPTION} element={<AgencySubscription />} />
         </Route>
 
         {/* ================================================
@@ -257,6 +260,7 @@ const AppRouter = () => {
           <Route path={ROUTES.SUPER_ADMIN_APPROVAL} element={<SuperAdminApprovals />} />
           <Route path={ROUTES.SUPER_ADMIN_SUBSCRIPTIONS} element={<SuperAdminSubscriptions />} />
           <Route path={ROUTES.SUPER_ADMIN_AGENCY_SUBSCRIPTIONS} element={<SuperAdminAgencySubscriptions />} />
+          <Route path={ROUTES.SUPER_ADMIN_REVENUE} element={<SuperAdminRevenue />} />
           <Route path={ROUTES.SUPER_ADMIN_COMMISSIONS} element={<SuperAdminCommissions />} />
           <Route path={ROUTES.SUPER_ADMIN_REPORTS} element={<SuperAdminReports />} />
           <Route path={ROUTES.SUPER_ADMIN_AUDIT} element={<SuperAdminAudit />} />

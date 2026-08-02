@@ -32,6 +32,7 @@ export const sidebarMenus = [
     { id: 'messages', label: 'Messagerie', icon: 'bi-chat-dots', to: '/agency/messages', badge: 2 },
   ]},
   { section: 'Système', items: [
+    { id: 'subscription', label: 'Mon abonnement', icon: 'bi-box-seam', to: '/agency/subscription' },
     { id: 'settings', label: 'Paramètres', icon: 'bi-gear', to: '/agency/settings' },
   ]},
 ];

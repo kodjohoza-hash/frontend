@@ -8,3 +8,4 @@ export { default as AdminSubscriptionBilling } from './AdminSubscriptionBilling'
 export { default as AdminSubscriptionTimeline } from './AdminSubscriptionTimeline';
 export { default as AdminSubscriptionModal } from './AdminSubscriptionModal';
 export { default as AdminSubscriptionSkeleton } from './AdminSubscriptionSkeleton';
+export { default as AdminPlanFormModal } from './AdminPlanFormModal';

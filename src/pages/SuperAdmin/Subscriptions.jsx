@@ -3,15 +3,15 @@ import {
   AdminSubscriptionStats, AdminSubscriptionFilters, AdminSubscriptionTable,
   AdminSubscriptionCards, AdminSubscriptionProfile, AdminSubscriptionFeatures,
   AdminSubscriptionBilling, AdminSubscriptionTimeline, AdminSubscriptionModal,
-  AdminSubscriptionSkeleton,
+  AdminSubscriptionSkeleton, AdminPlanFormModal,
 } from '../../components/admin';
 import {
-  plans as allPlans, subscriptions, subscriptionStats as statsData,
-  billingRecords, subscriptionTimeline, featureCategories,
-  filterPlans, sortPlans, getPlanById, getSubscriptionsByPlan,
-  getBillingBySubscription, getTimelineBySubscription,
+  subscriptions as mockSubscriptions,
+  filterPlans, sortPlans,
   formatCurrency, durationLabels,
 } from '../../data/adminSubscriptionData';
+import useSubscriptionsStore from '../../store/subscriptions.store';
+import useAuthStore from '../../store/auth.store';
 
 const drawerTabs = [
   { id: 'profile', label: 'Profile', icon: 'fa-cube' },
@@ -24,6 +24,7 @@ const drawerTabs = [
 export default function Subscriptions() {
   const [loading, setLoading] = useState(true);
   const [plans, setPlans] = useState([]);
+  const [stats, setStats] = useState({});
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [durationFilter, setDurationFilter] = useState('');
@@ -38,11 +39,30 @@ export default function Subscriptions() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalConfig, setModalConfig] = useState({});
   const [toasts, setToasts] = useState([]);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingPlan, setEditingPlan] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [subscriptions, setSubscriptions] = useState(mockSubscriptions);
+  const [usingMock, setUsingMock] = useState(true);
   const perPage = 10;
 
   useEffect(() => {
-    const t = setTimeout(() => { setPlans(allPlans); setLoading(false); }, 400);
-    return () => clearTimeout(t);
+    let cancelled = false;
+    (async () => {
+      const store = useSubscriptionsStore.getState();
+      const p = await store.loadPlans();
+      await store.loadSubscriptions();
+      await store.loadPayments();
+      const s = store.refreshStats();
+      if (!cancelled) {
+        setPlans(p);
+        setStats(s);
+        setSubscriptions(store.subscriptions);
+        setUsingMock(store.usingMock);
+        setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
   }, []);
 
   const addToast = useCallback((msg, type = 'success') => {
@@ -62,11 +82,53 @@ export default function Subscriptions() {
   const totalPages = Math.ceil(filtered.length / perPage);
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
 
-  const selectedSubs = useMemo(() => selected ? getSubscriptionsByPlan(selected.id) : [], [selected]);
-  const selectedBilling = useMemo(() => selected ? selectedSubs.flatMap(s => getBillingBySubscription(s.id)) : [], [selected, selectedSubs]);
-  const selectedTimeline = useMemo(() => selected ? selectedSubs.flatMap(s => getTimelineBySubscription(s.id)) : [], [selected, selectedSubs]);
+  const selectedSubs = useMemo(() => (selected ? subscriptions.filter(s => s.planId === selected.id) : []), [selected, subscriptions]);
+  const selectedBilling = useMemo(() => {
+    if (!selected) return [];
+    const store = useSubscriptionsStore.getState();
+    return store.payments.filter(p => p.planName === selected.name);
+  }, [selected]);
+  const selectedTimeline = useMemo(() => {
+    if (!selected) return [];
+    const store = useSubscriptionsStore.getState();
+    return store.notifications
+      .filter(n => n.companyName)
+      .map(n => ({ id: `evt_${n.id}`, subscriptionId: '', action: n.type, title: n.title, description: n.message, time: n.date, user: 'Système' }));
+  }, [selected]);
 
-  const handleEdit = useCallback((p) => { addToast(`Editing "${p.name}" — modal ready for Express.js`, 'info'); }, [addToast]);
+  const refreshFromStore = useCallback(() => {
+    const store = useSubscriptionsStore.getState();
+    setPlans(store.plans);
+    setSubscriptions(store.subscriptions);
+    setStats(store.refreshStats());
+  }, []);
+
+  const handleNewPlan = useCallback(() => { setEditingPlan(null); setFormOpen(true); }, []);
+  const handleEdit = useCallback((p) => { setEditingPlan(p); setFormOpen(true); }, []);
+  const handleSavePlan = useCallback(async (payload) => {
+    const store = useSubscriptionsStore.getState();
+    setSaving(true);
+    const res = editingPlan ? await store.updatePlan(editingPlan.id, payload) : await store.createPlan(payload);
+    setSaving(false);
+    if (res.ok) {
+      setFormOpen(false);
+      addToast(editingPlan ? `Plan "${res.plan.name}" mis à jour.` : `Plan "${res.plan.name}" créé.`);
+      refreshFromStore();
+    } else {
+      addToast(res.error || 'Enregistrement impossible.', 'error');
+      if (!useAuthStore.getState().token) {
+        /* Fallback : mutation locale */
+        if (editingPlan) {
+          setPlans(prev => prev.map(x => x.id === editingPlan.id ? { ...x, ...payload, status: payload.status } : x));
+        } else {
+          setPlans(prev => [{ ...payload, id: `plan_${Date.now()}`, companiesCount: 0, revenue: 0, popular: false, createdAt: new Date().toISOString().slice(0, 10), features: payload.features }, ...prev]);
+        }
+        setFormOpen(false);
+        addToast(editingPlan ? 'Plan mis à jour (mode démo).' : 'Plan créé (mode démo).');
+      }
+    }
+  }, [editingPlan, addToast, refreshFromStore]);
+
   const handleDuplicate = useCallback((p) => {
     openModal({
       title: 'Duplicate Plan',
@@ -76,21 +138,46 @@ export default function Subscriptions() {
     });
   }, [openModal, addToast]);
   const handleArchive = useCallback((p) => {
-    const arch = p.status !== 'archived';
+    const arch = p.status !== 'inactive';
     openModal({
       title: arch ? 'Archive Plan' : 'Reactivate Plan',
       message: arch ? `Archive "${p.name}"? It will no longer be available for new subscriptions.` : `Reactivate "${p.name}"?`,
       confirmLabel: arch ? 'Archive' : 'Reactivate', confirmClass: arch ? 'warning' : 'success', icon: arch ? 'fa-box-archive' : 'fa-box-open',
-      onConfirm: () => { setPlans(prev => prev.map(x => x.id === p.id ? { ...x, status: arch ? 'archived' : 'active' } : x)); addToast(`"${p.name}" ${arch ? 'archived' : 'reactivated'}.`); setModalOpen(false); if (selected?.id === p.id) setSelected(prev => prev ? { ...prev, status: arch ? 'archived' : 'active' } : null); },
+      onConfirm: async () => {
+        setModalOpen(false);
+        const store = useSubscriptionsStore.getState();
+        const res = await store.updatePlan(p.id, { ...p, status: arch ? 'inactive' : 'active' });
+        if (res.ok) {
+          refreshFromStore();
+          addToast(`"${res.plan.name}" ${arch ? 'archived' : 'reactivated'}.`);
+          if (selected?.id === p.id) setSelected(res.plan);
+        } else {
+          setPlans(prev => prev.map(x => x.id === p.id ? { ...x, status: arch ? 'inactive' : 'active' } : x));
+          addToast(`"${p.name}" ${arch ? 'archived' : 'reactivated'} (mode démo).`);
+        }
+      },
     });
-  }, [openModal, addToast, selected]);
+  }, [openModal, addToast, refreshFromStore, selected]);
   const handleDelete = useCallback((p) => {
     openModal({
       title: 'Delete Plan', message: `Permanently delete "${p.name}"? This cannot be undone.`,
       confirmLabel: 'Delete', confirmClass: 'danger', icon: 'fa-trash-can',
-      onConfirm: () => { setPlans(prev => prev.filter(x => x.id !== p.id)); addToast(`"${p.name}" deleted.`, 'error'); setModalOpen(false); if (selected?.id === p.id) setSelected(null); },
+      onConfirm: async () => {
+        setModalOpen(false);
+        const store = useSubscriptionsStore.getState();
+        const res = await store.deletePlan(p.id);
+        if (res.ok) {
+          refreshFromStore();
+          addToast(`"${p.name}" deleted.`, 'error');
+          if (selected?.id === p.id) setSelected(null);
+        } else {
+          setPlans(prev => prev.filter(x => x.id !== p.id));
+          addToast(`"${p.name}" deleted (mode démo).`, 'error');
+          if (selected?.id === p.id) setSelected(null);
+        }
+      },
     });
-  }, [openModal, addToast, selected]);
+  }, [openModal, addToast, refreshFromStore, selected]);
   const handleViewCompanies = useCallback(() => setDrawerTab('companies'), []);
   const handleViewRevenue = useCallback(() => setDrawerTab('billing'), []);
   const handleHistory = useCallback(() => setDrawerTab('timeline'), []);
@@ -118,7 +205,7 @@ export default function Subscriptions() {
             <p>Manage pricing plans, billing, and company subscriptions</p>
           </div>
           <div className="adms-hero-actions">
-            <button className="adms-btn adms-btn--primary" onClick={() => addToast('Create plan modal ready for Express.js.', 'info')}>
+            <button className="adms-btn adms-btn--primary" onClick={handleNewPlan}>
               <i className="fa-solid fa-plus" /> New Plan
             </button>
             <button className="adms-btn adms-btn--outline" onClick={() => addToast('Comparison view toggled.', 'info')}>
@@ -126,10 +213,11 @@ export default function Subscriptions() {
             </button>
           </div>
         </div>
+        <div className="adms-hero-badge">{usingMock ? 'Mode démo (mock data)' : 'API connectée'}</div>
       </div>
 
       {/* KPI */}
-      <AdminSubscriptionStats stats={statsData} />
+      <AdminSubscriptionStats stats={stats} />
 
       {/* Comparator */}
       <div className="adms-section-header">
@@ -270,6 +358,12 @@ export default function Subscriptions() {
         onConfirm={modalConfig.onConfirm || (() => {})}
         title={modalConfig.title} message={modalConfig.message}
         confirmLabel={modalConfig.confirmLabel} confirmClass={modalConfig.confirmClass} icon={modalConfig.icon}
+      />
+
+      {/* Plan form (create / edit) */}
+      <AdminPlanFormModal
+        isOpen={formOpen} onClose={() => setFormOpen(false)}
+        initial={editingPlan} onSave={handleSavePlan} saving={saving}
       />
 
       {/* Toasts */}

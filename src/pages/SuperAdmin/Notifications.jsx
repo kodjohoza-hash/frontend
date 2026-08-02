@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import '../../../src/assets/styles/admin-notifications.css';
+import useSubscriptionsStore from '../../../src/store/subscriptions.store';
 import {
   AdminNotificationStats,
   AdminNotificationFilters,
@@ -27,6 +28,31 @@ const Notifications = () => {
   const [toast, setToast] = useState(null);
   const [previewNotif, setPreviewNotif] = useState(null);
   const [recipientSegment, setRecipientSegment] = useState('all');
+  const [saasNotifs, setSaasNotifs] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const store = useSubscriptionsStore.getState();
+      const res = await store.loadNotifications();
+      if (!cancelled) {
+        const items = (store.notifications || []).map((n) => ({
+          id: String(n.id),
+          title: n.title,
+          category: 'Abonnement',
+          channel: n.canal || 'inapp',
+          status: 'sent',
+          recipients: n.companyName || 'Compagnie',
+          scheduledAt: n.date ? String(n.date).replace('T', ' ').slice(0, 16) : '—',
+          content: n.message,
+          body: n.message,
+          company: n.companyName,
+        }));
+        setSaasNotifs(res.length > 0 ? items : []);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const filtered = useMemo(() => {
     if (search || cat !== 'all' || ch !== 'all') {
@@ -91,8 +117,15 @@ const Notifications = () => {
       )}
       {tab === 'history' && (
         <>
+          {saasNotifs.length > 0 && (
+            <>
+              <div className="adn-section-header"><h3><i className="fas fa-bell" style={{ color: '#10B981' }} /> Notifications SaaS — rappels d'abonnement</h3></div>
+              <AdminNotificationHistory notifications={saasNotifs} onView={setPreviewNotif} onDelete={(id) => showToast('Notification supprimée', 'info')} />
+              <div className="adn-section-header" style={{ marginTop: '1.5rem' }}><h3><i className="fas fa-clock-rotate" style={{ color: '#3B82F6' }} /> Toutes les notifications</h3></div>
+            </>
+          )}
           <AdminNotificationFilters cat={cat} setCat={setCat} search={search} setSearch={setSearch} channels={notifChannels} ch={ch} setCh={setCh} />
-          <div className="adn-section-header"><h3><i className="fas fa-clock-rotate" style={{ color: '#3B82F6' }} /> Toutes les notifications</h3></div>
+          {saasNotifs.length === 0 && <div className="adn-section-header"><h3><i className="fas fa-clock-rotate" style={{ color: '#3B82F6' }} /> Toutes les notifications</h3></div>}
           {loading ? <AdminNotificationSkeleton rows={5} /> : (
             <AdminNotificationHistory notifications={filtered} onView={setPreviewNotif} onDelete={(id) => showToast('Notification supprimée', 'info')} />
           )}

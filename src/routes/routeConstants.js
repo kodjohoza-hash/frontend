@@ -66,6 +66,7 @@ export const ROUTES = {
   COMPANY_PROFILE: '/agency/profile',
   COMPANY_NOTIFICATIONS: '/agency/notifications',
   COMPANY_MESSAGES: '/agency/messages',
+  COMPANY_SUBSCRIPTION: '/agency/subscription',
 
   /* ================================================
      COUNTER
@@ -91,6 +92,7 @@ export const ROUTES = {
   SUPER_ADMIN_APPROVAL: '/super-admin/approval',
   SUPER_ADMIN_SUBSCRIPTIONS: '/super-admin/subscriptions',
   SUPER_ADMIN_AGENCY_SUBSCRIPTIONS: '/super-admin/agency-subscriptions',
+  SUPER_ADMIN_REVENUE: '/super-admin/revenue',
   SUPER_ADMIN_COMMISSIONS: '/super-admin/commissions',
   SUPER_ADMIN_REPORTS: '/super-admin/reports',
   SUPER_ADMIN_AUDIT: '/super-admin/audit',
@@ -166,6 +168,7 @@ export const ROUTE_NAMES = {
   [ROUTES.COMPANY_PROFILE]: 'Profil',
   [ROUTES.COMPANY_NOTIFICATIONS]: 'Notifications',
   [ROUTES.COMPANY_MESSAGES]: 'Messagerie',
+  [ROUTES.COMPANY_SUBSCRIPTION]: 'Mon abonnement',
   [ROUTES.COUNTER_DASHBOARD]: 'Tableau de bord',
   [ROUTES.COUNTER_SALE]: 'Vente',
   [ROUTES.COUNTER_BOOKINGS]: 'Réservations',
@@ -183,6 +186,7 @@ export const ROUTE_NAMES = {
   [ROUTES.SUPER_ADMIN_APPROVAL]: 'Approbations',
   [ROUTES.SUPER_ADMIN_SUBSCRIPTIONS]: 'Abonnements',
   [ROUTES.SUPER_ADMIN_AGENCY_SUBSCRIPTIONS]: 'Abonnements des agences',
+  [ROUTES.SUPER_ADMIN_REVENUE]: 'Revenus',
   [ROUTES.SUPER_ADMIN_COMMISSIONS]: 'Commissions',
   [ROUTES.SUPER_ADMIN_REPORTS]: 'Rapports',
   [ROUTES.SUPER_ADMIN_AUDIT]: 'Audit',

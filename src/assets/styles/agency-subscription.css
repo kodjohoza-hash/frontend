@@ -1,0 +1,66 @@
+/* ══════════════════════════════════════════════════════════
+   BUS TIX CONNECT — Mon abonnement (espace compagnie)
+   ══════════════════════════════════════════════════════════ */
+.agsub-page { padding: 1.5rem 2rem 2.5rem; }
+
+.agsub-hero {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+  background: linear-gradient(135deg, #1E1B4B 0%, #4C1D95 100%); color: #fff;
+  border-radius: 18px; padding: 1.6rem 2rem; margin-bottom: 1.5rem;
+}
+.agsub-hero h1 { font-size: 1.55rem; font-weight: 800; margin: 0 0 0.25rem; letter-spacing: -0.02em; }
+.agsub-hero p { color: rgba(255,255,255,0.65); font-size: 0.9rem; margin: 0; }
+.agsub-hero .agsub-badge { font-size: 0.78rem; font-weight: 700; padding: 0.4rem 0.95rem; border-radius: 999px; }
+
+.agsub-badge { padding: 0.35rem 0.85rem; border-radius: 999px; font-size: 0.78rem; font-weight: 700; }
+
+.agsub-loading { text-align: center; color: #64748B; padding: 3rem 0; font-size: 0.9rem; }
+.agsub-loading i { animation: agsubSpin 1s linear infinite; display: inline-block; margin-right: 0.4rem; }
+@keyframes agsubSpin { to { transform: rotate(360deg); } }
+
+.agsub-notice {
+  display: flex; align-items: center; gap: 0.6rem; padding: 0.85rem 1rem; border-radius: 12px;
+  font-size: 0.85rem; margin-bottom: 1.25rem;
+}
+.agsub-notice--ok { background: rgba(16,185,129,0.1); color: #047857; border: 1px solid rgba(16,185,129,0.2); }
+.agsub-notice--err { background: rgba(245,158,11,0.1); color: #B45309; border: 1px solid rgba(245,158,11,0.25); }
+.agsub-notice__close { margin-left: auto; background: transparent; border: none; cursor: pointer; color: inherit; }
+
+.agsub-empty { text-align: center; padding: 3.5rem 1rem; color: #94A3B8; background: #fff; border: 1px dashed #E2E8F0; border-radius: 14px; }
+.agsub-empty i { font-size: 2.2rem; display: block; margin-bottom: 0.7rem; }
+.agsub-empty p { margin: 0.2rem 0; }
+.agsub-empty__sub { font-size: 0.82rem; }
+
+.agsub-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.agsub-card { background: #fff; border: 1px solid #F1F5F9; border-radius: 14px; padding: 1.1rem 1.2rem; display: flex; align-items: center; gap: 0.9rem; box-shadow: 0 1px 3px rgba(15,23,42,0.04); }
+.agsub-card--plan { background: linear-gradient(135deg, #8B5CF6, #6D28D9); border: none; }
+.agsub-card--plan .agsub-card__label,
+.agsub-card--plan .agsub-card__value { color: #fff; }
+.agsub-card__icon { width: 42px; height: 42px; border-radius: 12px; background: rgba(139,92,246,0.1); color: #7C3AED; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; flex-shrink: 0; }
+.agsub-card--plan .agsub-card__icon { background: rgba(255,255,255,0.16); color: #fff; }
+.agsub-card__label { font-size: 0.72rem; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.03em; }
+.agsub-card__value { font-size: 1.15rem; font-weight: 800; color: #0F172A; }
+
+.agsub-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.25rem; }
+@media (max-width: 1000px) { .agsub-grid { grid-template-columns: 1fr; } }
+
+.agsub-panel { background: #fff; border: 1px solid #F1F5F9; border-radius: 14px; padding: 1.4rem 1.5rem; box-shadow: 0 1px 3px rgba(15,23,42,0.04); }
+.agsub-panel h2 { font-size: 0.98rem; font-weight: 700; color: #0F172A; margin: 0 0 1.1rem; }
+.agsub-panel h2 i { color: var(--adm-accent); margin-right: 0.4rem; }
+
+.agsub-info { display: flex; flex-direction: column; }
+.agsub-info__row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid #F8FAFC; font-size: 0.86rem; }
+.agsub-info__row:last-child { border-bottom: none; }
+.agsub-info__label { color: #64748B; font-weight: 500; }
+.agsub-info__value { color: #0F172A; font-weight: 600; text-align: right; }
+
+.agsub-actions { margin-top: 1.25rem; }
+.agsub-btn { border: none; border-radius: 10px; padding: 0.62rem 1.3rem; font-size: 0.84rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.agsub-btn--primary { background: var(--adm-accent, #6D28D9); color: #fff; }
+.agsub-btn--primary:hover { background: #5B21B6; }
+.agsub-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.agsub-features { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; }
+.agsub-features li { display: flex; align-items: center; gap: 0.6rem; font-size: 0.86rem; color: #334155; }
+.agsub-features li i { color: #10B981; }
+.agsub-features__note { font-size: 0.76rem; color: #94A3B8; margin-top: 1.1rem; line-height: 1.5; }
