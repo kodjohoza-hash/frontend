@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import AgencyBusStatus from './AgencyBusStatus';
 import { useNavigate } from 'react-router-dom';
-import { busBrands, amenities } from '../../data/agencyBusData';
+import { busBrands } from '../../data/agencyBusData';
 import clsx from 'clsx';
 
-export default function AgencyBusTable({ buses, sortField, sortDir, onSort, onDelete, onDuplicate, onMaintenance }) {
+export default function AgencyBusTable({ buses, sortField, sortDir, onSort, onDelete, onDuplicate, onMaintenance, onEdit }) {
   const navigate = useNavigate();
   const [openMenu, setOpenMenu] = useState(null);
 
@@ -39,9 +39,9 @@ export default function AgencyBusTable({ buses, sortField, sortDir, onSort, onDe
 
   const handleSort = (key) => {
     if (sortField === key) {
-      onSort(sortDir === 'asc' ? 'desc' : 'asc');
+      onSort(key, sortDir === 'asc' ? 'desc' : 'asc');
     } else {
-      onSort('asc');
+      onSort(key, 'asc');
     }
   };
 
@@ -134,7 +134,9 @@ export default function AgencyBusTable({ buses, sortField, sortDir, onSort, onDe
               </td>
               <td>
                 <span className="ab-table__date">
-                  {new Date(bus.lastMaintenance).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  {bus.lastMaintenance
+                    ? new Date(bus.lastMaintenance).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
+                    : '—'}
                 </span>
               </td>
               <td>
@@ -142,7 +144,7 @@ export default function AgencyBusTable({ buses, sortField, sortDir, onSort, onDe
                   <button className="ab-table__action" onClick={(e) => { e.stopPropagation(); navigate(`/agency/buses/${bus.id}`); }} title="Voir">
                     <i className="bi bi-eye" />
                   </button>
-                  <button className="ab-table__action ab-table__action--edit" onClick={(e) => { e.stopPropagation(); }} title="Modifier">
+                  <button className="ab-table__action ab-table__action--edit" onClick={(e) => { e.stopPropagation(); onEdit?.(bus); }} title="Modifier">
                     <i className="bi bi-pencil" />
                   </button>
                   <div className="ab-table__menu-wrap">

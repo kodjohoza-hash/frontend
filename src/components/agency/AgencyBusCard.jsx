@@ -2,7 +2,7 @@ import AgencyBusStatus from './AgencyBusStatus';
 import { useNavigate } from 'react-router-dom';
 import { busBrands } from '../../data/agencyBusData';
 
-export default function AgencyBusCard({ bus }) {
+export default function AgencyBusCard({ bus, onEdit }) {
   const navigate = useNavigate();
   const getBrandLabel = (val) => busBrands.find((b) => b.value === val)?.label || val;
   const getAmenitiesCount = (bus) => Object.values(bus.amenities).filter(Boolean).length;
@@ -47,7 +47,7 @@ export default function AgencyBusCard({ bus }) {
         <button className="ab-card__btn ab-card__btn--primary" onClick={(e) => { e.stopPropagation(); navigate(`/agency/buses/${bus.id}`); }}>
           <i className="bi bi-eye" /> Voir
         </button>
-        <button className="ab-card__btn ab-card__btn--outline" onClick={(e) => e.stopPropagation()}>
+        <button className="ab-card__btn ab-card__btn--outline" onClick={(e) => { e.stopPropagation(); onEdit?.(bus); }}>
           <i className="bi bi-pencil" /> Modifier
         </button>
       </div>

@@ -9,11 +9,8 @@ export default function AgencyBusDetails({ bus }) {
 
   const getBrandLabel = (val) => busBrands.find((b) => b.value === val)?.label || val;
 
-  const getActiveAmenities = () => {
-    return amenitiesList.filter((a) => bus.amenities?.[a.key]);
-  };
-
-  const activeAmenities = getActiveAmenities();
+  const formatDate = (value) =>
+    value ? new Date(value).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) : '—';
 
   return (
     <div className="abd">
@@ -71,9 +68,9 @@ export default function AgencyBusDetails({ bus }) {
             <div className="abd__field"><span className="abd__label">Total voyages</span><span className="abd__value">{bus.tripCount}</span></div>
             <div className="abd__field"><span className="abd__label">Kilométrage</span><span className="abd__value">{(bus.totalKm || 0).toLocaleString('fr-FR')} km</span></div>
             <div className="abd__field"><span className="abd__label">Occupation moy.</span><span className="abd__value">{bus.avgOccupancy}%</span></div>
-            <div className="abd__field"><span className="abd__label">Mise en service</span><span className="abd__value">{new Date(bus.serviceDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}</span></div>
-            <div className="abd__field"><span className="abd__label">Dernière maintenance</span><span className="abd__value">{new Date(bus.lastMaintenance).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}</span></div>
-            <div className="abd__field"><span className="abd__label">Prochaine maintenance</span><span className="abd__value">{new Date(bus.nextMaintenance).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}</span></div>
+            <div className="abd__field"><span className="abd__label">Mise en service</span><span className="abd__value">{formatDate(bus.serviceDate)}</span></div>
+            <div className="abd__field"><span className="abd__label">Dernière maintenance</span><span className="abd__value">{formatDate(bus.lastMaintenance)}</span></div>
+            <div className="abd__field"><span className="abd__label">Prochaine maintenance</span><span className="abd__value">{formatDate(bus.nextMaintenance)}</span></div>
           </div>
         </div>
 

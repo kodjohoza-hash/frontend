@@ -3,30 +3,29 @@ import { useParams, useNavigate } from 'react-router-dom';
 import AgencyBusDetails from '../../components/agency/AgencyBusDetails';
 import AgencyBusSkeleton from '../../components/agency/AgencyBusSkeleton';
 import AgencyBusModal from '../../components/agency/AgencyBusModal';
-import { mockBuses } from '../../data/agencyBusData';
+import useBusStore from '../../store/bus.store';
 
 export default function BusDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [bus, setBus] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { bus, loadingDetail, fetchBus, fetchMaintenances, updateBus } = useBusStore();
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const found = mockBuses.find((b) => b.id === id);
-      setBus(found || null);
-      setLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [id]);
+    fetchBus(id).catch(() => {});
+    fetchMaintenances(id).catch(() => {});
+  }, [id, fetchBus, fetchMaintenances]);
 
-  const handleSave = (formData) => {
-    setBus((prev) => prev ? { ...prev, ...formData, amenities: formData.amenities || prev.amenities } : prev);
-    setModalOpen(false);
+  const handleSave = async (formData) => {
+    try {
+      await updateBus(id, formData);
+      setModalOpen(false);
+    } catch (err) {
+      window.alert(err.message || 'Impossible d\'enregistrer ce bus.');
+    }
   };
 
-  if (loading) return <AgencyBusSkeleton rows={4} />;
+  if (loadingDetail && !bus) return <AgencyBusSkeleton rows={4} />;
 
   if (!bus) {
     return (

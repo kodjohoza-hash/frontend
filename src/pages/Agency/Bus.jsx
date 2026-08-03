@@ -1,14 +1,14 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import AgencyBusStats from '../../components/agency/AgencyBusStats';
 import AgencyBusFilters from '../../components/agency/AgencyBusFilters';
 import AgencyBusTable from '../../components/agency/AgencyBusTable';
 import AgencyBusCard from '../../components/agency/AgencyBusCard';
 import AgencyBusModal from '../../components/agency/AgencyBusModal';
 import AgencyBusSkeleton from '../../components/agency/AgencyBusSkeleton';
-import { mockBuses, busStats } from '../../data/agencyBusData';
+import useBusStore from '../../store/bus.store';
 
 export default function Bus() {
-  const [buses, setBuses] = useState(mockBuses);
+  const { buses, stats, loading, fetchBuses, createBus, updateBus, deleteBus } = useBusStore();
   const [filters, setFilters] = useState({
     search: '', type: '', status: '', seatsMin: '', seatsMax: '',
     climatisation: '', wifi: '', serviceDateFrom: '', serviceDateTo: '',
@@ -20,7 +20,12 @@ export default function Bus() {
   const [editingBus, setEditingBus] = useState(null);
   const [viewMode, setViewMode] = useState('table');
   const [page, setPage] = useState(1);
+  const [busy, setBusy] = useState(false);
   const perPage = 10;
+
+  useEffect(() => {
+    fetchBuses();
+  }, [fetchBuses]);
 
   const filteredBuses = useMemo(() => {
     let result = [...buses];
@@ -74,55 +79,56 @@ export default function Bus() {
     setPage(1);
   };
 
-  const handleSave = (formData) => {
-    if (editingBus) {
-      setBuses((prev) => prev.map((b) => b.id === editingBus.id ? { ...b, ...formData, amenities: formData.amenities } : b));
-    } else {
-      const newBus = {
-        id: `BUS-${String(buses.length + 1).padStart(3, '0')}`,
-        ...formData,
-        amenities: formData.amenities,
-        currentDriver: null, lastMaintenance: new Date().toISOString().split('T')[0],
-        nextMaintenance: new Date(Date.now() + 90 * 86400000).toISOString().split('T')[0],
-        serviceDate: new Date().toISOString().split('T')[0], mileage: 0,
-        tripCount: 0, totalKm: 0, avgOccupancy: 0,
-        photoUrl: null,
-        seatLayout: { rows: Math.ceil(formData.seats / 4), seatsPerSide: 2, aisleAfter: [Math.ceil(formData.seats / 8)], vipRows: [], pmrSeats: [] },
-      };
-      setBuses((prev) => [newBus, ...prev]);
+  const handleSave = async (formData) => {
+    try {
+      setBusy(true);
+      if (editingBus) {
+        await updateBus(editingBus.id, formData);
+      } else {
+        await createBus(formData);
+      }
+      setModalOpen(false);
+      setEditingBus(null);
+    } catch (err) {
+      window.alert(err.message || 'Impossible d\'enregistrer ce bus.');
+    } finally {
+      setBusy(false);
     }
-    setModalOpen(false);
-    setEditingBus(null);
   };
 
-  const handleDelete = (bus) => {
+  const handleDelete = async (bus) => {
     if (window.confirm(`Supprimer le bus ${bus.plate} ? Cette action est irréversible.`)) {
-      setBuses((prev) => prev.filter((b) => b.id !== bus.id));
+      try {
+        setBusy(true);
+        await deleteBus(bus);
+      } catch (err) {
+        window.alert(err.message || 'Impossible de supprimer ce bus.');
+      } finally {
+        setBusy(false);
+      }
     }
   };
 
-  const handleDuplicate = (bus) => {
-    const dup = {
-      ...bus,
-      id: `BUS-${String(buses.length + 1).padStart(3, '0')}`,
-      internalNumber: `GE-${String(buses.length + 1).padStart(3, '0')}`,
+  const handleDuplicate = async (bus) => {
+    const duplicate = {
       plate: bus.plate.replace(/.$/, 'D'),
-      status: 'disponible',
-      currentDriver: null,
-      tripCount: 0, totalKm: 0,
+      internalNumber: `${bus.internalNumber}-COPY`,
+      brand: bus.brand, model: bus.model, year: bus.year,
+      seats: bus.seats, type: bus.type, class: bus.class,
+      status: 'disponible', color: bus.color, amenities: bus.amenities || {},
+      notes: bus.notes || '', fuelType: bus.fuelType, currentDriver: '',
     };
-    setBuses((prev) => [dup, ...prev]);
+    try {
+      setBusy(true);
+      await createBus(duplicate);
+    } catch (err) {
+      window.alert(err.message || 'Impossible de dupliquer ce bus.');
+    } finally {
+      setBusy(false);
+    }
   };
 
-  const currentStats = useMemo(() => ({
-    total: buses.length,
-    disponible: buses.filter((b) => b.status === 'disponible').length,
-    en_voyage: buses.filter((b) => b.status === 'en_voyage').length,
-    maintenance: buses.filter((b) => b.status === 'maintenance').length,
-    hors_service: buses.filter((b) => b.status === 'hors_service').length,
-    reserve: buses.filter((b) => b.status === 'reserve').length,
-    avgOccupancy: Math.round(buses.reduce((acc, b) => acc + b.avgOccupancy, 0) / buses.length),
-  }), [buses]);
+  if (loading && buses.length === 0) return <AgencyBusSkeleton />;
 
   return (
     <div className="ab-page">
@@ -143,14 +149,14 @@ export default function Bus() {
               <i className="bi bi-grid-3x3-gap" />
             </button>
           </div>
-          <button className="ab-btn ab-btn--primary ab-btn--lg" onClick={() => { setEditingBus(null); setModalOpen(true); }}>
+          <button className="ab-btn ab-btn--primary ab-btn--lg" disabled={busy} onClick={() => { setEditingBus(null); setModalOpen(true); }}>
             <i className="bi bi-plus-lg" />
             <span>Ajouter un bus</span>
           </button>
         </div>
       </div>
 
-      <AgencyBusStats stats={currentStats} activeFilter={activeStatFilter} onFilterChange={handleStatFilter} />
+      <AgencyBusStats stats={stats} activeFilter={activeStatFilter} onFilterChange={handleStatFilter} />
 
       <AgencyBusFilters filters={filters} onFiltersChange={(f) => { setFilters(f); setPage(1); }} onReset={handleReset} />
 
@@ -160,14 +166,15 @@ export default function Bus() {
             buses={paginatedBuses}
             sortField={sortField}
             sortDir={sortDir}
-            onSort={(dir) => setSortDir(dir)}
+            onSort={(key, dir) => { setSortField(key); setSortDir(dir); }}
             onDelete={handleDelete}
             onDuplicate={handleDuplicate}
+            onEdit={(b) => { setEditingBus(b); setModalOpen(true); }}
           />
         ) : (
           <div className="ab-page__cards">
             {paginatedBuses.map((bus) => (
-              <AgencyBusCard key={bus.id} bus={bus} />
+              <AgencyBusCard key={bus.id} bus={bus} onEdit={(b) => { setEditingBus(b); setModalOpen(true); }} />
             ))}
             {paginatedBuses.length === 0 && (
               <div className="ab-page__empty-cards">
