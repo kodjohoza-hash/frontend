@@ -49,6 +49,14 @@ app.use('/api/v1', usersModule.routes);
 const companiesModule = require('./modules/companies');
 app.use('/api/v1', companiesModule.routes);
 
+/* Module Agencies (points de vente : CRUD, statuts, GPS, agences proches, KPIs) */
+const agenciesModule = require('./modules/agencies');
+app.use('/api/v1', agenciesModule.routes);
+
+/* Module Counters (guichets : CRUD, statuts, affectation d'agents, dashboards) */
+const countersModule = require('./modules/counters');
+app.use('/api/v1', countersModule.routes);
+
 /* 404 + gestion centralisée des erreurs */
 app.use(notFoundHandler);
 app.use(errorHandler);

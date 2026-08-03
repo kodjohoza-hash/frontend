@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       verifie: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
       agence_id: { type: DataTypes.CHAR(10), allowNull: false },
+      guichet_id: { type: DataTypes.CHAR(10), allowNull: true }, // FK vers guichet
       superieur_id: { type: DataTypes.CHAR(10), allowNull: true },
     },
     {
@@ -38,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Agent.associate = (db) => {
     Agent.belongsTo(db.Agence, { foreignKey: 'agence_id', as: 'agence' });
+    Agent.belongsTo(db.Guichet, { foreignKey: 'guichet_id', as: 'guichet' });
     Agent.belongsTo(db.Agent, { foreignKey: 'superieur_id', as: 'superieur' });
     Agent.hasMany(db.Agent, { foreignKey: 'superieur_id', as: 'subordonnes' });
     Agent.hasOne(db.CompteAgent, { foreignKey: 'agent_id', as: 'compte' });

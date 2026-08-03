@@ -20,6 +20,8 @@ const serializeUser = (agent) => ({
   role: agent.role,
   agenceId: agent.agence_id ?? null,
   agenceName: agent.agence?.nom ?? null,
+  guichetId: agent.guichet_id ?? null,
+  guichetName: agent.guichet?.nom ?? null,
   compagnieId: agent.agence?.compagnie_id ?? null,
   companyName: agent.agence?.compagnie?.nom ?? null,
   dateCreation: agent.date_creation ?? agent.date_embauche ?? null,

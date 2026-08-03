@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { Agent, Agence, Compagnie, CompteAgent } = require('../../../models');
+const { Agent, Agence, Compagnie, CompteAgent, Guichet } = require('../../../models');
 
 /** Associations à charger pour la vue "détail utilisateur". */
 const detailInclude = [
@@ -8,6 +8,7 @@ const detailInclude = [
     as: 'agence',
     include: [{ model: Compagnie, as: 'compagnie' }],
   },
+  { model: Guichet, as: 'guichet' },
   { model: CompteAgent, as: 'compte' },
 ];
 
