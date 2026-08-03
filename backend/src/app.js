@@ -61,6 +61,10 @@ app.use('/api/v1', countersModule.routes);
 const busesModule = require('./modules/buses');
 app.use('/api/v1', busesModule.routes);
 
+/* Module Drivers (chauffeurs : CRUD, statuts, disponibilité, voyages, affectations, incidents, documents, photos) */
+const driversModule = require('./modules/drivers');
+app.use('/api/v1', driversModule.routes);
+
 /* 404 + gestion centralisée des erreurs */
 app.use(notFoundHandler);
 app.use(errorHandler);

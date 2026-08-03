@@ -48,6 +48,12 @@ module.exports = (sequelize, DataTypes) => {
     Agent.hasMany(db.PasswordResetToken, { foreignKey: 'agent_id', as: 'passwordResetTokens' });
     Agent.hasMany(db.EmailVerificationToken, { foreignKey: 'agent_id', as: 'emailVerificationTokens' });
     Agent.hasMany(db.Bus, { foreignKey: 'chauffeur_id', as: 'busesConduites' });
+    /* Module Drivers */
+    Agent.hasOne(db.Chauffeur, { foreignKey: 'agent_id', as: 'chauffeurProfile' });
+    Agent.hasMany(db.ChauffeurDocument, { foreignKey: 'chauffeur_id', as: 'chauffeurDocuments' });
+    Agent.hasMany(db.ChauffeurIncident, { foreignKey: 'chauffeur_id', as: 'chauffeurIncidents' });
+    Agent.hasMany(db.ChauffeurAffectation, { foreignKey: 'chauffeur_id', as: 'chauffeurAffectations' });
+    Agent.hasMany(db.Depart, { foreignKey: 'chauffeur_id', as: 'departsConduits' });
   };
 
   return Agent;
