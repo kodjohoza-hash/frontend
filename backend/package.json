@@ -1,0 +1,43 @@
+{
+  "name": "bus_tix_connect_backend",
+  "version": "1.0.0",
+  "description": "API Bus Tix Connect — Express 5 + Sequelize + MySQL",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "seed": "node src/seeders/index.js",
+    "db:sync": "cross-env DB_SYNC=true node src/server.js"
+  },
+  "keywords": [
+    "bus",
+    "ticketing",
+    "api",
+    "express",
+    "sequelize",
+    "mysql"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "joi": "^18.2.3",
+    "jsonwebtoken": "^9.0.3",
+    "juice": "^12.1.1",
+    "multer": "^2.2.0",
+    "mysql2": "^3.23.2",
+    "node-cron": "^4.6.0",
+    "nodemailer": "^9.0.3",
+    "nodemon": "^3.1.14",
+    "sequelize": "^6.37.8",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}
