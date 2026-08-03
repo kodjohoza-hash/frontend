@@ -1,5 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
-import { companyStats, companies as allCompanies, filterCompanies, sortCompanies, companyActivityTimeline, companyDocuments, companyChartData } from '../../data/adminCompanyData';
+import { companyActivityTimeline, companyDocuments, companyChartData } from '../../data/adminCompanyData';
+import { filterCompanies, sortCompanies, buildFilterOptions } from '../../services/companies.service';
+import useCompaniesStore from '../../store/companies.store';
 import AdminCompanyStats from '../../components/admin/AdminCompanyStats';
 import AdminCompanyFilters from '../../components/admin/AdminCompanyFilters';
 import AdminCompanyTable from '../../components/admin/AdminCompanyTable';
@@ -19,31 +21,44 @@ const defaultFilters = {
 };
 
 const Companies = () => {
+  const {
+    companies, stats, loading, refresh, suspend, reactivate, refuse, validate, removeCompany,
+  } = useCompaniesStore();
   const [filters, setFilters] = useState(defaultFilters);
   const [sortBy, setSortBy] = useState('newest');
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [showValidation, setShowValidation] = useState(null);
   const [toasts, setToasts] = useState([]);
+  const [confirming, setConfirming] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
-
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 600);
-    return () => clearTimeout(t);
-  }, []);
-
-  const filtered = useMemo(() => filterCompanies(allCompanies, filters), [filters]);
-  const sorted = useMemo(() => sortCompanies(filtered, sortBy), [filtered, sortBy]);
-  const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
-  const paginated = sorted.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
-
-  useEffect(() => { setPage(1); }, [filters, sortBy]);
 
   const addToast = (type, message) => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, type, message }]);
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3000);
+  };
+
+  useEffect(() => {
+    refresh().catch((err) => {
+      addToast('error', err.message || 'Impossible de charger les compagnies.');
+    });
+  }, [refresh]);
+
+  const filtered = useMemo(() => filterCompanies(companies, filters), [companies, filters]);
+  const sorted = useMemo(() => sortCompanies(filtered, sortBy), [filtered, sortBy]);
+  const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+  const paginated = sorted.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+  const filterOptions = useMemo(() => buildFilterOptions(companies), [companies]);
+
+  const handleFilterChange = (nextFilters) => {
+    setFilters(nextFilters);
+    setPage(1);
+  };
+
+  const handleSortChange = (value) => {
+    setSortBy(value);
+    setPage(1);
   };
 
   const handleAction = (action, company) => {
@@ -52,7 +67,7 @@ const Companies = () => {
         setSelectedCompany(company);
         break;
       case 'edit':
-        addToast('info', `Modification de ${company.name} (mock)`);
+        addToast('info', `Modification de ${company.name} (à venir)`);
         break;
       case 'validate':
         setShowValidation(company);
@@ -70,39 +85,74 @@ const Companies = () => {
         setConfirmAction({ action: 'delete', company, message: `Supprimer ${company.name} ? Cette action est irréversible.`, icon: 'danger' });
         break;
       case 'stats':
-        addToast('info', `Statistiques de ${company.name} (mock)`);
+        addToast('info', `Statistiques de ${company.name} (à venir)`);
         break;
       default:
-        addToast('info', `${action} — ${company.name} (mock)`);
+        addToast('info', `${action} — ${company.name} (à venir)`);
     }
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!confirmAction) return;
     const { action, company } = confirmAction;
-    const labels = {
-      suspend: { success: 'suspendue', error: 'suspendre' },
-      reactivate: { success: 'réactivée', error: 'réactiver' },
-      refuse: { success: 'refusée', error: 'refuser' },
-      delete: { success: 'supprimée', error: 'supprimer' },
-    };
-    addToast('success', `${company.name} ${labels[action]?.success || action}`);
-    setConfirmAction(null);
+    setConfirming(true);
+    try {
+      switch (action) {
+        case 'suspend':
+          await suspend(company);
+          addToast('success', `${company.name} suspendue`);
+          break;
+        case 'reactivate':
+          await reactivate(company);
+          addToast('success', `${company.name} réactivée`);
+          break;
+        case 'refuse':
+          await refuse(company);
+          addToast('success', `${company.name} refusée`);
+          break;
+        case 'delete':
+          await removeCompany(company);
+          addToast('success', `${company.name} supprimée`);
+          break;
+        default:
+          addToast('success', `${company.name} — action effectuée`);
+      }
+    } catch (err) {
+      addToast('error', err.message || 'Action impossible.');
+    } finally {
+      setConfirming(false);
+      setConfirmAction(null);
+    }
   };
 
-  const handleValidationComplete = (decision) => {
-    const label = decision === 'validated' ? 'validée' : 'refusée';
-    addToast('success', `Compagnie ${label} avec succès`);
-    setShowValidation(null);
+  const handleValidationComplete = async (decision) => {
+    const target = showValidation;
+    if (!target) return;
+    setConfirming(true);
+    try {
+      if (decision === 'validated') {
+        await validate(target);
+        addToast('success', `${target.name} validée`);
+      } else {
+        await refuse(target);
+        addToast('success', `${target.name} refusée`);
+      }
+    } catch (err) {
+      addToast('error', err.message || 'Validation impossible.');
+    } finally {
+      setConfirming(false);
+      setShowValidation(null);
+    }
   };
 
   const handleReset = () => {
     setFilters(defaultFilters);
     setSortBy('newest');
+    setPage(1);
     addToast('info', 'Filtres réinitialisés');
   };
 
-  if (loading) return <AdminCompanySkeleton />;
+  if (loading && companies.length === 0) return <AdminCompanySkeleton />;
 
   return (
     <div className="admc-page">
@@ -114,10 +164,10 @@ const Companies = () => {
             <p>Gérez, validez et supervisez toutes les compagnies de transport de la plateforme.</p>
           </div>
           <div className="admc-hero-actions">
-            <button className="admc-btn admc-btn--primary" onClick={() => addToast('info', 'Création de compagnie (mock)')}>
+            <button className="admc-btn admc-btn--primary" onClick={() => addToast('info', 'Création de compagnie (à venir)')}>
               <i className="bi bi-plus-lg" /> Nouvelle compagnie
             </button>
-            <button className="admc-btn admc-btn--outline" onClick={() => { /* export all */ }}>
+            <button className="admc-btn admc-btn--outline" onClick={() => addToast('info', 'Export (à venir)')}>
               <i className="bi bi-download" /> Exporter
             </button>
           </div>
@@ -125,21 +175,22 @@ const Companies = () => {
       </div>
 
       {/* KPI */}
-      <AdminCompanyStats stats={companyStats} />
+      <AdminCompanyStats stats={stats} />
 
       {/* Filters */}
       <AdminCompanyFilters
         filters={filters}
-        onFilterChange={(f) => { setFilters(f); }}
+        onFilterChange={handleFilterChange}
         onReset={handleReset}
-        total={allCompanies.length}
+        total={companies.length}
         filtered={filtered.length}
+        options={filterOptions}
       />
 
       {/* Sort */}
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.75rem', gap: '0.5rem', alignItems: 'center' }}>
         <label style={{ fontSize: '0.8rem', color: '#6B7280' }}>Trier par :</label>
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}
+        <select value={sortBy} onChange={(e) => handleSortChange(e.target.value)}
           style={{ padding: '0.35rem 0.6rem', borderRadius: 6, border: '1.5px solid #E5E7EB', fontSize: '0.8rem', background: '#fff' }}>
           <option value="newest">Plus récentes</option>
           <option value="oldest">Plus anciennes</option>
@@ -209,7 +260,7 @@ const Companies = () => {
 
       {/* Confirm Modal */}
       {confirmAction && (
-        <div className="admc-modal-overlay" onClick={() => setConfirmAction(null)}>
+        <div className="admc-modal-overlay" onClick={() => !confirming && setConfirmAction(null)}>
           <div className="admc-modal" onClick={(e) => e.stopPropagation()}>
             <div className={`admc-modal-icon admc-modal-icon--${confirmAction.icon}`}>
               <i className={`bi ${confirmAction.icon === 'danger' ? 'bi-exclamation-triangle' : confirmAction.icon === 'success' ? 'bi-check-circle' : 'bi-question-circle'}`} />
@@ -217,9 +268,9 @@ const Companies = () => {
             <h3>Confirmation</h3>
             <p>{confirmAction.message}</p>
             <div className="admc-modal-actions">
-              <button className="admc-btn--cancel" onClick={() => setConfirmAction(null)}>Annuler</button>
-              <button className={`admc-btn--${confirmAction.icon === 'danger' ? 'danger' : 'primary'}`} onClick={handleConfirm}>
-                {confirmAction.action === 'reactivate' ? 'Réactiver' : confirmAction.action.charAt(0).toUpperCase() + confirmAction.action.slice(1)}
+              <button className="admc-btn--cancel" disabled={confirming} onClick={() => setConfirmAction(null)}>Annuler</button>
+              <button className={`admc-btn--${confirmAction.icon === 'danger' ? 'danger' : 'primary'}`} disabled={confirming} onClick={handleConfirm}>
+                {confirming ? 'En cours…' : confirmAction.action === 'reactivate' ? 'Réactiver' : confirmAction.action.charAt(0).toUpperCase() + confirmAction.action.slice(1)}
               </button>
             </div>
           </div>

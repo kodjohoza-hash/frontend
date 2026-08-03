@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { subscriptionTypes, statusTypes, filterOptions } from '../../data/adminCompanyData';
+import { subscriptionTypes, statusTypes, filterOptions as defaultFilterOptions } from '../../data/adminCompanyData';
 
-const AdminCompanyFilters = ({ filters, onFilterChange, onReset, total, filtered }) => {
+const AdminCompanyFilters = ({ filters, onFilterChange, onReset, total, filtered, options: optionsProp }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const filterOptions = optionsProp || defaultFilterOptions;
   const handleChange = (key, value) => onFilterChange({ ...filters, [key]: value });
   const rangeFields = [
     { key: 'busesMin', label: 'Bus min' }, { key: 'busesMax', label: 'Bus max' },
