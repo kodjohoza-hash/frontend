@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
   Depart.associate = (db) => {
     Depart.belongsTo(db.Bus, { foreignKey: 'bus_id', as: 'bus' });
     Depart.belongsTo(db.Agent, { foreignKey: 'chauffeur_id', as: 'chauffeur' });
+    Depart.belongsTo(db.Trajet, { foreignKey: 'trajet_id', as: 'trajet' });
   };
 
   return Depart;

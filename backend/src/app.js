@@ -65,6 +65,10 @@ app.use('/api/v1', busesModule.routes);
 const driversModule = require('./modules/drivers');
 app.use('/api/v1', driversModule.routes);
 
+/* Module Routes (itinéraires : CRUD, escales, calculs, villes, KPIs) */
+const routesModule = require('./modules/routes');
+app.use('/api/v1', routesModule.routes);
+
 /* 404 + gestion centralisée des erreurs */
 app.use(notFoundHandler);
 app.use(errorHandler);

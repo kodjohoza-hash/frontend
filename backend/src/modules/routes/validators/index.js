@@ -1,0 +1,33 @@
+const {
+  STATUTS,
+  SORTS,
+  idSchema,
+  villeIdSchema,
+  stopIdSchema,
+  listQuerySchema,
+  routeCreateSchema,
+  routeUpdateSchema,
+  statusSchema,
+  calculsQuerySchema,
+  villeCreateSchema,
+  villeUpdateSchema,
+  stopCreateSchema,
+  stopUpdateSchema,
+} = require('./route.validator');
+
+module.exports = {
+  STATUTS,
+  SORTS,
+  idSchema,
+  villeIdSchema,
+  stopIdSchema,
+  listQuerySchema,
+  routeCreateSchema,
+  routeUpdateSchema,
+  statusSchema,
+  calculsQuerySchema,
+  villeCreateSchema,
+  villeUpdateSchema,
+  stopCreateSchema,
+  stopUpdateSchema,
+};

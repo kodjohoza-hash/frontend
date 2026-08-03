@@ -49,6 +49,7 @@ module.exports = (sequelize, DataTypes) => {
     Compagnie.hasMany(db.NotificationAbonnement, { foreignKey: 'compagnie_id', as: 'notifications_abonnement' });
     Compagnie.hasMany(db.HistoriqueAbonnement, { foreignKey: 'compagnie_id', as: 'historique_abonnement' });
     Compagnie.hasMany(db.Bus, { foreignKey: 'compagnie_id', as: 'buses' });
+    Compagnie.hasMany(db.Trajet, { foreignKey: 'compagnie_id', as: 'trajets' });
   };
 
   return Compagnie;
