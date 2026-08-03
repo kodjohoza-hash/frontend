@@ -45,6 +45,10 @@ app.use('/api/v1', subscriptionsModule.routes);
 const usersModule = require('./modules/users');
 app.use('/api/v1', usersModule.routes);
 
+/* Module Companies (compagnies de transport : CRUD, profil, logo, documents, statuts, KPIs) */
+const companiesModule = require('./modules/companies');
+app.use('/api/v1', companiesModule.routes);
+
 /* 404 + gestion centralisée des erreurs */
 app.use(notFoundHandler);
 app.use(errorHandler);
