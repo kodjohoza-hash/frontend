@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { filterOptions } from '../../data/adminUserData';
+import { filterOptions as defaultFilterOptions } from '../../data/adminUserData';
 
-const AdminUserFilters = ({ filters, onFilterChange, onReset, total, filtered }) => {
+const AdminUserFilters = ({ filters, onFilterChange, onReset, total, filtered, options: optionsProp }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const filterOptions = optionsProp || defaultFilterOptions;
   const handleChange = (key, value) => onFilterChange({ ...filters, [key]: value });
 
   return (
