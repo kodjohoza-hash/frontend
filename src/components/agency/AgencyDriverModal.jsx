@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { licenseCategories, cities, driverStatuses } from '../../data/agencyDriverData';
+import useAgencyStore from '../../store/agency.store';
 
 const emptyDriver = {
   firstName: '', lastName: '', dateOfBirth: '', gender: 'M', phone: '', email: '',
   address: '', city: '', country: 'Cameroun', licenseNumber: '', licenseCategory: 'D',
   licenseObtained: '', licenseExpiry: '', experience: '', hireDate: '', assignedBus: '',
-  status: 'disponible', observations: '',
+  agenceId: '', status: 'disponible', observations: '',
 };
 
 export default function AgencyDriverModal({ isOpen, onClose, driver, onSave }) {
@@ -14,6 +15,11 @@ export default function AgencyDriverModal({ isOpen, onClose, driver, onSave }) {
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
   const [step, setStep] = useState(1);
+  const { branches, fetchBranches } = useAgencyStore();
+
+  useEffect(() => {
+    if (isOpen && branches.length === 0) fetchBranches().catch(() => {});
+  }, [isOpen, branches.length, fetchBranches]);
 
   useEffect(() => {
     if (driver) {
@@ -25,8 +31,8 @@ export default function AgencyDriverModal({ isOpen, onClose, driver, onSave }) {
         licenseNumber: driver.licenseNumber || '', licenseCategory: driver.licenseCategory || 'D',
         licenseObtained: driver.licenseObtained || '', licenseExpiry: driver.licenseExpiry || '',
         experience: String(driver.experience || ''), hireDate: driver.hireDate || '',
-        assignedBus: driver.assignedBus || '', status: driver.status || 'disponible',
-        observations: driver.observations || '',
+        assignedBus: driver.assignedBusId || driver.assignedBus || '', status: driver.status || 'disponible',
+        agenceId: driver.agenceId || '', observations: driver.observations || '',
       });
     } else { setForm(emptyDriver); }
     setErrors({}); setStep(1);
@@ -43,6 +49,7 @@ export default function AgencyDriverModal({ isOpen, onClose, driver, onSave }) {
     if (!form.lastName.trim()) errs.lastName = 'Nom requis';
     if (!form.phone.trim()) errs.phone = 'Téléphone requis';
     if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) errs.email = 'Email valide requis';
+    if (!form.agenceId) errs.agenceId = 'Agence requise';
     if (!form.licenseNumber.trim()) errs.licenseNumber = 'N° permis requis';
     if (!form.licenseCategory) errs.licenseCategory = 'Catégorie requise';
     setErrors(errs);
@@ -113,9 +120,10 @@ export default function AgencyDriverModal({ isOpen, onClose, driver, onSave }) {
             <div className="ad-form-section">
               <h4 className="ad-form-section__title"><i className="bi bi-bus-front" /> Affectation & Statut</h4>
               <div className="ad-form-row">
+                <div className="ad-form-field"><label>Agence <span className="ad-required">*</span></label><select value={form.agenceId} onChange={(e) => handleChange('agenceId', e.target.value)} className={clsx('ad-input', errors.agenceId && 'ad-input--error')}><option value="">Sélectionner</option>{branches.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select>{errors.agenceId && <span className="ad-form-error">{errors.agenceId}</span>}</div>
                 <div className="ad-form-field"><label>Date d'embauche</label><input type="date" value={form.hireDate} onChange={(e) => handleChange('hireDate', e.target.value)} className="ad-input" /></div>
                 <div className="ad-form-field"><label>Statut</label><select value={form.status} onChange={(e) => handleChange('status', e.target.value)} className="ad-input">{driverStatuses.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}</select></div>
-                <div className="ad-form-field"><label>Bus affecté</label><input type="text" value={form.assignedBus} onChange={(e) => handleChange('assignedBus', e.target.value)} placeholder="ex: BUS-001" className="ad-input" /></div>
+                <div className="ad-form-field"><label>Bus affecté</label><input type="text" value={form.assignedBus} onChange={(e) => handleChange('assignedBus', e.target.value)} placeholder="ex: BS1234567" className="ad-input" /></div>
               </div>
               <div className="ad-form-field"><label>Observations</label><textarea value={form.observations} onChange={(e) => handleChange('observations', e.target.value)} rows={4} placeholder="Notes internes..." className="ad-input ad-input--textarea" /></div>
             </div>

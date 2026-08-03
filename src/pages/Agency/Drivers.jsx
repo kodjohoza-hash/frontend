@@ -1,14 +1,14 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import AgencyDriverStats from '../../components/agency/AgencyDriverStats';
 import AgencyDriverFilters from '../../components/agency/AgencyDriverFilters';
 import AgencyDriverTable from '../../components/agency/AgencyDriverTable';
 import AgencyDriverCard from '../../components/agency/AgencyDriverCard';
 import AgencyDriverModal from '../../components/agency/AgencyDriverModal';
 import AgencyDriverSkeleton from '../../components/agency/AgencyDriverSkeleton';
-import { mockDrivers, driverStats } from '../../data/agencyDriverData';
+import useDriverStore from '../../store/driver.store';
 
 export default function Drivers() {
-  const [drivers, setDrivers] = useState(mockDrivers);
+  const { drivers, stats, loading, fetchDrivers, createDriver, updateDriver, removeDriver } = useDriverStore();
   const [filters, setFilters] = useState({ search: '', lastName: '', firstName: '', phone: '', status: '', licenseCategory: '', assignedBus: '', city: '', experience: '', available: '' });
   const [activeStatFilter, setActiveStatFilter] = useState('all');
   const [sortField, setSortField] = useState('lastName');
@@ -17,11 +17,16 @@ export default function Drivers() {
   const [editingDriver, setEditingDriver] = useState(null);
   const [viewMode, setViewMode] = useState('table');
   const [page, setPage] = useState(1);
+  const [busy, setBusy] = useState(false);
   const perPage = 10;
+
+  useEffect(() => {
+    fetchDrivers();
+  }, [fetchDrivers]);
 
   const filteredDrivers = useMemo(() => {
     let result = [...drivers];
-    if (activeStatFilter !== 'all') result = result.filter((d) => d.status === activeStatFilter);
+    if (activeStatFilter !== 'all' && activeStatFilter !== 'experience') result = result.filter((d) => d.status === activeStatFilter);
     if (filters.search) {
       const q = filters.search.toLowerCase();
       result = result.filter((d) => `${d.firstName} ${d.lastName} ${d.phone} ${d.email} ${d.id}`.toLowerCase().includes(q));
@@ -56,30 +61,37 @@ export default function Drivers() {
   const handleReset = () => { setFilters({ search: '', lastName: '', firstName: '', phone: '', status: '', licenseCategory: '', assignedBus: '', city: '', experience: '', available: '' }); setActiveStatFilter('all'); setPage(1); };
   const handleStatFilter = (key) => { setActiveStatFilter(key === activeStatFilter ? 'all' : key); setPage(1); };
 
-  const handleSave = (formData) => {
-    if (editingDriver) {
-      setDrivers((prev) => prev.map((d) => d.id === editingDriver.id ? { ...d, ...formData } : d));
-    } else {
-      const newDriver = { id: `DRV-${String(drivers.length + 1).padStart(3, '0')}`, ...formData, assignedBus: formData.assignedBus || null, currentTrip: null, photoUrl: null, performance: { totalTrips: 0, totalKm: 0, punctuality: 0, satisfaction: 0, incidents: 0, yearsService: 0 }, documents: { license: true, nationalId: true, contract: true, medical: false, certificates: false } };
-      setDrivers((prev) => [newDriver, ...prev]);
+  const handleSave = async (formData) => {
+    try {
+      setBusy(true);
+      if (editingDriver) {
+        await updateDriver(editingDriver.id, formData);
+      } else {
+        await createDriver(formData);
+      }
+      setModalOpen(false);
+      setEditingDriver(null);
+    } catch (err) {
+      window.alert(err.message || 'Impossible d\'enregistrer ce chauffeur.');
+    } finally {
+      setBusy(false);
     }
-    setModalOpen(false); setEditingDriver(null);
   };
 
-  const handleDelete = (driver) => {
+  const handleDelete = async (driver) => {
     if (window.confirm(`Supprimer le chauffeur ${driver.firstName} ${driver.lastName} ?`)) {
-      setDrivers((prev) => prev.filter((d) => d.id !== driver.id));
+      try {
+        setBusy(true);
+        await removeDriver(driver);
+      } catch (err) {
+        window.alert(err.message || 'Impossible de supprimer ce chauffeur.');
+      } finally {
+        setBusy(false);
+      }
     }
   };
 
-  const currentStats = useMemo(() => ({
-    total: drivers.length,
-    disponible: drivers.filter((d) => d.status === 'disponible').length,
-    en_mission: drivers.filter((d) => d.status === 'en_mission').length,
-    conge: drivers.filter((d) => d.status === 'conge').length,
-    suspendu: drivers.filter((d) => d.status === 'suspendu').length,
-    avgExperience: Math.round(drivers.reduce((acc, d) => acc + d.experience, 0) / drivers.length),
-  }), [drivers]);
+  if (loading && drivers.length === 0) return <AgencyDriverSkeleton />;
 
   return (
     <div className="ad-page">
@@ -93,17 +105,17 @@ export default function Drivers() {
             <button className={`ad-page__view-btn ${viewMode === 'table' ? 'ad-page__view-btn--active' : ''}`} onClick={() => setViewMode('table')}><i className="bi bi-list-ul" /></button>
             <button className={`ad-page__view-btn ${viewMode === 'cards' ? 'ad-page__view-btn--active' : ''}`} onClick={() => setViewMode('cards')}><i className="bi bi-grid-3x3-gap" /></button>
           </div>
-          <button className="ad-btn ad-btn--primary ad-btn--lg" onClick={() => { setEditingDriver(null); setModalOpen(true); }}><i className="bi bi-plus-lg" /><span>Ajouter un chauffeur</span></button>
+          <button className="ad-btn ad-btn--primary ad-btn--lg" disabled={busy} onClick={() => { setEditingDriver(null); setModalOpen(true); }}><i className="bi bi-plus-lg" /><span>Ajouter un chauffeur</span></button>
         </div>
       </div>
-      <AgencyDriverStats stats={currentStats} activeFilter={activeStatFilter} onFilterChange={handleStatFilter} />
+      <AgencyDriverStats stats={stats} activeFilter={activeStatFilter} onFilterChange={handleStatFilter} />
       <AgencyDriverFilters filters={filters} onFiltersChange={(f) => { setFilters(f); setPage(1); }} onReset={handleReset} />
       <div className="ad-page__content">
         {viewMode === 'table' ? (
-          <AgencyDriverTable drivers={paginatedDrivers} sortField={sortField} sortDir={sortDir} onSort={(dir) => setSortDir(dir)} onDelete={handleDelete} />
+          <AgencyDriverTable drivers={paginatedDrivers} sortField={sortField} sortDir={sortDir} onSort={(key, dir) => { setSortField(key); setSortDir(dir); }} onDelete={handleDelete} onEdit={(d) => { setEditingDriver(d); setModalOpen(true); }} />
         ) : (
           <div className="ad-page__cards">
-            {paginatedDrivers.map((d) => <AgencyDriverCard key={d.id} driver={d} />)}
+            {paginatedDrivers.map((d) => <AgencyDriverCard key={d.id} driver={d} onEdit={(driver) => { setEditingDriver(driver); setModalOpen(true); }} />)}
             {paginatedDrivers.length === 0 && <div className="ad-page__empty-cards"><i className="bi bi-person-badge" /><p>Aucun chauffeur trouvé</p></div>}
           </div>
         )}

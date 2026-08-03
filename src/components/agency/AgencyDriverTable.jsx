@@ -2,7 +2,7 @@ import AgencyDriverStatus from './AgencyDriverStatus';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 
-export default function AgencyDriverTable({ drivers, sortField, sortDir, onSort, onDelete }) {
+export default function AgencyDriverTable({ drivers, sortField, sortDir, onSort, onDelete, onEdit }) {
   const navigate = useNavigate();
 
   const columns = [
@@ -21,8 +21,8 @@ export default function AgencyDriverTable({ drivers, sortField, sortDir, onSort,
   ];
 
   const handleSort = (key) => {
-    if (sortField === key) onSort(sortDir === 'asc' ? 'desc' : 'asc');
-    else onSort('asc');
+    if (sortField === key) onSort?.(key, sortDir === 'asc' ? 'desc' : 'asc');
+    else onSort?.(key, 'asc');
   };
 
   const getInitials = (d) => `${(d.firstName || '')[0] || ''}${(d.lastName || '')[0] || ''}`;
@@ -77,7 +77,7 @@ export default function AgencyDriverTable({ drivers, sortField, sortDir, onSort,
               <td>
                 <div className="ad-table__actions-cell">
                   <button className="ad-table__action" onClick={(e) => { e.stopPropagation(); navigate(`/agency/drivers/${d.id}`); }} title="Voir"><i className="bi bi-eye" /></button>
-                  <button className="ad-table__action ad-table__action--edit" onClick={(e) => e.stopPropagation()} title="Modifier"><i className="bi bi-pencil" /></button>
+                  <button className="ad-table__action ad-table__action--edit" onClick={(e) => { e.stopPropagation(); onEdit?.(d); }} title="Modifier"><i className="bi bi-pencil" /></button>
                   <button className="ad-table__action ad-table__action--danger" onClick={(e) => { e.stopPropagation(); onDelete?.(d); }} title="Supprimer"><i className="bi bi-trash" /></button>
                 </div>
               </td>

@@ -1,7 +1,7 @@
 import AgencyDriverStatus from './AgencyDriverStatus';
 import { useNavigate } from 'react-router-dom';
 
-export default function AgencyDriverCard({ driver }) {
+export default function AgencyDriverCard({ driver, onEdit }) {
   const navigate = useNavigate();
   const getInitials = (d) => `${(d.firstName || '')[0] || ''}${(d.lastName || '')[0] || ''}`;
   const genderColor = (g) => g === 'F' ? '#EC4899' : '#3B82F6';
@@ -26,7 +26,7 @@ export default function AgencyDriverCard({ driver }) {
       </div>
       <div className="ad-card__footer">
         <button className="ad-card__btn ad-card__btn--primary" onClick={(e) => { e.stopPropagation(); navigate(`/agency/drivers/${driver.id}`); }}><i className="bi bi-eye" /> Voir</button>
-        <button className="ad-card__btn ad-card__btn--outline" onClick={(e) => e.stopPropagation()}><i className="bi bi-pencil" /> Modifier</button>
+        <button className="ad-card__btn ad-card__btn--outline" onClick={(e) => { e.stopPropagation(); onEdit?.(driver); }}><i className="bi bi-pencil" /> Modifier</button>
       </div>
     </div>
   );
