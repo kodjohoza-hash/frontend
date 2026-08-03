@@ -49,6 +49,7 @@ export const ROUTES = {
      ================================================ */
   COMPANY_DASHBOARD: '/agency/dashboard',
   COMPANY_ROUTES: '/agency/routes',
+  COMPANY_ROUTE_DETAIL: '/agency/routes/:id',
   COMPANY_TRIPS: '/agency/trips',
   COMPANY_TRIP_DETAIL: '/agency/trips/:id',
   COMPANY_BUSES: '/agency/buses',
@@ -150,7 +151,8 @@ export const ROUTE_NAMES = {
   [ROUTES.CLIENT_SETTINGS]: 'Paramètres',
   [ROUTES.CLIENT_SUPPORT]: 'Centre d\'aide',
   [ROUTES.COMPANY_DASHBOARD]: 'Tableau de bord',
-  [ROUTES.COMPANY_ROUTES]: 'Trajets',
+  [ROUTES.COMPANY_ROUTES]: 'Itinéraires',
+  [ROUTES.COMPANY_ROUTE_DETAIL]: 'Détail de l\'itinéraire',
   [ROUTES.COMPANY_TRIPS]: 'Voyages',
   [ROUTES.COMPANY_TRIP_DETAIL]: 'Détail du voyage',
   [ROUTES.COMPANY_BUSES]: 'Bus',

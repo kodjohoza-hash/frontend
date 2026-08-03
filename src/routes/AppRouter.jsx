@@ -61,6 +61,8 @@ const ClientCreateBooking = lazy(() => import('@pages/Client/CreateBooking'));
 const AgencyDashboard = lazy(() => import('@pages/Agency/Dashboard'));
 const AgencyTrips = lazy(() => import('@pages/Agency/Trips'));
 const AgencyTripDetail = lazy(() => import('@pages/Agency/TripDetail'));
+const AgencyRoutes = lazy(() => import('@pages/Agency/Routes'));
+const AgencyRouteDetail = lazy(() => import('@pages/Agency/RouteDetail'));
 const AgencyBuses = lazy(() => import('@pages/Agency/Bus'));
 const AgencyBusDetail = lazy(() => import('@pages/Agency/BusDetail'));
 const AgencyDrivers = lazy(() => import('@pages/Agency/Drivers'));
@@ -217,7 +219,8 @@ const AppRouter = () => {
           <Route path={ROUTES.COMPANY_DASHBOARD} element={<AgencyDashboard />} />
           <Route path={ROUTES.COMPANY_TRIPS} element={<AgencyTrips />} />
           <Route path={ROUTES.COMPANY_TRIP_DETAIL} element={<AgencyTripDetail />} />
-          <Route path={ROUTES.COMPANY_ROUTES} element={<PlaceholderPage title="Trajets" description="Gérez les itinéraires et horaires de vos bus." icon="bi-signpost-2" backTo={ROUTES.COMPANY_DASHBOARD} />} />
+          <Route path={ROUTES.COMPANY_ROUTES} element={<AgencyRoutes />} />
+          <Route path={ROUTES.COMPANY_ROUTE_DETAIL} element={<AgencyRouteDetail />} />
           <Route path={ROUTES.COMPANY_BUSES} element={<AgencyBuses />} />
           <Route path={`${ROUTES.COMPANY_BUSES}/:id`} element={<AgencyBusDetail />} />
           <Route path={ROUTES.COMPANY_DRIVERS} element={<AgencyDrivers />} />

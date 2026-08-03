@@ -51,7 +51,7 @@ export const companyMenu = [
     icon: 'bi-bus-front',
     label: 'Transport',
     children: [
-      { id: 'company-routes', icon: 'bi-signpost-2', label: 'Trajets', path: ROUTES.COMPANY_ROUTES },
+      { id: 'company-routes', icon: 'bi-signpost-split', label: 'Itinéraires', path: ROUTES.COMPANY_ROUTES },
       { id: 'company-buses', icon: 'bi-bus-front-fill', label: 'Bus', path: ROUTES.COMPANY_BUSES },
       { id: 'company-drivers', icon: 'bi-person-badge', label: 'Chauffeurs', path: ROUTES.COMPANY_DRIVERS },
     ],

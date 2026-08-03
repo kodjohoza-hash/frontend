@@ -17,7 +17,8 @@ export const ROUTE_PERMISSIONS = {
 
   /* Company */
   [ROUTES.COMPANY_DASHBOARD]: { roles: ['company_admin'], permissions: [PERMISSIONS.DASHBOARD_VIEW] },
-  [ROUTES.COMPANY_ROUTES]: { roles: ['company_admin'], permissions: [PERMISSIONS.TRIPS_VIEW] },
+  [ROUTES.COMPANY_ROUTES]: { roles: ['company_admin'], permissions: [PERMISSIONS.TRANSPORT_ROUTES_VIEW] },
+  [ROUTES.COMPANY_ROUTE_DETAIL]: { roles: ['company_admin'], permissions: [PERMISSIONS.TRANSPORT_ROUTES_VIEW] },
   [ROUTES.COMPANY_TRIPS]: { roles: ['company_admin'], permissions: [PERMISSIONS.TRIPS_VIEW] },
   [ROUTES.COMPANY_TRIP_DETAIL]: { roles: ['company_admin'], permissions: [PERMISSIONS.TRIPS_VIEW] },
   [ROUTES.COMPANY_BUSES]: { roles: ['company_admin'], permissions: [PERMISSIONS.BUSES_VIEW] },

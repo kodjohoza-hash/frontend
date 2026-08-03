@@ -11,6 +11,7 @@ export const companyInfo = {
 export const sidebarMenus = [
   { section: 'Principal', items: [
     { id: 'dashboard', label: 'Tableau de bord', icon: 'bi-speedometer2', to: '/agency/dashboard' },
+    { id: 'routes', label: 'Itinéraires', icon: 'bi-signpost-split', to: '/agency/routes' },
     { id: 'trips', label: 'Voyages', icon: 'bi-signpost-2', to: '/agency/trips', badge: 12 },
     { id: 'bookings', label: 'Réservations', icon: 'bi-ticket-perforated', to: '/agency/bookings', badge: 48 },
   ]},

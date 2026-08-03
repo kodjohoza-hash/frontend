@@ -1,0 +1,105 @@
+/* ================================================================
+   BUS TIX CONNECT — Agency Routes & Cities (reuses ab-* from buses)
+   Routes / Itinéraires / Escales / Villes
+   ================================================================ */
+
+/* ── Stat variants manquants ─────────────────────────────────── */
+.ab-stat--muted { border-top-color: var(--ag-muted); }
+.ab-stat--muted .ab-stat-card__icon { background: var(--ag-muted-50); color: var(--ag-muted); }
+.ab-status--muted { background: var(--ag-muted-50); color: var(--ag-muted); }
+.ab-stat-card--plain { cursor: default; }
+
+/* ── Boutons ─────────────────────────────────────────────────── */
+.ab-btn--sm { padding: 8px 14px; font-size: 0.8rem; border-radius: 9px; }
+.ab-card__btn--danger { background: var(--ag-surface); color: var(--ag-danger); border: 1px solid var(--ag-danger-30, rgba(239, 68, 68, 0.3)); }
+.ab-card__btn--danger:hover { background: var(--ag-danger-50); border-color: var(--ag-danger); }
+
+/* ── Erreur en tête de page ──────────────────────────────────── */
+.ab-page__error { display: flex; align-items: center; gap: 8px; padding: 12px 16px; margin-bottom: 16px; background: var(--ag-danger-50); color: var(--ag-danger); border: 1px solid var(--ag-danger-30, rgba(239, 68, 68, 0.3)); border-radius: 10px; font-size: 0.85rem; }
+
+/* ── Table : itinéraires ─────────────────────────────────────── */
+.ab-table__route { display: flex; align-items: center; gap: 12px; }
+.ab-table__route-icon { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: var(--ag-primary-50); color: var(--ag-primary-400); flex-shrink: 0; }
+.ab-table__route-text { display: flex; flex-direction: column; gap: 2px; }
+.ab-table__route-name { font-size: 0.85rem; font-weight: 600; color: var(--ag-text); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ab-table__route-code { font-size: 0.72rem; color: var(--ag-text-muted); font-family: 'Courier New', monospace; }
+.ab-table__city { font-size: 0.82rem; color: var(--ag-text); font-weight: 500; }
+.ab-table__distance { font-size: 0.82rem; color: var(--ag-text); font-variant-numeric: tabular-nums; }
+.ab-table__duration { font-size: 0.82rem; color: var(--ag-text); font-variant-numeric: tabular-nums; }
+.ab-table__price { font-size: 0.82rem; font-weight: 600; color: var(--ag-success); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ab-table__stops { display: inline-flex; align-items: center; gap: 5px; font-size: 0.82rem; color: var(--ag-text-secondary); }
+.ab-table__stops i { color: var(--ag-accent); font-size: 0.8rem; }
+
+/* ── Cartes : itinéraires ────────────────────────────────────── */
+.ab-card__route-flag { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: var(--ag-primary-50); color: var(--ag-primary-400); flex-shrink: 0; }
+.ab-card__route-name { font-size: 0.92rem; font-weight: 600; color: var(--ag-text); }
+.ab-card__route-journey { display: flex; flex-direction: column; gap: 8px; padding: 14px; background: var(--ag-muted-50); border-radius: 12px; }
+.ab-card__journey-city { display: flex; align-items: center; gap: 8px; }
+.ab-card__journey-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: var(--ag-muted); }
+.ab-card__journey-dot--start { background: var(--ag-success); box-shadow: 0 0 0 3px var(--ag-success-50); }
+.ab-card__journey-dot--end { background: var(--ag-primary-400); box-shadow: 0 0 0 3px var(--ag-primary-50); }
+.ab-card__journey-name { font-size: 0.85rem; font-weight: 600; color: var(--ag-text); }
+.ab-card__journey-line { display: flex; align-items: center; gap: 8px; padding-left: 3px; color: var(--ag-muted); }
+.ab-card__journey-line i { font-size: 0.8rem; }
+.ab-card__journey-dist { font-size: 0.72rem; color: var(--ag-text-muted); }
+
+/* ── Détail : trajet (timeline) ──────────────────────────────── */
+.abd__photo--route { background: var(--ag-primary-50); color: var(--ag-primary-400); }
+.abd__journey { display: flex; flex-direction: column; gap: 14px; }
+.abd__journey-item { display: flex; align-items: center; gap: 12px; position: relative; padding-left: 4px; }
+.abd__journey-item::before { content: ''; position: absolute; left: 8px; top: 22px; bottom: -16px; width: 2px; background: var(--ag-border); }
+.abd__journey-item:last-child::before { display: none; }
+.abd__journey-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--ag-border); border: 3px solid var(--ag-surface); box-shadow: 0 0 0 1px var(--ag-border); flex-shrink: 0; z-index: 1; }
+.abd__journey-dot--start { background: var(--ag-success); box-shadow: 0 0 0 1px var(--ag-success); }
+.abd__journey-dot--end { background: var(--ag-primary-400); box-shadow: 0 0 0 1px var(--ag-primary-400); }
+.abd__journey-name { font-size: 0.88rem; font-weight: 600; color: var(--ag-text); }
+.abd__journey-badge { margin-left: auto; font-size: 0.68rem; font-weight: 600; color: var(--ag-text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+.abd__journey-meta { margin-left: auto; font-size: 0.75rem; color: var(--ag-text-muted); }
+
+/* ── Détail : calculs ────────────────────────────────────────── */
+.abd__calculs-depart { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--ag-border-light); display: flex; flex-direction: column; gap: 8px; }
+.abd__calculs-depart .ab-input { width: 140px; }
+.abd__calculs-result { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--ag-text-secondary); }
+.abd__calculs-result strong { color: var(--ag-success); font-variant-numeric: tabular-nums; }
+
+/* ── Détail : escales ────────────────────────────────────────── */
+.abd__card-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--ag-border-light); }
+.abd__card-head .abd__card-title { margin: 0; padding: 0; border: none; }
+.abd__stops-total { margin-left: auto; font-size: 0.75rem; font-weight: 600; color: var(--ag-accent); }
+.abd__empty-inline { display: flex; align-items: center; gap: 10px; padding: 20px; color: var(--ag-text-muted); font-size: 0.85rem; background: var(--ag-muted-50); border-radius: 10px; }
+.abd__empty-inline i { font-size: 1.2rem; }
+.abd__stops-list { display: flex; flex-direction: column; gap: 8px; }
+.abd__stop-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--ag-border-light); border-radius: 10px; background: var(--ag-surface); transition: var(--ag-transition); }
+.abd__stop-row:hover { border-color: var(--ag-primary-100); }
+.abd__stop-order { display: flex; align-items: center; gap: 4px; }
+.abd__stop-move { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 6px; border: none; background: transparent; color: var(--ag-text-muted); cursor: pointer; transition: var(--ag-transition); }
+.abd__stop-move:hover:not(:disabled) { background: var(--ag-muted-50); color: var(--ag-primary); }
+.abd__stop-move:disabled { opacity: 0.35; cursor: not-allowed; }
+.abd__stop-index { display: flex; align-items: center; justify-content: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 8px; background: var(--ag-primary-50); color: var(--ag-primary-400); font-size: 0.75rem; font-weight: 700; }
+.abd__stop-city { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 600; color: var(--ag-text); min-width: 140px; }
+.abd__stop-city i { color: var(--ag-accent); }
+.abd__stop-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+.abd__stop-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 8px; background: var(--ag-muted-50); font-size: 0.75rem; color: var(--ag-text-secondary); }
+.abd__stop-actions { display: flex; gap: 4px; }
+.abd__stop-form { margin-top: 14px; padding: 16px; border: 1px solid var(--ag-primary-100); border-radius: 12px; background: var(--ag-muted-50); }
+.abd__stop-form-title { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 700; color: var(--ag-text); margin: 0 0 12px 0; }
+.abd__stop-form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+
+/* ── Villes ──────────────────────────────────────────────────── */
+.ab-page__panel { background: var(--ag-surface); border: 1px solid var(--ag-border-light); border-radius: var(--ag-radius); padding: 20px; }
+.ab-page__panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--ag-border-light); }
+.ab-page__panel-title { display: flex; align-items: center; gap: 8px; font-size: 1rem; font-weight: 700; color: var(--ag-text); }
+.ab-page__panel-title i { color: var(--ag-accent); }
+.ab-page__panel-sub { font-size: 0.8rem; color: var(--ag-text-muted); margin-top: 4px; }
+.ab-villes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.ab-ville-card { display: flex; flex-direction: column; gap: 10px; padding: 16px; border: 1px solid var(--ag-border-light); border-radius: 12px; background: var(--ag-surface); transition: var(--ag-transition); }
+.ab-ville-card:hover { border-color: var(--ag-primary-100); box-shadow: var(--ag-shadow-sm); }
+.ab-ville-card--inactive { opacity: 0.65; }
+.ab-ville-card__top { display: flex; align-items: center; justify-content: space-between; }
+.ab-ville-card__code { font-size: 0.75rem; font-weight: 700; color: var(--ag-primary-400); background: var(--ag-primary-50); padding: 3px 10px; border-radius: 8px; font-family: 'Courier New', monospace; }
+.ab-ville-card__status { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; color: var(--ag-text-muted); }
+.ab-ville-card__status--active { color: var(--ag-success); }
+.ab-ville-card__name { font-size: 0.95rem; font-weight: 600; color: var(--ag-text); }
+.ab-ville-card__meta { display: flex; flex-direction: column; gap: 4px; font-size: 0.76rem; color: var(--ag-text-muted); }
+.ab-ville-card__meta span { display: flex; align-items: center; gap: 6px; }
+.ab-ville-card__actions { display: flex; gap: 6px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid var(--ag-border-light); }
