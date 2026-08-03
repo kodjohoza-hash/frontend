@@ -69,6 +69,8 @@ export const mapUser = (u) => ({
   payments: 0,
   compagnieId: u.compagnieId ?? null,
   agenceId: u.agenceId ?? null,
+  guichetId: u.guichetId ?? null,
+  guichetName: u.guichetName ?? null,
   emailVerified: Boolean(u.emailVerified),
 });
 

@@ -1,22 +1,32 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AgencyBranchStats from '../../components/agency/AgencyBranchStats';
 import AgencyBranchFilters from '../../components/agency/AgencyBranchFilters';
 import AgencyBranchTable from '../../components/agency/AgencyBranchTable';
 import AgencyBranchCard from '../../components/agency/AgencyBranchCard';
 import AgencyBranchModal from '../../components/agency/AgencyBranchModal';
 import AgencyBranchSkeleton from '../../components/agency/AgencyBranchSkeleton';
-import { mockBranches } from '../../data/agencyBranchData';
+import useAgencyStore from '../../store/agency.store';
+import { UI_TO_STATUS } from '../../services/agency.service';
 
 export default function Branches() {
-  const [branches, setBranches] = useState(mockBranches);
+  const navigate = useNavigate();
+  const { branches, stats, villes, loading, fetchBranches, fetchStats, fetchVilles, createBranch, updateBranch, removeBranch, suspend } = useAgencyStore();
+
   const [filters, setFilters] = useState({ search: '', city: '', region: '', status: '', type: '' });
   const [sort, setSort] = useState({ key: 'name', dir: 'asc' });
   const [modalOpen, setModalOpen] = useState(false);
   const [editingBranch, setEditingBranch] = useState(null);
   const [viewMode, setViewMode] = useState('table');
   const [page, setPage] = useState(1);
-  const [loading] = useState(false);
+  const [busy, setBusy] = useState(false);
   const perPage = 10;
+
+  useEffect(() => {
+    fetchBranches();
+    fetchStats();
+    fetchVilles();
+  }, [fetchBranches, fetchStats, fetchVilles]);
 
   const filteredBranches = useMemo(() => {
     let result = [...branches];
@@ -47,50 +57,89 @@ export default function Branches() {
   const handleReset = () => { setFilters({ search: '', city: '', region: '', status: '', type: '' }); setPage(1); };
   const handleSort = (key) => { setSort((prev) => ({ key, dir: prev.key === key && prev.dir === 'asc' ? 'desc' : 'asc' })); };
 
-  const handleAction = (action, branchId) => {
+  const handleAction = async (action, branchId) => {
     const branch = branches.find((b) => b.id === branchId);
     if (action === 'view') {
-      window.location.href = `/agency/branches/${branchId}`;
+      navigate(`/agency/branches/${branchId}`);
     } else if (action === 'edit') {
       setEditingBranch(branch);
       setModalOpen(true);
-    } else if (action === 'delete' && branch) {
-      if (window.confirm(`Supprimer ${branch.name} ?`)) {
-        setBranches((prev) => prev.filter((b) => b.id !== branchId));
-      }
-    } else if (action === 'suspend' && branch) {
-      setBranches((prev) => prev.map((b) => b.id === branchId ? { ...b, status: 'temporairement_ferme' } : b));
-    } else if (action === 'agents') {
-      window.location.href = `/agency/counter-agents?branch=${branchId}`;
     } else if (action === 'map') {
       if (branch?.lat && branch?.lng) {
         window.open(`https://www.google.com/maps?q=${branch.lat},${branch.lng}`, '_blank');
+      }
+    } else if (action === 'agents') {
+      navigate(`/agency/counter-agents?branch=${branchId}`);
+    } else if (action === 'stats') {
+      navigate(`/agency/branches/${branchId}`);
+    } else if (action === 'delete' && branch) {
+      if (window.confirm(`Supprimer ${branch.name} ?`)) {
+        try {
+          setBusy(true);
+          await removeBranch(branch);
+        } catch (err) {
+          window.alert(err.message || 'Impossible de supprimer cette agence.');
+        } finally {
+          setBusy(false);
+        }
+      }
+    } else if (action === 'suspend' && branch) {
+      if (window.confirm(`Suspendre ${branch.name} ?`)) {
+        try {
+          setBusy(true);
+          await suspend(branch);
+        } catch (err) {
+          window.alert(err.message || 'Impossible de suspendre cette agence.');
+        } finally {
+          setBusy(false);
+        }
       }
     } else {
       alert(`Action "${action}" sur ${branch?.name}`);
     }
   };
 
-  const handleSave = (formData) => {
-    if (editingBranch) {
-      setBranches((prev) => prev.map((b) => b.id === editingBranch.id ? { ...b, ...formData, manager: { ...b.manager, name: formData.managerName } } : b));
-    } else {
-      const newBranch = {
-        id: `BR-${String(branches.length + 1).padStart(3, '0')}`,
-        ...formData,
-        lat: parseFloat(formData.lat) || 0, lng: parseFloat(formData.lng) || 0,
-        manager: { name: formData.managerName, id: null, phone: null },
-        agentCount: 0, counters: 0, photoUrl: null,
-        stats: { todayBookings: 0, todayRevenue: 0, totalBookings: 0, totalRevenue: 0, avgDaily: 0, satisfaction: 0 },
-        reservations: [], history: [],
-      };
-      setBranches((prev) => [newBranch, ...prev]);
+  const handleSave = async (formData) => {
+    const ville = villes.find((v) => v.nom === formData.city);
+    if (!ville) {
+      window.alert(`La ville "${formData.city}" n'existe pas dans la base. Sélectionnez une ville de la liste.`);
+      return;
     }
-    setModalOpen(false);
-    setEditingBranch(null);
+    const payload = {
+      nom: formData.name,
+      villeId: ville.id,
+      region: formData.region,
+      adresse: formData.fullAddress,
+      quartier: formData.quartier,
+      telephone: formData.phone,
+      email: formData.email,
+      description: formData.description,
+      statut: UI_TO_STATUS[formData.status] || 'actif',
+      type: formData.type,
+      latitude: formData.lat ? parseFloat(formData.lat) : null,
+      longitude: formData.lng ? parseFloat(formData.lng) : null,
+      heureOuverture: formData.openTime,
+      heureFermeture: formData.closeTime,
+      joursOuverture: formData.openDays,
+      services: formData.services,
+    };
+    try {
+      setBusy(true);
+      if (editingBranch) {
+        await updateBranch(editingBranch.id, payload);
+      } else {
+        await createBranch(payload);
+      }
+      setModalOpen(false);
+      setEditingBranch(null);
+    } catch (err) {
+      window.alert(err.message || 'Impossible d\'enregistrer ce point de vente.');
+    } finally {
+      setBusy(false);
+    }
   };
 
-  if (loading) return <AgencyBranchSkeleton count={6} />;
+  if (loading && branches.length === 0) return <AgencyBranchSkeleton count={6} />;
 
   return (
     <div className="abr-page">
@@ -104,13 +153,13 @@ export default function Branches() {
             <button className={`abr-page__view-btn ${viewMode === 'table' ? 'abr-page__view-btn--active' : ''}`} onClick={() => setViewMode('table')}><i className="bi bi-list-ul" /></button>
             <button className={`abr-page__view-btn ${viewMode === 'cards' ? 'abr-page__view-btn--active' : ''}`} onClick={() => setViewMode('cards')}><i className="bi bi-grid-3x3-gap" /></button>
           </div>
-          <button className="abr-btn abr-btn--primary abr-btn--lg" onClick={() => { setEditingBranch(null); setModalOpen(true); }}>
+          <button className="abr-btn abr-btn--primary abr-btn--lg" disabled={busy} onClick={() => { setEditingBranch(null); setModalOpen(true); }}>
             <i className="bi bi-plus-lg" /><span>Ajouter un point de vente</span>
           </button>
         </div>
       </div>
 
-      <AgencyBranchStats />
+      <AgencyBranchStats stats={stats} />
       <AgencyBranchFilters filters={filters} onChange={(f) => { setFilters(f); setPage(1); }} onReset={handleReset} />
 
       <div className="abr-page__content">
@@ -142,7 +191,7 @@ export default function Branches() {
         </div>
       )}
 
-      <AgencyBranchModal isOpen={modalOpen} onClose={() => { setModalOpen(false); setEditingBranch(null); }} branch={editingBranch} onSave={handleSave} />
+      <AgencyBranchModal isOpen={modalOpen} onClose={() => { setModalOpen(false); setEditingBranch(null); }} branch={editingBranch} onSave={handleSave} villes={villes} />
     </div>
   );
 }

@@ -1,22 +1,67 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AgencyCounterAgentStats from '../../components/agency/AgencyCounterAgentStats';
 import AgencyCounterAgentFilters from '../../components/agency/AgencyCounterAgentFilters';
 import AgencyCounterAgentTable from '../../components/agency/AgencyCounterAgentTable';
 import AgencyCounterAgentCard from '../../components/agency/AgencyCounterAgentCard';
 import AgencyCounterAgentModal from '../../components/agency/AgencyCounterAgentModal';
 import AgencyCounterAgentSkeleton from '../../components/agency/AgencyCounterAgentSkeleton';
-import { mockCounterAgents } from '../../data/agencyCounterAgentData';
+import usersService, { generateTempPassword } from '../../services/users.service';
+import agencyService from '../../services/agency.service';
+import counterService from '../../services/counter.service';
+import { mapCounterAgent, buildUpdatePayload } from '../../utils/counterAgents';
 
 export default function CounterAgents() {
-  const [agents, setAgents] = useState(mockCounterAgents);
+  const navigate = useNavigate();
+  const [agents, setAgents] = useState([]);
+  const [agencyOptions, setAgencyOptions] = useState([]);
+  const [pdvOptions, setPdvOptions] = useState([]);
   const [filters, setFilters] = useState({ search: '', agency: '', pointDeVente: '', status: '', role: '' });
   const [sort, setSort] = useState({ key: 'lastName', dir: 'asc' });
   const [modalOpen, setModalOpen] = useState(false);
   const [editingAgent, setEditingAgent] = useState(null);
   const [viewMode, setViewMode] = useState('table');
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [saving, setSaving] = useState(false);
   const perPage = 10;
+
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [users, branches, guichets] = await Promise.all([
+        usersService.getAll(),
+        agencyService.getAll(),
+        counterService.getAll(),
+      ]);
+      setAgencyOptions(branches);
+      setPdvOptions(guichets);
+      setAgents(users.filter((u) => u.role !== 'client').map((u) => mapCounterAgent(u, branches, guichets)));
+    } catch (err) {
+      setError(err.message || 'Impossible de charger les agents.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const stats = useMemo(() => {
+    const count = (s) => agents.filter((a) => a.status === s).length;
+    return {
+      total: agents.length,
+      actif: count('actif'),
+      hors_ligne: count('hors_ligne'),
+      en_service: count('en_service'),
+      conge: count('conge'),
+      guichetsOuverts: pdvOptions.filter((p) => p.status === 'ouvert').length,
+      guichetsFermes: pdvOptions.length - pdvOptions.filter((p) => p.status === 'ouvert').length,
+    };
+  }, [agents, pdvOptions]);
 
   const filteredAgents = useMemo(() => {
     let result = [...agents];
@@ -47,42 +92,82 @@ export default function CounterAgents() {
   const handleReset = () => { setFilters({ search: '', agency: '', pointDeVente: '', status: '', role: '' }); setPage(1); };
   const handleSort = (key) => { setSort((prev) => ({ key, dir: prev.key === key && prev.dir === 'asc' ? 'desc' : 'asc' })); };
 
+  const runAction = async (fn) => {
+    setSaving(true);
+    try {
+      await fn();
+      await loadData();
+    } catch (err) {
+      alert(err.message || 'Une erreur est survenue.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleAction = (action, agentId) => {
     const agent = agents.find((a) => a.id === agentId);
     if (action === 'view') {
-      window.location.href = `/agency/counter-agents/${agentId}`;
+      navigate(`/agency/counter-agents/${agentId}`);
     } else if (action === 'edit') {
+      setEditingAgent(agent);
+      setModalOpen(true);
+    } else if (action === 'reassign' || action === 'change_role') {
       setEditingAgent(agent);
       setModalOpen(true);
     } else if (action === 'delete' && agent) {
       if (window.confirm(`Supprimer l'agent ${agent.firstName} ${agent.lastName} ?`)) {
-        setAgents((prev) => prev.filter((a) => a.id !== agentId));
+        runAction(() => usersService.remove(agentId));
       }
     } else if (action === 'suspend' && agent) {
-      setAgents((prev) => prev.map((a) => a.id === agentId ? { ...a, status: 'suspendu' } : a));
-    } else if (action === 'reset_password') {
-      alert(`Mot de passe réinitialisé pour ${agent?.firstName}. Un email de réinitialisation a été envoyé.`);
-    } else {
-      alert(`Action "${action}" sur ${agent?.firstName} ${agent?.lastName}`);
+      if (window.confirm(`Suspendre l'agent ${agent.firstName} ${agent.lastName} ?`)) {
+        runAction(() => usersService.updateStatus(agentId, 'suspendu', 'Suspendu depuis la gestion des agents de guichet'));
+      }
+    } else if (action === 'reset_password' && agent) {
+      runAction(async () => {
+        const temp = generateTempPassword();
+        await usersService.update(agentId, { motDePasse: temp });
+        alert(`Mot de passe réinitialisé pour ${agent.firstName} ${agent.lastName}. Nouveau mot de passe temporaire : ${temp}`);
+      });
     }
   };
 
-  const handleSave = (formData) => {
-    if (editingAgent) {
-      setAgents((prev) => prev.map((a) => a.id === editingAgent.id ? { ...a, ...formData } : a));
-    } else {
-      const newAgent = {
-        id: `AGT-${String(agents.length + 1).padStart(3, '0')}`,
-        ...formData,
-        photoUrl: null,
-        lastLogin: null,
-        stats: { totalSales: 0, totalRevenue: 0, ticketsPrinted: 0, bookingsCreated: 0, cancellations: 0, avgDailySales: 0 },
-        history: [],
-      };
-      setAgents((prev) => [newAgent, ...prev]);
+  const handleSave = async (formData) => {
+    setSaving(true);
+    try {
+      if (editingAgent) {
+        await usersService.update(editingAgent.id, buildUpdatePayload(formData));
+        const oldGuichet = editingAgent.pointDeVente;
+        if (oldGuichet && oldGuichet !== formData.pointDeVente) {
+          await counterService.removeAgents(oldGuichet, [editingAgent.id]);
+        }
+        if (formData.pointDeVente && formData.pointDeVente !== oldGuichet) {
+          await counterService.assignAgents(formData.pointDeVente, [editingAgent.id]);
+        }
+      } else {
+        const created = await usersService.create({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          role: formData.role === 'manager' ? 'company_admin' : 'counter_agent',
+          gender: formData.gender,
+          dob: formData.dateOfBirth || null,
+          address: formData.address,
+          agenceId: formData.agency,
+          password: formData.tempPassword || generateTempPassword(),
+        });
+        if (formData.pointDeVente) {
+          await counterService.assignAgents(formData.pointDeVente, [created.id]);
+        }
+      }
+      await loadData();
+      setModalOpen(false);
+      setEditingAgent(null);
+    } catch (err) {
+      alert(err.message || 'Une erreur est survenue lors de l\'enregistrement.');
+    } finally {
+      setSaving(false);
     }
-    setModalOpen(false);
-    setEditingAgent(null);
   };
 
   if (loading) return <AgencyCounterAgentSkeleton count={6} />;
@@ -109,14 +194,35 @@ export default function CounterAgents() {
         </div>
       </div>
 
-      <AgencyCounterAgentStats />
+      {error && (
+        <div className="ac-page__error">
+          <i className="bi bi-exclamation-triangle" />
+          <span>{error}</span>
+          <button className="ac-btn ac-btn--outline" onClick={loadData}><i className="bi bi-arrow-clockwise" /> Réessayer</button>
+        </div>
+      )}
 
-      <AgencyCounterAgentFilters filters={filters} onChange={(f) => { setFilters(f); setPage(1); }} onReset={handleReset} />
+      <AgencyCounterAgentStats stats={stats} />
+
+      <AgencyCounterAgentFilters
+        filters={filters}
+        onChange={(f) => { setFilters(f); setPage(1); }}
+        onReset={handleReset}
+        agencies={agencyOptions}
+        pointsDeVente={pdvOptions}
+      />
 
       <div className="ac-page__content">
         {viewMode === 'table' ? (
           <>
-            <AgencyCounterAgentTable agents={paginatedAgents} sort={sort} onSort={handleSort} onAction={handleAction} />
+            <AgencyCounterAgentTable
+              agents={paginatedAgents}
+              sort={sort}
+              onSort={handleSort}
+              onAction={handleAction}
+              agencies={agencyOptions}
+              pointsDeVente={pdvOptions}
+            />
             {paginatedAgents.length === 0 && (
               <div className="ac-page__empty">
                 <i className="bi bi-people" />
@@ -128,7 +234,7 @@ export default function CounterAgents() {
         ) : (
           <div className="ac-page__cards">
             {paginatedAgents.map((agent) => (
-              <AgencyCounterAgentCard key={agent.id} agent={agent} onAction={handleAction} />
+              <AgencyCounterAgentCard key={agent.id} agent={agent} onAction={handleAction} agencies={agencyOptions} pointsDeVente={pdvOptions} />
             ))}
             {paginatedAgents.length === 0 && (
               <div className="ac-page__empty">
@@ -158,7 +264,15 @@ export default function CounterAgents() {
         </div>
       )}
 
-      <AgencyCounterAgentModal isOpen={modalOpen} onClose={() => { setModalOpen(false); setEditingAgent(null); }} agent={editingAgent} onSave={handleSave} />
+      <AgencyCounterAgentModal
+        isOpen={modalOpen}
+        onClose={() => { setModalOpen(false); setEditingAgent(null); }}
+        agent={editingAgent}
+        onSave={handleSave}
+        saving={saving}
+        agencies={agencyOptions}
+        pointsDeVente={pdvOptions}
+      />
     </div>
   );
 }

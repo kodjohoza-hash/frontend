@@ -69,6 +69,7 @@ const AgencyCounterAgents = lazy(() => import('@pages/Agency/CounterAgents'));
 const AgencyCounterAgentDetail = lazy(() => import('@pages/Agency/CounterAgentDetail'));
 const AgencyBranches = lazy(() => import('@pages/Agency/Branches'));
 const AgencyBranchDetail = lazy(() => import('@pages/Agency/BranchDetail'));
+const AgencyGuichets = lazy(() => import('@pages/Agency/Guichets'));
 const AgencyBookings = lazy(() => import('@pages/Agency/Bookings'));
 const AgencyBookingDetail = lazy(() => import('@pages/Agency/BookingDetail'));
 const AgencyPayments = lazy(() => import('@pages/Agency/Payments'));
@@ -227,7 +228,7 @@ const AppRouter = () => {
           <Route path={`${ROUTES.COMPANY_PAYMENTS}/:id`} element={<AgencyPaymentDetail />} />
           <Route path={ROUTES.COMPANY_CLIENTS} element={<AgencyClients />} />
           <Route path={`${ROUTES.COMPANY_CLIENTS}/:id`} element={<AgencyClientDetail />} />
-          <Route path={ROUTES.COMPANY_COUNTERS} element={<PlaceholderPage title="Guichets" description="Gérez vos points de vente et agents de guichet." icon="bi-shop" backTo={ROUTES.COMPANY_DASHBOARD} />} />
+          <Route path={ROUTES.COMPANY_COUNTERS} element={<AgencyGuichets />} />
           <Route path={ROUTES.COMPANY_COUNTER_AGENTS} element={<AgencyCounterAgents />} />
           <Route path={`${ROUTES.COMPANY_COUNTER_AGENTS}/:id`} element={<AgencyCounterAgentDetail />} />
           <Route path={ROUTES.COMPANY_BRANCHES} element={<AgencyBranches />} />

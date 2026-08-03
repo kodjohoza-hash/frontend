@@ -1,14 +1,5 @@
-import React from 'react';
 import AgencyCounterAgentStatus from './AgencyCounterAgentStatus';
 import { agencies, pointsDeVente } from '../../data/agencyCounterAgentData';
-
-function getAgencyName(id) {
-  return agencies.find((a) => a.id === id)?.name || id;
-}
-
-function getPDVName(id) {
-  return pointsDeVente.find((p) => p.id === id)?.name || id;
-}
 
 function getInitials(first, last) {
   return `${(first || '')[0] || ''}${(last || '')[0] || ''}`.toUpperCase();
@@ -21,7 +12,13 @@ function formatDateTime(iso) {
     d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 }
 
-export default function AgencyCounterAgentTable({ agents, sort, onSort, onAction }) {
+export default function AgencyCounterAgentTable({ agents, sort, onSort, onAction, agencies: agencyOptions, pointsDeVente: pdvOptions }) {
+  const agencyList = agencyOptions || agencies;
+  const pdvList = pdvOptions || pointsDeVente;
+
+  const resolveAgency = (id) => agencyList.find((a) => a.id === id)?.name || id;
+  const resolvePDV = (id) => pdvList.find((p) => p.id === id)?.name || id;
+
   const columns = [
     { key: 'firstName', label: 'Agent', sortable: true },
     { key: 'phone', label: 'Téléphone', sortable: false },
@@ -70,10 +67,10 @@ export default function AgencyCounterAgentTable({ agents, sort, onSort, onAction
               </td>
               <td>{agent.phone}</td>
               <td><span className="ac-table__email">{agent.email}</span></td>
-              <td><span className="ac-table__text">{getAgencyName(agent.agency)}</span></td>
-              <td><span className="ac-table__text">{getPDVName(agent.pointDeVente)}</span></td>
+              <td><span className="ac-table__text">{resolveAgency(agent.agency)}</span></td>
+              <td><span className="ac-table__text">{resolvePDV(agent.pointDeVente)}</span></td>
               <td><span className="ac-table__badge">{agent.position}</span></td>
-              <td>{new Date(agent.hireDate).toLocaleDateString('fr-FR')}</td>
+              <td>{agent.hireDate ? new Date(agent.hireDate).toLocaleDateString('fr-FR') : '—'}</td>
               <td><AgencyCounterAgentStatus status={agent.status} /></td>
               <td>{formatDateTime(agent.lastLogin)}</td>
               <td>

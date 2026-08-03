@@ -3,11 +3,11 @@ import { branchStats } from '../../data/agencyBranchData';
 
 function formatMoney(n) {
   if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M FCFA';
-  return n.toLocaleString('fr-FR') + ' FCFA';
+  return (n || 0).toLocaleString('fr-FR') + ' FCFA';
 }
 
-export default function AgencyBranchStats() {
-  const s = branchStats;
+export default function AgencyBranchStats({ stats }) {
+  const s = stats || branchStats;
 
   const cards = [
     { label: 'Total agences', value: s.total, icon: 'bi-building', color: '#0B1D51', gradient: 'linear-gradient(135deg, #0B1D51 0%, #1a3a8a 100%)' },

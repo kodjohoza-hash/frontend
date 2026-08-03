@@ -1,17 +1,19 @@
-import React from 'react';
 import AgencyCounterAgentStatus from './AgencyCounterAgentStatus';
 import AgencyCounterAgentPerformance from './AgencyCounterAgentPerformance';
-import AgencyCounterAgentDocuments from './AgencyCounterAgentDocuments';
+import AgencyCounterAgentPermissions from './AgencyCounterAgentPermissions';
 import AgencyCounterAgentHistory from './AgencyCounterAgentHistory';
-import { agencies, pointsDeVente } from '../../data/agencyCounterAgentData';
+import { agencies as mockAgencies, pointsDeVente as mockPointsDeVente } from '../../data/agencyCounterAgentData';
 
-function getAgencyName(id) { return agencies.find((a) => a.id === id)?.name || id; }
-function getPDVName(id) { return pointsDeVente.find((p) => p.id === id)?.name || id; }
 function getInitials(first, last) { return `${(first || '')[0] || ''}${(last || '')[0] || ''}`.toUpperCase(); }
 function formatMoney(n) { return (n || 0).toLocaleString('fr-FR') + ' FCFA'; }
 
-export default function AgencyCounterAgentDetails({ agent, onBack, onAction }) {
+export default function AgencyCounterAgentDetails({ agent, onBack, onAction, agencies, pointsDeVente }) {
   if (!agent) return null;
+
+  const agencyList = agencies || mockAgencies;
+  const pdvList = pointsDeVente || mockPointsDeVente;
+  const getAgencyName = (id) => agencyList.find((a) => a.id === id)?.name || id;
+  const getPDVName = (id) => pdvList.find((p) => p.id === id)?.name || id;
 
   return (
     <div className="add-details">
@@ -40,7 +42,7 @@ export default function AgencyCounterAgentDetails({ agent, onBack, onAction }) {
           <h4><i className="bi bi-person" /> Informations personnelles</h4>
           <div className="add-details__card-body">
             <div className="add-details__field"><span>Sexe</span><span>{agent.gender === 'F' ? 'Féminin' : 'Masculin'}</span></div>
-            <div className="add-details__field"><span>Date de naissance</span><span>{new Date(agent.dateOfBirth).toLocaleDateString('fr-FR')}</span></div>
+            <div className="add-details__field"><span>Date de naissance</span><span>{agent.dateOfBirth ? new Date(agent.dateOfBirth).toLocaleDateString('fr-FR') : '—'}</span></div>
             <div className="add-details__field"><span>Téléphone</span><span>{agent.phone}</span></div>
             <div className="add-details__field"><span>Email</span><span>{agent.email}</span></div>
             <div className="add-details__field"><span>Adresse</span><span>{agent.address}, {agent.city}, {agent.country}</span></div>
@@ -55,7 +57,7 @@ export default function AgencyCounterAgentDetails({ agent, onBack, onAction }) {
             <div className="add-details__field"><span>Poste</span><span>{agent.position}</span></div>
             <div className="add-details__field"><span>Rôle</span><span>{agent.role}</span></div>
             <div className="add-details__field"><span>Identifiant</span><span>{agent.username}</span></div>
-            <div className="add-details__field"><span>Date d'embauche</span><span>{new Date(agent.hireDate).toLocaleDateString('fr-FR')}</span></div>
+            <div className="add-details__field"><span>Date d'embauche</span><span>{agent.hireDate ? new Date(agent.hireDate).toLocaleDateString('fr-FR') : '—'}</span></div>
             <div className="add-details__field"><span>Dernière connexion</span><span>{agent.lastLogin ? new Date(agent.lastLogin).toLocaleString('fr-FR') : '—'}</span></div>
           </div>
         </div>

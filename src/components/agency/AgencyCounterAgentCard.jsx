@@ -1,20 +1,15 @@
-import React from 'react';
 import AgencyCounterAgentStatus from './AgencyCounterAgentStatus';
 import { agencies, pointsDeVente } from '../../data/agencyCounterAgentData';
-
-function getAgencyName(id) {
-  return agencies.find((a) => a.id === id)?.name || id;
-}
-
-function getPDVName(id) {
-  return pointsDeVente.find((p) => p.id === id)?.name || id;
-}
 
 function getInitials(first, last) {
   return `${(first || '')[0] || ''}${(last || '')[0] || ''}`.toUpperCase();
 }
 
-export default function AgencyCounterAgentCard({ agent, onAction }) {
+export default function AgencyCounterAgentCard({ agent, onAction, agencies: agencyOptions, pointsDeVente: pdvOptions }) {
+  const agencyList = agencyOptions || agencies;
+  const pdvList = pdvOptions || pointsDeVente;
+  const agencyName = agencyList.find((a) => a.id === agent.agency)?.name || agent.agency || '—';
+  const pdvName = pdvList.find((p) => p.id === agent.pointDeVente)?.name || agent.pointDeVente || '—';
   return (
     <div className="ac-card">
       <div className="ac-card__header">
@@ -35,13 +30,13 @@ export default function AgencyCounterAgentCard({ agent, onAction }) {
           <i className="bi bi-envelope" /><span>{agent.email}</span>
         </div>
         <div className="ac-card__row">
-          <i className="bi bi-building" /><span>{getAgencyName(agent.agency)}</span>
+          <i className="bi bi-building" /><span>{agencyName}</span>
         </div>
         <div className="ac-card__row">
-          <i className="bi bi-shop" /><span>{getPDVName(agent.pointDeVente)}</span>
+          <i className="bi bi-shop" /><span>{pdvName}</span>
         </div>
         <div className="ac-card__row">
-          <i className="bi bi-calendar" /><span>Embauché le {new Date(agent.hireDate).toLocaleDateString('fr-FR')}</span>
+          <i className="bi bi-calendar" /><span>{agent.hireDate ? `Embauché le ${new Date(agent.hireDate).toLocaleDateString('fr-FR')}` : 'Date d\'embauche inconnue'}</span>
         </div>
       </div>
       <div className="ac-card__footer">

@@ -35,7 +35,7 @@ const defaultValues = {
   services: ['vente_billets', 'reservation'], status: 'ouvert', type: 'agence', observations: '',
 };
 
-export default function AgencyBranchModal({ isOpen, onClose, branch, onSave }) {
+export default function AgencyBranchModal({ isOpen, onClose, branch, onSave, villes = [] }) {
   const [step, setStep] = useState(0);
   const isEdit = !!branch;
 
@@ -65,6 +65,12 @@ export default function AgencyBranchModal({ isOpen, onClose, branch, onSave }) {
 
   const watchedOpenDays = watch('openDays');
   const watchedServices = watch('services');
+
+  /* En édition, on garde la ville courante même si absente de la liste officielle. */
+  const villeOptions =
+    isEdit && branch?.city && !villes.some((v) => v.nom === branch.city)
+      ? [{ id: branch.city, nom: branch.city }, ...villes]
+      : villes;
 
   const toggleDay = (day) => {
     const current = watchedOpenDays || [];
@@ -179,7 +185,10 @@ export default function AgencyBranchModal({ isOpen, onClose, branch, onSave }) {
               <div className="abr-modal__row">
                 <div className="abr-modal__field">
                   <label>Ville <span>*</span></label>
-                  <input {...register('city')} />
+                  <select {...register('city')}>
+                    <option value="">Sélectionner</option>
+                    {villeOptions.map((v) => <option key={v.id} value={v.nom}>{v.nom}</option>)}
+                  </select>
                 </div>
                 <div className="abr-modal__field">
                   <label>Quartier <span>*</span></label>

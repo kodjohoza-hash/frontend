@@ -1,7 +1,10 @@
 import React from 'react';
 import { agentStatuses, agentRoles, agencies, pointsDeVente } from '../../data/agencyCounterAgentData';
 
-export default function AgencyCounterAgentFilters({ filters, onChange, onReset }) {
+export default function AgencyCounterAgentFilters({ filters, onChange, onReset, agencies: agencyOptions, pointsDeVente: pdvOptions }) {
+  const agencyList = agencyOptions || agencies;
+  const pdvList = pdvOptions || pointsDeVente;
+
   const handleChange = (key, value) => {
     onChange({ ...filters, [key]: value });
   };
@@ -27,7 +30,7 @@ export default function AgencyCounterAgentFilters({ filters, onChange, onReset }
             onChange={(e) => handleChange('agency', e.target.value)}
           >
             <option value="">Toutes</option>
-            {agencies.map((a) => (
+            {agencyList.map((a) => (
               <option key={a.id} value={a.id}>{a.name}</option>
             ))}
           </select>
@@ -40,7 +43,7 @@ export default function AgencyCounterAgentFilters({ filters, onChange, onReset }
             onChange={(e) => handleChange('pointDeVente', e.target.value)}
           >
             <option value="">Tous</option>
-            {pointsDeVente.map((p) => (
+            {pdvList.map((p) => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
           </select>

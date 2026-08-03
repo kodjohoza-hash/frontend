@@ -6,3 +6,4 @@ export { PLACEHOLDERS, IMAGE_PATHS, IMAGE_SIZES } from './images';
 export * from './constants';
 export * from './roles';
 export * from './permissions';
+export * from './counterAgents';

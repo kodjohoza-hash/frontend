@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -20,15 +20,17 @@ const schema = z.object({
   role: z.string().min(1, 'Rôle requis'),
   hireDate: z.string().min(1, 'Date d\'embauche requise'),
   username: z.string().min(3, 'Identifiant requis'),
-  tempPassword: z.string().min(6, 'Mot de passe minimum 6 caractères'),
+  tempPassword: z.string().optional(),
   status: z.string().min(1, 'Statut requis'),
   observations: z.string().optional(),
   permissions: z.array(z.string()).min(1, 'Au moins une permission requise'),
 });
 
-export default function AgencyCounterAgentModal({ isOpen, onClose, agent, onSave }) {
+export default function AgencyCounterAgentModal({ isOpen, onClose, agent, onSave, saving, agencies: agencyOptions, pointsDeVente: pdvOptions }) {
   const [step, setStep] = useState(0);
   const isEdit = !!agent;
+  const agencyList = agencyOptions || agencies;
+  const pdvList = pdvOptions || pointsDeVente;
 
   const { register, handleSubmit, formState: { errors }, reset, watch, setValue } = useForm({
     resolver: zodResolver(schema),
@@ -66,7 +68,7 @@ export default function AgencyCounterAgentModal({ isOpen, onClose, agent, onSave
 
   const watchedAgency = watch('agency');
   const watchedPermissions = watch('permissions');
-  const filteredPDV = pointsDeVente.filter((p) => p.agency === watchedAgency);
+  const filteredPDV = pdvList.filter((p) => p.agency === watchedAgency);
 
   const togglePermission = (key) => {
     const current = watchedPermissions || [];
@@ -181,7 +183,7 @@ export default function AgencyCounterAgentModal({ isOpen, onClose, agent, onSave
                   <label>Agence <span>*</span></label>
                   <select {...register('agency')} className={errors.agency ? 'ac-input--error' : ''}>
                     <option value="">Sélectionner</option>
-                    {agencies.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+                    {agencyList.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
                   </select>
                   {errors.agency && <span className="ac-modal__error">{errors.agency.message}</span>}
                 </div>
@@ -225,9 +227,8 @@ export default function AgencyCounterAgentModal({ isOpen, onClose, agent, onSave
                   {errors.username && <span className="ac-modal__error">{errors.username.message}</span>}
                 </div>
                 <div className="ac-modal__field">
-                  <label>Mot de passe temporaire <span>*</span></label>
-                  <input type="text" {...register('tempPassword')} className={errors.tempPassword ? 'ac-input--error' : ''} />
-                  {errors.tempPassword && <span className="ac-modal__error">{errors.tempPassword.message}</span>}
+                  <label>Mot de passe temporaire</label>
+                  <input type="text" {...register('tempPassword')} placeholder="Laissé vide : généré automatiquement" />
                 </div>
               </div>
               <div className="ac-modal__row">
@@ -263,14 +264,14 @@ export default function AgencyCounterAgentModal({ isOpen, onClose, agent, onSave
           )}
 
           <div className="ac-modal__footer">
-            <button type="button" className="ac-modal__btn ac-modal__btn--cancel" onClick={onClose}>Annuler</button>
+            <button type="button" className="ac-modal__btn ac-modal__btn--cancel" onClick={onClose} disabled={saving}>Annuler</button>
             {step < 2 ? (
               <button type="button" className="ac-modal__btn ac-modal__btn--next" onClick={() => setStep(step + 1)}>
                 Suivant <i className="bi bi-arrow-right" />
               </button>
             ) : (
-              <button type="submit" className="ac-modal__btn ac-modal__btn--save">
-                <i className="bi bi-check-lg" /> {isEdit ? 'Enregistrer' : 'Créer'}
+              <button type="submit" className="ac-modal__btn ac-modal__btn--save" disabled={saving}>
+                {saving ? <><i className="bi bi-arrow-repeat bi-spin" /> Enregistrement…</> : <><i className="bi bi-check-lg" /> {isEdit ? 'Enregistrer' : 'Créer'}</>}
               </button>
             )}
           </div>
