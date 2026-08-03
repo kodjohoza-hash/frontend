@@ -57,6 +57,10 @@ app.use('/api/v1', agenciesModule.routes);
 const countersModule = require('./modules/counters');
 app.use('/api/v1', countersModule.routes);
 
+/* Module Buses (flotte : CRUD, statuts, plan de sièges, maintenances, photos) */
+const busesModule = require('./modules/buses');
+app.use('/api/v1', busesModule.routes);
+
 /* 404 + gestion centralisée des erreurs */
 app.use(notFoundHandler);
 app.use(errorHandler);

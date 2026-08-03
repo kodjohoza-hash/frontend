@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     Agent.hasMany(db.RefreshToken, { foreignKey: 'agent_id', as: 'refreshTokens' });
     Agent.hasMany(db.PasswordResetToken, { foreignKey: 'agent_id', as: 'passwordResetTokens' });
     Agent.hasMany(db.EmailVerificationToken, { foreignKey: 'agent_id', as: 'emailVerificationTokens' });
+    Agent.hasMany(db.Bus, { foreignKey: 'chauffeur_id', as: 'busesConduites' });
   };
 
   return Agent;
