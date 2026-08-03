@@ -35,4 +35,23 @@ const requirePermission = authorize;
  */
 const requireSuperAdmin = roleGuard('super_admin');
 
-module.exports = { requireRole, requirePermission, requireSuperAdmin, roleGuard, authorize };
+/* ──────────────────────────────────────────────────────────────
+   Guards nommés (module Users) — réutilisent authenticate.
+   Usage : router.get('/', authenticate, isSuperAdmin, controller)
+   ────────────────────────────────────────────────────────────── */
+const isSuperAdmin = roleGuard('super_admin');
+const isCompanyAdmin = roleGuard('company_admin');
+const isCounterAgent = roleGuard('counter_agent');
+const isClient = roleGuard('client');
+
+module.exports = {
+  requireRole,
+  requirePermission,
+  requireSuperAdmin,
+  roleGuard,
+  authorize,
+  isSuperAdmin,
+  isCompanyAdmin,
+  isCounterAgent,
+  isClient,
+};

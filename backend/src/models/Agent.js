@@ -17,9 +17,12 @@ module.exports = (sequelize, DataTypes) => {
       genre: { type: DataTypes.ENUM('F', 'M', 'Autre'), allowNull: true },
       adresse: { type: DataTypes.STRING(255), allowNull: true },
       langue: { type: DataTypes.STRING(40), allowNull: true },
+      photo: { type: DataTypes.STRING(255), allowNull: true },
+      nationalite: { type: DataTypes.STRING(60), allowNull: true },
+      date_creation: { type: DataTypes.DATEONLY, allowNull: true },
       date_embauche: { type: DataTypes.DATEONLY, allowNull: false },
       statut: {
-        type: DataTypes.ENUM('actif', 'inactif', 'suspendu'),
+        type: DataTypes.ENUM('actif', 'inactif', 'suspendu', 'supprime', 'banni'),
         allowNull: false,
         defaultValue: 'actif',
       },

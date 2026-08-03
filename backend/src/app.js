@@ -41,6 +41,10 @@ app.use('/api/v1', routes);
 const subscriptionsModule = require('./modules/subscriptions');
 app.use('/api/v1', subscriptionsModule.routes);
 
+/* Module Users (gestion des utilisateurs : profil, CRUD, statuts, photo, permissions) */
+const usersModule = require('./modules/users');
+app.use('/api/v1', usersModule.routes);
+
 /* 404 + gestion centralisée des erreurs */
 app.use(notFoundHandler);
 app.use(errorHandler);

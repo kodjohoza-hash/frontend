@@ -19,6 +19,12 @@ const errorHandler = (err, _req, res, _next) => {
   } else if (err.name === 'SequelizeForeignKeyConstraintError') {
     status = 400;
     message = 'Référence invalide (clé étrangère).';
+  } else if (err.name === 'MulterError') {
+    status = 400;
+    message =
+      err.code === 'LIMIT_FILE_SIZE'
+        ? 'Fichier trop volumineux (5 Mo maximum).'
+        : 'Erreur d\'upload de fichier.';
   }
 
   if (status >= 500) {
