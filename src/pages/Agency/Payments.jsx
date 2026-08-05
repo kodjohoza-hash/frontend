@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockPayments, paymentStats } from '@data/paymentData';
+import usePaymentStore from '@store/payment.store';
 import AgencyPaymentStats from '@components/agency/AgencyPaymentStats';
 import AgencyPaymentFilters from '@components/agency/AgencyPaymentFilters';
 import AgencyPaymentTable from '@components/agency/AgencyPaymentTable';
@@ -11,7 +11,15 @@ const PAGE_SIZE = 10;
 
 export default function AgencyPayments() {
   const navigate = useNavigate();
-  const [loading] = useState(false);
+  const {
+    payments,
+    statsCards,
+    loading,
+    refresh,
+    confirmPayment,
+    cancelPayment,
+    refundPayment,
+  } = usePaymentStore();
   const [filters, setFilters] = useState({
     search: '',
     reference: '',
@@ -29,36 +37,47 @@ export default function AgencyPayments() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [toasts, setToasts] = useState([]);
+
+  useEffect(() => {
+    refresh().catch(() => {});
+  }, [refresh]);
+
+  const addToast = useCallback((message, type = 'success') => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3500);
+  }, []);
 
   const filteredPayments = useMemo(() => {
-    return mockPayments.filter((p) => {
+    return payments.filter((p) => {
       if (filters.search) {
         const q = filters.search.toLowerCase();
         if (
-          !p.id.toLowerCase().includes(q) &&
-          !p.client.firstName.toLowerCase().includes(q) &&
-          !p.client.lastName.toLowerCase().includes(q) &&
-          !p.client.phone.includes(q) &&
-          !p.route.toLowerCase().includes(q)
+          !(p.id || '').toLowerCase().includes(q) &&
+          !(p.client?.firstName || '').toLowerCase().includes(q) &&
+          !(p.client?.lastName || '').toLowerCase().includes(q) &&
+          !(p.clientPhone || '').includes(q) &&
+          !(p.route || '').toLowerCase().includes(q)
         ) return false;
       }
-      if (filters.reference && !p.id.toLowerCase().includes(filters.reference.toLowerCase())) return false;
+      if (filters.reference && !(p.id || '').toLowerCase().includes(filters.reference.toLowerCase())) return false;
       if (filters.client) {
         const c = filters.client.toLowerCase();
-        if (!p.client.firstName.toLowerCase().includes(c) && !p.client.lastName.toLowerCase().includes(c)) return false;
+        if (!(p.client?.firstName || '').toLowerCase().includes(c) && !(p.client?.lastName || '').toLowerCase().includes(c)) return false;
       }
-      if (filters.bookingId && !p.bookingId.toLowerCase().includes(filters.bookingId.toLowerCase())) return false;
-      if (filters.outlet && !p.outlet.toLowerCase().includes(filters.outlet.toLowerCase())) return false;
-      if (filters.agent && !p.agent.toLowerCase().includes(filters.agent.toLowerCase())) return false;
+      if (filters.bookingId && !(p.bookingId || '').toLowerCase().includes(filters.bookingId.toLowerCase())) return false;
+      if (filters.outlet && !(p.outlet || '').toLowerCase().includes(filters.outlet.toLowerCase())) return false;
+      if (filters.agent && !(p.agent || '').toLowerCase().includes(filters.agent.toLowerCase())) return false;
       if (filters.method && p.method !== filters.method) return false;
       if (filters.status && p.status !== filters.status) return false;
-      if (filters.dateFrom && new Date(p.createdAt) < new Date(filters.dateFrom)) return false;
-      if (filters.dateTo && new Date(p.createdAt) > new Date(filters.dateTo)) return false;
+      if (filters.dateFrom && p.createdAt && new Date(p.createdAt) < new Date(filters.dateFrom)) return false;
+      if (filters.dateTo && p.createdAt && new Date(p.createdAt) > new Date(filters.dateTo)) return false;
       if (filters.amountMin && p.totalPaid < Number(filters.amountMin)) return false;
       if (filters.amountMax && p.totalPaid > Number(filters.amountMax)) return false;
       return true;
     });
-  }, [filters]);
+  }, [payments, filters]);
 
   const totalPages = Math.ceil(filteredPayments.length / PAGE_SIZE);
   const paginatedPayments = filteredPayments.slice(
@@ -71,24 +90,40 @@ export default function AgencyPayments() {
   };
 
   const handleEdit = (payment) => {
-    // Placeholder — edit logic
+    addToast(`Modification de ${payment.reference} non disponible ici`, 'info');
   };
 
-  const handleValidate = (payment) => {
-    // Placeholder — validate logic
+  const handleValidate = async (payment) => {
+    const result = await confirmPayment(payment.id);
+    if (!result.ok) return addToast(result.error || 'Échec de la validation', 'error');
+    addToast(result.message || `Paiement ${payment.reference} validé`);
   };
 
-  const handleCancel = (payment) => {
-    // Placeholder — cancel logic
+  const handleCancel = async (payment) => {
+    const motif = window.prompt(`Motif d'annulation du paiement ${payment.reference} :`, '');
+    if (motif === null) return;
+    if (!motif) return addToast('Le motif est requis', 'error');
+    const result = await cancelPayment(payment.id, motif);
+    if (!result.ok) return addToast(result.error || "Échec de l'annulation", 'error');
+    addToast(result.message || `Paiement ${payment.reference} annulé`);
   };
 
-  const handleRefund = (payment) => {
-    // Placeholder — refund logic
+  const handleRefund = async (payment) => {
+    const montantStr = window.prompt(`Montant à rembourser (max ${payment.totalPaid} FCFA) :`, String(payment.totalPaid));
+    if (montantStr === null) return;
+    const montant = Number(montantStr);
+    if (!Number.isFinite(montant) || montant <= 0 || montant > payment.totalPaid) {
+      return addToast('Montant invalide', 'error');
+    }
+    const motif = window.prompt('Motif du remboursement :', '') || '';
+    const result = await refundPayment(payment.id, { montant, motif });
+    if (!result.ok) return addToast(result.error || 'Échec du remboursement', 'error');
+    addToast(result.message || `Remboursement de ${montant.toLocaleString('fr-FR')} FCFA effectué`);
   };
 
-  const handleCreatePayment = (data) => {
+  const handleCreatePayment = () => {
     setShowCreateModal(false);
-    // Placeholder — create logic
+    addToast('Création gérée depuis la vente ou les réservations', 'info');
   };
 
   const handleResetFilters = () => {
@@ -100,7 +135,7 @@ export default function AgencyPayments() {
     setCurrentPage(1);
   };
 
-  if (loading) {
+  if (loading && payments.length === 0) {
     return <AgencyPaymentSkeleton />;
   }
 
@@ -128,7 +163,7 @@ export default function AgencyPayments() {
         </div>
       </div>
 
-      <AgencyPaymentStats stats={paymentStats} />
+      <AgencyPaymentStats stats={statsCards} />
 
       <AgencyPaymentFilters
         filters={filters}
@@ -169,6 +204,20 @@ export default function AgencyPayments() {
         onSubmit={handleCreatePayment}
         loading={false}
       />
+
+      {toasts.length > 0 && (
+        <div className="ap-toast-container">
+          {toasts.map((toast) => (
+            <div key={toast.id} className={`ap-toast ap-toast-${toast.type}`}>
+              <i className={`bi ${toast.type === 'success' ? 'bi-check-circle-fill' : toast.type === 'error' ? 'bi-x-circle-fill' : 'bi-info-circle-fill'}`} />
+              {toast.message}
+              <button className="ap-toast-close" onClick={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}>
+                <i className="bi bi-x-lg" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

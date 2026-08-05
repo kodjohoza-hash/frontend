@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import CounterCashStats from '@components/counter/CounterCashStats';
 import CounterPaymentFilters from '@components/counter/CounterPaymentFilters';
 import CounterPaymentTable from '@components/counter/CounterPaymentTable';
@@ -9,17 +9,56 @@ import CounterCashOpening from '@components/counter/CounterCashOpening';
 import CounterCashClosing from '@components/counter/CounterCashClosing';
 import CounterCashReport from '@components/counter/CounterCashReport';
 import CounterPaymentSkeleton from '@components/counter/CounterPaymentSkeleton';
+import usePaymentStore from '@store/payment.store';
 import {
-  payments as allPayments,
   filterPayments,
   sortPayments,
   cashSession,
 } from '@data/counterPaymentData';
 
+/** Modes backend (minuscules) → clés Counter (capitalisées) pour les filtres. */
+const METHOD_TO_COUNTER_KEY = {
+  orange_money: 'Orange_Money',
+  mtn_money: 'MTN_Mobile_Money',
+  carte_bancaire: 'Carte_Bancaire',
+  especes: 'Espèces',
+  virement_bancaire: 'Virement_Bancaire',
+  bon_reduction: 'Bon_Reduction',
+  code_promo: 'Code_Promotionnel',
+};
+
+/** Paiement du store → forme attendue par les composants Counter. */
+const toCounterShape = (p) => ({
+  id: p.id,
+  reference: p.reference,
+  clientName: p.clientName,
+  clientPhone: p.clientPhone,
+  clientEmail: p.clientEmail,
+  bookingRef: p.bookingId,
+  ticketRef: p.ticketRef,
+  tripFrom: p.tripFrom,
+  tripTo: p.tripTo,
+  amount: p.amount,
+  method: METHOD_TO_COUNTER_KEY[p.method] || p.method,
+  methodLabel: p.methodLabel,
+  methodIcon: p.methodIcon,
+  methodColor: p.methodColor,
+  status: p.statusEn,
+  agent: p.agent,
+  createdAt: p.createdAt,
+  notes: p.notes,
+  refundAmount: p.remboursement,
+  refundReason: p.motifRemboursement,
+});
+
 const CounterPaymentsPage = () => {
-  const [loading, setLoading] = useState(true);
-  const [payments, setPayments] = useState([]);
-  const [filtered, setFiltered] = useState([]);
+  const {
+    payments: storePayments,
+    loading: storeLoading,
+    refresh,
+    refundPayment,
+  } = usePaymentStore();
+  const [localExtra, setLocalExtra] = useState([]);
   const [filters, setFilters] = useState({ search: '', method: '', status: '', date: '', amountMin: '', amountMax: '' });
   const [sortBy, setSortBy] = useState('newest');
   const [page, setPage] = useState(1);
@@ -33,19 +72,19 @@ const CounterPaymentsPage = () => {
   const [toasts, setToasts] = useState([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setPayments(allPayments);
-      setFiltered(allPayments);
-      setLoading(false);
-    }, 600);
-    return () => clearTimeout(timer);
-  }, []);
+    refresh().catch(() => {});
+  }, [refresh]);
 
-  useEffect(() => {
+  /** Paiements du store (forme Counter) + encaissements locaux du wizard. */
+  const payments = useMemo(
+    () => [...localExtra, ...storePayments.map(toCounterShape)],
+    [localExtra, storePayments]
+  );
+
+  const filtered = useMemo(() => {
     let result = filterPayments(payments, filters);
     result = sortPayments(result, sortBy);
-    setFiltered(result);
-    setPage(1);
+    return result;
   }, [payments, filters, sortBy]);
 
   const addToast = useCallback((message, type = 'success') => {
@@ -56,10 +95,12 @@ const CounterPaymentsPage = () => {
 
   const handleFilterChange = useCallback((newFilters) => {
     setFilters(newFilters);
+    setPage(1);
   }, []);
 
   const handleReset = useCallback(() => {
     setFilters({ search: '', method: '', status: '', date: '', amountMin: '', amountMax: '' });
+    setPage(1);
   }, []);
 
   const handleAction = useCallback((action, payment) => {
@@ -84,28 +125,24 @@ const CounterPaymentsPage = () => {
   }, [addToast]);
 
   const handleWizardComplete = useCallback((newPayment) => {
-    setPayments((prev) => [newPayment, ...prev]);
+    setLocalExtra((prev) => [newPayment, ...prev]);
     setShowWizard(false);
     addToast(`Paiement ${newPayment.reference} encaissé avec succès`);
   }, [addToast]);
 
-  const handleRefundConfirm = useCallback((refund) => {
-    setPayments((prev) =>
-      prev.map((p) =>
-        p.id === refund.paymentId
-          ? {
-              ...p,
-              status: refund.isPartial ? 'partially_refunded' : 'refunded',
-              refundAmount: refund.refundAmount,
-              refundReason: refund.reason,
-              notes: refund.notes,
-            }
-          : p
-      )
-    );
+  const handleRefundConfirm = useCallback(async (refund) => {
+    const result = await refundPayment(refund.paymentId, {
+      montant: refund.refundAmount,
+      motif: refund.reason,
+      note: refund.notes,
+    });
+    if (!result.ok) {
+      addToast(result.error || 'Échec du remboursement', 'error');
+      return;
+    }
     setShowRefund(null);
     addToast(`Remboursement de ${refund.refundAmount.toLocaleString('fr-FR')} FCFA effectué`);
-  }, [addToast]);
+  }, [addToast, refundPayment]);
 
   const handleOpenCash = useCallback((data) => {
     setSession((prev) => ({
@@ -133,7 +170,7 @@ const CounterPaymentsPage = () => {
     addToast('Caisse clôturée avec succès');
   }, [addToast]);
 
-  if (loading) return <CounterPaymentSkeleton />;
+  if (storeLoading && storePayments.length === 0) return <CounterPaymentSkeleton />;
 
   return (
     <div className="acp-wrapper">
@@ -196,7 +233,7 @@ const CounterPaymentsPage = () => {
           <strong>{filtered.length}</strong> paiement{filtered.length > 1 ? 's' : ''} trouvé{filtered.length > 1 ? 's' : ''}
           {filtered.length !== payments.length && ` (sur ${payments.length})`}
         </span>
-        <select className="acp-sort-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+        <select className="acp-sort-select" value={sortBy} onChange={(e) => { setSortBy(e.target.value); setPage(1); }}>
           <option value="newest">Plus récents</option>
           <option value="oldest">Plus anciens</option>
           <option value="amount_asc">Montant ↑</option>
