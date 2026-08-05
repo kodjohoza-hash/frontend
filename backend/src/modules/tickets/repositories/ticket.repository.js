@@ -19,7 +19,7 @@ const {
 const clientAttrs = ['id', 'prenom', 'nom', 'telephone', 'email'];
 const agentAttrs = ['id', 'prenom', 'nom', 'matricule'];
 const agenceAttrs = ['id', 'nom', 'telephone', 'compagnie_id'];
-const compagnieAttrs = ['id', 'nom', 'couleur', 'logo'];
+const compagnieAttrs = ['id', 'nom', 'couleur', 'logo', 'telephone', 'email', 'adresse', 'site_web'];
 const villeAttrs = ['id', 'nom'];
 
 /** Associations du voyage (trajet + villes, bus, compagnie, agence). */
