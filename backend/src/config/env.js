@@ -72,6 +72,15 @@ const env = {
     superAdminEmail: process.env.SEED_SUPER_ADMIN_EMAIL || 'admin@bustixconnect.com',
     superAdminPassword: process.env.SEED_SUPER_ADMIN_PASSWORD || 'Admin@2026',
   },
+
+  ticket: {
+    /* Expiration configurable des QR codes :
+       - null            → expiration basée sur `validite_jusqua` (départ du voyage).
+       - nombre d'heures → un QR devient invalide N heures après l'émission. */
+    qrExpiryHours: process.env.TICKET_QR_EXPIRY_HOURS ? Number(process.env.TICKET_QR_EXPIRY_HOURS) : null,
+    /* Taille de l'image QR (pixels) générée par GET /tickets/:id/qrcode. */
+    qrWidth: Number(process.env.TICKET_QR_WIDTH) || 480,
+  },
 };
 
 module.exports = env;

@@ -5,10 +5,14 @@
  * contrainte unique (reservation_id, siege) le garantit en base.
  *
  * Champs d'émission électronique :
- *   - qr_code  : payload unique scannable (BTC:<reference>:<token>).
- *   - token    : jeton aléatoire d'authentification du billet (vérification
- *                sécurisée, anti double utilisation).
- *   - signature: HMAC-SHA256 du contenu du billet (clé JWT) — infalsifiable.
+ *   - qr_code  : payload scannable (BTC:<ticket_id>:<token>:<version>) — ne
+ *                contient QUE ticket_id, token et version (aucune donnée sensible).
+ *   - token    : jeton aléatoire d'authentification du billet (crypto.randomBytes).
+ *   - token_hash : empreinte SHA-256 du jeton (index de vérification ; le jeton
+ *                  n'est jamais exposé via l'API ni indexé en clair).
+ *   - signature: HMAC-SHA256 du payload QR (clé JWT) — infalsifiable.
+ *   - qr_version / regenerations : version du QR + compteur de régénérations
+ *                (un ancien QR devient invalide après régénération).
  *   - validite_jusqua : fin de validité (date/heure de départ du voyage).
  *   - email_envoye / sms_envoye : drapeaux d'envoi au passager.
  * Statuts : valide / utilise / expire / annule / rembourse / impaye / inconnu.
@@ -33,7 +37,10 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 'valide',
       },
       token: { type: DataTypes.STRING(48), allowNull: true, unique: true },
+      token_hash: { type: DataTypes.STRING(64), allowNull: true, unique: true },
       signature: { type: DataTypes.STRING(128), allowNull: true },
+      qr_version: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
+      regenerations: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
       cree_le: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
       cree_par: { type: DataTypes.CHAR(10), allowNull: true },
       validite_jusqua: { type: DataTypes.DATE, allowNull: true },
@@ -61,6 +68,7 @@ module.exports = (sequelize, DataTypes) => {
     Billet.belongsTo(db.Agent, { foreignKey: 'cree_par', as: 'creePar' });
     Billet.belongsTo(db.Agent, { foreignKey: 'verifie_par', as: 'verifiePar' });
     Billet.hasMany(db.Paiement, { foreignKey: 'billet_id', as: 'paiements' });
+    Billet.hasMany(db.ScanBillet, { foreignKey: 'billet_id', as: 'scans' });
   };
 
   return Billet;
