@@ -4,6 +4,7 @@ const sequelize = require('./config/database');
 const db = require('./models');
 const logger = require('./utils/logger');
 const subscriptionsModule = require('./modules/subscriptions');
+const bookingsModule = require('./modules/bookings');
 
 async function start() {
   try {
@@ -19,6 +20,9 @@ async function start() {
 
     /* Tâches planifiées (abonnements SaaS) */
     subscriptionsModule.startCron();
+
+    /* Tâches planifiées (expiration des réservations) */
+    bookingsModule.startCron();
 
     app.listen(env.port, () => {
       console.log(`✓ API Bus Tix Connect démarrée sur http://localhost:${env.port}/api/v1`);

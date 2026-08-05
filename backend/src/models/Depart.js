@@ -49,6 +49,8 @@ module.exports = (sequelize, DataTypes) => {
     Depart.belongsTo(db.Trajet, { foreignKey: 'trajet_id', as: 'trajet' });
     Depart.belongsTo(db.Agence, { foreignKey: 'agence_id', as: 'agence' });
     Depart.belongsTo(db.Compagnie, { foreignKey: 'compagnie_id', as: 'compagnie' });
+    /* Module Bookings */
+    Depart.hasMany(db.Reservation, { foreignKey: 'depart_id', as: 'reservations' });
   };
 
   return Depart;

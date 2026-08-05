@@ -37,6 +37,12 @@ app.get('/api/v1/health', (_req, res) => {
 /* Routes API */
 app.use('/api/v1', routes);
 
+/* Module Bookings (réservations : CRUD, sièges, paiements, expirations, statistiques)
+   Monté en premier : la route publique GET /bookings/availability doit être
+   atteinte avant les `router.use(authenticate)` des autres modules. */
+const bookingsModule = require('./modules/bookings');
+app.use('/api/v1', bookingsModule.routes);
+
 /* Module SaaS Subscriptions (plans, abonnements compagnie, paiements, notifications, revenus) */
 const subscriptionsModule = require('./modules/subscriptions');
 app.use('/api/v1', subscriptionsModule.routes);

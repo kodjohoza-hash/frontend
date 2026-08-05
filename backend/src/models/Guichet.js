@@ -34,6 +34,8 @@ module.exports = (sequelize, DataTypes) => {
   Guichet.associate = (db) => {
     Guichet.belongsTo(db.Agence, { foreignKey: 'agence_id', as: 'agence' });
     Guichet.hasMany(db.Agent, { foreignKey: 'guichet_id', as: 'agents' });
+    /* Module Bookings */
+    Guichet.hasMany(db.Reservation, { foreignKey: 'guichet_id', as: 'reservations' });
   };
 
   return Guichet;

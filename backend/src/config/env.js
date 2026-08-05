@@ -65,6 +65,7 @@ const env = {
   cron: {
     enabled: process.env.CRON_ENABLED === 'true',
     subscriptionSchedule: process.env.CRON_SUBSCRIPTION_SCHEDULE || '0 2 * * *', // chaque jour à 02:00
+    bookingsSchedule: process.env.CRON_BOOKINGS_SCHEDULE || '*/5 * * * *', // toutes les 5 minutes
   },
 
   seed: {

@@ -1,0 +1,33 @@
+const {
+  STATUTS,
+  INITIAL_STATUTS,
+  MODES_RESERVATION,
+  MODES_PAIEMENT,
+  SORTS,
+  idSchema,
+  availabilityQuerySchema,
+  statsQuerySchema,
+  listQuerySchema,
+  createSchema,
+  updateSchema,
+  cancelSchema,
+  paymentSchema,
+  refundSchema,
+} = require('./booking.validator');
+
+module.exports = {
+  STATUTS,
+  INITIAL_STATUTS,
+  MODES_RESERVATION,
+  MODES_PAIEMENT,
+  SORTS,
+  idSchema,
+  availabilityQuerySchema,
+  statsQuerySchema,
+  listQuerySchema,
+  createSchema,
+  updateSchema,
+  cancelSchema,
+  paymentSchema,
+  refundSchema,
+};
