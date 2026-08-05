@@ -1,8 +1,12 @@
 /**
  * BUS TIX CONNECT — Payment Service Layer
- * Prepared for future API integration (MTN MoMo, Orange Money, Stripe, etc.)
- * All methods return Promises — currently returns mock data.
+ * - Module opérationnel (Module 11) : liste, stats, reçu, confirm / cancel / fail / refund
+ *   branchés sur l'API Express `/api/v1/payments`.
+ * - Le flux de paiement du booking (validatePhone, validateCard, processPayment,
+ *   validatePromoCode, reserveSeats) reste simulé en attendant la passerelle.
  */
+
+import apiClient from './apiClient';
 
 const MOCK_DELAY = 2000;
 
@@ -96,6 +100,43 @@ const PaymentService = {
       expiresAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
     };
   },
+
+  /* ══════════════════════════════════════════════════════════════
+     Module 11 — Gestion des paiements (API Express réelle)
+     ══════════════════════════════════════════════════════════════ */
+
+  /** GET /payments — liste paginée des paiements opérationnels. */
+  listPayments: (params) => apiClient.get('/payments', { params }),
+
+  /** GET /payments/:id — détail complet d'un paiement (client/agent/réservation). */
+  getPayment: (id) => apiClient.get(`/payments/${id}`),
+
+  /** GET /payments/:id/receipt — reçu officiel d'un paiement. */
+  getReceipt: (id) => apiClient.get(`/payments/${id}/receipt`),
+
+  /** GET /payments/stats — KPIs (total, encaissé, remboursé, répartitions). */
+  getPaymentStats: (params) => apiClient.get('/payments/stats', { params }),
+
+  /** GET /payments/statistics — KPIs étendus (mois, compagnies, catégories). */
+  getPaymentStatistics: (params) => apiClient.get('/payments/statistics', { params }),
+
+  /** POST /payments — enregistre un paiement (réservation / abonnement / manuel). */
+  createPayment: (payload) => apiClient.post('/payments', payload),
+
+  /** PATCH /payments/:id — met à jour un paiement (métadonnées + statut). */
+  updatePayment: (id, payload) => apiClient.patch(`/payments/${id}`, payload),
+
+  /** POST /payments/:id/confirm — confirme un paiement initié ou en attente. */
+  confirmPayment: (id) => apiClient.post(`/payments/${id}/confirm`),
+
+  /** POST /payments/:id/cancel — annule un paiement en attente. */
+  cancelPayment: (id, motif) => apiClient.post(`/payments/${id}/cancel`, { motif }),
+
+  /** POST /payments/:id/fail — marque un paiement comme échoué. */
+  failPayment: (id, motif) => apiClient.post(`/payments/${id}/fail`, { motif }),
+
+  /** POST /payments/:id/refund — rembourse un paiement encaissé. */
+  refundPayment: (id, payload) => apiClient.post(`/payments/${id}/refund`, payload),
 };
 
 export default PaymentService;
