@@ -688,6 +688,7 @@ const refund = async ({ id, data, actor }) => {
         montant: refundAmount,
         methode: reservation.mode_paiement || 'especes',
         statut: 'rembourse',
+        type: 'remboursement',
         cree_le: now,
         paiement_le: now,
         remboursement: refundAmount,

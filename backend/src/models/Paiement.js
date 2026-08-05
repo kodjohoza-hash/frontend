@@ -2,6 +2,8 @@
  * Modèle PAIEMENT — table `paiement` (MCD section 2)
  * Comptabilité des paiements liés à une réservation (ou un billet).
  * Un paiement peut être en ligne (agent_id NULL) ou encaissé par un agent.
+ * Le module Payments (Module 11) gère la consultation, le reporting et les
+ * transitions de statut (confirm / cancel / fail / refund) de ces enregistrements.
  */
 module.exports = (sequelize, DataTypes) => {
   const Paiement = sequelize.define(
@@ -14,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
       client_id: { type: DataTypes.CHAR(12), allowNull: false },
       agent_id: { type: DataTypes.CHAR(10), allowNull: true },
       montant: { type: DataTypes.INTEGER, allowNull: false },
+      frais: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
+      devise: { type: DataTypes.CHAR(3), allowNull: false, defaultValue: 'XAF' },
       methode: {
         type: DataTypes.ENUM('orange_money', 'mtn_money', 'carte_bancaire', 'especes', 'virement_bancaire', 'bon_reduction', 'code_promo'),
         allowNull: false,
@@ -27,11 +31,24 @@ module.exports = (sequelize, DataTypes) => {
       remboursement: { type: DataTypes.INTEGER, allowNull: true },
       motif_remboursement: { type: DataTypes.STRING(255), allowNull: true },
       note: { type: DataTypes.STRING(255), allowNull: true },
+      type: {
+        type: DataTypes.ENUM('encaissement', 'remboursement'),
+        allowNull: false,
+        defaultValue: 'encaissement',
+      },
+      metadata: { type: DataTypes.JSON, allowNull: true },
     },
     {
       tableName: 'paiement',
       timestamps: false,
-      indexes: [{ fields: ['reservation_id'] }, { fields: ['client_id'] }, { fields: ['statut'] }],
+      indexes: [
+        { fields: ['reservation_id'] },
+        { fields: ['client_id'] },
+        { fields: ['statut'] },
+        { fields: ['type'] },
+        { fields: ['cree_le'] },
+        { fields: ['methode'] },
+      ],
     }
   );
 

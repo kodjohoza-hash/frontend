@@ -43,6 +43,12 @@ app.use('/api/v1', routes);
 const bookingsModule = require('./modules/bookings');
 app.use('/api/v1', bookingsModule.routes);
 
+/* Module Payments (gestion des paiements opérationnels : liste, statuts, remboursements, stats).
+   Monté avant Subscriptions : GET /payments y est consommé par le super_admin pour les
+   paiements d'abonnement (SaaS), les autres rôles obtiennent les paiements de réservations. */
+const paymentsModule = require('./modules/payments');
+app.use('/api/v1', paymentsModule.routes);
+
 /* Module SaaS Subscriptions (plans, abonnements compagnie, paiements, notifications, revenus) */
 const subscriptionsModule = require('./modules/subscriptions');
 app.use('/api/v1', subscriptionsModule.routes);
