@@ -229,8 +229,8 @@ const stats = async ({ actor, query }) => {
    Émission automatique
    ══════════════════════════════════════════════════════════════ */
 
-/** Construit les données d'un billet pour une place donnée (un billet = un siège). */
-const buildTicketData = async (reservation, place, creePar) => {
+/** Construit les données d'un billet pour une place donnée (un billet = un siège = un passager). */
+const buildTicketData = async (reservation, place, passenger, creePar) => {
   const depart = reservation.depart;
   const prix = place.tarif != null && place.tarif !== '' ? Number(place.tarif) : Number(depart.prix_base) || 0;
   const siege = String(place.siege).trim().toUpperCase();
@@ -238,6 +238,10 @@ const buildTicketData = async (reservation, place, creePar) => {
   const id = await generateBilletId();
   const token = generateToken();
   const qr_code = buildQrPayload({ id, token, qr_version: 1 });
+
+  const fullName = passenger
+    ? [passenger.first_name, passenger.last_name].filter(Boolean).join(' ').trim()
+    : (place.nom_passager || null);
 
   return {
     id,
@@ -247,8 +251,9 @@ const buildTicketData = async (reservation, place, creePar) => {
     reservation_id: reservation.id,
     depart_id: depart.id,
     client_id: reservation.client_id,
+    passenger_id: passenger?.id || null,
     siege,
-    nom_passager: place.nom_passager || null,
+    nom_passager: fullName || null,
     prix,
     statut: 'valide',
     token,
@@ -295,10 +300,16 @@ const generateForReservation = async ({ reservationId, actor }) => {
   }
 
   const creePar = actor && actor.role !== ROLES.CLIENT ? actor.id : null;
+  const passengerBySiege = new Map(
+    (reservation.passengers || [])
+      .filter((p) => p.place?.siege)
+      .map((p) => [String(p.place.siege).trim().toUpperCase(), p])
+  );
   const rows = [];
   await sequelize.transaction(async (t) => {
     for (const place of toCreate) {
-      const data = await buildTicketData(reservation, place, creePar);
+      const passenger = passengerBySiege.get(String(place.siege).trim().toUpperCase()) || null;
+      const data = await buildTicketData(reservation, place, passenger, creePar);
       rows.push(await ticketRepository.createBillet(data, { transaction: t }));
     }
     await ticketRepository.createHistorique(

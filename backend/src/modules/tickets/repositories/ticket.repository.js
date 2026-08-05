@@ -14,6 +14,8 @@ const {
   Compagnie,
   Ville,
   HistoriqueReservation,
+  Passenger,
+  EmergencyContact,
 } = require('../../../models');
 
 const clientAttrs = ['id', 'prenom', 'nom', 'telephone', 'email'];
@@ -154,11 +156,20 @@ const findBilletsByReservation = (reservationId, options = {}) =>
 const countBilletsByReservation = (reservationId, options = {}) =>
   Billet.count({ where: { reservation_id: reservationId }, ...options });
 
-/** Réservation complète (sièges + client + voyage + agence) pour l'émission. */
+/** Réservation complète (sièges + passagers + client + voyage + agence) pour l'émission. */
 const findReservationWithPlaces = (id) =>
   Reservation.findByPk(id, {
     include: [
       { model: PlaceReservee, as: 'places' },
+      {
+        model: Passenger,
+        as: 'passengers',
+        attributes: ['id', 'place_reservee_id', 'first_name', 'last_name', 'gender', 'birth_date', 'phone', 'email'],
+        include: [
+          { model: PlaceReservee, as: 'place', attributes: ['id', 'siege'] },
+          { model: EmergencyContact, as: 'emergencyContact', attributes: ['id', 'full_name', 'phone', 'relationship', 'address'] },
+        ],
+      },
       { model: Client, as: 'client', attributes: clientAttrs },
       {
         model: Depart,
