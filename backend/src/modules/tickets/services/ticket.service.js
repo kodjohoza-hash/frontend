@@ -5,7 +5,9 @@ const logger = require('../../../utils/logger');
 const { ROLES } = require('../../../middlewares/auth');
 const env = require('../../../config/env');
 const { sequelize } = require('../../../models');
+const { sendMail } = require('../../../services/mailer.service');
 const { ticketRepository } = require('../repositories');
+const { buildPdfBuffer, buildTicketEmailHtml } = require('./ticket-pdf.service');
 
 /** Statuts d'un billet (alignés sur la table `billet.statut`). */
 const STATUTS = ['valide', 'utilise', 'expire', 'annule', 'rembourse', 'impaye', 'inconnu'];
@@ -534,6 +536,59 @@ const regenerateQrCode = async ({ id, actor }) => {
   };
 };
 
+/* ══════════════════════════════════════════════════════════════
+   PDF professionnel & envoi email (Étape 3)
+   ══════════════════════════════════════════════════════════════ */
+
+/**
+ * GET /tickets/:id/pdf — buffer PDF du billet (logo compagnie, voyage,
+ * passager, QR code intégré, code-barres). Périmètre d'accès identique
+ * au QR code (propriétaire du billet ou personnel autorisé).
+ */
+const getPdf = async ({ id, actor }) => {
+  const ticket = await ticketRepository.findByIdFull(id);
+  if (!ticket) throw new ApiError(404, 'Billet introuvable.');
+  assertCanAccess(actor, ticket);
+  return buildPdfBuffer({ ticket });
+};
+
+/**
+ * POST /tickets/:id/send-email — envoi du billet PDF au passager.
+ * - En SMTP configuré : envoi réel avec pièce jointe PDF, puis `email_envoye = true`.
+ * - Sans SMTP (dev) : l'email est journalisé (mailer existant), aucun envoi réel.
+ * N'envoie jamais les secrets du billet (token/signature) dans le corps.
+ */
+const envoyerBilletParEmail = async ({ id, actor, to }) => {
+  const ticket = await ticketRepository.findByIdFull(id);
+  if (!ticket) throw new ApiError(404, 'Billet introuvable.');
+  assertCanAccess(actor, ticket);
+
+  const destinataire = to || ticket.client?.email;
+  if (!destinataire) throw new ApiError(400, 'Aucune adresse email disponible pour ce passager.');
+
+  const pdf = await buildPdfBuffer({ ticket });
+  const envoye = await sendMail({
+    to: destinataire,
+    subject: `Votre billet de voyage ${ticket.reference}`,
+    html: buildTicketEmailHtml({ ticket }),
+    attachments: [{ filename: `billet-${ticket.reference}.pdf`, content: pdf, contentType: 'application/pdf' }],
+  });
+
+  if (envoye && !ticket.email_envoye) {
+    await ticketRepository.updateBillet(ticket, { email_envoye: true });
+    ticket.email_envoye = true;
+  }
+  logger.info(`[tickets] billet ${ticket.reference} → email ${destinataire}${envoye ? '' : ' (journalisé, SMTP non configuré)'}`);
+  return {
+    envoye,
+    destinataire,
+    mode: envoye ? 'smtp' : 'dev-log',
+    message: envoye ? 'Billet envoyé par email.' : 'Email journalisé : SMTP non configuré (aucun envoi réel).',
+    emailEnvoye: !!ticket.email_envoye,
+    ticket: serializeTicket(ticket),
+  };
+};
+
 module.exports = {
   STATUTS,
   ALLOWED_TRANSITIONS,
@@ -546,4 +601,6 @@ module.exports = {
   getQrCode,
   verify,
   regenerateQrCode,
+  getPdf,
+  envoyerBilletParEmail,
 };

@@ -6,6 +6,7 @@ const {
   listQuerySchema,
   statsQuerySchema,
   statusSchema,
+  sendEmailSchema,
 } = require('./ticket.validator');
 
 module.exports = {
@@ -16,4 +17,5 @@ module.exports = {
   listQuerySchema,
   statsQuerySchema,
   statusSchema,
+  sendEmailSchema,
 };

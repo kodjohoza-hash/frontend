@@ -61,6 +61,25 @@ const regenerateQrCode = asyncHandler(async (req, res) => {
   res.json({ success: true, data });
 });
 
+/**
+ * GET /tickets/:id/pdf — téléchargement du billet PDF professionnel.
+ */
+const getPdf = asyncHandler(async (req, res) => {
+  const buffer = await ticketService.getPdf({ id: req.params.id, actor: req.user });
+  res.set('Content-Type', 'application/pdf');
+  res.set('Content-Disposition', `attachment; filename="billet-${req.params.id}.pdf"`);
+  res.set('Cache-Control', 'private, no-store');
+  res.send(buffer);
+});
+
+/**
+ * POST /tickets/:id/send-email — envoi du billet PDF au passager.
+ */
+const sendEmail = asyncHandler(async (req, res) => {
+  const data = await ticketService.envoyerBilletParEmail({ id: req.params.id, actor: req.user, to: req.body?.to });
+  res.json({ success: true, data });
+});
+
 module.exports = {
   list,
   stats,
@@ -69,4 +88,6 @@ module.exports = {
   getQrCode,
   verify,
   regenerateQrCode,
+  getPdf,
+  sendEmail,
 };

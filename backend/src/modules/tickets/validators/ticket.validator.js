@@ -60,6 +60,11 @@ const statusSchema = Joi.object({
   }),
 });
 
+/** Envoi du billet par email — destinataire optionnel (défaut : email du client). */
+const sendEmailSchema = Joi.object({
+  to: Joi.string().email().max(120).optional().allow('', null),
+});
+
 module.exports = {
   STATUTS,
   SORTS,
@@ -68,4 +73,5 @@ module.exports = {
   listQuerySchema,
   statsQuerySchema,
   statusSchema,
+  sendEmailSchema,
 };

@@ -12,6 +12,7 @@ const {
   listQuerySchema,
   statsQuerySchema,
   statusSchema,
+  sendEmailSchema,
 } = require('./validators');
 
 const writeLimiter = rateLimit(30, 15 * 60 * 1000);
@@ -35,9 +36,11 @@ router.get('/tickets', ticketRoles, validate(listQuerySchema, 'query'), ticketCo
 router.get('/tickets/stats', ticketRoles, validate(statsQuerySchema, 'query'), ticketController.stats);
 router.get('/tickets/verify/:token', staffRoles, verifyLimiter, validate(verifyTokenSchema, 'params'), ticketController.verify);
 
-/* ── Détail, QR code, transitions de statut, régénération ────── */
+/* ── Détail, QR code, PDF, transitions de statut, régénération ── */
 router.get('/tickets/:id', ticketRoles, validate(idSchema, 'params'), ticketController.getById);
 router.get('/tickets/:id/qrcode', ticketRoles, validate(idSchema, 'params'), ticketController.getQrCode);
+router.get('/tickets/:id/pdf', ticketRoles, validate(idSchema, 'params'), ticketController.getPdf);
+router.post('/tickets/:id/send-email', ticketRoles, writeLimiter, validate(idSchema, 'params'), validate(sendEmailSchema), ticketController.sendEmail);
 router.patch('/tickets/:id/status', ticketRoles, writeLimiter, validate(idSchema, 'params'), validate(statusSchema), ticketController.updateStatus);
 router.post('/tickets/:id/regenerate-qrcode', adminOnly, writeLimiter, validate(idSchema, 'params'), ticketController.regenerateQrCode);
 

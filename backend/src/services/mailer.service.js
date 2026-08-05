@@ -24,11 +24,11 @@ const getTransporter = () => {
 
 /**
  * Envoie un email. Retourne true si réellement envoyé, false si journalisé.
- * @param {{to: string, subject: string, html?: string, text?: string}} options
+ * @param {{to: string, subject: string, html?: string, text?: string, attachments?: Array<{filename: string, content: Buffer}>}} options
  */
-const sendMail = async ({ to, subject, html, text }) => {
+const sendMail = async ({ to, subject, html, text, attachments }) => {
   if (!isConfigured()) {
-    logger.info(`[MAIL-DEV] to=${to} subject="${subject}"`, { html: html?.slice(0, 500) });
+    logger.info(`[MAIL-DEV] to=${to} subject="${subject}"`, { html: html?.slice(0, 500), attachments: attachments?.length || 0 });
     return false;
   }
   try {
@@ -38,6 +38,7 @@ const sendMail = async ({ to, subject, html, text }) => {
       subject,
       html,
       text,
+      attachments,
     });
     logger.info(`Email envoyé à ${to} — "${subject}"`);
     return true;
