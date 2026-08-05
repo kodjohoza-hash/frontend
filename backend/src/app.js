@@ -81,6 +81,11 @@ app.use('/api/v1', driversModule.routes);
 const routesModule = require('./modules/routes');
 app.use('/api/v1', routesModule.routes);
 
+/* Module Tickets (billets électroniques : consultation, statuts, statistiques).
+   Émission automatique branchée sur les modules Bookings & Payments. */
+const ticketsModule = require('./modules/tickets');
+app.use('/api/v1', ticketsModule.routes);
+
 /* 404 + gestion centralisée des erreurs */
 app.use(notFoundHandler);
 app.use(errorHandler);

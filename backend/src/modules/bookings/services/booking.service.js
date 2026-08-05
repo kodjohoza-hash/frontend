@@ -3,6 +3,7 @@ const ApiError = require('../../../utils/ApiError');
 const logger = require('../../../utils/logger');
 const { ROLES } = require('../../../middlewares/auth');
 const { bookingRepository } = require('../repositories');
+const { ticketService } = require('../../tickets/services');
 
 /** Durée de validité d'une réservation non payée (blocage des sièges). */
 const EXPIRATION_MINUTES = 30;
@@ -653,6 +654,12 @@ const pay = async ({ id, data, actor }) => {
 
   const full = await bookingRepository.findByIdFull(id);
   logger.info(`[bookings] ${reservation.reference} paiement ${data.montant} FCFA (${data.methode})`);
+
+  /* Réservation entièrement payée : émission automatique des billets. */
+  if (newStatut === 'payee') {
+    await ticketService.generateForReservation({ reservationId: id, actor });
+  }
+
   return { booking: serializeReservation(full), message: 'Paiement enregistré.' };
 };
 
@@ -718,6 +725,12 @@ const refund = async ({ id, data, actor }) => {
 
   const full = await bookingRepository.findByIdFull(id);
   logger.info(`[bookings] ${reservation.reference} remboursement ${refundAmount} FCFA`);
+
+  /* Remboursement total : les billets émis de la réservation sont remboursés. */
+  if (fullRefund) {
+    await ticketService.annulerBilletsReservation({ reservationId: id, actor, motif: data.motif });
+  }
+
   return { booking: serializeReservation(full), message: 'Remboursement effectué.' };
 };
 

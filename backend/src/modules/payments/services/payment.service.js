@@ -4,6 +4,7 @@ const { ROLES } = require('../../../middlewares/auth');
 const { sequelize } = require('../../../models');
 const { paymentRepository } = require('../repositories');
 const { bookingService } = require('../../bookings/services');
+const { ticketService } = require('../../tickets/services');
 
 /** Statuts de réservation qui « retiennent » les sièges en attente de paiement. */
 const HOLDING_STATUTS = ['brouillon', 'en_attente'];
@@ -396,6 +397,7 @@ const create = async ({ data, actor }) => {
   const now = new Date();
   const paiementId = await generatePaiementId();
   const reference = await generateReference('PAY', paymentRepository.findPaiementByReference);
+  let reservationDevenuePayee = false;
 
   await sequelize.transaction(async (t) => {
     await paymentRepository.createPaiement(
@@ -428,6 +430,7 @@ const create = async ({ data, actor }) => {
 
     if (isConfirmed && reservation) {
       const newStatut = montantPercu + Number(data.montant) >= Number(reservation.montant) ? 'payee' : 'confirmee';
+      if (newStatut === 'payee') reservationDevenuePayee = true;
       const patch = {
         statut: newStatut,
         date_expiration: null,
@@ -450,6 +453,12 @@ const create = async ({ data, actor }) => {
   const full = await paymentRepository.findByIdFull(paiementId);
   await attachBalance(full);
   logger.info(`[payments] ${reference} créé (${Number(data.montant)} FCFA, ${data.methode}, ${categorie})`);
+
+  /* Réservation entièrement payée : émission automatique des billets. */
+  if (reservationDevenuePayee && reservation) {
+    await ticketService.generateForReservation({ reservationId: reservation.id, actor });
+  }
+
   return { payment: serializePayment(full), message: 'Paiement enregistré.' };
 };
 
@@ -547,6 +556,11 @@ const confirmReservationFromPayment = async (payment, actor) => {
     timestamp: now,
     utilisateur: actorName(actor),
   });
+
+  /* Réservation entièrement payée : émission automatique des billets. */
+  if (couvert) {
+    await ticketService.generateForReservation({ reservationId: reservation.id, actor });
+  }
 };
 
 /* ══════════════════════════════════════════════════════════════
