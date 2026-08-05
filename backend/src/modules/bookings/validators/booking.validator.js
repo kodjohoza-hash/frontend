@@ -97,20 +97,60 @@ const seatsSchema = Joi.array()
   })
   .messages({ 'any.custom': 'Valeurs incohérentes.' });
 
+/** Contact d'urgence d'un passager (0..1 par passager) — jamais un voyageur. */
+const emergencyContactSchema = Joi.object({
+  fullName: Joi.string().max(160).optional().allow('', null),
+  phone: Joi.string().max(20).optional().allow('', null),
+  relationship: Joi.string().max(60).optional().allow('', null),
+  address: Joi.string().max(255).optional().allow('', null),
+});
+
+/** Passager : identité + document + contact d'urgence. */
+const passengerSchema = Joi.object({
+  firstName: Joi.string().max(80).optional().allow('', null),
+  lastName: Joi.string().max(80).optional().allow('', null),
+  gender: Joi.string().valid('M', 'F').optional().allow('', null),
+  birthDate: Joi.date().iso().optional().allow('', null),
+  phone: Joi.string().max(20).optional().allow('', null),
+  email: Joi.string().email().max(120).optional().allow('', null),
+  documentType: Joi.string().max(20).optional().allow('', null),
+  documentNumber: Joi.string().max(40).optional().allow('', null),
+  nationality: Joi.string().max(60).optional().allow('', null),
+  emergencyContact: emergencyContactSchema.optional().allow(null),
+});
+
+const passengersSchema = Joi.array()
+  .items(passengerSchema)
+  .min(1)
+  .max(60)
+  .optional()
+  .messages({
+    'array.max': 'Le nombre de passagers est trop élevé.',
+  });
+
 /** Création d'une réservation. */
 const createSchema = Joi.object({
-  departId: Joi.string().max(10).required().messages({
-    'any.required': "L'identifiant du voyage (depart) est requis.",
+  departId: Joi.string().max(10).optional().messages({
+    'any.unknown': 'Identifiant de voyage inconnu.',
+  }),
+  tripId: Joi.string().max(10).optional().messages({
+    'any.unknown': 'Identifiant de voyage inconnu.',
   }),
   clientId: Joi.string().max(12).optional().allow('', null),
   guichetId: Joi.string().max(10).optional().allow('', null),
   seats: seatsSchema,
+  passengers: passengersSchema,
   modeReservation: Joi.string().valid(...MODES_RESERVATION).optional().default('en_ligne'),
   modePaiement: Joi.string().valid(...MODES_PAIEMENT).optional().allow('', null),
   remise: Joi.number().integer().min(0).default(0),
   taxes: Joi.number().integer().min(0).default(0),
   observations: Joi.string().max(500).optional().allow('', null),
   statut: Joi.string().valid(...INITIAL_STATUTS).optional().default('en_attente'),
+}).custom((value, helpers) => {
+  if (!value.departId && !value.tripId) {
+    return helpers.error('any.required', { message: "L'identifiant du voyage (depart) est requis." });
+  }
+  return value;
 });
 
 /** Mise à jour partielle d'une réservation (sièges, remise, taxes, observations). */
@@ -122,6 +162,7 @@ const updateSchema = Joi.object({
     }
     return value;
   }).messages({ 'any.custom': 'Valeurs incohérentes.' }),
+  passengers: passengersSchema,
   modeReservation: Joi.string().valid(...MODES_RESERVATION).optional(),
   modePaiement: Joi.string().valid(...MODES_PAIEMENT).optional().allow('', null),
   remise: Joi.number().integer().min(0).optional(),

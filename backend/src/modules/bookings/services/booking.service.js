@@ -2,6 +2,7 @@ const { sequelize } = require('../../../models');
 const ApiError = require('../../../utils/ApiError');
 const logger = require('../../../utils/logger');
 const { ROLES } = require('../../../middlewares/auth');
+const { ulid } = require('../../../utils/ulid');
 const { bookingRepository } = require('../repositories');
 const { ticketService } = require('../../tickets/services');
 
@@ -62,7 +63,9 @@ const normalizeSeats = (seats) =>
     tarif: s.tarif !== undefined && s.tarif !== null && s.tarif !== '' ? Number(s.tarif) : null,
   }));
 
-/** Montant d'une réservation : Σ(tarifs) − remise + taxes. */
+/** Montant d'une réservation : Σ(tarifs) − remise + taxes.
+ *  Les contacts d'urgence n'ont JAMAIS de siège ni de tarif : ils ne sont
+ *  donc jamais comptés dans le nombre de voyageurs ni dans le prix. */
 const calcMontant = (depart, seats, remise, taxes) => {
   const brut = seats.reduce((sum, s) => sum + (s.tarif ?? (Number(depart.prix_base) || 0)), 0);
   return Math.max(0, brut - (remise || 0) + (taxes || 0));
@@ -74,6 +77,84 @@ const actorName = (actor) => {
   const u = actor.user;
   const name = [u?.firstName, u?.lastName].filter(Boolean).join(' ').trim();
   return name || actor.email || actor.id;
+};
+
+/* ══════════════════════════════════════════════════════════════
+   Passagers & contacts d'urgence (helpers)
+   ══════════════════════════════════════════════════════════════ */
+
+/** Découpe « Prénom Nom » → { first, last } (garde la totalité sinon). */
+const splitFullName = (name) => {
+  const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+  const first = parts.shift() || 'Passager';
+  const last = parts.join(' ') || first;
+  return { first, last };
+};
+
+/**
+ * Construit les champs d'un passager. Les champs manquants d'un appel
+ * rétro-compatible (sièges sans passagers) reçoivent des valeurs par défaut ;
+ * l'identité réelle est ensuite saisie / mise à jour.
+ */
+const buildPassengerData = (input = {}, opts = {}) => {
+  const name = splitFullName(opts.nomPassager);
+  return {
+    first_name: (input.firstName && String(input.firstName).trim()) || name.first,
+    last_name: (input.lastName && String(input.lastName).trim()) || name.last,
+    gender: input.gender || 'M',
+    birth_date: input.birthDate || '1970-01-01',
+    phone: input.phone || '',
+    email: input.email || null,
+    document_type: String(input.documentType || 'cni').trim() || 'cni',
+    document_number: String(input.documentNumber || `LEGACY-${opts.placeId || 'X'}`).trim(),
+    nationality: input.nationality || null,
+    status: 'BOOKED',
+  };
+};
+
+/** Patch d'un passager existant : ne modifie que les champs fournis. */
+const buildPassengerPatch = (input = {}) => {
+  const patch = {};
+  if (input.firstName !== undefined) patch.first_name = String(input.firstName).trim();
+  if (input.lastName !== undefined) patch.last_name = String(input.lastName).trim();
+  if (input.gender !== undefined) patch.gender = input.gender;
+  if (input.birthDate !== undefined) patch.birth_date = input.birthDate;
+  if (input.phone !== undefined) patch.phone = String(input.phone).trim();
+  if (input.email !== undefined) patch.email = input.email || null;
+  if (input.documentType !== undefined) patch.document_type = String(input.documentType).trim();
+  if (input.documentNumber !== undefined) patch.document_number = String(input.documentNumber).trim();
+  if (input.nationality !== undefined) patch.nationality = input.nationality || null;
+  if (input.status !== undefined) patch.status = input.status;
+  return patch;
+};
+
+/** Contact d'urgence (ou null si incomplet) — n'est JAMAIS un passager. */
+const buildEmergencyContactData = (ec = {}) => {
+  if (!ec || !ec.fullName || !ec.phone || !ec.relationship) return null;
+  return {
+    full_name: String(ec.fullName).trim(),
+    phone: String(ec.phone).trim(),
+    relationship: String(ec.relationship).trim(),
+    address: ec.address ? String(ec.address).trim() : null,
+  };
+};
+
+/** Nom complet du passager (source d'affichage / billets). */
+const passengerFullName = (p) => [p.first_name, p.last_name].filter(Boolean).join(' ').trim();
+
+/** Crée / met à jour le contact d'urgence d'un passager (0..1 par passager). */
+const syncEmergencyContact = async (passengerId, ecInput, t) => {
+  const existing = await bookingRepository.findEmergencyContactByPassenger(passengerId, { transaction: t });
+  const ec = buildEmergencyContactData(ecInput);
+  if (ec) {
+    if (existing) {
+      await bookingRepository.updateEmergencyContact(existing, ec, { transaction: t });
+    } else {
+      await bookingRepository.createEmergencyContact({ id: ulid(), passenger_id: passengerId, ...ec }, { transaction: t });
+    }
+  } else if (existing) {
+    await bookingRepository.destroyEmergencyContactByPassenger(passengerId, { transaction: t });
+  }
 };
 
 /* ══════════════════════════════════════════════════════════════
@@ -269,6 +350,36 @@ const serializePaiement = (p) => ({
   note: p.note ?? null,
 });
 
+const serializePassenger = (p) => {
+  if (!p) return null;
+  const ec = p.emergencyContact;
+  return {
+    id: p.id,
+    placeReserveeId: p.place_reservee_id ?? null,
+    clientId: p.client_id ?? null,
+    firstName: p.first_name,
+    lastName: p.last_name,
+    fullName: passengerFullName(p),
+    gender: p.gender,
+    birthDate: p.birth_date ?? null,
+    phone: p.phone,
+    email: p.email ?? null,
+    documentType: p.document_type,
+    documentNumber: p.document_number,
+    nationality: p.nationality ?? null,
+    status: p.status,
+    siege: p.place?.siege ?? null,
+    emergencyContact: ec
+      ? {
+          fullName: ec.full_name,
+          phone: ec.phone,
+          relationship: ec.relationship,
+          address: ec.address ?? null,
+        }
+      : null,
+  };
+};
+
 const serializeReservation = (r) => {
   if (!r) return null;
   const paiements = r.paiements || [];
@@ -293,6 +404,7 @@ const serializeReservation = (r) => {
     guichetId: r.guichet_id ?? null,
     guichet: r.guichet ? { id: r.guichet.id, code: r.guichet.code, name: r.guichet.nom } : null,
     places: (r.places || []).map(serializePlace),
+    passengers: (r.passengers || []).map(serializePassenger),
     nbPlaces: r.nb_places,
     montant: Number(r.montant) || 0,
     remise: Number(r.remise) || 0,
@@ -346,7 +458,7 @@ const create = async ({ data, actor }) => {
   if (!client) throw new ApiError(404, 'Client introuvable.');
   assertClientActive(client);
 
-  const depart = await bookingRepository.findDepart(data.departId);
+  const depart = await bookingRepository.findDepart(data.departId || data.tripId);
   if (!depart) throw new ApiError(404, 'Voyage introuvable.');
   assertTripBookable(depart);
   assertScopeDepart(actor, depart);
@@ -354,6 +466,10 @@ const create = async ({ data, actor }) => {
   const guichetId = await resolveGuichet(actor, data.guichetId);
 
   const seats = normalizeSeats(data.seats);
+  const passengers = Array.isArray(data.passengers) ? data.passengers : [];
+  if (passengers.length && passengers.length !== seats.length) {
+    throw new ApiError(400, 'Le nombre de passagers doit correspondre au nombre de sièges.');
+  }
   assertSeatsWithinCapacity(depart, seats);
   if (seats.length > Number(depart.places_dispo)) {
     throw new ApiError(400, 'Plus assez de places disponibles sur ce voyage.');
@@ -403,17 +519,40 @@ const create = async ({ data, actor }) => {
       { transaction: t }
     );
 
-    for (const seat of seats) {
-      await bookingRepository.createPlace(
-        { reservation_id: id, siege: seat.siege, nom_passager: seat.nomPassager, tarif: seat.tarif },
+    for (let i = 0; i < seats.length; i += 1) {
+      const seat = seats[i];
+      const passengerInput = passengers[i] || {};
+
+      /* Occupation du siège (place_reservee) — le passager est lié par
+         place_reservee_id (1:1). nom_passager conservé pour compatibilité. */
+      const place = await bookingRepository.createPlace(
+        { reservation_id: id, siege: seat.siege, tarif: seat.tarif },
         { transaction: t }
       );
+
+      const passengerData = buildPassengerData(passengerInput, { nomPassager: seat.nomPassager, placeId: place.id });
+      const fullName = passengerFullName(passengerData);
+      await place.update({ nom_passager: fullName }, { transaction: t });
+
+      const passenger = await bookingRepository.createPassenger(
+        {
+          id: ulid(),
+          reservation_id: id,
+          place_reservee_id: place.id,
+          client_id: clientId,
+          ...passengerData,
+        },
+        { transaction: t }
+      );
+
+      /* Contact d'urgence (0..1 par passager) — jamais compté comme voyageur. */
+      await syncEmergencyContact(passenger.id, passengerInput.emergencyContact, t);
     }
 
     await bookingRepository.createHistorique(
       {
         reservation_id: id,
-        action: `Réservation créée (${statut}) — ${seats.length} place(s)`,
+        action: `Réservation créée (${statut}) — ${seats.length} place(s), ${passengers.length || seats.length} passager(s)`,
         timestamp: now,
         utilisateur: actorName(actor),
       },
@@ -441,6 +580,10 @@ const update = async ({ id, data, actor }) => {
   if (!depart) throw new ApiError(404, 'Voyage introuvable.');
 
   const seats = data.seats ? normalizeSeats(data.seats) : null;
+  const passengers = Array.isArray(data.passengers) ? data.passengers : null;
+  if (seats && passengers && passengers.length !== seats.length) {
+    throw new ApiError(400, 'Le nombre de passagers doit correspondre au nombre de sièges.');
+  }
   const patch = {};
   if (data.modeReservation !== undefined) patch.mode_reservation = data.modeReservation;
   if (data.modePaiement !== undefined) patch.mode_paiement = data.modePaiement || null;
@@ -467,20 +610,51 @@ const update = async ({ id, data, actor }) => {
         }
       }
 
-      for (const s of seats) {
+      for (let i = 0; i < seats.length; i += 1) {
+        const s = seats[i];
         const existing = curSet.get(s.siege);
+        const passengerInput = passengers ? passengers[i] : {};
+        const passengerName = passengerInput.firstName || passengerInput.lastName
+          ? [passengerInput.firstName, passengerInput.lastName].filter(Boolean).join(' ').trim()
+          : (s.nomPassager || null);
+
+        let place;
         if (existing) {
           await bookingRepository.updatePlace(
             existing,
-            { nom_passager: s.nomPassager, tarif: s.tarif },
+            { nom_passager: passengerName, tarif: s.tarif },
             { transaction: t }
           );
+          place = existing;
         } else {
-          await bookingRepository.createPlace(
-            { reservation_id: id, siege: s.siege, nom_passager: s.nomPassager, tarif: s.tarif },
+          place = await bookingRepository.createPlace(
+            { reservation_id: id, siege: s.siege, nom_passager: passengerName, tarif: s.tarif },
             { transaction: t }
           );
         }
+
+        /* Synchronise le passager 1:1 du siège (+ son contact d'urgence). */
+        let passenger = await bookingRepository.findPassengerByPlaceId(place.id, { transaction: t });
+        if (passenger) {
+          const ppatch = buildPassengerPatch(passengerInput);
+          if (Object.keys(ppatch).length) {
+            await bookingRepository.updatePassenger(passenger, ppatch, { transaction: t });
+            passenger = await bookingRepository.findPassengerByPlaceId(place.id, { transaction: t });
+          }
+        } else {
+          const pdata = buildPassengerData(passengerInput, { nomPassager: s.nomPassager, placeId: place.id });
+          passenger = await bookingRepository.createPassenger(
+            {
+              id: ulid(),
+              reservation_id: id,
+              place_reservee_id: place.id,
+              client_id: reservation.client_id,
+              ...pdata,
+            },
+            { transaction: t }
+          );
+        }
+        await syncEmergencyContact(passenger.id, passengerInput.emergencyContact, t);
       }
       for (const [siege, place] of curSet) {
         if (!newSet.has(siege)) {

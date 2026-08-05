@@ -14,6 +14,8 @@ const {
   Agent,
   Guichet,
   Ville,
+  Passenger,
+  EmergencyContact,
 } = require('../../../models');
 
 /** Statuts qui « bloquent » un siège (en attente / brouillon, expirent). */
@@ -28,6 +30,23 @@ const agenceAttrs = ['id', 'nom', 'telephone', 'compagnie_id'];
 const compagnieAttrs = ['id', 'nom', 'couleur', 'logo'];
 const villeAttrs = ['id', 'nom'];
 const paiementAttrs = ['id', 'reference', 'montant', 'methode', 'statut', 'cree_le', 'paiement_le', 'note'];
+const passengerAttrs = [
+  'id',
+  'place_reservee_id',
+  'client_id',
+  'first_name',
+  'last_name',
+  'gender',
+  'birth_date',
+  'phone',
+  'email',
+  'document_type',
+  'document_number',
+  'nationality',
+  'status',
+  'created_at',
+];
+const emergencyContactAttrs = ['id', 'passenger_id', 'full_name', 'phone', 'relationship', 'address'];
 
 const departInclude = [
   { model: Trajet, as: 'trajet', include: [
@@ -39,7 +58,18 @@ const departInclude = [
   { model: Agence, as: 'agence', attributes: agenceAttrs },
 ];
 
-/** Associations de liste (client, voyage, agence, agent, guichet, sièges, paiements). */
+/** Associations de détail d'une réservation (siège → passager → contact d'urgence). */
+const passengerInclude = {
+  model: Passenger,
+  as: 'passengers',
+  attributes: passengerAttrs,
+  include: [
+    { model: PlaceReservee, as: 'place', attributes: ['id', 'siege'] },
+    { model: EmergencyContact, as: 'emergencyContact', attributes: emergencyContactAttrs },
+  ],
+};
+
+/** Associations de liste (client, voyage, agence, agent, guichet, sièges, passagers, paiements). */
 const listInclude = [
   { model: Client, as: 'client', attributes: clientAttrs },
   { model: Depart, as: 'depart', attributes: ['id', 'code', 'date_depart', 'heure_depart', 'prix_base', 'places_total', 'places_dispo', 'statut'], include: departInclude },
@@ -47,6 +77,7 @@ const listInclude = [
   { model: Agent, as: 'agent', attributes: agentAttrs },
   { model: Guichet, as: 'guichet', attributes: ['id', 'code', 'nom'] },
   { model: PlaceReservee, as: 'places' },
+  passengerInclude,
   { model: Paiement, as: 'paiements', attributes: paiementAttrs },
 ];
 
@@ -178,6 +209,33 @@ const destroyPlace = (place, options = {}) => place.destroy(options);
 
 const destroyPlacesByReservation = (reservationId, options = {}) =>
   PlaceReservee.destroy({ where: { reservation_id: reservationId }, ...options });
+
+/* ══════════════════════════════════════════════════════════════
+   Passagers & contacts d'urgence
+   ══════════════════════════════════════════════════════════════ */
+
+const findPassengersByReservation = (reservationId, options = {}) =>
+  Passenger.findAll({ where: { reservation_id: reservationId }, ...options });
+
+const findPassengerByPlaceId = (placeReserveeId, options = {}) =>
+  Passenger.findOne({ where: { place_reservee_id: placeReserveeId }, ...options });
+
+const createPassenger = (data, options = {}) => Passenger.create(data, options);
+
+const updatePassenger = (passenger, data, options = {}) => passenger.update(data, options);
+
+const destroyPassengersByReservation = (reservationId, options = {}) =>
+  Passenger.destroy({ where: { reservation_id: reservationId }, ...options });
+
+const findEmergencyContactByPassenger = (passengerId, options = {}) =>
+  EmergencyContact.findOne({ where: { passenger_id: passengerId }, ...options });
+
+const createEmergencyContact = (data, options = {}) => EmergencyContact.create(data, options);
+
+const updateEmergencyContact = (contact, data, options = {}) => contact.update(data, options);
+
+const destroyEmergencyContactByPassenger = (passengerId, options = {}) =>
+  EmergencyContact.destroy({ where: { passenger_id: passengerId }, ...options });
 
 /* ══════════════════════════════════════════════════════════════
    Paiements
@@ -434,6 +492,15 @@ module.exports = {
   updatePlace,
   destroyPlace,
   destroyPlacesByReservation,
+  findPassengersByReservation,
+  findPassengerByPlaceId,
+  createPassenger,
+  updatePassenger,
+  destroyPassengersByReservation,
+  findEmergencyContactByPassenger,
+  createEmergencyContact,
+  updateEmergencyContact,
+  destroyEmergencyContactByPassenger,
   createPaiement,
   findPaiement,
   findPaiementByReference,

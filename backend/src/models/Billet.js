@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       qr_code: { type: DataTypes.STRING(80), allowNull: false, unique: true },
       code_barre: { type: DataTypes.STRING(40), allowNull: false },
       reservation_id: { type: DataTypes.CHAR(15), allowNull: true },
+      passenger_id: { type: DataTypes.CHAR(26), allowNull: true, unique: true },
       depart_id: { type: DataTypes.CHAR(10), allowNull: false },
       client_id: { type: DataTypes.CHAR(12), allowNull: false },
       siege: { type: DataTypes.STRING(5), allowNull: false },
@@ -63,6 +64,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Billet.associate = (db) => {
     Billet.belongsTo(db.Reservation, { foreignKey: 'reservation_id', as: 'reservation' });
+    Billet.belongsTo(db.Passenger, { foreignKey: 'passenger_id', as: 'passenger' });
     Billet.belongsTo(db.Depart, { foreignKey: 'depart_id', as: 'depart' });
     Billet.belongsTo(db.Client, { foreignKey: 'client_id', as: 'client' });
     Billet.belongsTo(db.Agent, { foreignKey: 'cree_par', as: 'creePar' });

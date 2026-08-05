@@ -59,6 +59,7 @@ module.exports = (sequelize, DataTypes) => {
     Reservation.belongsTo(db.Agent, { foreignKey: 'agent_id', as: 'agent' });
     Reservation.belongsTo(db.Guichet, { foreignKey: 'guichet_id', as: 'guichet' });
     Reservation.hasMany(db.PlaceReservee, { foreignKey: 'reservation_id', as: 'places' });
+    Reservation.hasMany(db.Passenger, { foreignKey: 'reservation_id', as: 'passengers' });
     Reservation.hasMany(db.Paiement, { foreignKey: 'reservation_id', as: 'paiements' });
     Reservation.hasMany(db.Billet, { foreignKey: 'reservation_id', as: 'billets' });
     Reservation.hasMany(db.HistoriqueReservation, { foreignKey: 'reservation_id', as: 'historique' });

@@ -50,6 +50,7 @@ module.exports = (sequelize, DataTypes) => {
     Client.hasMany(db.SessionConnexion, { foreignKey: 'client_id', as: 'sessions' });
     /* Module Bookings */
     Client.hasMany(db.Reservation, { foreignKey: 'client_id', as: 'reservations' });
+    Client.hasMany(db.Passenger, { foreignKey: 'client_id', as: 'passengers' });
     Client.hasMany(db.Paiement, { foreignKey: 'client_id', as: 'paiements' });
   };
 

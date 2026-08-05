@@ -22,6 +22,8 @@ module.exports = (sequelize, DataTypes) => {
 
   PlaceReservee.associate = (db) => {
     PlaceReservee.belongsTo(db.Reservation, { foreignKey: 'reservation_id', as: 'reservation' });
+    /* Un siège = un passager (le passager porte la FK place_reservee_id). */
+    PlaceReservee.hasOne(db.Passenger, { foreignKey: 'place_reservee_id', as: 'passenger' });
   };
 
   return PlaceReservee;
