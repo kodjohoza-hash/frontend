@@ -12,6 +12,8 @@ const {
   Agence,
   Compagnie,
   Ville,
+  Guichet,
+  AbonnementCompagnie,
   HistoriqueReservation,
 } = require('../../../models');
 
@@ -57,32 +59,48 @@ const detailInclude = [
 /** Construit la clause WHERE (périmètre + filtres) pour la liste Sequelize. */
 const buildWhere = (filters = {}, scope = {}) => {
   const where = {};
+  const andClauses = [];
 
   if (scope.clientId) {
     where.client_id = scope.clientId;
   }
+
+  /* Périmètre agence / compagnie : les paiements rattachés à une réservation de
+     l'agence + les paiements manuels (sans réservation) enregistrés par l'équipe. */
   if (scope.agenceIds) {
-    where['$reservation.agence_id$'] = scope.agenceIds.length ? { [Op.in]: scope.agenceIds } : { [Op.in]: [] };
+    andClauses.push({
+      [Op.or]: [
+        {
+          '$reservation.agence_id$': scope.agenceIds.length ? { [Op.in]: scope.agenceIds } : { [Op.in]: [] },
+        },
+        { reservation_id: null },
+      ],
+    });
   }
 
   if (filters.statut) where.statut = filters.statut;
   if (filters.methode) where.methode = filters.methode;
   if (filters.type) where.type = filters.type;
+  if (filters.categorie) where.categorie = filters.categorie;
   if (filters.agenceId && !scope.agenceIds) where['$reservation.agence_id$'] = filters.agenceId;
   if (filters.clientId && !scope.clientId) where.client_id = filters.clientId;
+  if (filters.compagnieId && !scope.compagnieId) where['$reservation.agence.compagnie_id$'] = filters.compagnieId;
 
   if (filters.recherche) {
     const q = `%${filters.recherche.trim()}%`;
-    where[Op.or] = [
-      { reference: { [Op.like]: q } },
-      { id: { [Op.like]: q } },
-      { '$client.prenom$': { [Op.like]: q } },
-      { '$client.nom$': { [Op.like]: q } },
-      { '$client.telephone$': { [Op.like]: q } },
-      { '$reservation.reference$': { [Op.like]: q } },
-      { '$reservation.depart.code$': { [Op.like]: q } },
-    ];
+    andClauses.push({
+      [Op.or]: [
+        { reference: { [Op.like]: q } },
+        { id: { [Op.like]: q } },
+        { '$client.prenom$': { [Op.like]: q } },
+        { '$client.nom$': { [Op.like]: q } },
+        { '$client.telephone$': { [Op.like]: q } },
+        { '$reservation.reference$': { [Op.like]: q } },
+        { '$reservation.depart.code$': { [Op.like]: q } },
+      ],
+    });
   }
+  if (andClauses.length) where[Op.and] = andClauses;
 
   const range = {};
   if (filters.dateDebut) range[Op.gte] = `${filters.dateDebut} 00:00:00`;
@@ -133,6 +151,10 @@ const findByIdFull = (id) => Paiement.findOne({ where: { id }, include: detailIn
 
 const findById = (id) => Paiement.findByPk(id);
 
+const createPaiement = (data, options = {}) => Paiement.create(data, options);
+
+const findPaiementByReference = (reference) => Paiement.findOne({ where: { reference } });
+
 const updatePaiement = (paiement, data, options = {}) => paiement.update(data, options);
 
 /* ══════════════════════════════════════════════════════════════
@@ -144,7 +166,22 @@ const findAgencesByCompagnie = (compagnieId) => Agence.findAll({ where: { compag
 
 const findReservation = (id) => Reservation.findByPk(id);
 
+/** Réservation avec le minimum nécessaire au grand livre (agence + voyage). */
+const findReservationLedger = (id) =>
+  Reservation.findByPk(id, {
+    include: [
+      { model: Agence, as: 'agence', attributes: ['id', 'compagnie_id'] },
+      { model: Depart, as: 'depart', attributes: ['id', 'compagnie_id'] },
+    ],
+  });
+
 const updateReservation = (reservation, data, options = {}) => reservation.update(data, options);
+
+/** Vérifie qu'un abonnement compagnie existe (paiement « abonnement »). */
+const findAbonnementCompagnie = (id) => AbonnementCompagnie.findByPk(id, { attributes: ['id', 'compagnie_id', 'statut'] });
+
+/** Client minimal pour l'enregistrement d'un paiement. */
+const findClient = (id) => Client.findByPk(id, { attributes: ['id', 'prenom', 'nom', 'telephone', 'email'] });
 
 /** Somme des paiements réellement encaissés pour une réservation. */
 const sumPaidByReservation = async (reservationId, options = {}) => {
@@ -152,6 +189,17 @@ const sumPaidByReservation = async (reservationId, options = {}) => {
     `SELECT COALESCE(SUM(montant), 0) AS total
        FROM paiement
       WHERE reservation_id = :reservationId AND statut = 'paye'`,
+    { type: QueryTypes.SELECT, replacements: { reservationId }, ...options }
+  );
+  return Number(row?.total) || 0;
+};
+
+/** Somme déjà remboursée pour une réservation (lignes de remboursement). */
+const sumRefundedByReservation = async (reservationId, options = {}) => {
+  const [row] = await sequelize.query(
+    `SELECT COALESCE(SUM(montant), 0) AS total
+       FROM paiement
+      WHERE reservation_id = :reservationId AND statut = 'rembourse'`,
     { type: QueryTypes.SELECT, replacements: { reservationId }, ...options }
   );
   return Number(row?.total) || 0;
@@ -167,11 +215,11 @@ const createHistorique = (data, options = {}) => HistoriqueReservation.create(da
 /** Périmètre SQL (join via `reservation` pour agences / compagnie). */
 const scopeClause = (scope = {}) => {
   if (scope.agenceIds) {
-    return { sql: 'r.agence_id IN (:agenceIds)', params: { agenceIds: scope.agenceIds } };
+    return { sql: '(r.agence_id IN (:agenceIds) OR p.reservation_id IS NULL)', params: { agenceIds: scope.agenceIds } };
   }
   if (scope.compagnieId) {
     return {
-      sql: 'r.agence_id IN (SELECT id FROM agence WHERE compagnie_id = :compagnieId)',
+      sql: '((r.agence_id IN (SELECT id FROM agence WHERE compagnie_id = :compagnieId)) OR p.reservation_id IS NULL)',
       params: { compagnieId: scope.compagnieId },
     };
   }
@@ -335,21 +383,86 @@ const byAgency = async ({ filters = {}, scope = {} } = {}) => {
   }));
 };
 
+/** Tendances mensuelles (recettes par mois). */
+const byMonth = async ({ filters = {}, scope = {} } = {}) => {
+  const { where, params } = buildStatsWhere({ filters, scope });
+  const rows = await sequelize.query(
+    `SELECT DATE_FORMAT(p.cree_le, '%Y-%m') AS mois,
+            COUNT(*) AS total,
+            COALESCE(SUM(CASE WHEN p.statut = 'paye' THEN p.montant ELSE 0 END), 0) AS montant
+       ${FROM}
+       ${where}
+      GROUP BY DATE_FORMAT(p.cree_le, '%Y-%m')
+      ORDER BY mois ASC`,
+    { type: QueryTypes.SELECT, replacements: params }
+  );
+  return rows.map((r) => ({ mois: r.mois, total: Number(r.total), montant: Number(r.montant) }));
+};
+
+/** Top compagnies par recettes (paiement lié réservation ou compagnie directe). */
+const byCompagnie = async ({ filters = {}, scope = {} } = {}) => {
+  const { where, params } = buildStatsWhere({ filters, scope });
+  const rows = await sequelize.query(
+    `SELECT c.id AS compagnieId, COALESCE(c.nom, p.compagnie_id) AS compagnieNom,
+            COUNT(*) AS total,
+            COALESCE(SUM(CASE WHEN p.statut = 'paye' THEN p.montant ELSE 0 END), 0) AS montant
+       ${FROM}
+       LEFT JOIN agence a ON a.id = r.agence_id
+       LEFT JOIN compagnie c ON c.id = COALESCE(p.compagnie_id, a.compagnie_id)
+       ${where}
+      GROUP BY c.id, c.nom, p.compagnie_id
+      ORDER BY montant DESC
+      LIMIT 10`,
+    { type: QueryTypes.SELECT, replacements: params }
+  );
+  return rows.map((r) => ({
+    compagnieId: r.compagnieId || r.compagnieNom,
+    compagnieNom: r.compagnieNom,
+    total: Number(r.total),
+    montant: Number(r.montant),
+  }));
+};
+
+/** Répartition par catégorie métier (réservation / abonnement / …). */
+const byCategorie = async ({ filters = {}, scope = {} } = {}) => {
+  const { where, params } = buildStatsWhere({ filters, scope });
+  const rows = await sequelize.query(
+    `SELECT p.categorie AS categorie,
+            COUNT(*) AS total,
+            COALESCE(SUM(CASE WHEN p.statut = 'paye' THEN p.montant ELSE 0 END), 0) AS montant
+       ${FROM}
+       ${where}
+      GROUP BY p.categorie
+      ORDER BY montant DESC`,
+    { type: QueryTypes.SELECT, replacements: params }
+  );
+  return rows.map((r) => ({ categorie: r.categorie, total: Number(r.total), montant: Number(r.montant) }));
+};
+
 module.exports = {
   buildWhere,
   buildOrder,
   findPage,
   findByIdFull,
   findById,
+  createPaiement,
+  findPaiementByReference,
   updatePaiement,
   findAgencesByCompagnie,
   findReservation,
+  findReservationLedger,
   updateReservation,
+  findAbonnementCompagnie,
+  findClient,
   sumPaidByReservation,
+  sumRefundedByReservation,
   createHistorique,
   summary,
   byStatus,
   byMethod,
   byDay,
   byAgency,
+  byMonth,
+  byCompagnie,
+  byCategorie,
 };

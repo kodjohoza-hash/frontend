@@ -3,15 +3,18 @@ const Joi = require('joi');
 /**
  * Module PAYMENTS (Module 11) — validators.
  * Statuts paiement (alignés sur la table `paiement.statut`) :
- *   paye / en_attente / echoue / annule / rembourse / partiellement_rembourse
- * Types paiement :
+ *   initie / paye / en_attente / echoue / annule / rembourse /
+ *   partiellement_rembourse
+ * Types paiement (sens de flux) :
  *   encaissement (entrée d'argent) / remboursement (sortie d'argent)
+ * Catégories métier : reservation / abonnement / complement / remboursement / manuel
  * Modes paiement : orange_money / mtn_money / carte_bancaire / especes /
- *   virement_bancaire / bon_reduction / code_promo
+ *   virement_bancaire / bon_reduction / code_promo / express_union_mobile / autre
  */
 
 /** Statuts d'un paiement. */
 const STATUTS = [
+  'initie',
   'paye',
   'en_attente',
   'echoue',
@@ -20,8 +23,11 @@ const STATUTS = [
   'partiellement_rembourse',
 ];
 
-/** Types de paiement. */
+/** Types de paiement (sens de flux d'argent). */
 const TYPES = ['encaissement', 'remboursement'];
+
+/** Catégories métier d'un paiement. */
+const CATEGORIES = ['reservation', 'abonnement', 'complement', 'remboursement', 'manuel'];
 
 /** Modes de paiement (alignés sur la table `paiement.methode`). */
 const MODES = [
@@ -32,6 +38,8 @@ const MODES = [
   'virement_bancaire',
   'bon_reduction',
   'code_promo',
+  'express_union_mobile',
+  'autre',
 ];
 
 /** Codes de tri de la liste des paiements. */
@@ -51,8 +59,10 @@ const listQuerySchema = Joi.object({
   statut: Joi.string().valid(...STATUTS).optional().allow(''),
   methode: Joi.string().valid(...MODES).optional().allow(''),
   type: Joi.string().valid(...TYPES).optional().allow(''),
+  categorie: Joi.string().valid(...CATEGORIES).optional().allow(''),
   agenceId: Joi.string().max(10).optional().allow(''),
   clientId: Joi.string().max(12).optional().allow(''),
+  compagnieId: Joi.string().max(4).optional().allow(''),
   dateDebut: Joi.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().allow(''),
   dateFin: Joi.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().allow(''),
   montantMin: Joi.number().integer().min(0).optional().allow(''),
@@ -87,9 +97,48 @@ const refundSchema = Joi.object({
   note: Joi.string().max(255).optional().allow('', null),
 });
 
+/** Création d'un paiement (POST /payments) — grand livre unique. */
+const createPaymentSchema = Joi.object({
+  clientId: Joi.string().max(12).optional().allow('', null),
+  reservationId: Joi.string().max(15).optional().allow('', null),
+  abonnementCompagnieId: Joi.number().integer().min(1).optional().allow('', null),
+  montant: Joi.number().integer().min(1).required().messages({
+    'any.required': 'Le montant est requis.',
+    'number.min': 'Le montant doit être positif.',
+  }),
+  frais: Joi.number().integer().min(0).optional().default(0),
+  devise: Joi.string().length(3).optional().default('XAF'),
+  methode: Joi.string().valid(...MODES).required().messages({
+    'any.required': 'Le mode de paiement est requis.',
+    'any.only': 'Mode de paiement invalide.',
+  }),
+  statut: Joi.string().valid('initie', 'en_attente', 'paye').optional().default('en_attente'),
+  categorie: Joi.string().valid(...CATEGORIES).optional(),
+  referenceFournisseur: Joi.string().max(100).optional().allow('', null),
+  provider: Joi.string().max(100).optional().allow('', null),
+  note: Joi.string().max(255).optional().allow('', null),
+  metadata: Joi.object().optional().allow(null),
+});
+
+/** Mise à jour d'un paiement (PATCH /payments/:id). */
+const updatePaymentSchema = Joi.object({
+  montant: Joi.number().integer().min(1).optional(),
+  frais: Joi.number().integer().min(0).optional(),
+  methode: Joi.string().valid(...MODES).optional(),
+  statut: Joi.string().valid(...STATUTS).optional(),
+  referenceFournisseur: Joi.string().max(100).optional().allow('', null),
+  provider: Joi.string().max(100).optional().allow('', null),
+  note: Joi.string().max(255).optional().allow('', null),
+  paiementLe: Joi.date().iso().optional().allow('', null),
+  metadata: Joi.object().optional().allow(null),
+}).min(1).messages({
+  'object.min': 'Aucune donnée à mettre à jour.',
+});
+
 module.exports = {
   STATUTS,
   TYPES,
+  CATEGORIES,
   MODES,
   SORTS,
   idSchema,
@@ -98,4 +147,6 @@ module.exports = {
   cancelSchema,
   failSchema,
   refundSchema,
+  createPaymentSchema,
+  updatePaymentSchema,
 };

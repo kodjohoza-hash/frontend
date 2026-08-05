@@ -200,6 +200,17 @@ const sumPaidByReservation = async (reservationId, options = {}) => {
   return Number(row?.total) || 0;
 };
 
+/** Somme déjà remboursée pour une réservation (garde anti double-remboursement). */
+const sumRefundedByReservation = async (reservationId, options = {}) => {
+  const [row] = await sequelize.query(
+    `SELECT COALESCE(SUM(montant), 0) AS total
+       FROM paiement
+      WHERE reservation_id = :reservationId AND statut = 'rembourse'`,
+    { type: QueryTypes.SELECT, replacements: { reservationId }, ...options }
+  );
+  return Number(row?.total) || 0;
+};
+
 /* ══════════════════════════════════════════════════════════════
    Historique d'audit
    ══════════════════════════════════════════════════════════════ */
@@ -427,6 +438,7 @@ module.exports = {
   findPaiement,
   findPaiementByReference,
   sumPaidByReservation,
+  sumRefundedByReservation,
   createHistorique,
   destroyHistoriqueByReservation,
   findDepart,

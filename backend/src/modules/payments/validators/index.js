@@ -1,6 +1,7 @@
 const {
   STATUTS,
   TYPES,
+  CATEGORIES,
   MODES,
   SORTS,
   idSchema,
@@ -9,11 +10,14 @@ const {
   cancelSchema,
   failSchema,
   refundSchema,
+  createPaymentSchema,
+  updatePaymentSchema,
 } = require('./payment.validator');
 
 module.exports = {
   STATUTS,
   TYPES,
+  CATEGORIES,
   MODES,
   SORTS,
   idSchema,
@@ -22,4 +26,6 @@ module.exports = {
   cancelSchema,
   failSchema,
   refundSchema,
+  createPaymentSchema,
+  updatePaymentSchema,
 };

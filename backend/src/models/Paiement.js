@@ -19,11 +19,11 @@ module.exports = (sequelize, DataTypes) => {
       frais: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
       devise: { type: DataTypes.CHAR(3), allowNull: false, defaultValue: 'XAF' },
       methode: {
-        type: DataTypes.ENUM('orange_money', 'mtn_money', 'carte_bancaire', 'especes', 'virement_bancaire', 'bon_reduction', 'code_promo'),
+        type: DataTypes.ENUM('orange_money', 'mtn_money', 'carte_bancaire', 'especes', 'virement_bancaire', 'bon_reduction', 'code_promo', 'express_union_mobile', 'autre'),
         allowNull: false,
       },
       statut: {
-        type: DataTypes.ENUM('paye', 'en_attente', 'echoue', 'annule', 'rembourse', 'partiellement_rembourse'),
+        type: DataTypes.ENUM('initie', 'paye', 'en_attente', 'echoue', 'annule', 'rembourse', 'partiellement_rembourse'),
         allowNull: false,
       },
       cree_le: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
@@ -31,11 +31,21 @@ module.exports = (sequelize, DataTypes) => {
       remboursement: { type: DataTypes.INTEGER, allowNull: true },
       motif_remboursement: { type: DataTypes.STRING(255), allowNull: true },
       note: { type: DataTypes.STRING(255), allowNull: true },
+      reference_fournisseur: { type: DataTypes.STRING(100), allowNull: true },
+      provider: { type: DataTypes.STRING(100), allowNull: true },
       type: {
         type: DataTypes.ENUM('encaissement', 'remboursement'),
         allowNull: false,
         defaultValue: 'encaissement',
       },
+      categorie: {
+        type: DataTypes.ENUM('reservation', 'abonnement', 'complement', 'remboursement', 'manuel'),
+        allowNull: false,
+        defaultValue: 'reservation',
+      },
+      abonnement_compagnie_id: { type: DataTypes.INTEGER, allowNull: true },
+      compagnie_id: { type: DataTypes.CHAR(4), allowNull: true },
+      guichet_id: { type: DataTypes.CHAR(10), allowNull: true },
       metadata: { type: DataTypes.JSON, allowNull: true },
     },
     {
@@ -46,6 +56,10 @@ module.exports = (sequelize, DataTypes) => {
         { fields: ['client_id'] },
         { fields: ['statut'] },
         { fields: ['type'] },
+        { fields: ['categorie'] },
+        { fields: ['abonnement_compagnie_id'] },
+        { fields: ['compagnie_id'] },
+        { fields: ['guichet_id'] },
         { fields: ['cree_le'] },
         { fields: ['methode'] },
       ],
@@ -57,6 +71,9 @@ module.exports = (sequelize, DataTypes) => {
     Paiement.belongsTo(db.Billet, { foreignKey: 'billet_id', as: 'billet' });
     Paiement.belongsTo(db.Client, { foreignKey: 'client_id', as: 'client' });
     Paiement.belongsTo(db.Agent, { foreignKey: 'agent_id', as: 'agent' });
+    Paiement.belongsTo(db.AbonnementCompagnie, { foreignKey: 'abonnement_compagnie_id', as: 'abonnementCompagnie' });
+    Paiement.belongsTo(db.Compagnie, { foreignKey: 'compagnie_id', as: 'compagnie' });
+    Paiement.belongsTo(db.Guichet, { foreignKey: 'guichet_id', as: 'guichet' });
   };
 
   return Paiement;

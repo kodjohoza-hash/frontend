@@ -12,10 +12,34 @@ const list = asyncHandler(async (req, res) => {
 });
 
 /**
- * GET /payments/stats — synthèse pour tableaux de bord.
+ * GET /payments/stats (ou /payments/statistics) — synthèse pour tableaux de bord.
  */
 const stats = asyncHandler(async (req, res) => {
   const data = await paymentService.stats({ query: req.query, actor: req.user });
+  res.json({ success: true, data });
+});
+
+/**
+ * GET /payments/statistics — alias de /payments/stats.
+ */
+const statistics = asyncHandler(async (req, res) => {
+  const data = await paymentService.statistics({ query: req.query, actor: req.user });
+  res.json({ success: true, data });
+});
+
+/**
+ * POST /payments — enregistre un paiement (réservation / abonnement / manuel).
+ */
+const create = asyncHandler(async (req, res) => {
+  const data = await paymentService.create({ data: req.body, actor: req.user });
+  res.status(201).json({ success: true, data });
+});
+
+/**
+ * PATCH /payments/:id — met à jour un paiement (métadonnées + statut gardé).
+ */
+const update = asyncHandler(async (req, res) => {
+  const data = await paymentService.update({ id: req.params.id, data: req.body, actor: req.user });
   res.json({ success: true, data });
 });
 
@@ -70,6 +94,9 @@ const refund = asyncHandler(async (req, res) => {
 module.exports = {
   list,
   stats,
+  statistics,
+  create,
+  update,
   getById,
   receipt,
   confirm,

@@ -666,11 +666,13 @@ const refund = async ({ id, data, actor }) => {
   }
 
   const montantPercu = await bookingRepository.sumPaidByReservation(id);
-  const refundAmount = Number(data.montant) || montantPercu;
-  if (refundAmount > montantPercu) {
-    throw new ApiError(400, `Le montant remboursé ne peut pas dépasser le total payé (${montantPercu} FCFA).`);
+  const dejaRembourse = await bookingRepository.sumRefundedByReservation(id);
+  const netPercu = Math.max(0, montantPercu - dejaRembourse);
+  const refundAmount = Number(data.montant) || netPercu;
+  if (refundAmount > netPercu) {
+    throw new ApiError(400, `Le montant remboursé ne peut pas dépasser le total net payé (${netPercu} FCFA).`);
   }
-  const fullRefund = refundAmount >= montantPercu;
+  const fullRefund = refundAmount >= netPercu;
   const now = new Date();
 
   const paiementId = await generatePaiementId();
