@@ -20,6 +20,15 @@ const idSchema = Joi.object({
   }),
 }).unknown(true);
 
+/** Jeton de vérification d'un QR (48 hex, issu de crypto.randomBytes(24)). */
+const verifyTokenSchema = Joi.object({
+  token: Joi.string().hex().length(48).required().messages({
+    'any.required': 'Le jeton du QR est requis.',
+    'string.length': 'Jeton de QR invalide.',
+    'string.hex': 'Jeton de QR invalide.',
+  }),
+}).unknown(true);
+
 /** Filtres de liste : pagination, tri, statut, réservation, voyage, client, dates, recherche. */
 const listQuerySchema = Joi.object({
   page: Joi.number().integer().min(1).default(1),
@@ -55,6 +64,7 @@ module.exports = {
   STATUTS,
   SORTS,
   idSchema,
+  verifyTokenSchema,
   listQuerySchema,
   statsQuerySchema,
   statusSchema,
