@@ -2,6 +2,7 @@ const { Op, QueryTypes } = require('sequelize');
 const {
   sequelize,
   Billet,
+  ScanBillet,
   Reservation,
   PlaceReservee,
   Client,
@@ -136,6 +137,12 @@ const findById = (id) => Billet.findByPk(id);
 const findBilletByReference = (reference) => Billet.findOne({ where: { reference } });
 
 const findBilletByToken = (token) => Billet.findOne({ where: { token } });
+
+const findBilletByTokenHash = (hash) => Billet.findOne({ where: { token_hash: hash } });
+
+const findFullByTokenHash = (hash) => Billet.findOne({ where: { token_hash: hash }, include: detailInclude });
+
+const createScanBillet = (data, options = {}) => ScanBillet.create(data, options);
 
 const createBillet = (data, options = {}) => Billet.create(data, options);
 
@@ -308,6 +315,9 @@ module.exports = {
   findById,
   findBilletByReference,
   findBilletByToken,
+  findBilletByTokenHash,
+  findFullByTokenHash,
+  createScanBillet,
   createBillet,
   updateBillet,
   findBilletsByReservation,

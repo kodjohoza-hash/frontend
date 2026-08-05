@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const QRCode = require('qrcode');
 const ApiError = require('../../../utils/ApiError');
 const logger = require('../../../utils/logger');
 const { ROLES } = require('../../../middlewares/auth');
@@ -53,11 +54,21 @@ const buildValiditeJusqua = (depart) => {
   return new Date(`${depart.date_depart}T${depart.heure_depart}`);
 };
 
-/** Signature HMAC-SHA256 du contenu du billet (clé JWT). */
-const signTicket = ({ reference, reservationId, departId, clientId, siege, prix }) => {
-  const payload = `${reference}|${reservationId}|${departId}|${clientId}|${siege}|${prix}`;
-  return crypto.createHmac('sha256', env.jwt.secret).update(payload).digest('hex');
-};
+/** Empreinte SHA-256 hexadécimale (index de vérification du jeton). */
+const sha256hex = (value) => crypto.createHash('sha256').update(String(value)).digest('hex');
+
+/**
+ * Payload QR code sécurisé : contient UNIQUEMENT ticket_id, token et version.
+ * Aucune donnée sensible (nom, téléphone, email, pièce) n'y figure.
+ * Format : BTC:<ticket_id>:<token>:<version>
+ */
+const buildQrPayload = ({ id, token, qr_version }) => `BTC:${id}:${token}:${qr_version || 1}`;
+
+/** Signature HMAC-SHA256 du payload QR (clé JWT) — infalsifiable. */
+const signPayload = (payload) => crypto.createHmac('sha256', env.jwt.secret).update(payload).digest('hex');
+
+/** Jeton d'authentification cryptographiquement sûr (48 hex, imprévisible). */
+const generateToken = () => crypto.randomBytes(24).toString('hex');
 
 const actorName = (actor) => {
   const u = actor?.user;
@@ -122,10 +133,10 @@ const serializeTicket = (t) => {
   return {
     id: t.id,
     reference: t.reference,
-    qrCode: t.qr_code,
     codeBarre: t.code_barre,
     statut: t.statut,
     siege: t.siege,
+    qrVersion: t.qr_version ?? 1,
     nomPassager: t.nom_passager ?? null,
     prix: Number(t.prix) || 0,
     prixLabel: `${(Number(t.prix) || 0).toLocaleString('fr-FR')} XAF`,
@@ -222,12 +233,14 @@ const buildTicketData = async (reservation, place, creePar) => {
   const prix = place.tarif != null && place.tarif !== '' ? Number(place.tarif) : Number(depart.prix_base) || 0;
   const siege = String(place.siege).trim().toUpperCase();
   const reference = await generateReference();
-  const token = crypto.randomBytes(24).toString('hex');
+  const id = await generateBilletId();
+  const token = generateToken();
+  const qr_code = buildQrPayload({ id, token, qr_version: 1 });
 
   return {
-    id: await generateBilletId(),
+    id,
     reference,
-    qr_code: `BTC:${reference}:${token}`,
+    qr_code,
     code_barre: buildCodeBarre(reference),
     reservation_id: reservation.id,
     depart_id: depart.id,
@@ -237,14 +250,10 @@ const buildTicketData = async (reservation, place, creePar) => {
     prix,
     statut: 'valide',
     token,
-    signature: signTicket({
-      reference,
-      reservationId: reservation.id,
-      departId: depart.id,
-      clientId: reservation.client_id,
-      siege,
-      prix,
-    }),
+    token_hash: sha256hex(token),
+    signature: signPayload(qr_code),
+    qr_version: 1,
+    regenerations: 0,
     cree_le: new Date(),
     cree_par: creePar,
     validite_jusqua: buildValiditeJusqua(depart),
@@ -365,6 +374,166 @@ const updateStatus = async ({ id, data, actor }) => {
   return { ticket: serializeTicket(full), message: 'Statut du billet mis à jour.' };
 };
 
+/* ══════════════════════════════════════════════════════════════
+   QR Code sécurisé (Étape 2)
+   ══════════════════════════════════════════════════════════════ */
+
+const generateScanId = async () => {
+  for (let i = 0; i < 6; i += 1) {
+    const id = `SCN${randAlnum(12)}`;
+    const existing = await sequelize.query('SELECT id FROM scan_billet WHERE id = :id LIMIT 1', {
+      replacements: { id },
+    });
+    if (!existing[0]?.length) return id;
+  }
+  throw new ApiError(500, 'Impossible de générer un identifiant de scan unique.');
+};
+
+/**
+ * Journalise chaque scan (valide ou refusé) : billet, agent, guichet,
+ * compagnie, résultat, raison, adresse IP et date/heure.
+ */
+const logScan = async ({ ticket, actor, ip, statut, raison }) => {
+  try {
+    await ticketRepository.createScanBillet({
+      id: await generateScanId(),
+      billet_id: ticket.id,
+      scanner_agent_id: actor && actor.role !== ROLES.CLIENT ? actor.id : null,
+      client_id: ticket.client_id ?? null,
+      agence_id: actor?.agenceId ?? ticket.reservation?.agence_id ?? null,
+      compagnie_id: actor?.compagnieId ?? ticket.reservation?.agence?.compagnie_id ?? null,
+      statut,
+      raison: raison ? String(raison).slice(0, 120) : null,
+      adresse_ip: ip || null,
+      cree_le: new Date(),
+    });
+  } catch (err) {
+    logger.error(`[tickets] échec journalisation du scan : ${err.message}`);
+  }
+};
+
+/** Expiration configurable : date de départ et/ou fenêtre TTL (env). */
+const isTicketExpired = (ticket) => {
+  const now = Date.now();
+  if (ticket.validite_jusqua && new Date(ticket.validite_jusqua).getTime() < now) return true;
+  if (env.ticket.qrExpiryHours != null && ticket.cree_le) {
+    const ttl = new Date(ticket.cree_le).getTime() + env.ticket.qrExpiryHours * 3600 * 1000;
+    if (ttl < now) return true;
+  }
+  return false;
+};
+
+/**
+ * GET /tickets/:id/qrcode — rend l'image PNG du QR code d'un billet.
+ * Le payload encodé ne contient QUE ticket_id, token et version.
+ */
+const getQrCode = async ({ id, actor }) => {
+  const ticket = await ticketRepository.findByIdFull(id);
+  if (!ticket) throw new ApiError(404, 'Billet introuvable.');
+  assertCanAccess(actor, ticket);
+  if (!ticket.token) throw new ApiError(404, 'QR code indisponible pour ce billet.');
+
+  const payload = buildQrPayload(ticket);
+  try {
+    return await QRCode.toBuffer(payload, {
+      type: 'png',
+      width: env.ticket.qrWidth || 480,
+      errorCorrectionLevel: 'M',
+      margin: 2,
+    });
+  } catch (err) {
+    logger.error(`[tickets] génération PNG impossible : ${err.message}`);
+    throw new ApiError(500, 'Impossible de générer le QR code.');
+  }
+};
+
+/**
+ * GET /tickets/verify/:token — vérification sécurisée d'un QR scanné.
+ * Contrôles anti-fraude :
+ *   1. Billet existant (résolution par empreinte SHA-256 du jeton).
+ *   2. QR non falsifié (signature HMAC du payload QR).
+ *   3. Billet non expiré (validite_jusqua / fenêtre configurable).
+ *   4. Billet non annulé / non remboursé / non inconnu.
+ *   5. Anti double-utilisation (un billet « utilise » est refusé).
+ * Chaque scan est journalisé dans `scan_billet`.
+ */
+const verify = async ({ token, actor, ip }) => {
+  const ticket = await ticketRepository.findFullByTokenHash(sha256hex(token));
+
+  if (!ticket) {
+    return { valide: false, raison: 'Billet introuvable ou QR invalide.', billet: null };
+  }
+
+  const expected = signPayload(buildQrPayload(ticket));
+  if (ticket.signature && expected !== ticket.signature) {
+    await logScan({ ticket, actor, ip, statut: 'refuse', raison: 'QR falsifié (signature invalide).' });
+    logger.warn(`[tickets] QR falsifié rejeté (${ticket.reference})`);
+    return { valide: false, raison: 'QR falsifié (signature invalide).', billet: serializeTicket(ticket) };
+  }
+
+  let valide = false;
+  let raison = null;
+
+  if (isTicketExpired(ticket)) {
+    raison = 'Billet expiré.';
+    if (ticket.statut === 'valide') {
+      await ticketRepository.updateBillet(ticket, { statut: 'expire' });
+      ticket.statut = 'expire';
+    }
+  } else if (ticket.statut === 'valide') {
+    valide = true;
+  } else {
+    const raisons = {
+      utilise: 'Billet déjà utilisé (double utilisation).',
+      annule: 'Billet annulé.',
+      rembourse: 'Billet remboursé.',
+      expire: 'Billet expiré.',
+      impaye: 'Billet impayé.',
+      inconnu: 'Billet au statut inconnu.',
+    };
+    raison = raisons[ticket.statut] || 'Billet non valide.';
+  }
+
+  await logScan({ ticket, actor, ip, statut: valide ? 'valide' : 'refuse', raison });
+  logger.info(`[tickets] scan ${ticket.reference} → ${valide ? 'valide' : 'refusé'}${raison ? ` (${raison})` : ''}`);
+  return { valide, raison, billet: serializeTicket(ticket) };
+};
+
+/**
+ * POST /tickets/:id/regenerate-qrcode — Super Admin uniquement.
+ * Fait tourner le jeton + signature + version : l'ancien QR devient
+ * immédiatement invalide (le token ne correspond plus).
+ */
+const regenerateQrCode = async ({ id, actor }) => {
+  const ticket = await ticketRepository.findByIdFull(id);
+  if (!ticket) throw new ApiError(404, 'Billet introuvable.');
+  if (actor.role !== ROLES.SUPER_ADMIN) {
+    throw new ApiError(403, 'Accès refusé : régénération réservée au Super Admin.');
+  }
+
+  const token = generateToken();
+  const qr_version = (ticket.qr_version || 1) + 1;
+  const qr_code = buildQrPayload({ id: ticket.id, token, qr_version });
+
+  await ticketRepository.updateBillet(ticket, {
+    token,
+    token_hash: sha256hex(token),
+    qr_code,
+    signature: signPayload(qr_code),
+    qr_version,
+    regenerations: (ticket.regenerations || 0) + 1,
+  });
+
+  const full = await ticketRepository.findByIdFull(id);
+  logger.info(`[tickets] QR régénéré pour ${ticket.reference} (v${qr_version}) par ${actor.email}`);
+  return {
+    regenerated: true,
+    version: qr_version,
+    message: 'QR code régénéré : l\'ancien QR est désormais invalide.',
+    ticket: serializeTicket(full),
+  };
+};
+
 module.exports = {
   STATUTS,
   ALLOWED_TRANSITIONS,
@@ -374,4 +543,7 @@ module.exports = {
   generateForReservation,
   annulerBilletsReservation,
   updateStatus,
+  getQrCode,
+  verify,
+  regenerateQrCode,
 };
