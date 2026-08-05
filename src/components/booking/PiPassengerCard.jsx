@@ -15,6 +15,9 @@ const ID_TYPES = [
 const PiPassengerCard = ({ index, passenger, onChange, onRemove, canRemove, errors = {} }) => {
   const update = (field, value) => onChange(index, field, value);
 
+  const ec = passenger.emergencyContact || {};
+  const ecErrors = errors.emergencyContact || {};
+
   return (
     <div className={clsx('pi-card', errors._hasError && 'pi-card--error')}>
       <div className="pi-card__header">
@@ -164,33 +167,65 @@ const PiPassengerCard = ({ index, passenger, onChange, onRemove, canRemove, erro
 
         <div className="pi-card__section-divider">
           <i className="bi bi-telephone-forward" />
-          <span>Contact d'urgence</span>
+          <span>Contact d'urgence (optionnel)</span>
         </div>
 
         <div className="pi-field-row pi-field-row--2">
-          <div className="pi-field">
-            <label className="pi-field__label">Nom du contact</label>
+          <div className={clsx('pi-field', ecErrors.fullName && 'pi-field--error')}>
+            <label className="pi-field__label">Nom complet du contact</label>
             <div className="pi-field__input-wrap">
               <i className="bi bi-person-heart pi-field__icon" />
               <input
                 type="text"
                 className="pi-field__input"
-                value={passenger.emergencyName}
-                onChange={(e) => update('emergencyName', e.target.value)}
+                value={ec.fullName}
+                onChange={(e) => update('emergencyContact.fullName', e.target.value)}
                 placeholder="Nom complet"
               />
             </div>
+            {ecErrors.fullName && <span className="pi-field__error">{ecErrors.fullName}</span>}
           </div>
-          <div className="pi-field">
+          <div className={clsx('pi-field', ecErrors.phone && 'pi-field--error')}>
             <label className="pi-field__label">Téléphone du contact</label>
             <div className="pi-field__input-wrap">
               <i className="bi bi-telephone-outbound pi-field__icon" />
               <input
                 type="tel"
                 className="pi-field__input"
-                value={passenger.emergencyPhone}
-                onChange={(e) => update('emergencyPhone', e.target.value)}
+                value={ec.phone}
+                onChange={(e) => update('emergencyContact.phone', e.target.value)}
                 placeholder="+237 6XX XXX XXX"
+              />
+            </div>
+            {ecErrors.phone && <span className="pi-field__error">{ecErrors.phone}</span>}
+          </div>
+        </div>
+
+        <div className="pi-field-row pi-field-row--2">
+          <div className={clsx('pi-field', ecErrors.relationship && 'pi-field--error')}>
+            <label className="pi-field__label">Lien avec le passager</label>
+            <div className="pi-field__input-wrap">
+              <i className="bi bi-people pi-field__icon" />
+              <input
+                type="text"
+                className="pi-field__input"
+                value={ec.relationship}
+                onChange={(e) => update('emergencyContact.relationship', e.target.value)}
+                placeholder="Conjoint, parent, ami…"
+              />
+            </div>
+            {ecErrors.relationship && <span className="pi-field__error">{ecErrors.relationship}</span>}
+          </div>
+          <div className="pi-field">
+            <label className="pi-field__label">Adresse (optionnel)</label>
+            <div className="pi-field__input-wrap">
+              <i className="bi bi-geo-alt pi-field__icon" />
+              <input
+                type="text"
+                className="pi-field__input"
+                value={ec.address}
+                onChange={(e) => update('emergencyContact.address', e.target.value)}
+                placeholder="Quartier, ville…"
               />
             </div>
           </div>

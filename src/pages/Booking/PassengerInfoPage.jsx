@@ -4,8 +4,14 @@ import { ROUTES } from '@routes/routeConstants';
 import PiStepper from '@components/booking/PiStepper';
 import PiPassengerCard from '@components/booking/PiPassengerCard';
 import PiTripSummary from '@components/booking/PiTripSummary';
-import PiSkeleton from '@components/booking/PiSkeleton';
 import '@assets/styles/passengerInfo.css';
+
+const EMPTY_EMERGENCY_CONTACT = {
+  fullName: '',
+  phone: '',
+  relationship: '',
+  address: '',
+};
 
 const EMPTY_PASSENGER = {
   firstName: '',
@@ -16,8 +22,20 @@ const EMPTY_PASSENGER = {
   email: '',
   idType: 'cni',
   idNumber: '',
-  emergencyName: '',
-  emergencyPhone: '',
+  emergencyContact: { ...EMPTY_EMERGENCY_CONTACT },
+};
+
+const validateEmergencyContact = (ec = {}) => {
+  const errs = {};
+  const filled = ['fullName', 'phone', 'relationship'].filter((k) => String(ec[k] || '').trim());
+  if (filled.length) {
+    if (!ec.fullName?.trim()) errs.fullName = 'Nom du contact requis';
+    if (!ec.phone?.trim()) errs.phone = 'Téléphone du contact requis';
+    else if (!/^(\+?237)?[69]\d{8}$/.test(ec.phone.replace(/\s/g, ''))) errs.phone = 'Numéro camerounais invalide';
+    if (!ec.relationship?.trim()) errs.relationship = 'Lien requis';
+  }
+  errs._hasError = Object.keys(errs).filter((k) => k !== '_hasError').length > 0;
+  return errs;
 };
 
 const validatePassenger = (pax) => {
@@ -30,6 +48,8 @@ const validatePassenger = (pax) => {
   else if (!/^(\+?237)?[69]\d{8}$/.test(pax.phone.replace(/\s/g, ''))) errs.phone = 'Numéro camerounais invalide';
   if (pax.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(pax.email)) errs.email = 'Email invalide';
   if (!pax.idNumber.trim()) errs.idNumber = 'Numéro requis';
+  const ecErrs = validateEmergencyContact(pax.emergencyContact);
+  if (ecErrs._hasError) errs.emergencyContact = ecErrs;
   errs._hasError = Object.keys(errs).length > 1;
   return errs;
 };
@@ -58,14 +78,30 @@ const PassengerInfoPage = () => {
   const updatePassenger = useCallback((index, field, value) => {
     setPassengers((prev) => {
       const next = [...prev];
-      next[index] = { ...next[index], [field]: value };
+      const [root, sub] = field.split('.');
+      if (sub) {
+        next[index] = {
+          ...next[index],
+          [root]: { ...(next[index][root] || {}), [sub]: value },
+        };
+      } else {
+        next[index] = { ...next[index], [root]: value };
+      }
       return next;
     });
     setErrors((prev) => {
       const next = [...prev];
       if (next[index]) {
         const updated = { ...next[index] };
-        delete updated[field];
+        const [root, sub] = field.split('.');
+        if (sub && updated[root]) {
+          const nested = { ...updated[root] };
+          delete nested[sub];
+          if (Object.keys(nested).filter((k) => k !== '_hasError').length === 0) delete updated[root];
+          else updated[root] = nested;
+        } else {
+          delete updated[root];
+        }
         if (Object.keys(updated).filter((k) => k !== '_hasError').length === 0) {
           next[index] = {};
         } else {
