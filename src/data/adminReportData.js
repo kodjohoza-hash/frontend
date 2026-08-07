@@ -3,7 +3,7 @@
    Fully mock data, ready for Express.js + WebSocket
    ══════════════════════════════════════════════════════════════ */
 
-export const formatCurrency = (amount) => `${amount.toLocaleString('fr-FR')} FCFA`;
+export const formatCurrency = (amount) => `${amount.toLocaleString('fr-FR')} XAF`;
 
 /* ══════════════════════════════════════════════════════════════
    PERIOD PRESETS

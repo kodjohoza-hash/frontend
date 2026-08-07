@@ -115,7 +115,7 @@ const SeatTooltip = React.memo(function SeatTooltip({ seat, position }) {
         <div style={{ ...rowStyle, marginTop: '4px', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <span style={{ ...labelStyle, color: '#CBD5E1' }}>Prix</span>
           <span style={{ ...valueStyle, color: '#FBBF24', fontSize: '13px' }}>
-            {seat.price?.toLocaleString()} FCFA
+            {seat.price?.toLocaleString()} XAF
           </span>
         </div>
       )}

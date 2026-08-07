@@ -354,7 +354,7 @@ const TripCard = React.memo(({ trip, onBook, onViewDetails }) => {
               <span style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--color-accent, #FF6B35)' }}>
                 {trip.price.toLocaleString()}
               </span>
-              <span style={{ fontSize: 'var(--font-size-xs, 0.75rem)', color: 'var(--text-muted, #9ca3af)' }}>FCFA</span>
+              <span style={{ fontSize: 'var(--font-size-xs, 0.75rem)', color: 'var(--text-muted, #9ca3af)' }}>XAF</span>
               {hasDiscount && (
                 <span
                   style={{
@@ -398,7 +398,7 @@ const TripCard = React.memo(({ trip, onBook, onViewDetails }) => {
             </button>
             <button
               onClick={() => onBook?.(trip)}
-              aria-label={`Choisir mes sièges pour ${trip.companyName} à ${trip.price} FCFA`}
+              aria-label={`Choisir mes sièges pour ${trip.companyName} à ${trip.price} XAF`}
               style={{
                 padding: '10px 20px',
                 borderRadius: 12,

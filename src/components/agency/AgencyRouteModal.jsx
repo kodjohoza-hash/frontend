@@ -134,12 +134,12 @@ export default function AgencyRouteModal({ isOpen, onClose, route, villes = [], 
             </div>
             <div className="ab-form-row">
               <div className="ab-form-field">
-                <label>Prix min (FCFA)</label>
+                <label>Prix min (XAF)</label>
                 <input type="number" min="0" value={form.priceMin} onChange={(e) => handleChange('priceMin', e.target.value)} placeholder="ex: 4500" className={clsx('ab-input', errors.priceMin && 'ab-input--error')} />
                 {errors.priceMin && <span className="ab-form-error">{errors.priceMin}</span>}
               </div>
               <div className="ab-form-field">
-                <label>Prix max (FCFA)</label>
+                <label>Prix max (XAF)</label>
                 <input type="number" min="0" value={form.priceMax} onChange={(e) => handleChange('priceMax', e.target.value)} placeholder="ex: 6000" className={clsx('ab-input', errors.priceMax && 'ab-input--error')} />
                 {errors.priceMax && <span className="ab-form-error">{errors.priceMax}</span>}
               </div>

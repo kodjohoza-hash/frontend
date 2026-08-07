@@ -15,21 +15,21 @@ export const agentInfo = {
 export const dashboardStats = [
   { id: 'tickets', label: 'Billets vendus', value: 47, icon: 'bi-ticket-perforated', trend: 12, trendUp: true, color: 'primary' },
   { id: 'bookings', label: 'Réservations', value: 23, icon: 'bi-calendar-check', trend: 5, trendUp: true, color: 'accent' },
-  { id: 'payments', label: 'Paiements encaissés', value: '485k', suffix: 'FCFA', icon: 'bi-cash-coin', trend: 8, trendUp: true, color: 'success' },
+  { id: 'payments', label: 'Paiements encaissés', value: '485k', suffix: 'XAF', icon: 'bi-cash-coin', trend: 8, trendUp: true, color: 'success' },
   { id: 'clients', label: 'Clients servis', value: 89, icon: 'bi-people', trend: 15, trendUp: true, color: 'info' },
   { id: 'cancellations', label: 'Annulations', value: 3, icon: 'bi-x-circle', trend: -2, trendUp: false, color: 'danger' },
-  { id: 'revenue', label: 'Chiffre d\'affaires', value: '1 285', suffix: 'k FCFA', icon: 'bi-graph-up-arrow', trend: 18, trendUp: true, color: 'purple' },
+  { id: 'revenue', label: 'Chiffre d\'affaires', value: '1 285', suffix: 'k XAF', icon: 'bi-graph-up-arrow', trend: 18, trendUp: true, color: 'purple' },
 ];
 
 export const activityTimeline = [
-  { id: 1, type: 'vente', icon: 'bi-ticket-perforated', color: 'success', action: 'Vente de billet', detail: 'Douala → Yaoundé — 2 places — 8 500 FCFA', time: '08:32' },
+  { id: 1, type: 'vente', icon: 'bi-ticket-perforated', color: 'success', action: 'Vente de billet', detail: 'Douala → Yaoundé — 2 places — 8 500 XAF', time: '08:32' },
   { id: 2, type: 'reservation', icon: 'bi-calendar-check', color: 'primary', action: 'Nouvelle réservation', detail: 'BK-2026-1890 — Yaoundé → Bafoussam — 1 place', time: '09:15' },
-  { id: 3, type: 'paiement', icon: 'bi-cash-coin', color: 'success', action: 'Paiement reçu', detail: '12 500 FCFA — Réservation BK-2026-1885', time: '09:47' },
+  { id: 3, type: 'paiement', icon: 'bi-cash-coin', color: 'success', action: 'Paiement reçu', detail: '12 500 XAF — Réservation BK-2026-1885', time: '09:47' },
   { id: 4, type: 'annulation', icon: 'bi-x-circle', color: 'danger', action: 'Réservation annulée', detail: 'BK-2026-1878 — Douala → Bamenda — Remboursement', time: '10:05' },
   { id: 5, type: 'impression', icon: 'bi-printer', color: 'info', action: 'Impression de billet', detail: 'Billet BT-2026-0912 — 2 passagers', time: '10:30' },
-  { id: 6, type: 'vente', icon: 'bi-ticket-perforated', color: 'success', action: 'Vente de billet', detail: 'Douala → Garoua — 1 place — 25 000 FCFA', time: '10:55' },
+  { id: 6, type: 'vente', icon: 'bi-ticket-perforated', color: 'success', action: 'Vente de billet', detail: 'Douala → Garoua — 1 place — 25 000 XAF', time: '10:55' },
   { id: 7, type: 'reservation', icon: 'bi-calendar-check', color: 'primary', action: 'Nouvelle réservation', detail: 'BK-2026-1892 — Yaoundé → Kribi — 3 places', time: '11:20' },
-  { id: 8, type: 'paiement', icon: 'bi-cash-coin', color: 'success', action: 'Paiement reçu', detail: '18 000 FCFA — Réservation BK-2026-1888', time: '11:45' },
+  { id: 8, type: 'paiement', icon: 'bi-cash-coin', color: 'success', action: 'Paiement reçu', detail: '18 000 XAF — Réservation BK-2026-1888', time: '11:45' },
 ];
 
 export const upcomingTrips = [
@@ -42,7 +42,7 @@ export const upcomingTrips = [
 
 export const alerts = [
   { id: 1, type: 'warning', title: 'Voyage bientôt complet', text: 'TR-010 — Yaoundé → Douala — <strong>Plus que 2 places</strong> disponibles' },
-  { id: 2, type: 'info', title: 'Paiement en attente', text: 'BK-2026-1889 — 8 500 FCFA — En attente de confirmation' },
+  { id: 2, type: 'info', title: 'Paiement en attente', text: 'BK-2026-1889 — 8 500 XAF — En attente de confirmation' },
   { id: 3, type: 'success', title: 'Billet à imprimer', text: 'BT-2026-0915 — 3 passagers — En attente d\'impression' },
   { id: 4, type: 'primary', title: 'Nouveau message', text: 'M. Jean Ndongo — Question sur le départ de 14h' },
   { id: 5, type: 'accent', title: 'Nouvelle notification', text: 'Rappel : Maintenance du système à 23h' },
@@ -59,7 +59,7 @@ export const quickActions = [
 
 export const recentNotifications = [
   { id: 1, title: 'Voyage complet', message: 'TR-012 Yaoundé → Kribi — Complet', time: '10min', unread: true, color: 'danger' },
-  { id: 2, title: 'Paiement reçu', message: '12 500 FCFA — BK-2026-1885', time: '25min', unread: true, color: 'success' },
+  { id: 2, title: 'Paiement reçu', message: '12 500 XAF — BK-2026-1885', time: '25min', unread: true, color: 'success' },
   { id: 3, title: 'Rappel départ', message: 'TR-010 Yaoundé → Douala dans 30min', time: '1h', unread: false, color: 'info' },
   { id: 4, title: 'Mise à jour', message: 'Nouveau tarif disponible pour Kribi', time: '2h', unread: false, color: 'primary' },
 ];

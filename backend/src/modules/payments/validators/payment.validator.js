@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { currency: currencyConfig } = require('../../../config/env');
 
 /**
  * Module PAYMENTS (Module 11) — validators.
@@ -107,7 +108,7 @@ const createPaymentSchema = Joi.object({
     'number.min': 'Le montant doit être positif.',
   }),
   frais: Joi.number().integer().min(0).optional().default(0),
-  devise: Joi.string().length(3).optional().default('XAF'),
+  devise: Joi.string().length(3).optional().default(currencyConfig.default),
   methode: Joi.string().valid(...MODES).required().messages({
     'any.required': 'Le mode de paiement est requis.',
     'any.only': 'Mode de paiement invalide.',

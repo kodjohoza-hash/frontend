@@ -117,7 +117,7 @@ export default function AgencySubscription() {
               <div className="agsub-card__icon"><i className="bi bi-cash-stack" /></div>
               <div>
                 <div className="agsub-card__label">Montant / cycle</div>
-                <div className="agsub-card__value">{fmt(sub.amount)} FCFA</div>
+                <div className="agsub-card__value">{fmt(sub.amount)} XAF</div>
               </div>
             </div>
           </div>

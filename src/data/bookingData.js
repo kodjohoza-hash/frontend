@@ -100,7 +100,7 @@ export const bookingStats = [
   {
     id: 'revenue',
     label: 'Chiffre d\'affaires',
-    value: '1.8M FCFA',
+    value: '1.8M XAF',
     icon: 'bi-cash-stack',
     trend: '+15%',
     color: 'primary',
@@ -492,7 +492,7 @@ export const mockBookings = [
 
 export const mockBookingTimeline = [
   { id: 1, label: 'Réservation créée', time: '20/07/2026 10:30', icon: 'bi-plus-circle', color: 'primary' },
-  { id: 2, label: 'Paiement reçu — 8 500 FCFA', time: '20/07/2026 10:32', icon: 'bi-credit-card', color: 'success' },
+  { id: 2, label: 'Paiement reçu — 8 500 XAF', time: '20/07/2026 10:32', icon: 'bi-credit-card', color: 'success' },
   { id: 3, label: 'Billet généré', time: '20/07/2026 10:33', icon: 'bi-postcard', color: 'info' },
   { id: 4, label: 'Billet envoyé par email', time: '20/07/2026 10:33', icon: 'bi-envelope', color: 'accent' },
   { id: 5, label: 'Billet envoyé par SMS', time: '20/07/2026 10:34', icon: 'bi-phone', color: 'accent' },

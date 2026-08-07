@@ -61,7 +61,7 @@ const CompanyCard = React.memo(({ company }) => {
 
         <div className="btc-company-footer">
           <span className="btc-company-price">
-            À partir de <strong>{company.price.toLocaleString('fr-FR')} FCFA</strong>
+            À partir de <strong>{company.price.toLocaleString('fr-FR')} XAF</strong>
           </span>
           <button className="btc-company-btn" onClick={() => navigate('/booking/search')} aria-label={`Voir les trajets de ${company.name}`}>
             Voir les trajets <i className="bi bi-arrow-right" />

@@ -168,7 +168,7 @@ export const conversations = [
 
   // 6 ── Arnaud Nkolo (support comptable) ── inbox
   conv('conv-006', { id: 'SUP-019', ...participant('Arnaud Nkolo', 'Support comptable', 'Express Bus Cameroun', 'Douala Central', 'online', { phone: '+237691122334', email: 'arnaud.nkolo@compta-ebc.cm', lastActivity: ago(0, 1) }) }, [
-    msg({ senderId: 'SUP-019', text: 'Marie, la caisse du guichet 2 a un écart de 12 500 FCFA aujourd\'hui. Pouvez-vous vérifier ?', date: ago(0, 6) }),
+    msg({ senderId: 'SUP-019', text: 'Marie, la caisse du guichet 2 a un écart de 12 500 XAF aujourd\'hui. Pouvez-vous vérifier ?', date: ago(0, 6) }),
     msg({ senderId: AGT, text: 'Je passe tout de suite. Vous avez le détail des transactions suspectes ?', date: ago(0, 5, 55) }),
     msg({ senderId: 'SUP-019', text: 'Oui, deux tickets supprimés sans remboursement : EBC-YDE-208 et EBC-YDE-209.', date: ago(0, 5, 45) }),
     msg({ senderId: AGT, text: 'Je vois. C\'était mon collègue Richard qui était sur ce guichet ce matin. Je lui demande.', date: ago(0, 5, 30) }),
@@ -224,7 +224,7 @@ export const conversations = [
     msg({ senderId: 'CLT-276', text: 'Bonjour. Je souhaite modifier mon billet pour le départ de 18h à un départ de 6h demain.', date: ago(0, 4) }),
     msg({ senderId: AGT, text: 'Bonjour Christine. Oui c\'est possible sous réserve de disponibilité. Votre réservation ?', date: ago(0, 3, 45) }),
     msg({ senderId: 'CLT-276', text: 'C\'est le EBC-DLA-NSF-2024-08-19-114.', date: ago(0, 3, 30) }),
-    msg({ senderId: AGT, text: 'Il reste des places pour le 6h demain. Je peux faire le changement. Un supplément de 500 FCFA sera appliqué.', date: ago(0, 3, 15) }),
+    msg({ senderId: AGT, text: 'Il reste des places pour le 6h demain. Je peux faire le changement. Un supplément de 500 XAF sera appliqué.', date: ago(0, 3, 15) }),
     msg({ senderId: 'CLT-276', text: 'C\'est bon pour moi.', date: ago(0, 3) }),
     msg({ senderId: AGT, text: 'C\'est fait. Votre nouveau départ : demain 6h, siège 12A. Nouveau billet envoyé par email.', date: ago(0, 2, 45) }),
     msg({ senderId: 'CLT-276', text: 'Merci infiniment ! Très rapide.', date: ago(0, 2, 30) }),
@@ -400,8 +400,8 @@ export const tickets = [
   { id: 'TKT-003', subject: 'Demande de réapprovisionnement tickets prépayés', status: 'open', priority: 'normal', createdAt: ago(0, 4), updatedAt: ago(0, 4), messages: [
     tmsg('Marie Ngo', 'Il ne reste que 120 tickets prépayés au guichet. Je commande 500 supplémentaires.', ago(0, 4)),
   ]},
-  { id: 'TKT-004', subject: 'Incident caisse — Écart de 12 500 FCFA', status: 'resolved', priority: 'critical', createdAt: ago(0, 6), updatedAt: ago(0, 4), messages: [
-    tmsg('Arnaud Nkolo (Support comptable)', 'Écart constaté de 12 500 FCFA au guichet 2. Transactions suspectes : EBC-YDE-208 et 209.', ago(0, 6)),
+  { id: 'TKT-004', subject: 'Incident caisse — Écart de 12 500 XAF', status: 'resolved', priority: 'critical', createdAt: ago(0, 6), updatedAt: ago(0, 4), messages: [
+    tmsg('Arnaud Nkolo (Support comptable)', 'Écart constaté de 12 500 XAF au guichet 2. Transactions suspectes : EBC-YDE-208 et 209.', ago(0, 6)),
     tmsg('Marie Ngo', 'Vérification effectuée. Richard Onguéné confirme avoir remboursé en espèces sans saisie immédiate.', ago(0, 5)),
     tmsg('Richard Onguéné', 'Régularisation effectuée dans le système. Désolé pour l\'erreur.', ago(0, 4, 45)),
     tmsg('Arnaud Nkolo (Support comptable)', 'Écart régularisé. Ticket clôturé.', ago(0, 4)),

@@ -165,7 +165,7 @@ async function seed() {
       reference: genererRef('REF'),
     });
   }
-  console.log(`✔ Abonnement ${moisCourant}/${anneeCourante} payé (${montant} FCFA)`);
+  console.log(`✔ Abonnement ${moisCourant}/${anneeCourante} payé (${montant} XAF)`);
 
   /* ── Abonnement SaaS (par compagnie) : plan Standard actif + paiement + historique ── */
   const planStandard = await PlanAbonnement.findOne({ where: { code: 'STANDARD' } });
@@ -199,7 +199,7 @@ async function seed() {
         date: new Date(),
         reference: genererRef('SUB'),
       });
-      console.log(`✔ Paiement SaaS démo : ${planStandard.prix_mensuel} FCFA`);
+      console.log(`✔ Paiement SaaS démo : ${planStandard.prix_mensuel} XAF`);
     }
 
     const histo = await HistoriqueAbonnement.findOne({

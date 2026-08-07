@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       agence_id: { type: DataTypes.CHAR(10), allowNull: false },
       mois: { type: DataTypes.TINYINT, allowNull: false }, // 1..12
       annee: { type: DataTypes.SMALLINT, allowNull: false },
-      montant: { type: DataTypes.INTEGER, allowNull: false }, // en FCFA
+      montant: { type: DataTypes.INTEGER, allowNull: false }, // en XAF
       date_debut: { type: DataTypes.DATEONLY, allowNull: false },
       date_fin: { type: DataTypes.DATEONLY, allowNull: false },
       statut_paiement: {

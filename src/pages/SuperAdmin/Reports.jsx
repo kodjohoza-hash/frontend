@@ -137,7 +137,7 @@ const Reports = () => {
                         {p.share > 10 ? `${p.share}%` : ''}
                       </div>
                     </div>
-                    <div className="adbi-hbar-value">{`${(p.amount / 1000000).toFixed(1)}M FCFA`}</div>
+                    <div className="adbi-hbar-value">{`${(p.amount / 1000000).toFixed(1)}M XAF`}</div>
                   </div>
                 ))}
               </div>

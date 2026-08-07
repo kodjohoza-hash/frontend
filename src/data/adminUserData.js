@@ -209,7 +209,7 @@ export const userActivityLog = [
   { id: 3, date: '29 jul 2026', time: '18:42', action: 'Connexion', detail: 'Authentification réussie', ip: '197.168.2.15' },
   { id: 4, date: '29 jul 2026', time: '18:40', action: 'Réservation', detail: 'Réservation BR-2450 — Yaoundé → Douala', ip: '197.168.2.15' },
   { id: 5, date: '28 jul 2026', time: '09:15', action: 'Connexion', detail: 'Authentification réussie', ip: '196.168.1.42' },
-  { id: 6, date: '28 jul 2026', time: '09:10', action: 'Paiement', detail: 'Paiement PM-890 — 12 500 FCFA', ip: '196.168.1.42' },
+  { id: 6, date: '28 jul 2026', time: '09:10', action: 'Paiement', detail: 'Paiement PM-890 — 12 500 XAF', ip: '196.168.1.42' },
   { id: 7, date: '27 jul 2026', time: '14:30', action: 'Tentative connexion', detail: 'Échec — mot de passe incorrect', ip: '192.168.1.100' },
   { id: 8, date: '25 jul 2026', time: '10:00', action: 'Connexion', detail: 'Authentification réussie', ip: '196.168.1.50' },
 ];

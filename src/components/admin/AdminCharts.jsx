@@ -5,7 +5,7 @@ import {
 } from 'recharts';
 import { chartData } from '@data/adminData';
 
-const formatFCFA = (v) => `${(v / 1000000).toFixed(1)}M`;
+const formatXAF = (v) => `${(v / 1000000).toFixed(1)}M`;
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -26,7 +26,7 @@ const RevenueTooltip = ({ active, payload, label }) => {
       <p style={{ fontWeight: 700, margin: '0 0 4px', color: '#0F172A' }}>{label}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ color: p.color, margin: 0 }}>
-          {p.name}: {formatFCFA(p.value)} FCFA
+          {p.name}: {formatXAF(p.value)} XAF
         </p>
       ))}
     </div>
@@ -130,7 +130,7 @@ const AdminCharts = () => {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
                 <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} tickFormatter={formatFCFA} />
+                <YAxis tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} tickFormatter={formatXAF} />
                 <Tooltip content={<RevenueTooltip />} />
                 {revenueTab === 'revenue' ? (
                   <Area type="monotone" dataKey="revenue" name="Revenus" stroke="#6366F1" strokeWidth={2} fill="url(#revGrad)" />

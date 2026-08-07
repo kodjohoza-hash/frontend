@@ -1,6 +1,6 @@
 import { transactions, statusConfig } from '@data/adminData';
 
-const formatFCFA = (v) => `${v.toLocaleString('fr-FR')} FCFA`;
+const formatXAF = (v) => `${v.toLocaleString('fr-FR')} XAF`;
 
 const AdminTransactions = () => (
   <div className="adm-transactions-card">
@@ -28,8 +28,8 @@ const AdminTransactions = () => (
             <tr key={txn.id}>
               <td style={{ fontWeight: 600 }}>{txn.id}</td>
               <td>{txn.company}</td>
-              <td>{formatFCFA(txn.amount)}</td>
-              <td>{formatFCFA(txn.commission)}</td>
+              <td>{formatXAF(txn.amount)}</td>
+              <td>{formatXAF(txn.commission)}</td>
               <td><span className={`adm-badge ${status.class}`}>{status.label}</span></td>
               <td style={{ color: 'var(--adm-text-muted)', fontSize: 12 }}>
                 {new Date(txn.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}

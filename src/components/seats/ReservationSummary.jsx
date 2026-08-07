@@ -248,18 +248,18 @@ const ReservationSummary = React.memo(function ReservationSummary({
               <span style={priceLabelStyle}>
                 Siège {String(seat.number).padStart(2, '0')}
               </span>
-              <span style={priceValueStyle}>{seat.price?.toLocaleString()} FCFA</span>
+              <span style={priceValueStyle}>{seat.price?.toLocaleString()} XAF</span>
             </div>
           ))}
           {selectedSeats.length > 0 && (
             <>
               <div style={priceRowStyle}>
                 <span style={priceLabelStyle}>Frais de service</span>
-                <span style={priceValueStyle}>{SERVICE_FEE.toLocaleString()} FCFA</span>
+                <span style={priceValueStyle}>{SERVICE_FEE.toLocaleString()} XAF</span>
               </div>
               <div style={totalRowStyle}>
                 <span style={totalLabelStyle}>Total</span>
-                <span style={totalValueStyle}>{total.toLocaleString()} FCFA</span>
+                <span style={totalValueStyle}>{total.toLocaleString()} XAF</span>
               </div>
             </>
           )}

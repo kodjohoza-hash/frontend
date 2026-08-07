@@ -65,8 +65,8 @@ export default function AdminPlanFormModal({ isOpen, onClose, initial, onSave, s
           </div>
           <div><label style={label}>Description</label><textarea style={{ ...input, resize: 'vertical', minHeight: 52 }} value={form.description} onChange={set('description')} /></div>
           <div style={grid}>
-            <div><label style={label}>Prix mensuel (FCFA)</label><input style={input} type="number" min={0} value={form.price} onChange={set('price')} /></div>
-            <div><label style={label}>Prix annuel (FCFA, optionnel)</label><input style={input} type="number" min={0} value={form.annualPrice} onChange={set('annualPrice')} /></div>
+            <div><label style={label}>Prix mensuel (XAF)</label><input style={input} type="number" min={0} value={form.price} onChange={set('price')} /></div>
+            <div><label style={label}>Prix annuel (XAF, optionnel)</label><input style={input} type="number" min={0} value={form.annualPrice} onChange={set('annualPrice')} /></div>
             <div>
               <label style={label}>Durée du cycle (jours)</label>
               <select style={input} value={form.duree_jours} onChange={set('duree_jours')}>

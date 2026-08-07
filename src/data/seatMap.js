@@ -113,7 +113,7 @@ export const mockTripInfo = {
   duration: '3h 15min',
   distance: '243 km',
   pricePerSeat: 4500,
-  currency: 'FCFA',
+  currency: 'XAF',
   services: ['wifi', 'usb', 'ac', 'tv', 'toilet', 'charger', 'water', 'luggage'],
   baggagePolicy: '2 bagages inclus (23 kg + 7 kg)',
   departurePoint: 'Gare Routière Bonabéri',

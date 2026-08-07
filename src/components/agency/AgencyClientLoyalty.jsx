@@ -48,7 +48,7 @@ const AgencyClientLoyalty = ({ client }) => {
           <span className="ac-loyalty__stat-label">Trajets</span>
         </div>
         <div className="ac-loyalty__stat">
-          <span className="ac-loyalty__stat-value">{client.totalSpent?.toLocaleString('fr-FR') ?? 0} FCFA</span>
+          <span className="ac-loyalty__stat-value">{client.totalSpent?.toLocaleString('fr-FR') ?? 0} XAF</span>
           <span className="ac-loyalty__stat-label">Dépensé</span>
         </div>
         <div className="ac-loyalty__stat">

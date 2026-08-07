@@ -114,7 +114,7 @@ export default function AgencyTripsTable({ trips, sortField, sortDir, onSort }) 
               </td>
               <td>
                 <span className="at-table__price">
-                  {trip.price.toLocaleString('fr-FR')} <small>FCFA</small>
+                  {trip.price.toLocaleString('fr-FR')} <small>XAF</small>
                 </span>
               </td>
               <td>

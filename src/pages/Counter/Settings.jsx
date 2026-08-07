@@ -423,7 +423,7 @@ export default function SettingsPage() {
                 </div>
               ))}
               {[
-                { label: 'Monnaie', key: 'currency', options: ['XAF (FCFA)', 'XOF (FCFA)', 'EUR (€)', 'USD ($)'] },
+                { label: 'Monnaie', key: 'currency', options: ['XAF (FCFA BEAC)', 'EUR (€)', 'USD ($)'] },
                 { label: 'Format de date', key: 'dateFormat', options: ['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD'] },
                 { label: 'Format horaire', key: 'timeFormat', options: ['24h', '12h (AM/PM)'] },
               ].map((f) => (

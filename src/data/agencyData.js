@@ -41,7 +41,7 @@ export const sidebarMenus = [
 export const statCards = [
   { id: 'voyages', label: 'Voyages aujourd\'hui', value: 12, icon: 'bi-signpost-2', trend: '+2', trendUp: true, color: 'primary' },
   { id: 'reservations', label: 'Réservations', value: 48, icon: 'bi-ticket-perforated', trend: '+8', trendUp: true, color: 'accent' },
-  { id: 'revenue', label: 'Chiffre d\'affaires', value: '2.4M', suffix: 'FCFA', icon: 'bi-cash-stack', trend: '+12%', trendUp: true, color: 'success' },
+  { id: 'revenue', label: 'Chiffre d\'affaires', value: '2.4M', suffix: 'XAF', icon: 'bi-cash-stack', trend: '+12%', trendUp: true, color: 'success' },
   { id: 'occupancy', label: 'Taux de remplissage', value: 78, suffix: '%', icon: 'bi-people-fill', trend: '+5%', trendUp: true, color: 'info' },
   { id: 'buses', label: 'Bus actifs', value: 8, suffix: '/10', icon: 'bi-bus-front-fill', trend: '2 en maintenance', trendUp: false, color: 'warning' },
   { id: 'drivers', label: 'Chauffeurs disponibles', value: 14, suffix: '/16', icon: 'bi-person-badge', trend: '2 repos', trendUp: false, color: 'muted' },
@@ -58,7 +58,7 @@ export const todayTrips = [
 
 export const recentActivity = [
   { id: 1, type: 'booking', icon: 'bi-ticket-perforated', color: 'accent', message: 'Nouvelle réservation BK-2026-1847 pour le trajet Douala → Yaoundé', time: 'Il y a 5min', read: false },
-  { id: 2, type: 'payment', icon: 'bi-credit-card', color: 'success', message: 'Paiement reçu : 8 500 FCFA — Réservation BK-2026-1845', time: 'Il y a 12min', read: false },
+  { id: 2, type: 'payment', icon: 'bi-credit-card', color: 'success', message: 'Paiement reçu : 8 500 XAF — Réservation BK-2026-1845', time: 'Il y a 12min', read: false },
   { id: 3, type: 'trip', icon: 'bi-signpost-2', color: 'info', message: 'Le bus VIP-01 a quitté Douala pour Yaoundé (TR-001)', time: 'Il y a 1h', read: true },
   { id: 4, type: 'driver', icon: 'bi-person-badge', color: 'warning', message: 'Chauffeur Jean Mbarga a confirmé sa disponibilité pour demain', time: 'Il y a 2h', read: true },
   { id: 5, type: 'alert', icon: 'bi-exclamation-triangle', color: 'danger', message: 'Bus Standard-02 en maintenance prévue — 3 jours d\'indisponibilité', time: 'Il y a 3h', read: true },

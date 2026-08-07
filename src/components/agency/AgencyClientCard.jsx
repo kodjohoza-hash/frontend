@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import AgencyClientStatus from './AgencyClientStatus';
 
-const formatCurrency = (v) => (v ?? 0).toLocaleString('fr-FR') + ' FCFA';
+const formatCurrency = (v) => (v ?? 0).toLocaleString('fr-FR') + ' XAF';
 
 export default function AgencyClientCard({ client, onView }) {
   return (

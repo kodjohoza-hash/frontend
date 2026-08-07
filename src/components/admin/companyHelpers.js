@@ -1,6 +1,6 @@
 export const formatCurrency = (val) => {
-  if (!val) return '0 FCFA';
-  return val.toLocaleString('fr-FR') + ' FCFA';
+  if (!val) return '0 XAF';
+  return val.toLocaleString('fr-FR') + ' XAF';
 };
 export const formatDate = (dateStr) => {
   if (!dateStr) return '';

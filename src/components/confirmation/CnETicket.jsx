@@ -103,7 +103,7 @@ const CnETicket = memo(({ booking, trip, passengers, payment }) => {
                   <i className="bi bi-grid-3x3-gap-fill" /> Siège {pax.seat.number} · {pax.seat.type}
                 </span>
               </div>
-              <span className="cn-ticket__pax-price">{pax.seat.price.toLocaleString()} FCFA</span>
+              <span className="cn-ticket__pax-price">{pax.seat.price.toLocaleString()} XAF</span>
             </div>
           ))}
         </div>
@@ -111,7 +111,7 @@ const CnETicket = memo(({ booking, trip, passengers, payment }) => {
         {/* Total */}
         <div className="cn-ticket__total-row">
           <span>Total payé</span>
-          <span className="cn-ticket__total-val">{payment.amount.toLocaleString()} FCFA</span>
+          <span className="cn-ticket__total-val">{payment.amount.toLocaleString()} XAF</span>
         </div>
 
         {/* Perforation */}

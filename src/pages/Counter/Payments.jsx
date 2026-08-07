@@ -141,7 +141,7 @@ const CounterPaymentsPage = () => {
       return;
     }
     setShowRefund(null);
-    addToast(`Remboursement de ${refund.refundAmount.toLocaleString('fr-FR')} FCFA effectué`);
+    addToast(`Remboursement de ${refund.refundAmount.toLocaleString('fr-FR')} XAF effectué`);
   }, [addToast, refundPayment]);
 
   const handleOpenCash = useCallback((data) => {

@@ -33,9 +33,9 @@ export default function AdminSubscriptionBilling({ records }) {
               <tr key={inv.id}>
                 <td style={{ fontWeight: 600, fontSize: '0.75rem', color: '#0F172A' }}>{inv.id}</td>
                 <td style={{ fontSize: '0.78rem' }}>{inv.companyName}</td>
-                <td style={{ fontWeight: 600 }}>{formatCurrency(inv.amount, 'XOF')}</td>
-                <td style={{ fontSize: '0.78rem', color: '#64748B' }}>{formatCurrency(inv.tax, 'XOF')}</td>
-                <td style={{ fontWeight: 700, color: '#0F172A' }}>{formatCurrency(inv.total, 'XOF')}</td>
+                <td style={{ fontWeight: 600 }}>{formatCurrency(inv.amount, 'XAF')}</td>
+                <td style={{ fontSize: '0.78rem', color: '#64748B' }}>{formatCurrency(inv.tax, 'XAF')}</td>
+                <td style={{ fontWeight: 700, color: '#0F172A' }}>{formatCurrency(inv.total, 'XAF')}</td>
                 <td>
                   <span className={`adms-badge adms-badge--${inv.status}`} style={{ background: sc.bg, color: sc.color }}>
                     {sc.label}

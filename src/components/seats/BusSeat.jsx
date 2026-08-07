@@ -101,7 +101,7 @@ const BusSeat = React.memo(function BusSeat({ seat, isSelected, onToggle, onHove
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       disabled={isDisabled}
-      aria-label={`Siège ${seat.number} - ${seat.position === 'window' ? 'Fenêtre' : 'Couloir'} - ${seat.price} FCFA - ${config.label}`}
+      aria-label={`Siège ${seat.number} - ${seat.position === 'window' ? 'Fenêtre' : 'Couloir'} - ${seat.price} XAF - ${config.label}`}
       aria-pressed={isSelected}
       role="button"
       tabIndex={isDisabled ? -1 : 0}

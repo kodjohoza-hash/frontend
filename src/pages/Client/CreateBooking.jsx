@@ -93,8 +93,8 @@ const TripCard = ({ trip, selected, onSelect }) => (
       <span className={`bc-trip-card__type bc-trip-card__type--${trip.busType.toLowerCase()}`}>{trip.busType}</span>
     </div>
     <div className="bc-trip-card__price">
-      <span className="bc-trip-card__amount">{trip.price.toLocaleString()} <small>FCFA</small></span>
-      {trip.originalPrice > trip.price && <span className="bc-trip-card__original">{trip.originalPrice.toLocaleString()} FCFA</span>}
+      <span className="bc-trip-card__amount">{trip.price.toLocaleString()} <small>XAF</small></span>
+      {trip.originalPrice > trip.price && <span className="bc-trip-card__original">{trip.originalPrice.toLocaleString()} XAF</span>}
     </div>
   </div>
 );
@@ -181,11 +181,11 @@ const ConfirmationStep = ({ trip, passengers, onBack, onConfirm }) => {
         <div className="bc-pricing">
           <div className="bc-pricing__row">
             <span>Prix unitaire</span>
-            <span>{trip.price.toLocaleString()} FCFA</span>
+            <span>{trip.price.toLocaleString()} XAF</span>
           </div>
           <div className="bc-pricing__row">
             <span>× {passengers} passager{passengers > 1 ? 's' : ''}</span>
-            <span>{(trip.price * passengers).toLocaleString()} FCFA</span>
+            <span>{(trip.price * passengers).toLocaleString()} XAF</span>
           </div>
           <div className="bc-pricing__row bc-pricing__row--fee">
             <span>Frais de service</span>
@@ -194,7 +194,7 @@ const ConfirmationStep = ({ trip, passengers, onBack, onConfirm }) => {
           <div className="bc-pricing__divider" />
           <div className="bc-pricing__total">
             <span>Total à payer</span>
-            <span className="bc-pricing__amount">{(trip.price * passengers).toLocaleString()} FCFA</span>
+            <span className="bc-pricing__amount">{(trip.price * passengers).toLocaleString()} XAF</span>
           </div>
         </div>
         <p className="bc-pricing__notice">

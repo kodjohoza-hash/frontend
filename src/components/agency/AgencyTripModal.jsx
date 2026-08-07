@@ -50,7 +50,7 @@ export default function AgencyTripModal({ isOpen, onClose, trip, onSave }) {
     if (!form.departure) errs.departure = 'Heure de départ requise';
     if (!form.bus) errs.bus = 'Bus requis';
     if (!form.driver) errs.driver = 'Chauffeur requis';
-    if (!form.price || Number(form.price) < 1000) errs.price = 'Tarif minimum 1 000 FCFA';
+    if (!form.price || Number(form.price) < 1000) errs.price = 'Tarif minimum 1 000 XAF';
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -175,7 +175,7 @@ export default function AgencyTripModal({ isOpen, onClose, trip, onSave }) {
             </h4>
             <div className="at-form-row">
               <div className="at-form-field">
-                <label>Tarif (FCFA) <span className="at-required">*</span></label>
+                <label>Tarif (XAF) <span className="at-required">*</span></label>
                 <input type="number" min="1000" step="500" value={form.price} onChange={(e) => handleChange('price', e.target.value)} placeholder="ex: 8500" className={clsx('at-input', errors.price && 'at-input--error')} />
                 {errors.price && <span className="at-form-error">{errors.price}</span>}
               </div>

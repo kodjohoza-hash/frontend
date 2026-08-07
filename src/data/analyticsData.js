@@ -1,5 +1,5 @@
 export const KPI_DATA = [
-  { id: 'revenue', label: "Chiffre d'affaires", value: '32.5M', suffix: ' FCFA', icon: 'bi-cash-stack', color: 'accent', trend: '+18.2%', trendUp: true, data: [18,22,20,25,23,28,26,30,29,32,31,33] },
+  { id: 'revenue', label: "Chiffre d'affaires", value: '32.5M', suffix: ' XAF', icon: 'bi-cash-stack', color: 'accent', trend: '+18.2%', trendUp: true, data: [18,22,20,25,23,28,26,30,29,32,31,33] },
   { id: 'bookings', label: 'Réservations', value: '2,847', suffix: '', icon: 'bi-ticket-perforated', color: 'primary', trend: '+12.5%', trendUp: true, data: [180,210,195,240,220,260,250,280,270,290,285,285] },
   { id: 'tickets', label: 'Billets vendus', value: '3,412', suffix: '', icon: 'bi-postcard', color: 'info', trend: '+10.3%', trendUp: true, data: [210,250,230,280,260,310,290,340,320,350,340,341] },
   { id: 'trips', label: 'Voyages effectués', value: '1,256', suffix: '', icon: 'bi-signpost-2', color: 'success', trend: '+8.7%', trendUp: true, data: [85,92,88,100,95,108,102,115,110,120,118,126] },
@@ -10,7 +10,7 @@ export const KPI_DATA = [
   { id: 'clients', label: 'Clients actifs', value: '1,893', suffix: '', icon: 'bi-person-hearts', color: 'warning', trend: '+156', trendUp: true, data: [1400,1480,1520,1580,1620,1680,1720,1780,1820,1860,1880,1893] },
   { id: 'occupancy', label: "Taux d'occupation", value: '86', suffix: '%', icon: 'bi-pie-chart', color: 'accent', trend: '+4.2%', trendUp: true, data: [72,74,76,78,80,81,82,83,84,85,85,86] },
   { id: 'cancellations', label: 'Annulations', value: '89', suffix: '', icon: 'bi-x-circle', color: 'danger', trend: '+12', trendUp: false, data: [5,6,7,8,7,8,9,8,7,8,8,9] },
-  { id: 'refunds', label: 'Remboursements', value: '1.2M', suffix: ' FCFA', icon: 'bi-arrow-counterclockwise', color: 'warning', trend: '+200K', trendUp: false, data: [60,70,80,90,85,95,100,105,110,108,115,120] },
+  { id: 'refunds', label: 'Remboursements', value: '1.2M', suffix: ' XAF', icon: 'bi-arrow-counterclockwise', color: 'warning', trend: '+200K', trendUp: false, data: [60,70,80,90,85,95,100,105,110,108,115,120] },
   { id: 'growth', label: 'Croissance', value: '+18.2', suffix: '%', icon: 'bi-graph-up-arrow', color: 'success', trend: 'vs mois dernier', trendUp: true, data: [10,12,11,14,13,15,14,16,15,17,17,18] },
 ];
 

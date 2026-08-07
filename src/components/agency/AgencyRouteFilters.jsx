@@ -71,9 +71,9 @@ export default function AgencyRouteFilters({ filters, onFiltersChange, onReset, 
             </select>
           </div>
           <div className="ab-filters__group">
-            <label className="ab-filters__label">Prix min (FCFA)</label>
+            <label className="ab-filters__label">Prix min (XAF)</label>
             <input type="number" min="0" className="ab-filters__number" value={filters.priceMin} onChange={(e) => handleChange('priceMin', e.target.value)} placeholder="0" />
-            <label className="ab-filters__label">Prix max (FCFA)</label>
+            <label className="ab-filters__label">Prix max (XAF)</label>
             <input type="number" min="0" className="ab-filters__number" value={filters.priceMax} onChange={(e) => handleChange('priceMax', e.target.value)} placeholder="100000" />
           </div>
         </div>

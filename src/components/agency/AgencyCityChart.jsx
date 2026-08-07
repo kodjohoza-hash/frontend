@@ -7,7 +7,7 @@ const CustomTooltip = ({ active, payload }) => {
     <div className="aa-chart__tooltip">
       <p className="aa-chart__tooltip-label">{d.city}</p>
       <p className="aa-chart__tooltip-value">{d.reservations} réservations</p>
-      <p className="aa-chart__tooltip-sub">{d.revenue.toLocaleString()} FCFA</p>
+      <p className="aa-chart__tooltip-sub">{d.revenue.toLocaleString()} XAF</p>
     </div>
   );
 };

@@ -30,11 +30,11 @@ const AdminAnalyticsCards = ({ filters, loading }) => {
   };
 
   const getItemValue = (item) => {
-    if (item.revenue !== undefined) return `${(item.revenue / 1000000).toFixed(1)}M FCFA`;
+    if (item.revenue !== undefined) return `${(item.revenue / 1000000).toFixed(1)}M XAF`;
     if (item.bookings !== undefined) return item.bookings.toLocaleString('fr-FR');
     if (item.trips !== undefined) return `${item.trips} trajets`;
     if (item.tickets !== undefined) return `${item.tickets} billets`;
-    if (item.spent !== undefined) return `${(item.spent / 1000).toFixed(0)}k FCFA`;
+    if (item.spent !== undefined) return `${(item.spent / 1000).toFixed(0)}k XAF`;
     return '';
   };
 

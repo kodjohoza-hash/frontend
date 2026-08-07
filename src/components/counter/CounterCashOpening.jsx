@@ -25,7 +25,7 @@ const CounterCashOpening = ({ onClose, onConfirm }) => {
           <div className="acp-modal-body">
             <div className="acp-cash-form">
               <div className="acp-form-group">
-                <label className="acp-form-label">Montant initial (FCFA) *</label>
+                <label className="acp-form-label">Montant initial (XAF) *</label>
                 <input
                   className="acp-form-input"
                   type="number"

@@ -125,14 +125,14 @@ export const MOCK_RESERVATION = {
 
 export const PROMO_CODES = {
   BIENVENUE10: { discount: 10, type: 'percent', label: '10% de réduction', description: 'Offre de bienvenue' },
-  BTC500: { discount: 500, type: 'fixed', label: '500 FCFA de réduction', description: 'Réduction fidélité' },
+  BTC500: { discount: 500, type: 'fixed', label: '500 XAF de réduction', description: 'Réduction fidélité' },
   ETUDIANT: { discount: 15, type: 'percent', label: '15% tarif étudiant', description: 'Tarif étudiant' },
 };
 
 export const INSURANCE = {
   id: 'travel_insurance',
   name: 'Assurance Voyage Premium',
-  description: 'Protection complète : annulation, bagages perdus, accidents. Couvre jusqu\'à 500 000 FCFA.',
+  description: 'Protection complète : annulation, bagages perdus, accidents. Couvre jusqu\'à 500 000 XAF.',
   features: [
     'Annulation/remboursement intégral',
     'Protection des bagages',

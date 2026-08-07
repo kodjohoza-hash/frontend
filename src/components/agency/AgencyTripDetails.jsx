@@ -121,7 +121,7 @@ export default function AgencyTripDetails({ trip }) {
             </div>
             <div className="at-detail__field">
               <span className="at-detail__label">Tarif</span>
-              <span className="at-detail__value">{trip.price.toLocaleString('fr-FR')} FCFA</span>
+              <span className="at-detail__value">{trip.price.toLocaleString('fr-FR')} XAF</span>
             </div>
           </div>
           {trip.notes && (
@@ -154,7 +154,7 @@ export default function AgencyTripDetails({ trip }) {
                   <span className="at-detail__res-seats">Places: {res.seats.join(', ')}</span>
                 </div>
                 <div className="at-detail__res-meta">
-                  <span className="at-detail__res-total">{res.total.toLocaleString('fr-FR')} FCFA</span>
+                  <span className="at-detail__res-total">{res.total.toLocaleString('fr-FR')} XAF</span>
                   <span className={`at-detail__res-status at-detail__res-status--${res.status}`}>
                     {res.status === 'confirmee' ? 'Confirmée' : 'Annulée'}
                   </span>

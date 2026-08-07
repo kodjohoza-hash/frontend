@@ -1,5 +1,5 @@
 const formatCurrency = (amount) =>
-  new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XAF', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
+  `${new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount)} XAF`;
 
 const formatDate = (date) => {
   if (!date) return '';

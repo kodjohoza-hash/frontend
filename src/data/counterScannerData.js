@@ -195,7 +195,7 @@ export const randomScanResult = () => {
 };
 
 export const formatCurrency = (amount) =>
-  new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XAF', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
+  `${new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount)} XAF`;
 
 export const formatDateTime = (dateStr) => {
   if (!dateStr) return '—';

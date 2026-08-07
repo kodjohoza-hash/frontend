@@ -4,7 +4,7 @@ import { statusLabels, statusColors } from '@data/reservationsData';
 import ReservationTimeline from './ReservationTimeline';
 
 const formatPrice = (price) => {
-  return new Intl.NumberFormat('fr-CM').format(price) + ' FCFA';
+  return new Intl.NumberFormat('fr-CM').format(price) + ' XAF';
 };
 
 const formatDate = (dateStr) => {

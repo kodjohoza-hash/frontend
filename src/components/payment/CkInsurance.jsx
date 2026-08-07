@@ -8,7 +8,7 @@ const CkInsurance = memo(({ insurance, isSelected, onToggle }) => (
     <div className="ck-insurance__body">
       <div className="ck-insurance__head">
         <h4 className="ck-insurance__title">{insurance.name}</h4>
-        <span className="ck-insurance__price">+{insurance.price.toLocaleString()} FCFA</span>
+        <span className="ck-insurance__price">+{insurance.price.toLocaleString()} XAF</span>
       </div>
       <p className="ck-insurance__desc">{insurance.description}</p>
       <div className="ck-insurance__features">

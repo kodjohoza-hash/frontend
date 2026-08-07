@@ -4,7 +4,7 @@
    ══════════════════════════════════════════════════════════════ */
 
 export const currencySymbols = {
-  XOF: { symbol: 'FCFA', code: 'XOF', locale: 'fr-FR' },
+  XAF: { symbol: 'XAF', code: 'XAF', locale: 'fr-FR' },
   EUR: { symbol: '€', code: 'EUR', locale: 'fr-FR' },
   USD: { symbol: '$', code: 'USD', locale: 'en-US' },
 };
@@ -108,7 +108,7 @@ export const plans = [
     id: 'plan_start',
     name: 'Starter',
     description: 'Pour les petites compagnies qui débutent.',
-    price: 49000, currency: 'XOF', duration: 'monthly',
+    price: 49000, currency: 'XAF', duration: 'monthly',
     trialDays: 14, sortOrder: 0,
     maxBuses: 3, maxAgents: 2, maxBranches: 1, maxTrips: 30,
     storage: '5 Go', supportIncluded: 'Email',
@@ -122,7 +122,7 @@ export const plans = [
     id: 'plan_growth',
     name: 'Growth',
     description: 'Pour les compagnies en pleine expansion.',
-    price: 99000, currency: 'XOF', duration: 'monthly',
+    price: 99000, currency: 'XAF', duration: 'monthly',
     trialDays: 7, sortOrder: 1,
     maxBuses: 10, maxAgents: 5, maxBranches: 3, maxTrips: 100,
     storage: '20 Go', supportIncluded: 'Email + Chat',
@@ -136,7 +136,7 @@ export const plans = [
     id: 'plan_business',
     name: 'Business',
     description: 'Solution complète pour les grandes entreprises.',
-    price: 199000, currency: 'XOF', duration: 'monthly',
+    price: 199000, currency: 'XAF', duration: 'monthly',
     trialDays: 7, sortOrder: 2,
     maxBuses: -1, maxAgents: -1, maxBranches: -1, maxTrips: -1,
     storage: '100 Go', supportIncluded: 'Email + Chat + Téléphone',
@@ -150,7 +150,7 @@ export const plans = [
     id: 'plan_enterprise',
     name: 'Enterprise',
     description: 'Solution sur mesure avec support dédié.',
-    price: 499000, currency: 'XOF', duration: 'monthly',
+    price: 499000, currency: 'XAF', duration: 'monthly',
     trialDays: 0, sortOrder: 3,
     maxBuses: -1, maxAgents: -1, maxBranches: -1, maxTrips: -1,
     storage: '500 Go', supportIncluded: 'Support dédié 24/7',
@@ -164,7 +164,7 @@ export const plans = [
     id: 'plan_startup',
     name: 'Startup',
     description: 'Offre spéciale pour startups innovantes.',
-    price: 29000, currency: 'XOF', duration: 'yearly',
+    price: 29000, currency: 'XAF', duration: 'yearly',
     trialDays: 30, sortOrder: 4,
     maxBuses: 2, maxAgents: 1, maxBranches: 1, maxTrips: 15,
     storage: '3 Go', supportIncluded: 'Email',
@@ -179,7 +179,7 @@ export const plans = [
     id: 'plan_premium',
     name: 'Premium Annual',
     description: 'Tout inclus avec un tarif annuel préférentiel.',
-    price: 1790000, currency: 'XOF', duration: 'yearly',
+    price: 1790000, currency: 'XAF', duration: 'yearly',
     trialDays: 14, sortOrder: 5,
     maxBuses: -1, maxAgents: -1, maxBranches: -1, maxTrips: -1,
     storage: '200 Go', supportIncluded: 'Support prioritaire 24/7',
@@ -193,7 +193,7 @@ export const plans = [
     id: 'plan_freemium',
     name: 'Freemium',
     description: 'Pour découvrir la plateforme gratuitement.',
-    price: 0, currency: 'XOF', duration: 'monthly',
+    price: 0, currency: 'XAF', duration: 'monthly',
     trialDays: 0, sortOrder: 6,
     maxBuses: 1, maxAgents: 1, maxBranches: 0, maxTrips: 5,
     storage: '1 Go', supportIncluded: 'Base de connaissances',
@@ -210,15 +210,15 @@ export const plans = [
    SUBSCRIPTIONS (companies assigned to plans)
    ══════════════════════════════════════════════════════════════ */
 export const subscriptions = [
-  { id: 'sub_001', companyId: 'comp_1', companyName: 'Express Bus Cameroun', planId: 'plan_business', status: 'active', startDate: '2024-09-15', endDate: '2025-09-15', trialEnd: null, autoRenew: true, paymentMethod: 'Carte bancaire', lastPayment: '2025-06-15', nextBilling: '2025-07-15', billingCycle: 'monthly', amount: 199000, currency: 'XOF', assignedBy: 'Admin Guillaume', assignedAt: '2024-09-15' },
-  { id: 'sub_002', companyId: 'comp_2', companyName: 'Touristique Express', planId: 'plan_growth', status: 'active', startDate: '2024-10-01', endDate: '2025-10-01', trialEnd: null, autoRenew: true, paymentMethod: 'Mobile Money', lastPayment: '2025-06-01', nextBilling: '2025-07-01', billingCycle: 'monthly', amount: 99000, currency: 'XOF', assignedBy: 'Admin Guillaume', assignedAt: '2024-10-01' },
-  { id: 'sub_003', companyId: 'comp_3', companyName: 'Finex Voyages', planId: 'plan_growth', status: 'trial', startDate: '2025-06-10', endDate: '2025-06-24', trialEnd: '2025-06-24', autoRenew: false, paymentMethod: null, lastPayment: null, nextBilling: '2025-06-24', billingCycle: 'monthly', amount: 0, currency: 'XOF', assignedBy: 'Système', assignedAt: '2025-06-10' },
-  { id: 'sub_004', companyId: 'comp_4', companyName: 'Buca Voyages', planId: 'plan_starter', status: 'active', startDate: '2025-01-10', endDate: '2026-01-10', trialEnd: null, autoRenew: true, paymentMethod: 'Orange Money', lastPayment: '2025-06-10', nextBilling: '2025-07-10', billingCycle: 'monthly', amount: 49000, currency: 'XOF', assignedBy: 'Admin Guillaume', assignedAt: '2025-01-10' },
-  { id: 'sub_005', companyId: 'comp_5', companyName: 'Finex Voyages', planId: 'plan_enterprise', status: 'suspended', startDate: '2025-03-01', endDate: '2026-03-01', trialEnd: null, autoRenew: false, paymentMethod: 'Carte bancaire', lastPayment: '2025-05-01', nextBilling: null, billingCycle: 'monthly', amount: 499000, currency: 'XOF', assignedBy: 'Système', assignedAt: '2025-03-01' },
-  { id: 'sub_006', companyId: 'comp_6', companyName: 'Buca Voyages', planId: 'plan_freemium', status: 'expired', startDate: '2024-06-01', endDate: '2025-06-01', trialEnd: null, autoRenew: false, paymentMethod: null, lastPayment: null, nextBilling: null, billingCycle: 'monthly', amount: 0, currency: 'XOF', assignedBy: 'Système', assignedAt: '2024-06-01' },
-  { id: 'sub_007', companyId: 'comp_7', companyName: 'Express Bus Cameroun', planId: 'plan_premium', status: 'active', startDate: '2024-11-01', endDate: '2025-11-01', trialEnd: null, autoRenew: true, paymentMethod: 'Virement bancaire', lastPayment: '2025-06-01', nextBilling: '2025-11-01', billingCycle: 'yearly', amount: 1790000, currency: 'XOF', assignedBy: 'Admin Guillaume', assignedAt: '2024-11-01' },
-  { id: 'sub_008', companyId: 'comp_8', companyName: 'Touristique Express', planId: 'plan_business', status: 'cancelled', startDate: '2024-08-15', endDate: '2025-04-15', trialEnd: null, autoRenew: false, paymentMethod: 'Mobile Money', lastPayment: '2025-04-15', nextBilling: null, billingCycle: 'monthly', amount: 199000, currency: 'XOF', assignedBy: 'Admin Guillaume', assignedAt: '2024-08-15' },
-  { id: 'sub_009', companyId: 'comp_9', companyName: 'Finex Voyages', planId: 'plan_growth', status: 'active', startDate: '2025-05-01', endDate: '2026-05-01', trialEnd: null, autoRenew: true, paymentMethod: 'Orange Money', lastPayment: '2025-06-01', nextBilling: '2025-07-01', billingCycle: 'monthly', amount: 99000, currency: 'XOF', assignedBy: 'Admin Guillaume', assignedAt: '2025-05-01' },
+  { id: 'sub_001', companyId: 'comp_1', companyName: 'Express Bus Cameroun', planId: 'plan_business', status: 'active', startDate: '2024-09-15', endDate: '2025-09-15', trialEnd: null, autoRenew: true, paymentMethod: 'Carte bancaire', lastPayment: '2025-06-15', nextBilling: '2025-07-15', billingCycle: 'monthly', amount: 199000, currency: 'XAF', assignedBy: 'Admin Guillaume', assignedAt: '2024-09-15' },
+  { id: 'sub_002', companyId: 'comp_2', companyName: 'Touristique Express', planId: 'plan_growth', status: 'active', startDate: '2024-10-01', endDate: '2025-10-01', trialEnd: null, autoRenew: true, paymentMethod: 'Mobile Money', lastPayment: '2025-06-01', nextBilling: '2025-07-01', billingCycle: 'monthly', amount: 99000, currency: 'XAF', assignedBy: 'Admin Guillaume', assignedAt: '2024-10-01' },
+  { id: 'sub_003', companyId: 'comp_3', companyName: 'Finex Voyages', planId: 'plan_growth', status: 'trial', startDate: '2025-06-10', endDate: '2025-06-24', trialEnd: '2025-06-24', autoRenew: false, paymentMethod: null, lastPayment: null, nextBilling: '2025-06-24', billingCycle: 'monthly', amount: 0, currency: 'XAF', assignedBy: 'Système', assignedAt: '2025-06-10' },
+  { id: 'sub_004', companyId: 'comp_4', companyName: 'Buca Voyages', planId: 'plan_starter', status: 'active', startDate: '2025-01-10', endDate: '2026-01-10', trialEnd: null, autoRenew: true, paymentMethod: 'Orange Money', lastPayment: '2025-06-10', nextBilling: '2025-07-10', billingCycle: 'monthly', amount: 49000, currency: 'XAF', assignedBy: 'Admin Guillaume', assignedAt: '2025-01-10' },
+  { id: 'sub_005', companyId: 'comp_5', companyName: 'Finex Voyages', planId: 'plan_enterprise', status: 'suspended', startDate: '2025-03-01', endDate: '2026-03-01', trialEnd: null, autoRenew: false, paymentMethod: 'Carte bancaire', lastPayment: '2025-05-01', nextBilling: null, billingCycle: 'monthly', amount: 499000, currency: 'XAF', assignedBy: 'Système', assignedAt: '2025-03-01' },
+  { id: 'sub_006', companyId: 'comp_6', companyName: 'Buca Voyages', planId: 'plan_freemium', status: 'expired', startDate: '2024-06-01', endDate: '2025-06-01', trialEnd: null, autoRenew: false, paymentMethod: null, lastPayment: null, nextBilling: null, billingCycle: 'monthly', amount: 0, currency: 'XAF', assignedBy: 'Système', assignedAt: '2024-06-01' },
+  { id: 'sub_007', companyId: 'comp_7', companyName: 'Express Bus Cameroun', planId: 'plan_premium', status: 'active', startDate: '2024-11-01', endDate: '2025-11-01', trialEnd: null, autoRenew: true, paymentMethod: 'Virement bancaire', lastPayment: '2025-06-01', nextBilling: '2025-11-01', billingCycle: 'yearly', amount: 1790000, currency: 'XAF', assignedBy: 'Admin Guillaume', assignedAt: '2024-11-01' },
+  { id: 'sub_008', companyId: 'comp_8', companyName: 'Touristique Express', planId: 'plan_business', status: 'cancelled', startDate: '2024-08-15', endDate: '2025-04-15', trialEnd: null, autoRenew: false, paymentMethod: 'Mobile Money', lastPayment: '2025-04-15', nextBilling: null, billingCycle: 'monthly', amount: 199000, currency: 'XAF', assignedBy: 'Admin Guillaume', assignedAt: '2024-08-15' },
+  { id: 'sub_009', companyId: 'comp_9', companyName: 'Finex Voyages', planId: 'plan_growth', status: 'active', startDate: '2025-05-01', endDate: '2026-05-01', trialEnd: null, autoRenew: true, paymentMethod: 'Orange Money', lastPayment: '2025-06-01', nextBilling: '2025-07-01', billingCycle: 'monthly', amount: 99000, currency: 'XAF', assignedBy: 'Admin Guillaume', assignedAt: '2025-05-01' },
 ];
 
 /* ══════════════════════════════════════════════════════════════
@@ -250,15 +250,15 @@ export const billingStatusConfig = {
    ══════════════════════════════════════════════════════════════ */
 export const subscriptionTimeline = [
   { id: 'evt_01', subscriptionId: 'sub_001', action: 'created', title: 'Abonnement souscrit', description: 'Plan Business — Express Bus Cameroun', time: '2024-09-15 10:30', user: 'Admin Guillaume' },
-  { id: 'evt_02', subscriptionId: 'sub_001', action: 'payment', title: 'Paiement mensuel', description: '228 850 FCFA — Carte bancaire', time: '2025-06-15 09:15', user: 'Système' },
-  { id: 'evt_03', subscriptionId: 'sub_001', action: 'payment', title: 'Paiement mensuel', description: '228 850 FCFA — Carte bancaire', time: '2025-05-15 09:10', user: 'Système' },
+  { id: 'evt_02', subscriptionId: 'sub_001', action: 'payment', title: 'Paiement mensuel', description: '228 850 XAF — Carte bancaire', time: '2025-06-15 09:15', user: 'Système' },
+  { id: 'evt_03', subscriptionId: 'sub_001', action: 'payment', title: 'Paiement mensuel', description: '228 850 XAF — Carte bancaire', time: '2025-05-15 09:10', user: 'Système' },
   { id: 'evt_04', subscriptionId: 'sub_002', action: 'created', title: 'Abonnement souscrit', description: 'Plan Growth — Touristique Express', time: '2024-10-01 11:00', user: 'Admin Guillaume' },
-  { id: 'evt_05', subscriptionId: 'sub_002', action: 'payment', title: 'Paiement mensuel', description: '108 850 FCFA — Mobile Money', time: '2025-06-01 08:30', user: 'Système' },
+  { id: 'evt_05', subscriptionId: 'sub_002', action: 'payment', title: 'Paiement mensuel', description: '108 850 XAF — Mobile Money', time: '2025-06-01 08:30', user: 'Système' },
   { id: 'evt_06', subscriptionId: 'sub_005', action: 'suspended', title: 'Abonnement suspendu', description: 'Plan Enterprise — Finex Voyages — Impayé', time: '2025-05-15 14:00', user: 'Système' },
   { id: 'evt_07', subscriptionId: 'sub_008', action: 'cancelled', title: 'Abonnement résilié', description: 'Plan Business — Touristique Express — Résiliation demandée', time: '2025-04-15 16:45', user: 'Admin Guillaume' },
   { id: 'evt_08', subscriptionId: 'sub_003', action: 'trial', title: 'Essai gratuit démarré', description: 'Plan Growth — Finex Voyages — 14 jours d\'essai', time: '2025-06-10 09:00', user: 'Système' },
-  { id: 'evt_09', subscriptionId: 'sub_004', action: 'payment', title: 'Paiement mensuel', description: '56 350 FCFA — Orange Money', time: '2025-06-10 07:45', user: 'Système' },
-  { id: 'evt_10', subscriptionId: 'sub_007', action: 'renewed', title: 'Renouvellement annuel', description: 'Plan Premium Annual — 1 958 500 FCFA — Virement bancaire', time: '2025-06-01 10:00', user: 'Système' },
+  { id: 'evt_09', subscriptionId: 'sub_004', action: 'payment', title: 'Paiement mensuel', description: '56 350 XAF — Orange Money', time: '2025-06-10 07:45', user: 'Système' },
+  { id: 'evt_10', subscriptionId: 'sub_007', action: 'renewed', title: 'Renouvellement annuel', description: 'Plan Premium Annual — 1 958 500 XAF — Virement bancaire', time: '2025-06-01 10:00', user: 'Système' },
   { id: 'evt_11', subscriptionId: 'sub_009', action: 'created', title: 'Abonnement souscrit', description: 'Plan Growth — Finex Voyages', time: '2025-05-01 13:20', user: 'Admin Guillaume' },
   { id: 'evt_12', subscriptionId: 'sub_006', action: 'expired', title: 'Abonnement expiré', description: 'Plan Freemium — Buca Voyages — Fin de validité', time: '2025-06-01 00:00', user: 'Système' },
 ];
@@ -344,8 +344,8 @@ export const calculateAnnualEquivalent = (price, duration) => {
   return price * (multipliers[duration] || 12);
 };
 
-export const formatCurrency = (amount, currency = 'XOF') => {
-  const cfg = currencySymbols[currency] || currencySymbols.XOF;
-  if (cfg.code === 'XOF') return `${amount.toLocaleString()} ${cfg.symbol}`;
+export const formatCurrency = (amount, currency = 'XAF') => {
+  const cfg = currencySymbols[currency] || currencySymbols.XAF;
+  if (cfg.code === 'XAF') return `${amount.toLocaleString()} ${cfg.symbol}`;
   return `${cfg.symbol}${amount.toLocaleString()}`;
 };

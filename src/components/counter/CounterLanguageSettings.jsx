@@ -6,7 +6,7 @@ const LANGUAGE_OPTIONS = [
 ];
 
 const CURRENCY_OPTIONS = [
-  { value: 'XAF', label: 'XAF FCFA' },
+  { value: 'XAF', label: 'XAF' },
   { value: 'EUR', label: 'Euro (EUR)' },
   { value: 'USD', label: 'Dollar (USD)' },
 ];

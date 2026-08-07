@@ -215,7 +215,7 @@ export const languageOptions = [
 ];
 
 export const currencyOptions = [
-  { value: 'XAF', label: 'FCFA (XAF)' },
+  { value: 'XAF', label: 'XAF (FCFA BEAC)' },
   { value: 'EUR', label: 'Euro (EUR)' },
   { value: 'USD', label: 'Dollar (USD)' },
 ];

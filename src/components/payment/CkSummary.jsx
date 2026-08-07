@@ -75,23 +75,23 @@ const CkSummary = memo(({ reservation, promoDiscount, insurance, total }) => {
           {r.seats.map((s) => (
             <div key={s.id} className="ck-summary__price-row">
               <span>Siège {s.number} ({s.type})</span>
-              <span>{s.price.toLocaleString()} FCFA</span>
+              <span>{s.price.toLocaleString()} XAF</span>
             </div>
           ))}
           <div className="ck-summary__price-row">
             <span>Frais de service</span>
-            <span>{fees.toLocaleString()} FCFA</span>
+            <span>{fees.toLocaleString()} XAF</span>
           </div>
           {insurance && (
             <div className="ck-summary__price-row">
               <span>Assurance voyage</span>
-              <span>{insurancePrice.toLocaleString()} FCFA</span>
+              <span>{insurancePrice.toLocaleString()} XAF</span>
             </div>
           )}
           {promoDiscount > 0 && (
             <div className="ck-summary__price-row ck-summary__price-row--promo">
               <span><i className="bi bi-tag-fill" /> Réduction</span>
-              <span>-{promoDiscount.toLocaleString()} FCFA</span>
+              <span>-{promoDiscount.toLocaleString()} XAF</span>
             </div>
           )}
         </div>
@@ -100,7 +100,7 @@ const CkSummary = memo(({ reservation, promoDiscount, insurance, total }) => {
 
         <div className="ck-summary__total">
           <span>Total</span>
-          <span className="ck-summary__total-val">{total.toLocaleString()} FCFA</span>
+          <span className="ck-summary__total-val">{total.toLocaleString()} XAF</span>
         </div>
 
         <div className="ck-summary__baggage">

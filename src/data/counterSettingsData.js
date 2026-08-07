@@ -66,7 +66,7 @@ export const appearanceSettings = {
 
 export const languageSettings = {
   language: 'Français',
-  currency: 'XAF (FCFA)',
+  currency: 'XAF',
   dateFormat: 'DD/MM/YYYY',
   timeFormat: '24h',
   timezone: 'Africa/Douala',

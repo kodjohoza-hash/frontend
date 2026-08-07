@@ -18,7 +18,7 @@ const CnPassengerList = memo(({ passengers }) => (
               <i className="bi bi-grid-3x3-gap-fill" /> Siège {pax.seat.number} · {pax.seat.type}
             </span>
           </div>
-          <span className="cn-pax__price">{pax.seat.price.toLocaleString()} FCFA</span>
+          <span className="cn-pax__price">{pax.seat.price.toLocaleString()} XAF</span>
         </div>
       ))}
     </div>

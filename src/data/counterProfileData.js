@@ -43,20 +43,20 @@ export const agentProfile = {
   ],
   recentActivity: [
     { id: 1, type: 'login', title: 'Connexion matinale', description: 'Connexion au poste de travail — Guichet #3', date: '2026-07-29T06:55:00' },
-    { id: 2, type: 'sale', title: 'Vente de billet', description: 'Douala → Yaoundé — 8 500 FCFA — Siège 12', date: '2026-07-29T07:30:00' },
+    { id: 2, type: 'sale', title: 'Vente de billet', description: 'Douala → Yaoundé — 8 500 XAF — Siège 12', date: '2026-07-29T07:30:00' },
     { id: 3, type: 'booking', title: 'Réservation client', description: 'Réservation BK-2026-2310 pour Fatima Souleymane', date: '2026-07-29T09:15:00' },
-    { id: 4, type: 'payment', title: 'Encaissement', description: 'Paiement OM BK-2026-2308 — 12 500 FCFA', date: '2026-07-28T11:45:00' },
-    { id: 5, type: 'sale', title: 'Vente de billet', description: 'Douala → Bafoussam — 6 500 FCFA — Siège 8', date: '2026-07-28T10:20:00' },
+    { id: 4, type: 'payment', title: 'Encaissement', description: 'Paiement OM BK-2026-2308 — 12 500 XAF', date: '2026-07-28T11:45:00' },
+    { id: 5, type: 'sale', title: 'Vente de billet', description: 'Douala → Bafoussam — 6 500 XAF — Siège 8', date: '2026-07-28T10:20:00' },
     { id: 6, type: 'logout', title: 'Fin de service', description: 'Déconnexion — fin de poste 15:00', date: '2026-07-27T15:05:00' },
     { id: 7, type: 'profile_update', title: 'Mise à jour profil', description: 'Modification des informations de contact', date: '2026-07-26T14:30:00' },
-    { id: 8, type: 'sale', title: 'Vente de billet', description: 'Douala → Garoua — 12 000 FCFA — Siège 22', date: '2026-07-26T09:40:00' },
+    { id: 8, type: 'sale', title: 'Vente de billet', description: 'Douala → Garoua — 12 000 XAF — Siège 22', date: '2026-07-26T09:40:00' },
     { id: 9, type: 'booking', title: 'Réservation groupe', description: 'Réservation BK-2026-2285 pour 5 passagers', date: '2026-07-25T16:10:00' },
-    { id: 10, type: 'payment', title: 'Encaissement espèces', description: 'Paiement comptant BK-2026-2279 — 25 000 FCFA', date: '2026-07-24T13:25:00' },
-    { id: 11, type: 'sale', title: 'Vente de billet', description: 'Douala → Limbé — 4 500 FCFA — Siège 5', date: '2026-07-23T11:50:00' },
+    { id: 10, type: 'payment', title: 'Encaissement espèces', description: 'Paiement comptant BK-2026-2279 — 25 000 XAF', date: '2026-07-24T13:25:00' },
+    { id: 11, type: 'sale', title: 'Vente de billet', description: 'Douala → Limbé — 4 500 XAF — Siège 5', date: '2026-07-23T11:50:00' },
     { id: 12, type: 'login', title: 'Connexion matinale', description: 'Connexion au poste de travail — Guichet #3', date: '2026-07-23T06:50:00' },
     { id: 13, type: 'booking', title: 'Réservation client', description: 'Réservation BK-2026-2250 pour Paul Atangana', date: '2026-07-22T10:05:00' },
-    { id: 14, type: 'sale', title: 'Vente de billet', description: 'Douala → Kribi — 7 000 FCFA — Siège 15', date: '2026-07-21T08:30:00' },
-    { id: 15, type: 'payment', title: 'Encaissement Mobile Money', description: 'Paiement MTN BK-2026-2234 — 8 500 FCFA', date: '2026-07-20T15:40:00' },
+    { id: 14, type: 'sale', title: 'Vente de billet', description: 'Douala → Kribi — 7 000 XAF — Siège 15', date: '2026-07-21T08:30:00' },
+    { id: 15, type: 'payment', title: 'Encaissement Mobile Money', description: 'Paiement MTN BK-2026-2234 — 8 500 XAF', date: '2026-07-20T15:40:00' },
   ],
   documents: [
     { id: 'doc-001', name: 'Contrat_de_travail_Marie_Ngo.pdf', type: 'pdf', category: 'contrat', url: '/documents/contrats/contrat-marie-ngo.pdf', size: '1.2 Mo', uploadedAt: '2024-06-10' },
@@ -90,7 +90,7 @@ export const quickActions = [
 ];
 
 export function formatCurrency(amount) {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XAF', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount).replace('XAF', 'FCFA').trim();
+  return new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount) + ' XAF';
 }
 
 export function formatDate(dateStr) {

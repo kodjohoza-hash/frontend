@@ -1,6 +1,6 @@
 import { topCompanies } from '@data/adminData';
 
-const formatFCFA = (v) => `${(v / 1000000).toFixed(1)} M FCFA`;
+const formatXAF = (v) => `${(v / 1000000).toFixed(1)} M XAF`;
 
 const AdminTopCompanies = () => (
   <div className="adm-companies-card">
@@ -32,7 +32,7 @@ const AdminTopCompanies = () => (
             </td>
             <td>{c.tickets.toLocaleString('fr-FR')}</td>
             <td>{c.trips}</td>
-            <td>{formatFCFA(c.revenue)}</td>
+            <td>{formatXAF(c.revenue)}</td>
             <td>
               <div className="adm-satisfaction">
                 <div className="adm-satisfaction__bar">

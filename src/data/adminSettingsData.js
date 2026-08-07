@@ -52,7 +52,7 @@ export const settingsCategories = [
       { id: 'social_instagram', label: 'Instagram', type: T.URL, value: 'https://instagram.com/bustixconnect' },
       { id: 'timezone', label: 'Fuseau horaire', type: T.SELECT, value: 'Africa/Douala', options: ['Africa/Douala', 'Africa/Yaounde', 'UTC', 'Europe/Paris'] },
       { id: 'default_lang', label: 'Langue par défaut', type: T.SELECT, value: 'fr', options: ['fr' , 'en'] },
-      { id: 'default_currency', label: 'Devise par défaut', type: T.SELECT, value: 'XAF', options: ['XAF', 'XOF', 'EUR', 'USD'] },
+      { id: 'default_currency', label: 'Devise par défaut', type: T.SELECT, value: 'XAF', options: ['XAF', 'EUR', 'USD'] },
       { id: 'date_format', label: 'Format date', type: T.SELECT, value: 'DD/MM/YYYY', options: ['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD'] },
       { id: 'time_format', label: 'Format heure', type: T.SELECT, value: '24h', options: ['24h', '12h'] },
     ],

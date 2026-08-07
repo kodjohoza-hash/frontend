@@ -47,16 +47,16 @@ const CounterSaleSummary = ({ state, onConfirm, onBack }) => {
         <div className="acs-confirm__section">
           <div className="acs-confirm__section-title"><i className="bi bi-credit-card" /> Paiement</div>
           <div className="acs-confirm__row"><span className="acs-confirm__label">Méthode</span><span className="acs-confirm__value">{payMethod}</span></div>
-          <div className="acs-confirm__row"><span className="acs-confirm__label">Montant</span><span className="acs-confirm__value">{formatPrice(payment.amount)} FCFA</span></div>
+          <div className="acs-confirm__row"><span className="acs-confirm__label">Montant</span><span className="acs-confirm__value">{formatPrice(payment.amount)} XAF</span></div>
           {payment.discount > 0 && (
-            <div className="acs-confirm__row"><span className="acs-confirm__label">Réduction</span><span className="acs-confirm__value" style={{ color: 'var(--act-success)' }}>-{formatPrice(payment.discount)} FCFA</span></div>
+            <div className="acs-confirm__row"><span className="acs-confirm__label">Réduction</span><span className="acs-confirm__value" style={{ color: 'var(--act-success)' }}>-{formatPrice(payment.discount)} XAF</span></div>
           )}
-          <div className="acs-confirm__row"><span className="acs-confirm__label">Taxes</span><span className="acs-confirm__value">+{formatPrice(payment.taxes)} FCFA</span></div>
+          <div className="acs-confirm__row"><span className="acs-confirm__label">Taxes</span><span className="acs-confirm__value">+{formatPrice(payment.taxes)} XAF</span></div>
         </div>
 
         <div className="acs-confirm__total">
           <span className="acs-confirm__total-label">Total à payer</span>
-          <span>{formatPrice(payment.total)} FCFA</span>
+          <span>{formatPrice(payment.total)} XAF</span>
         </div>
 
         <div className="acs-step__nav" style={{ gridColumn: '1 / -1' }}>

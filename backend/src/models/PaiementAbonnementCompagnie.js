@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       abonnement_compagnie_id: { type: DataTypes.INTEGER, allowNull: false },
       compagnie_id: { type: DataTypes.CHAR(4), allowNull: false },
       plan_id: { type: DataTypes.INTEGER, allowNull: true },
-      montant: { type: DataTypes.INTEGER, allowNull: false }, // FCFA
+      montant: { type: DataTypes.INTEGER, allowNull: false }, // XAF
       methode: {
         type: DataTypes.ENUM('orange_money', 'mtn_money', 'carte_bancaire', 'virement_bancaire', 'especes'),
         allowNull: false,

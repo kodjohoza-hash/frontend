@@ -116,7 +116,7 @@ const CounterPaymentWizard = ({ onClose, onComplete }) => {
             <h3 className="acp-step-title">Montant</h3>
             <p className="acp-step-desc">Saisissez le montant à encaisser.</p>
             <div className="acp-form-group">
-              <label className="acp-form-label">Montant (FCFA) *</label>
+              <label className="acp-form-label">Montant (XAF) *</label>
               <input className="acp-form-input" type="number" placeholder="15000" value={amount} onChange={(e) => setAmount(e.target.value)} autoFocus />
             </div>
             <div className="acp-form-group" style={{ marginTop: 12 }}>

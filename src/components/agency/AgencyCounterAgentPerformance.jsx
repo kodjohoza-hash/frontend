@@ -1,7 +1,7 @@
 import React from 'react';
 
 const metrics = [
-  { label: 'Revenu total', key: 'totalRevenue', format: (v) => (v || 0).toLocaleString('fr-FR') + ' FCFA', color: '#FF6B35', icon: 'bi-cash-stack' },
+  { label: 'Revenu total', key: 'totalRevenue', format: (v) => (v || 0).toLocaleString('fr-FR') + ' XAF', color: '#FF6B35', icon: 'bi-cash-stack' },
   { label: 'Ventes totales', key: 'totalSales', format: (v) => v || 0, color: '#10b981', icon: 'bi-graph-up' },
   { label: 'Billets imprimés', key: 'ticketsPrinted', format: (v) => v || 0, color: '#3b82f6', icon: 'bi-printer' },
   { label: 'Réservations', key: 'bookingsCreated', format: (v) => v || 0, color: '#8b5cf6', icon: 'bi-bookmark-plus' },

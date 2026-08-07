@@ -125,14 +125,14 @@ export const subscriptionPayments = [
    RELANCES / MESSAGES DE RENOUVELLEMENT envoyés aux compagnies
    ────────────────────────────────────────────────────────────── */
 export const subscriptionReminders = [
-  { id: 'REL-001', companyId: 'EB', agencyId: 'AG-004', type: 'retard_paiement', channel: 'email', sentAt: '2026-07-18T08:00:00', subject: 'Paiement abonnement en retard — Garoua', message: 'Bonjour Express Bus Cameroun, l\'abonnement de l\'agence Garoua (40 000 FCFA) est impayé depuis le 05/07/2026. Un paiement automatique sera effectué sous 24h.', status: 'lu' },
-  { id: 'REL-002', companyId: 'FV', agencyId: 'AG-012', type: 'retard_paiement', channel: 'email', sentAt: '2026-07-20T08:00:00', subject: 'Paiement abonnement en retard — Ngaoundéré', message: 'Bonjour Finex Voyages, l\'abonnement de l\'agence Ngaoundéré (40 000 FCFA) est impayé depuis le 12/07/2026.', status: 'envoye' },
-  { id: 'REL-003', companyId: 'ST', agencyId: 'AG-009', type: 'derniere_relance', channel: 'sms', sentAt: '2026-07-27T09:00:00', subject: 'Dernière relance avant suspension — Kribi', message: 'Sécurité Transport, sous 24h votre agence Kribi sera suspendue si le règlement de 40 000 FCFA n\'est pas reçu.', status: 'envoye' },
+  { id: 'REL-001', companyId: 'EB', agencyId: 'AG-004', type: 'retard_paiement', channel: 'email', sentAt: '2026-07-18T08:00:00', subject: 'Paiement abonnement en retard — Garoua', message: 'Bonjour Express Bus Cameroun, l\'abonnement de l\'agence Garoua (40 000 XAF) est impayé depuis le 05/07/2026. Un paiement automatique sera effectué sous 24h.', status: 'lu' },
+  { id: 'REL-002', companyId: 'FV', agencyId: 'AG-012', type: 'retard_paiement', channel: 'email', sentAt: '2026-07-20T08:00:00', subject: 'Paiement abonnement en retard — Ngaoundéré', message: 'Bonjour Finex Voyages, l\'abonnement de l\'agence Ngaoundéré (40 000 XAF) est impayé depuis le 12/07/2026.', status: 'envoye' },
+  { id: 'REL-003', companyId: 'ST', agencyId: 'AG-009', type: 'derniere_relance', channel: 'sms', sentAt: '2026-07-27T09:00:00', subject: 'Dernière relance avant suspension — Kribi', message: 'Sécurité Transport, sous 24h votre agence Kribi sera suspendue si le règlement de 40 000 XAF n\'est pas reçu.', status: 'envoye' },
   { id: 'REL-004', companyId: 'TE', agencyId: 'AG-014', type: 'suspension', channel: 'email', sentAt: '2026-07-15T10:30:00', subject: 'Agence Douala Gare suspendue', message: 'Touristique Express, l\'agence Douala Gare a été suspendue. Les 3 agents ont été déconnectés automatiquement.', status: 'lu' },
-  { id: 'REL-005', companyId: 'EB', agencyId: 'AG-001', type: 'avant_echeance_j7', channel: 'email', sentAt: '2026-07-24T08:00:00', subject: 'Renouvellement abonnement dans 7 jours — Douala Central', message: 'Express Bus Cameroun, l\'abonnement de Douala Central expire le 31/07/2026. Pensez à renouveler pour 75 000 FCFA.', status: 'envoye' },
-  { id: 'REL-006', companyId: 'GE', agencyId: 'AG-005', type: 'avant_echeance_j7', channel: 'email', sentAt: '2026-07-24T08:05:00', subject: 'Renouvellement abonnement dans 7 jours — Yaoundé Centre', message: 'Guillaume Express, l\'abonnement de Yaoundé Centre expire le 31/07/2026. Renouvellement : 75 000 FCFA.', status: 'lu' },
+  { id: 'REL-005', companyId: 'EB', agencyId: 'AG-001', type: 'avant_echeance_j7', channel: 'email', sentAt: '2026-07-24T08:00:00', subject: 'Renouvellement abonnement dans 7 jours — Douala Central', message: 'Express Bus Cameroun, l\'abonnement de Douala Central expire le 31/07/2026. Pensez à renouveler pour 75 000 XAF.', status: 'envoye' },
+  { id: 'REL-006', companyId: 'GE', agencyId: 'AG-005', type: 'avant_echeance_j7', channel: 'email', sentAt: '2026-07-24T08:05:00', subject: 'Renouvellement abonnement dans 7 jours — Yaoundé Centre', message: 'Guillaume Express, l\'abonnement de Yaoundé Centre expire le 31/07/2026. Renouvellement : 75 000 XAF.', status: 'lu' },
   { id: 'REL-007', companyId: 'ST', agencyId: 'AG-008', type: 'avant_echeance_j7', channel: 'sms', sentAt: '2026-07-24T08:10:00', subject: 'Renouvellement abonnement dans 7 jours — Bonabéri', message: 'Sécurité Transport, l\'abonnement de Douala Bonabéri expire le 31/07/2026.', status: 'envoye' },
-  { id: 'REL-008', companyId: 'BV', agencyId: 'AG-013', type: 'avant_echeance_j7', channel: 'email', sentAt: '2026-07-24T08:15:00', subject: 'Renouvellement abonnement dans 7 jours — Yaoundé Obili', message: 'Buca Voyages, l\'abonnement de Yaoundé Obili expire le 31/07/2026. Renouvellement : 50 000 FCFA.', status: 'envoye' },
+  { id: 'REL-008', companyId: 'BV', agencyId: 'AG-013', type: 'avant_echeance_j7', channel: 'email', sentAt: '2026-07-24T08:15:00', subject: 'Renouvellement abonnement dans 7 jours — Yaoundé Obili', message: 'Buca Voyages, l\'abonnement de Yaoundé Obili expire le 31/07/2026. Renouvellement : 50 000 XAF.', status: 'envoye' },
   { id: 'REL-009', companyId: 'RC', agencyId: 'AG-010', type: 'avant_echeance_j7', channel: 'email', sentAt: '2026-07-24T08:15:00', subject: 'Renouvellement abonnement dans 7 jours — Bafoussam', message: 'Royal Coach, l\'abonnement de Bafoussam Marché expire le 31/07/2026.', status: 'lu' },
 ];
 
@@ -193,7 +193,7 @@ export const getSubscriptionSummary = (list = agencySubscriptions) => {
   };
 };
 
-export const formatCurrency = (amount) => `${amount.toLocaleString()} FCFA`;
+export const formatCurrency = (amount) => `${amount.toLocaleString()} XAF`;
 
 export const monthLabel = (month, year) => {
   const names = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];

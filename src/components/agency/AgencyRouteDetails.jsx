@@ -20,9 +20,9 @@ export default function AgencyRouteDetails({ route, calculs, onCalculs }) {
   const formatPrice = (min, max) => {
     const fmt = (v) => (v === null || v === undefined ? '—' : Number(v).toLocaleString('fr-FR'));
     if (min === null && max === null) return '—';
-    if (min === null) return `${fmt(max)} FCFA`;
-    if (max === null) return `${fmt(min)} FCFA`;
-    return `${fmt(min)} – ${fmt(max)} FCFA`;
+    if (min === null) return `${fmt(max)} XAF`;
+    if (max === null) return `${fmt(min)} XAF`;
+    return `${fmt(min)} – ${fmt(max)} XAF`;
   };
 
   return (

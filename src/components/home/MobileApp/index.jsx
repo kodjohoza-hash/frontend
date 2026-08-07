@@ -79,7 +79,7 @@ const MobileAppSection = () => {
                     <span><i className="bi bi-calendar" /> 25 Juil 2026</span>
                     <span><i className="bi bi-clock" /> 08:30</span>
                   </div>
-                  <div className="btc-phone-price">3 000 FCFA</div>
+                  <div className="btc-phone-price">3 000 XAF</div>
                 </div>
                 <div className="btc-phone-card">
                   <div className="btc-phone-status btc-phone-status--pending">
@@ -94,7 +94,7 @@ const MobileAppSection = () => {
                     <span><i className="bi bi-calendar" /> 2 Août 2026</span>
                     <span><i className="bi bi-clock" /> 14:00</span>
                   </div>
-                  <div className="btc-phone-price">4 500 FCFA</div>
+                  <div className="btc-phone-price">4 500 XAF</div>
                 </div>
                 <div className="btc-phone-nav">
                   <i className="bi bi-house-fill btc-phone-nav--active" />

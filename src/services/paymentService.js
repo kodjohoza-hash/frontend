@@ -79,7 +79,7 @@ const PaymentService = {
     await simulateNetwork(800);
     const codes = {
       BIENVENUE10: { discount: 10, type: 'percent', label: '10% de reduction' },
-      BTC500: { discount: 500, type: 'fixed', label: '500 FCFA de reduction' },
+      BTC500: { discount: 500, type: 'fixed', label: '500 XAF de reduction' },
       ETUDIANT: { discount: 15, type: 'percent', label: '15% tarif etudiant' },
     };
     const promo = codes[code.toUpperCase()];

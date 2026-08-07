@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       agent_id: { type: DataTypes.CHAR(10), allowNull: true },
       montant: { type: DataTypes.INTEGER, allowNull: false },
       frais: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
-      devise: { type: DataTypes.CHAR(3), allowNull: false, defaultValue: 'XAF' },
+      devise: { type: DataTypes.CHAR(3), allowNull: false, defaultValue: require('../config/env').currency.default },
       methode: {
         type: DataTypes.ENUM('orange_money', 'mtn_money', 'carte_bancaire', 'especes', 'virement_bancaire', 'bon_reduction', 'code_promo', 'express_union_mobile', 'autre'),
         allowNull: false,

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import AgencyClientStatus from './AgencyClientStatus';
 import AgencyClientCard from './AgencyClientCard';
 
-const formatCurrency = (v) => (v ?? 0).toLocaleString('fr-FR') + ' FCFA';
+const formatCurrency = (v) => (v ?? 0).toLocaleString('fr-FR') + ' XAF';
 const formatDate = (d) => d ? new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
 
 const actionGroups = [

@@ -15,22 +15,22 @@ const CnPaymentInfo = memo(({ payment }) => {
         </div>
         <div className="cn-pay__row">
           <span>Sous-total</span>
-          <span>{payment.subtotal.toLocaleString()} FCFA</span>
+          <span>{payment.subtotal.toLocaleString()} XAF</span>
         </div>
         {payment.insurance > 0 && (
           <div className="cn-pay__row">
             <span>Assurance</span>
-            <span>{payment.insurance.toLocaleString()} FCFA</span>
+            <span>{payment.insurance.toLocaleString()} XAF</span>
           </div>
         )}
         <div className="cn-pay__row">
           <span>Frais</span>
-          <span>{payment.fees.toLocaleString()} FCFA</span>
+          <span>{payment.fees.toLocaleString()} XAF</span>
         </div>
         <div className="cn-pay__divider" />
         <div className="cn-pay__total">
           <span>Total payé</span>
-          <span>{payment.amount.toLocaleString()} FCFA</span>
+          <span>{payment.amount.toLocaleString()} XAF</span>
         </div>
         <div className="cn-pay__divider" />
         <div className="cn-pay__meta">

@@ -372,7 +372,7 @@ const create = async ({ data, actor }) => {
     montantPercu = Math.max(0, paid - refunded);
     const resteAPayer = Math.max(0, Number(reservation.montant) - montantPercu);
     if (Number(data.montant) > resteAPayer) {
-      throw new ApiError(400, `Le montant dépasse le reste à payer (${resteAPayer} FCFA).`);
+      throw new ApiError(400, `Le montant dépasse le reste à payer (${resteAPayer} XAF).`);
     }
   }
 
@@ -441,7 +441,7 @@ const create = async ({ data, actor }) => {
       await paymentRepository.createHistorique(
         {
           reservation_id: reservation.id,
-          action: `Paiement ${reference} de ${Number(data.montant)} FCFA reçu (${data.methode}) — réservation ${newStatut}.`,
+          action: `Paiement ${reference} de ${Number(data.montant)} XAF reçu (${data.methode}) — réservation ${newStatut}.`,
           timestamp: now,
           utilisateur: actorName(actor),
         },
@@ -452,7 +452,7 @@ const create = async ({ data, actor }) => {
 
   const full = await paymentRepository.findByIdFull(paiementId);
   await attachBalance(full);
-  logger.info(`[payments] ${reference} créé (${Number(data.montant)} FCFA, ${data.methode}, ${categorie})`);
+  logger.info(`[payments] ${reference} créé (${Number(data.montant)} XAF, ${data.methode}, ${categorie})`);
 
   /* Réservation entièrement payée : émission automatique des billets. */
   if (reservationDevenuePayee && reservation) {
@@ -501,7 +501,7 @@ const update = async ({ id, data, actor }) => {
       ]);
       const resteAPayer = Math.max(0, Number(payment.reservation.montant) - Math.max(0, paid - refunded));
       if (Number(data.montant) > resteAPayer) {
-        throw new ApiError(400, `Le montant dépasse le reste à payer (${resteAPayer} FCFA).`);
+        throw new ApiError(400, `Le montant dépasse le reste à payer (${resteAPayer} XAF).`);
       }
     }
     patch.montant = Number(data.montant);
@@ -647,10 +647,10 @@ const refund = async ({ id, data, actor }) => {
   const net = Math.max(0, paid - refunded);
   const refundAmount = Number(data.montant) || net;
   if (refundAmount > net) {
-    throw new ApiError(400, `Le montant remboursé ne peut pas dépasser le total net payé (${net} FCFA).`);
+    throw new ApiError(400, `Le montant remboursé ne peut pas dépasser le total net payé (${net} XAF).`);
   }
   if (refundAmount > Number(payment.montant)) {
-    throw new ApiError(400, `Le montant remboursé ne peut pas dépasser ce paiement (${Number(payment.montant)} FCFA).`);
+    throw new ApiError(400, `Le montant remboursé ne peut pas dépasser ce paiement (${Number(payment.montant)} XAF).`);
   }
 
   const result = await bookingService.refund({

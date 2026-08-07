@@ -2,8 +2,8 @@ import React from 'react';
 import { branchStats } from '../../data/agencyBranchData';
 
 function formatMoney(n) {
-  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M FCFA';
-  return (n || 0).toLocaleString('fr-FR') + ' FCFA';
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M XAF';
+  return (n || 0).toLocaleString('fr-FR') + ' XAF';
 }
 
 export default function AgencyBranchStats({ stats }) {

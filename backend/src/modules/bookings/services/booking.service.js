@@ -775,7 +775,7 @@ const pay = async ({ id, data, actor }) => {
   const montantPercu = await bookingRepository.sumPaidByReservation(id);
   const reste = Math.max(0, Number(reservation.montant) - montantPercu);
   if (Number(data.montant) > reste) {
-    throw new ApiError(400, `Le montant dépasse le reste à payer (${reste} FCFA).`);
+    throw new ApiError(400, `Le montant dépasse le reste à payer (${reste} XAF).`);
   }
 
   const paiementId = await generatePaiementId();
@@ -818,7 +818,7 @@ const pay = async ({ id, data, actor }) => {
     await bookingRepository.createHistorique(
       {
         reservation_id: id,
-        action: `Paiement de ${Number(data.montant)} FCFA reçu (${data.methode}).`,
+        action: `Paiement de ${Number(data.montant)} XAF reçu (${data.methode}).`,
         timestamp: now,
         utilisateur: actorName(actor),
       },
@@ -827,7 +827,7 @@ const pay = async ({ id, data, actor }) => {
   });
 
   const full = await bookingRepository.findByIdFull(id);
-  logger.info(`[bookings] ${reservation.reference} paiement ${data.montant} FCFA (${data.methode})`);
+  logger.info(`[bookings] ${reservation.reference} paiement ${data.montant} XAF (${data.methode})`);
 
   /* Réservation entièrement payée : émission automatique des billets. */
   if (newStatut === 'payee') {
@@ -851,7 +851,7 @@ const refund = async ({ id, data, actor }) => {
   const netPercu = Math.max(0, montantPercu - dejaRembourse);
   const refundAmount = Number(data.montant) || netPercu;
   if (refundAmount > netPercu) {
-    throw new ApiError(400, `Le montant remboursé ne peut pas dépasser le total net payé (${netPercu} FCFA).`);
+    throw new ApiError(400, `Le montant remboursé ne peut pas dépasser le total net payé (${netPercu} XAF).`);
   }
   const fullRefund = refundAmount >= netPercu;
   const now = new Date();
@@ -892,13 +892,13 @@ const refund = async ({ id, data, actor }) => {
     }
 
     await bookingRepository.createHistorique(
-      { reservation_id: id, action: `Remboursement de ${refundAmount} FCFA effectué.`, timestamp: now, utilisateur: actorName(actor) },
+      { reservation_id: id, action: `Remboursement de ${refundAmount} XAF effectué.`, timestamp: now, utilisateur: actorName(actor) },
       { transaction: t }
     );
   });
 
   const full = await bookingRepository.findByIdFull(id);
-  logger.info(`[bookings] ${reservation.reference} remboursement ${refundAmount} FCFA`);
+  logger.info(`[bookings] ${reservation.reference} remboursement ${refundAmount} XAF`);
 
   /* Remboursement total : les billets émis de la réservation sont remboursés. */
   if (fullRefund) {

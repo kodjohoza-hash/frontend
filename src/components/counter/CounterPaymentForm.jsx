@@ -51,7 +51,7 @@ const CounterPaymentForm = ({ trip, search, onComplete, onBack }) => {
               {Number(cashGiven) >= total && (
                 <div className="acs-payment__change">
                   <span>Monnaie à rendre</span>
-                  <span>{change.toLocaleString('fr-FR')} FCFA</span>
+                  <span>{change.toLocaleString('fr-FR')} XAF</span>
                 </div>
               )}
             </div>
@@ -62,23 +62,23 @@ const CounterPaymentForm = ({ trip, search, onComplete, onBack }) => {
           <div className="acs-payment__summary-title">Récapitulatif</div>
           <div className="acs-payment__summary-row">
             <span>Prix de base ({search.passengers} passager{search.passengers > 1 ? 's' : ''})</span>
-            <span className="acs-payment__summary-value">{basePrice.toLocaleString('fr-FR')} FCFA</span>
+            <span className="acs-payment__summary-value">{basePrice.toLocaleString('fr-FR')} XAF</span>
           </div>
           <div className="acs-payment__summary-row">
             <span>Réduction</span>
-            <span className="acs-payment__summary-value" style={{ color: 'var(--act-success)' }}>{discount > 0 ? `-${discount.toLocaleString('fr-FR')} FCFA` : '—'}</span>
+            <span className="acs-payment__summary-value" style={{ color: 'var(--act-success)' }}>{discount > 0 ? `-${discount.toLocaleString('fr-FR')} XAF` : '—'}</span>
           </div>
           <div className="acs-payment__summary-row">
             <span>Taxes (5%)</span>
-            <span className="acs-payment__summary-value">{taxes.toLocaleString('fr-FR')} FCFA</span>
+            <span className="acs-payment__summary-value">{taxes.toLocaleString('fr-FR')} XAF</span>
           </div>
           <div className="acs-payment__summary-row">
             <span>Frais de service</span>
-            <span className="acs-payment__summary-value">{serviceFee.toLocaleString('fr-FR')} FCFA</span>
+            <span className="acs-payment__summary-value">{serviceFee.toLocaleString('fr-FR')} XAF</span>
           </div>
           <div className="acs-payment__summary-row acs-payment__summary-row--total">
             <span>Total</span>
-            <span>{total.toLocaleString('fr-FR')} FCFA</span>
+            <span>{total.toLocaleString('fr-FR')} XAF</span>
           </div>
 
           <div className="acs-step__nav" style={{ marginTop: 20 }}>

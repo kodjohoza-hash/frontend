@@ -34,7 +34,7 @@ export default function AdminSubscriptionStats({ stats }) {
             <i className={`fa-solid ${icons[key] || 'fa-receipt'}`} />
           </div>
           <div className="adms-stat-value">
-            {val.isCurrency ? formatCurrency(val.value || val, 'XOF') : (val.value ?? val)}
+            {val.isCurrency ? formatCurrency(val.value || val, 'XAF') : (val.value ?? val)}
             {val.trend != null && val.trend !== 0 && (
               <span className={`adms-stat-trend adms-stat-trend--${val.trend >= 0 ? 'up' : 'down'}`}>
                 <i className={`fa-solid fa-arrow-${val.trend >= 0 ? 'up' : 'down'}`} />

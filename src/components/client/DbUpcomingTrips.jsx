@@ -51,7 +51,7 @@ const DbUpcomingTrips = () => {
                 <span className="db-trips__seat">
                   <i className="bi bi-door-open" /> Siège {trip.seat}
                 </span>
-                <span className="db-trips__price">{trip.price} FCFA</span>
+                <span className="db-trips__price">{trip.price} XAF</span>
                 <span className={clsx('db-trips__status', `db-trips__status--${st.color}`)}>
                   <i className={clsx('bi', st.icon)} /> {st.label}
                 </span>

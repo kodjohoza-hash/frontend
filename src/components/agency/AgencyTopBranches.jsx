@@ -24,7 +24,7 @@ const AgencyTopBranches = ({ data }) => {
             </span>
             <div className="aa-top-table__info">
               <span className="aa-top-table__name">{branch.name}</span>
-              <span className="aa-top-table__value">{branch.revenue.toLocaleString()} FCFA</span>
+              <span className="aa-top-table__value">{branch.revenue.toLocaleString()} XAF</span>
             </div>
             <div className="aa-top-table__bar-wrap">
               <div className="aa-top-table__bar" style={{ width: `${branch.percentage}%` }} />

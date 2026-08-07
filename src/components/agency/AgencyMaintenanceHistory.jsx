@@ -40,7 +40,7 @@ export default function AgencyMaintenanceHistory({ busId }) {
                 {item.date && <span><i className="bi bi-calendar3" /> {new Date(item.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}</span>}
                 {item.completedDate && <span><i className="bi bi-check-circle" /> {new Date(item.completedDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}</span>}
                 <span><i className="bi bi-speedometer" /> {Number(item.mileage || 0).toLocaleString('fr-FR')} km</span>
-                {item.cost > 0 && <span><i className="bi bi-cash" /> {Number(item.cost || 0).toLocaleString('fr-FR')} FCFA</span>}
+                {item.cost > 0 && <span><i className="bi bi-cash" /> {Number(item.cost || 0).toLocaleString('fr-FR')} XAF</span>}
               </div>
               {item.provider && (
                 <div className="ab-maint__provider">

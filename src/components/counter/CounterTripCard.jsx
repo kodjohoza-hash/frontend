@@ -42,7 +42,7 @@ const CounterTripCard = ({ trip, selected, onSelect, disabled }) => {
 
       <div className="acs-trip-card__price">
         {trip.basePrice.toLocaleString('fr-FR')}
-        <span className="acs-trip-card__price-suffix"> FCFA</span>
+        <span className="acs-trip-card__price-suffix"> XAF</span>
       </div>
 
       <button type="button" className="acs-trip-card__select-btn" disabled={disabled || trip.seats.available === 0} onClick={(e) => { e.stopPropagation(); onSelect?.(trip); }}>

@@ -63,7 +63,7 @@ const buildTimeline = (p) => {
   if (p.remboursement != null) {
     events.push({
       id: 3,
-      label: `Remboursement de ${Number(p.remboursement).toLocaleString('fr-FR')} FCFA`,
+      label: `Remboursement de ${Number(p.remboursement).toLocaleString('fr-FR')} XAF`,
       time: p.paiementLe || p.creeLe,
       icon: 'bi-arrow-counterclockwise',
       color: 'primary',
@@ -155,7 +155,7 @@ const adaptStats = (s) => {
     { id: 'pending', label: 'Paiements en attente', value: String(countOf('en_attente')), icon: 'bi-clock-history', trend: '', color: 'warning' },
     { id: 'failed', label: 'Paiements échoués', value: String(countOf('echoue')), icon: 'bi-x-circle', trend: '', color: 'danger' },
     { id: 'refunded', label: 'Paiements remboursés', value: String(countOf('rembourse') + countOf('partiellement_rembourse')), icon: 'bi-arrow-counterclockwise', trend: '', color: 'info' },
-    { id: 'revenue', label: "Chiffre d'affaires", value: `${(s.netRevenu ?? s.encaisse ?? 0).toLocaleString('fr-FR')} FCFA`, icon: 'bi-cash-stack', trend: '', color: 'primary' },
+    { id: 'revenue', label: "Chiffre d'affaires", value: `${(s.netRevenu ?? s.encaisse ?? 0).toLocaleString('fr-FR')} XAF`, icon: 'bi-cash-stack', trend: '', color: 'primary' },
   ];
 };
 

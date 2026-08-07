@@ -36,7 +36,7 @@ const TkTicketCard = ({ ticket, onView, viewMode = 'grid' }) => {
           </div>
         </div>
         <div className="tk-ticket__list-right">
-          <span className="tk-ticket__price">{ticket.price} FCFA</span>
+          <span className="tk-ticket__price">{ticket.price} XAF</span>
           <span className={clsx('tk-ticket__status-dot', `tk-ticket__status-dot--${st.dot}`)}>
             {st.label}
           </span>
@@ -112,7 +112,7 @@ const TkTicketCard = ({ ticket, onView, viewMode = 'grid' }) => {
           <span className="tk-ticket__ref">{ticket.bookingRef}</span>
         </div>
         <div className="tk-ticket__price-section">
-          <span className="tk-ticket__price">{ticket.price} FCFA</span>
+          <span className="tk-ticket__price">{ticket.price} XAF</span>
           <span className="tk-ticket__bus-type">{ticket.busType}</span>
         </div>
       </div>

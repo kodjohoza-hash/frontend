@@ -380,7 +380,7 @@ const FilterSidebar = ({ filters, onFilterChange, onReset }) => {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
               <span style={{ fontSize: 'var(--font-size-xs, 0.75rem)', color: 'var(--text-muted, #9ca3af)' }}>Minimum</span>
               <span style={{ fontSize: 'var(--font-size-sm, 0.875rem)', fontWeight: 600, color: 'var(--text-primary, #111827)' }}>
-                {(filters.priceMin || 0).toLocaleString()} FCFA
+                {(filters.priceMin || 0).toLocaleString()} XAF
               </span>
             </div>
             <input
@@ -407,7 +407,7 @@ const FilterSidebar = ({ filters, onFilterChange, onReset }) => {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
               <span style={{ fontSize: 'var(--font-size-xs, 0.75rem)', color: 'var(--text-muted, #9ca3af)' }}>Maximum</span>
               <span style={{ fontSize: 'var(--font-size-sm, 0.875rem)', fontWeight: 600, color: 'var(--text-primary, #111827)' }}>
-                {(filters.priceMax || 15000).toLocaleString()} FCFA
+                {(filters.priceMax || 15000).toLocaleString()} XAF
               </span>
             </div>
             <input

@@ -25,12 +25,12 @@ const recordPayment = async (data, auteur = 'systeme') => {
     abonnement_compagnie_id: sub.id,
     action: 'paiement',
     plan_id: data.plan_id ?? sub.plan_id,
-    detail: `Paiement ${paiement.montant} FCFA (${paiement.methode}) — ${paiement.reference}`,
+    detail: `Paiement ${paiement.montant} XAF (${paiement.methode}) — ${paiement.reference}`,
     auteur,
     date: new Date(),
   });
 
-  logger.info(`Paiement enregistré : ${paiement.reference} (${paiement.montant} FCFA)`);
+  logger.info(`Paiement enregistré : ${paiement.reference} (${paiement.montant} XAF)`);
   return paymentRepository.findById(paiement.id);
 };
 

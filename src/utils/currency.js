@@ -1,17 +1,17 @@
-const DEFAULT_CURRENCY = 'XOF';
-const DEFAULT_LOCALE = 'fr-SN';
+const DEFAULT_CURRENCY = 'XAF';
+const DEFAULT_LOCALE = 'fr-CM';
 
 export const formatCurrency = (amount, currency = DEFAULT_CURRENCY, locale = DEFAULT_LOCALE) => {
   if (amount === null || amount === undefined) return '';
   const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
   if (isNaN(numAmount)) return '';
 
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency,
+  const formatted = new Intl.NumberFormat(locale, {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(numAmount);
+
+  return `${formatted} ${currency}`;
 };
 
 export const formatNumber = (number, locale = DEFAULT_LOCALE) => {
@@ -40,7 +40,7 @@ export const convertCurrency = (amount, fromRate, toRate) => {
 };
 
 export const CURRENCIES = {
-  XOF: { code: 'XOF', symbol: 'FCFA', name: 'Franc CFA' },
+  XAF: { code: 'XAF', symbol: 'XAF', name: 'Franc CFA BEAC' },
   EUR: { code: 'EUR', symbol: '€', name: 'Euro' },
   USD: { code: 'USD', symbol: '$', name: 'Dollar US' },
 };

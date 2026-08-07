@@ -58,7 +58,7 @@ INSERT IGNORE INTO ville (id, nom, region, pays, latitude, longitude, statut) VA
 --    - nom          : libellé (ex : « Douala → Yaoundé »)
 --    - code         : code métier unique (ex : RT-DLA-YDE-01)
 --    - compagnie_id : compagnie propriétaire de l'itinéraire
---    - prix_min / prix_max : fourchette de prix (FCFA)
+--    - prix_min / prix_max : fourchette de prix (XAF)
 --    - statut       : active / inactive / archived
 --    - description  : observations (étapes, temps de trajet…)
 -- ---------------------------------------------------------------------

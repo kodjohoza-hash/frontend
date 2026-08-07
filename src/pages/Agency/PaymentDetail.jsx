@@ -45,7 +45,7 @@ export default function AgencyPaymentDetail() {
   };
 
   const handleRefund = async () => {
-    const montantStr = window.prompt(`Montant à rembourser (max ${payment.totalPaid} FCFA) :`, String(payment.totalPaid));
+    const montantStr = window.prompt(`Montant à rembourser (max ${payment.totalPaid} XAF) :`, String(payment.totalPaid));
     if (montantStr === null) return;
     const montant = Number(montantStr);
     if (!Number.isFinite(montant) || montant <= 0 || montant > payment.totalPaid) {
@@ -54,7 +54,7 @@ export default function AgencyPaymentDetail() {
     const motif = window.prompt('Motif du remboursement :', '') || '';
     const result = await refundPayment(payment.id, { montant, motif });
     if (!result.ok) return addToast(result.error || 'Échec du remboursement', 'error');
-    addToast(result.message || `Remboursement de ${montant.toLocaleString('fr-FR')} FCFA effectué`);
+    addToast(result.message || `Remboursement de ${montant.toLocaleString('fr-FR')} XAF effectué`);
   };
 
   if (loadingDetail && !payment) {

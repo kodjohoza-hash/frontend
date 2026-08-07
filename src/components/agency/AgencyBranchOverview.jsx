@@ -38,7 +38,7 @@ export default function AgencyBranchOverview({ branch }) {
                     <td>{r.client}</td>
                     <td>{r.route}</td>
                     <td>{formatDate(r.date)}</td>
-                    <td className="abr-overview__amount">{formatMoney(r.amount)} FCFA</td>
+                    <td className="abr-overview__amount">{formatMoney(r.amount)} XAF</td>
                     <td>
                       <span className={`abr-overview__status abr-overview__status--${r.status}`}>
                         {r.status === 'confirmée' ? 'Confirmée' : r.status === 'en_attente' ? 'En attente' : r.status}

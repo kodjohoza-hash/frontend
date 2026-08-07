@@ -43,7 +43,7 @@ export default function AdminSubscriptionFilters({
             <label>Currency</label>
             <select value={currencyFilter} onChange={e => onCurrencyChange(e.target.value)}>
               <option value="">All</option>
-              <option value="XOF">XOF (FCFA)</option>
+              <option value="XAF">XAF</option>
               <option value="EUR">EUR (€)</option>
               <option value="USD">USD ($)</option>
             </select>

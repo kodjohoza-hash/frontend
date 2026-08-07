@@ -131,7 +131,7 @@ export default function Commissions() {
               <h2><i className="fa-solid fa-calculator" /> Dynamic Calculation Engine</h2>
               <button className="adcm-btn adcm-btn--primary" onClick={() => {
                 const test = calculateCommission(5000, localRules[0]);
-                addToast(`Test: 5000 FCFA × ${localRules[0].value}% = ${test} FCFA commission`, 'info');
+                addToast(`Test: 5000 XAF × ${localRules[0].value}% = ${test} XAF commission`, 'info');
               }}><i className="fa-solid fa-flask" /> Test Rule
               </button>
             </div>

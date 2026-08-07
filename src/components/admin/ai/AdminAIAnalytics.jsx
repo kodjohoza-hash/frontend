@@ -19,7 +19,7 @@ const BarPair = ({ data, key1, key2, labelKey, color1, color2, format }) => {
   );
 };
 
-const formatFCFA = (v) => `${(v / 1000000).toFixed(1)}M`;
+const formatXAF = (v) => `${(v / 1000000).toFixed(1)}M`;
 const formatK = (v) => `${(v / 1000).toFixed(0)}k`;
 
 const AdminAIAnalytics = () => (
@@ -38,7 +38,7 @@ const AdminAIAnalytics = () => (
       </div>
       <div className="adai-chart-card">
         <div className="adai-chart-title">Prévision des revenus <span>Réel vs Prédit</span></div>
-        <BarPair data={predictiveAnalytics.revenue} key1="actual" key2="predicted" labelKey="month" color1="#10B981" color2="#059669" format={formatFCFA} />
+        <BarPair data={predictiveAnalytics.revenue} key1="actual" key2="predicted" labelKey="month" color1="#10B981" color2="#059669" format={formatXAF} />
         <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: 12, fontSize: 11 }}>
           <span><i className="fa-solid fa-circle" style={{ color: '#10B981' }}></i> Réel</span>
           <span><i className="fa-solid fa-circle" style={{ color: '#059669' }}></i> Prévu</span>
@@ -46,7 +46,7 @@ const AdminAIAnalytics = () => (
       </div>
       <div className="adai-chart-card">
         <div className="adai-chart-title">Prévision des commissions <span>Réel vs Prédit</span></div>
-        <BarPair data={predictiveAnalytics.commissions} key1="actual" key2="predicted" labelKey="month" color1="#F59E0B" color2="#D97706" format={formatFCFA} />
+        <BarPair data={predictiveAnalytics.commissions} key1="actual" key2="predicted" labelKey="month" color1="#F59E0B" color2="#D97706" format={formatXAF} />
         <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: 12, fontSize: 11 }}>
           <span><i className="fa-solid fa-circle" style={{ color: '#F59E0B' }}></i> Réel</span>
           <span><i className="fa-solid fa-circle" style={{ color: '#D97706' }}></i> Prévu</span>

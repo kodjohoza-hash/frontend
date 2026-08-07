@@ -22,7 +22,7 @@ const adaptPlan = (p) => ({
   description: p.description || '',
   price: Number(p.prix_mensuel || 0),
   annualPrice: p.prix_annuel ? Number(p.prix_annuel) : null,
-  currency: 'XOF',
+  currency: 'XAF',
   duration: DURATION_LABEL[p.duree_jours] || 'custom',
   duree_jours: p.duree_jours,
   maxBuses: p.max_bus ?? -1,
@@ -81,7 +81,7 @@ const adaptSubscription = (s) => {
     nextBilling: s.date_fin,
     billingCycle: 'monthly',
     amount: Number(s.plan?.prix_mensuel || 0),
-    currency: 'XOF',
+    currency: 'XAF',
     joursRestants: s.jours_restants ?? null,
     planName: s.plan?.nom || '',
   };

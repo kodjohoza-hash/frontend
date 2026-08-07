@@ -46,7 +46,7 @@ const DbRecentBookings = () => {
                   <td>{formatDate(bk.date)}</td>
                   <td>{bk.company}</td>
                   <td className="db-bookings__seats">{bk.seats}</td>
-                  <td className="db-bookings__amount">{bk.amount} FCFA</td>
+                  <td className="db-bookings__amount">{bk.amount} XAF</td>
                   <td>
                     <span className={clsx('db-bookings__status', `db-bookings__status--${st.color}`)}>
                       <i className={clsx('bi', st.icon)} /> {st.label}

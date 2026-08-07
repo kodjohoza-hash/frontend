@@ -56,7 +56,7 @@ export const TESTIMONIALS = [
     date: 'Mai 2026',
     company: 'Guichet Unique',
     route: 'Douala → Kribi',
-    comment: 'Magnifique design et expérience fluide. Les prix sont très compétitifs par rapport aux guichets physiques. J\'ai économisé plus de 1500 FCFA.',
+    comment: 'Magnifique design et expérience fluide. Les prix sont très compétitifs par rapport aux guichets physiques. J\'ai économisé plus de 1500 XAF.',
     verified: true,
   },
   {

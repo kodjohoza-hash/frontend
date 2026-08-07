@@ -1,6 +1,6 @@
 import { getRevenueByCompany, getSubscriptionSummary } from '@data/adminAgencySubscriptionData';
 
-const formatFCFA = (v) => `${(v / 1000).toFixed(0)} k FCFA`;
+const formatXAF = (v) => `${(v / 1000).toFixed(0)} k XAF`;
 
 const AdminSubscriptionRevenue = () => {
   const revenue = getRevenueByCompany();
@@ -33,7 +33,7 @@ const AdminSubscriptionRevenue = () => {
                 </div>
               </td>
               <td>{c.subscribedCount}/{c.agenciesCount} payées</td>
-              <td style={{ fontWeight: 700, color: 'var(--adm-primary)' }}>{formatFCFA(c.revenue)}</td>
+              <td style={{ fontWeight: 700, color: 'var(--adm-primary)' }}>{formatXAF(c.revenue)}</td>
               <td>
                 <div className="adm-satisfaction">
                   <div className="adm-satisfaction__bar">
@@ -53,7 +53,7 @@ const AdminSubscriptionRevenue = () => {
           <tr style={{ background: 'var(--adm-surface-hover)', fontWeight: 700 }}>
             <td>Total encaissé</td>
             <td>{summary.paid}/{summary.total} agences</td>
-            <td style={{ color: 'var(--adm-accent)' }}>{formatFCFA(summary.totalRevenue)}</td>
+            <td style={{ color: 'var(--adm-accent)' }}>{formatXAF(summary.totalRevenue)}</td>
             <td>{summary.collectedRate}%</td>
             <td>{summary.late + summary.unpaid + summary.suspended}</td>
           </tr>

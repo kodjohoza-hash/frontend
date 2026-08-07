@@ -66,7 +66,7 @@ export default function Revenue() {
           <div key={c.label} className={`adr-card ${c.cls}`}>
             <div className="adr-card__icon"><i className={`bi ${c.icon}`} /></div>
             <div className="adr-card__value">{c.value}</div>
-            <div className="adr-card__label">FCFA — {c.label}</div>
+            <div className="adr-card__label">XAF — {c.label}</div>
           </div>
         ))}
       </div>
@@ -93,14 +93,14 @@ export default function Revenue() {
         <div className="adr-panel adr-panel--wide">
           <div className="adr-panel__head">
             <h2><i className="bi bi-bar-chart-line" /> Revenus par mois (12 derniers mois)</h2>
-            <span className="adr-total">Total : {fmt(revenue?.revenuTotal ?? 0)} FCFA</span>
+            <span className="adr-total">Total : {fmt(revenue?.revenuTotal ?? 0)} XAF</span>
           </div>
           {loading ? (
             <div className="adr-loading"><i className="bi bi-arrow-repeat" /> Chargement…</div>
           ) : (
             <div className="adr-chart">
               {(revenue?.graph || []).map((g) => (
-                <div className="adr-chart__col" key={g.mois} title={`${monthLabel(g.mois)} : ${fmt(g.total)} FCFA`}>
+                <div className="adr-chart__col" key={g.mois} title={`${monthLabel(g.mois)} : ${fmt(g.total)} XAF`}>
                   <div className="adr-chart__bar" style={{ height: `${Math.max((Number(g.total) / maxGraph) * 100, 2)}%` }} />
                   <div className="adr-chart__value">{fmtK(g.total)}</div>
                   <div className="adr-chart__label">{monthLabel(g.mois).split(' ')[0]}</div>
@@ -128,7 +128,7 @@ export default function Revenue() {
                     <div className="adr-top__bar"><div className="adr-top__fill" style={{ width: `${(Number(c.total) / topMax) * 100}%` }} /></div>
                   </div>
                   <div className="adr-top__amount">
-                    <div>{fmt(c.total)} FCFA</div>
+                    <div>{fmt(c.total)} XAF</div>
                     <div className="adr-top__count">{c.nb_paiements} paiement{c.nb_paiements > 1 ? 's' : ''}</div>
                   </div>
                 </div>

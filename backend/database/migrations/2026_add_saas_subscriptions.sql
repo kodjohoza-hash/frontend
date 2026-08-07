@@ -25,8 +25,8 @@ CREATE TABLE plan_abonnement (
   code              VARCHAR(20)   NOT NULL,
   nom               VARCHAR(60)   NOT NULL,
   description       VARCHAR(255)  NULL,
-  prix_mensuel      INT           NOT NULL DEFAULT 0,        -- FCFA / mois
-  prix_annuel       INT           NULL,                      -- FCFA / an (optionnel)
+  prix_mensuel      INT           NOT NULL DEFAULT 0,        -- XAF / mois
+  prix_annuel       INT           NULL,                      -- XAF / an (optionnel)
   duree_jours       SMALLINT      NOT NULL DEFAULT 30,       -- durée d'un cycle
   max_bus           SMALLINT      NULL,                      -- NULL = illimité
   max_agences       SMALLINT      NULL,
@@ -70,7 +70,7 @@ CREATE TABLE paiement_abonnement_compagnie (
   abonnement_compagnie_id INT           NOT NULL,
   compagnie_id            CHAR(4)       NOT NULL,
   plan_id                 INT           NULL,
-  montant                 INT           NOT NULL,             -- FCFA
+  montant                 INT           NOT NULL,             -- XAF
   methode                 ENUM('orange_money','mtn_money','carte_bancaire','virement_bancaire','especes') NOT NULL,
   statut                  ENUM('paye','en_attente','echoue','rembourse') NOT NULL DEFAULT 'paye',
   date                    DATETIME      NOT NULL,

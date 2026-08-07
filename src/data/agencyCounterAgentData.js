@@ -64,11 +64,11 @@ export const mockCounterAgents = [
     stats: { totalSales: 1247, totalRevenue: 18500000, ticketsPrinted: 1198, bookingsCreated: 1342, cancellations: 45, avgDailySales: 8.2 },
     history: [
       { type: 'connexion', date: '2026-07-25T08:30:00Z', detail: 'Connexion au point de vente PDV-001' },
-      { type: 'vente', date: '2026-07-25T09:15:00Z', detail: 'Billet VYG-2026-001 Douala→Yaoundé — 8 500 FCFA' },
-      { type: 'vente', date: '2026-07-25T09:45:00Z', detail: 'Billet VYG-2026-011 Douala→Yaoundé — 8 500 FCFA' },
+      { type: 'vente', date: '2026-07-25T09:15:00Z', detail: 'Billet VYG-2026-001 Douala→Yaoundé — 8 500 XAF' },
+      { type: 'vente', date: '2026-07-25T09:45:00Z', detail: 'Billet VYG-2026-011 Douala→Yaoundé — 8 500 XAF' },
       { type: 'reservation', date: '2026-07-25T10:20:00Z', detail: 'Réservation BK-2026-1847 pour Fatima Souleymane' },
-      { type: 'annulation', date: '2026-07-25T11:00:00Z', detail: 'Annulation BK-2026-1842 — remboursement 17 000 FCFA' },
-      { type: 'paiement', date: '2026-07-25T11:30:00Z', detail: 'Encaissement BK-2026-1845 — 8 500 FCFA' },
+      { type: 'annulation', date: '2026-07-25T11:00:00Z', detail: 'Annulation BK-2026-1842 — remboursement 17 000 XAF' },
+      { type: 'paiement', date: '2026-07-25T11:30:00Z', detail: 'Encaissement BK-2026-1845 — 8 500 XAF' },
     ],
   },
   {
@@ -83,8 +83,8 @@ export const mockCounterAgents = [
     stats: { totalSales: 856, totalRevenue: 12300000, ticketsPrinted: 820, bookingsCreated: 890, cancellations: 28, avgDailySales: 5.6 },
     history: [
       { type: 'connexion', date: '2026-07-25T07:45:00Z', detail: 'Connexion au point de vente PDV-001' },
-      { type: 'vente', date: '2026-07-25T08:00:00Z', detail: 'Billet VYG-2026-002 Yaoundé→Bafoussam — 6 500 FCFA' },
-      { type: 'vente', date: '2026-07-25T08:30:00Z', detail: 'Billet VYG-2026-004 Yaoundé→Kribi — 7 000 FCFA' },
+      { type: 'vente', date: '2026-07-25T08:00:00Z', detail: 'Billet VYG-2026-002 Yaoundé→Bafoussam — 6 500 XAF' },
+      { type: 'vente', date: '2026-07-25T08:30:00Z', detail: 'Billet VYG-2026-004 Yaoundé→Kribi — 7 000 XAF' },
     ],
   },
   {
@@ -99,7 +99,7 @@ export const mockCounterAgents = [
     stats: { totalSales: 634, totalRevenue: 8900000, ticketsPrinted: 610, bookingsCreated: 670, cancellations: 22, avgDailySales: 6.8 },
     history: [
       { type: 'connexion', date: '2026-07-25T08:00:00Z', detail: 'Connexion au point de vente PDV-004' },
-      { type: 'vente', date: '2026-07-25T08:45:00Z', detail: 'Billet VYG-2026-003 Douala→Bamenda — 9 000 FCFA' },
+      { type: 'vente', date: '2026-07-25T08:45:00Z', detail: 'Billet VYG-2026-003 Douala→Bamenda — 9 000 XAF' },
     ],
   },
   {
@@ -114,7 +114,7 @@ export const mockCounterAgents = [
     stats: { totalSales: 423, totalRevenue: 5600000, ticketsPrinted: 410, bookingsCreated: 445, cancellations: 15, avgDailySales: 4.5 },
     history: [
       { type: 'connexion', date: '2026-07-23T08:00:00Z', detail: 'Connexion au point de vente PDV-004' },
-      { type: 'vente', date: '2026-07-23T09:00:00Z', detail: 'Billet VYG-2026-006 Yaoundé→Ebolowa — 5 500 FCFA' },
+      { type: 'vente', date: '2026-07-23T09:00:00Z', detail: 'Billet VYG-2026-006 Yaoundé→Ebolowa — 5 500 XAF' },
       { type: 'deconnexion', date: '2026-07-23T17:30:00Z', detail: 'Déconnexion fin de service' },
     ],
   },
@@ -130,7 +130,7 @@ export const mockCounterAgents = [
     stats: { totalSales: 1089, totalRevenue: 15200000, ticketsPrinted: 1050, bookingsCreated: 1130, cancellations: 38, avgDailySales: 7.4 },
     history: [
       { type: 'connexion', date: '2026-07-25T07:30:00Z', detail: 'Connexion au point de vente PDV-006' },
-      { type: 'vente', date: '2026-07-25T08:15:00Z', detail: 'Billet VYG-2026-009 Douala→Kumba — 4 000 FCFA' },
+      { type: 'vente', date: '2026-07-25T08:15:00Z', detail: 'Billet VYG-2026-009 Douala→Kumba — 4 000 XAF' },
     ],
   },
   {
@@ -145,7 +145,7 @@ export const mockCounterAgents = [
     stats: { totalSales: 1567, totalRevenue: 21800000, ticketsPrinted: 1520, bookingsCreated: 1610, cancellations: 52, avgDailySales: 9.8 },
     history: [
       { type: 'connexion', date: '2026-07-25T08:15:00Z', detail: 'Connexion au point de vente PDV-007' },
-      { type: 'vente', date: '2026-07-25T09:00:00Z', detail: 'Billet VYG-2026-008 Yaoundé→Bamenda — 8 500 FCFA' },
+      { type: 'vente', date: '2026-07-25T09:00:00Z', detail: 'Billet VYG-2026-008 Yaoundé→Bamenda — 8 500 XAF' },
     ],
   },
   {
@@ -160,7 +160,7 @@ export const mockCounterAgents = [
     stats: { totalSales: 234, totalRevenue: 3200000, ticketsPrinted: 225, bookingsCreated: 248, cancellations: 8, avgDailySales: 3.8 },
     history: [
       { type: 'connexion', date: '2026-07-24T08:00:00Z', detail: 'Connexion au point de vente PDV-003' },
-      { type: 'vente', date: '2026-07-24T09:30:00Z', detail: 'Billet VYG-2026-005 Douala→Garoua — 12 000 FCFA' },
+      { type: 'vente', date: '2026-07-24T09:30:00Z', detail: 'Billet VYG-2026-005 Douala→Garoua — 12 000 XAF' },
       { type: 'deconnexion', date: '2026-07-24T18:00:00Z', detail: 'Déconnexion fin de service' },
     ],
   },
@@ -191,7 +191,7 @@ export const mockCounterAgents = [
     stats: { totalSales: 156, totalRevenue: 2100000, ticketsPrinted: 148, bookingsCreated: 165, cancellations: 5, avgDailySales: 5.2 },
     history: [
       { type: 'connexion', date: '2026-07-25T08:10:00Z', detail: 'Connexion au point de vente PDV-004' },
-      { type: 'vente', date: '2026-07-25T08:50:00Z', detail: 'Billet VYG-2026-012 Yaoundé→Bertoua — 7 500 FCFA' },
+      { type: 'vente', date: '2026-07-25T08:50:00Z', detail: 'Billet VYG-2026-012 Yaoundé→Bertoua — 7 500 XAF' },
     ],
   },
   {

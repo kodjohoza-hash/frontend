@@ -49,7 +49,7 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
 
   const mockNotifs = [
     { id: 1, title: 'Nouvelle réservation', message: 'BK-2026-1847 — Douala → Yaoundé', time: '5min', unread: true },
-    { id: 2, title: 'Paiement reçu', message: '8 500 FCFA — BK-2026-1845', time: '12min', unread: true },
+    { id: 2, title: 'Paiement reçu', message: '8 500 XAF — BK-2026-1845', time: '12min', unread: true },
     { id: 3, title: 'Alerte bus', message: 'Standard-02 en maintenance', time: '3h', unread: false },
   ];
 

@@ -28,7 +28,7 @@ const DestinationCard = memo(({ destination }) => {
               <i className="bi bi-bus-front" /> {trips} trajets
             </span>
             <span className="btc-dest-price">
-              À partir de <strong>{price.toLocaleString('fr-FR')} FCFA</strong>
+              À partir de <strong>{price.toLocaleString('fr-FR')} XAF</strong>
             </span>
           </div>
         </div>

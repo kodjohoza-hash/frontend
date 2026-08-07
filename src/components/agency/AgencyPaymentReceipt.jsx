@@ -2,7 +2,7 @@ import { PAYMENT_METHOD_LABELS, PAYMENT_STATUS_LABELS } from '@data/paymentData'
 import AppLogo from '@components/common/AppLogo';
 
 function formatAmount(n) {
-  return (n || 0).toLocaleString('fr-FR') + ' FCFA';
+  return (n || 0).toLocaleString('fr-FR') + ' XAF';
 }
 
 function formatDate(d) {

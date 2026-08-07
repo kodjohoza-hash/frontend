@@ -301,7 +301,7 @@ export default function AgencySubscriptions() {
               <span className="adasc-company-card__rank">#{idx + 1}</span>
             </div>
             <div className="adasc-company-card__revenue">
-              <span className="adasc-company-card__amount">{c.revenue.toLocaleString('fr-FR')} FCFA</span>
+              <span className="adasc-company-card__amount">{c.revenue.toLocaleString('fr-FR')} XAF</span>
               <span className="adasc-company-card__period">/ mois</span>
             </div>
             <div className="adasc-company-card__bar">
@@ -310,7 +310,7 @@ export default function AgencySubscriptions() {
             <div className="adasc-company-card__foot">
               <span>{c.rate}% recouvré</span>
               {c.pendingRevenue > 0
-                ? <span style={{ color: 'var(--adm-danger)' }}><i className="bi bi-arrow-down" /> {c.pendingRevenue.toLocaleString('fr-FR')} FCFA manquants</span>
+                ? <span style={{ color: 'var(--adm-danger)' }}><i className="bi bi-arrow-down" /> {c.pendingRevenue.toLocaleString('fr-FR')} XAF manquants</span>
                 : <span style={{ color: 'var(--adm-success)' }}><i className="bi bi-check-circle" /> À jour</span>}
             </div>
           </div>
@@ -385,7 +385,7 @@ export default function AgencySubscriptions() {
                       {company?.name}
                     </span>
                   </td>
-                  <td><span className="adasc-amount">{s.amount.toLocaleString('fr-FR')} FCFA</span></td>
+                  <td><span className="adasc-amount">{s.amount.toLocaleString('fr-FR')} XAF</span></td>
                   <td style={{ fontSize: '0.78rem', color: 'var(--adm-text-secondary)' }}>
                     {new Date(s.dueDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}
                   </td>
@@ -437,7 +437,7 @@ export default function AgencySubscriptions() {
                 {statusBadge(s.status)}
               </div>
               <div className="adasc-company-card__revenue">
-                <span className="adasc-company-card__amount">{s.amount.toLocaleString('fr-FR')} FCFA</span>
+                <span className="adasc-company-card__amount">{s.amount.toLocaleString('fr-FR')} XAF</span>
                 <span className="adasc-company-card__period">/ mois</span>
               </div>
               <div className="adasc-company-card__foot" style={{ marginBottom: '0.6rem' }}>{dayInfo(s)}</div>

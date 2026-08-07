@@ -44,7 +44,7 @@ const CounterHeader = ({ onToggleSidebar, onLogout }) => {
 
   const mockNotifs = [
     { id: 1, title: 'Voyage complet', message: 'TR-012 Yaoundé → Kribi — Complet', time: '10min', unread: true },
-    { id: 2, title: 'Paiement reçu', message: '12 500 FCFA — BK-2026-1885', time: '25min', unread: true },
+    { id: 2, title: 'Paiement reçu', message: '12 500 XAF — BK-2026-1885', time: '25min', unread: true },
     { id: 3, title: 'Rappel départ', message: 'TR-010 Yaoundé → Douala dans 30min', time: '1h', unread: false },
   ];
 

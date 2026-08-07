@@ -81,6 +81,11 @@ const env = {
     /* Taille de l'image QR (pixels) générée par GET /tickets/:id/qrcode. */
     qrWidth: Number(process.env.TICKET_QR_WIDTH) || 480,
   },
+
+  currency: {
+    /* Code ISO 4217 de la devise par défaut de la plateforme (XAF). */
+    default: process.env.DEFAULT_CURRENCY || 'XAF',
+  },
 };
 
 module.exports = env;

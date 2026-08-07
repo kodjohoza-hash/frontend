@@ -5,7 +5,7 @@ import AgencyCounterAgentHistory from './AgencyCounterAgentHistory';
 import { agencies as mockAgencies, pointsDeVente as mockPointsDeVente } from '../../data/agencyCounterAgentData';
 
 function getInitials(first, last) { return `${(first || '')[0] || ''}${(last || '')[0] || ''}`.toUpperCase(); }
-function formatMoney(n) { return (n || 0).toLocaleString('fr-FR') + ' FCFA'; }
+function formatMoney(n) { return (n || 0).toLocaleString('fr-FR') + ' XAF'; }
 
 export default function AgencyCounterAgentDetails({ agent, onBack, onAction, agencies, pointsDeVente }) {
   if (!agent) return null;

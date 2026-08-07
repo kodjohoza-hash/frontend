@@ -44,7 +44,7 @@ const PiTripSummary = ({ trip, selectedSeats = [] }) => {
 
       <div className="pi-summary__price">
         <span className="pi-summary__price-label">Total</span>
-        <span className="pi-summary__price-value">{trip.price} FCFA</span>
+        <span className="pi-summary__price-value">{trip.price} XAF</span>
       </div>
 
       <div className="pi-summary__info">

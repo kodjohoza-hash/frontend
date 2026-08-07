@@ -2,7 +2,7 @@ import AgencyPaymentStatus from './AgencyPaymentStatus';
 import { PAYMENT_METHOD_LABELS, PAYMENT_METHOD_ICONS } from '@data/paymentData';
 
 function formatAmount(n) {
-  return (n || 0).toLocaleString('fr-FR') + ' FCFA';
+  return (n || 0).toLocaleString('fr-FR') + ' XAF';
 }
 
 function formatDate(d) {
