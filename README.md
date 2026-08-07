@@ -149,7 +149,7 @@ npm run lint     # ESLint
 
 `.env`:
 ```
-VITE_API_BASE_URL=http://localhost:8000/api
+VITE_API_BASE_URL=http://localhost:5000/api/v1
 VITE_API_TIMEOUT=15000
 VITE_APP_NAME=Bus Tix Connect
 VITE_APP_VERSION=1.0.0
