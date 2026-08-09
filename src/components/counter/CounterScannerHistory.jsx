@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import CounterTicketStatus from './CounterTicketStatus';
-import { formatDateTime } from '@data/counterScannerData';
+import { formatDateTime } from '@data/ticketScanner';
 
 const CounterScannerHistory = ({ history = [], onSelect }) => {
   const [filter, setFilter] = useState('all');
@@ -21,7 +21,8 @@ const CounterScannerHistory = ({ history = [], onSelect }) => {
     );
   }
 
-  const filtered = filter === 'all' ? history : history.filter((h) => h.status === filter);
+  const isValide = (h) => h.result === 'valid' || h.result === 'boarded';
+  const filtered = filter === 'all' ? history : (filter === 'valide' ? history.filter(isValide) : history.filter((h) => !isValide(h)));
 
   return (
     <div className="acv-history">
@@ -41,8 +42,8 @@ const CounterScannerHistory = ({ history = [], onSelect }) => {
           onChange={(e) => setFilter(e.target.value)}
         >
           <option value="all">Tous</option>
-          <option value="boarded">Embarqués</option>
-          <option value="refused">Refusés</option>
+          <option value="valide">Valides</option>
+          <option value="refuse">Refusés</option>
         </select>
       </div>
 

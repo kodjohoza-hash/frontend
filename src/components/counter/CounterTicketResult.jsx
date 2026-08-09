@@ -1,7 +1,12 @@
 import CounterTicketStatus from './CounterTicketStatus';
-import { formatCurrency, formatDateTime } from '@data/counterScannerData';
+import { formatCurrency, formatDateTime } from '@data/ticketScanner';
 
-const CounterTicketResult = ({ ticket, onAction }) => {
+/**
+ * Panneau de résultat du contrôle.
+ * - `ticket` : billet adapté (voir mapApiTicket).
+ * - `result` : résultat de la vérification { code, raison, valide }.
+ */
+const CounterTicketResult = ({ ticket, onAction, result }) => {
   if (!ticket) {
     return (
       <div className="acv-result-empty">
@@ -21,8 +26,24 @@ const CounterTicketResult = ({ ticket, onAction }) => {
     );
   }
 
+  const canBoard = ticket.status === 'valid';
+
   return (
     <>
+      {result && (
+        <div className={`acv-result-banner ${result.valide ? 'success' : 'danger'}`}>
+          <i className={`bi ${result.valide ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}`} />
+          <div>
+            <div className="acv-result-banner-title">
+              {result.valide ? 'Billet valide' : result.raison || 'Billet non valide'}
+            </div>
+            {!result.valide && result.raison && (
+              <div className="acv-result-banner-sub">{result.code || ''}</div>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="acv-ticket">
         <div className="acv-ticket-header">
           <div>
@@ -64,10 +85,6 @@ const CounterTicketResult = ({ ticket, onAction }) => {
               <span className="acv-ticket-value">{ticket.trip.time}</span>
             </div>
             <div className="acv-ticket-row">
-              <span className="acv-ticket-label">Durée</span>
-              <span className="acv-ticket-value">{ticket.trip.duration}</span>
-            </div>
-            <div className="acv-ticket-row">
               <span className="acv-ticket-label">Bus</span>
               <span className="acv-ticket-value">{ticket.bus.plate} — {ticket.bus.model}</span>
             </div>
@@ -81,7 +98,7 @@ const CounterTicketResult = ({ ticket, onAction }) => {
             <div className="acv-ticket-row">
               <span className="acv-ticket-label">Montant</span>
               <span className="acv-ticket-value" style={{ fontWeight: 700, color: '#0B1D51' }}>
-                {formatCurrency(ticket.amount || ticket.payment.amount)}
+                {formatCurrency(ticket.amount)}
               </span>
             </div>
             <div className="acv-ticket-row">
@@ -105,41 +122,27 @@ const CounterTicketResult = ({ ticket, onAction }) => {
                 <span className="acv-ticket-value">{formatDateTime(ticket.verifiedAt)}</span>
               </div>
             )}
-          </div>
-        </div>
-
-        <div className="acv-ticket-qr">
-          <div className="acv-ticket-qr-placeholder">
-            <i className="bi bi-qr-code" />
-          </div>
-          <div className="acv-ticket-qr-info">
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#0B1D51', marginBottom: 4 }}>QR Code</div>
-            <div className="acv-ticket-qr-code">{ticket.qrCode}</div>
-            <div style={{ fontSize: 11, color: '#9CA3AF', marginTop: 4 }}>Code-barres</div>
-            <div className="acv-ticket-barcode">{ticket.barcode}</div>
+            {ticket.verifiedBy && (
+              <div className="acv-ticket-row">
+                <span className="acv-ticket-label">Vérifié par</span>
+                <span className="acv-ticket-value">{ticket.verifiedBy}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
       <div className="acv-ticket-actions">
-        {ticket.status === 'valid' && (
+        {canBoard && (
           <button className="acv-btn acv-btn-success" onClick={() => onAction?.('board', ticket)}>
             <i className="bi bi-check-lg" /> Valider l'embarquement
           </button>
         )}
-        {ticket.status === 'valid' && (
-          <button className="acv-btn acv-btn-danger" onClick={() => onAction?.('refuse', ticket)}>
-            <i className="bi bi-x-lg" /> Refuser
-          </button>
-        )}
-        <button className="acv-btn acv-btn-secondary" onClick={() => onAction?.('details', ticket)}>
-          <i className="bi bi-info-circle" /> Détails
+        <button className="acv-btn acv-btn-secondary" onClick={() => onAction?.('history', ticket)}>
+          <i className="bi bi-clock-history" /> Historique
         </button>
         <button className="acv-btn acv-btn-secondary" onClick={() => onAction?.('print', ticket)}>
           <i className="bi bi-printer" /> Imprimer
-        </button>
-        <button className="acv-btn acv-btn-secondary" onClick={() => onAction?.('history', ticket)}>
-          <i className="bi bi-clock-history" /> Historique
         </button>
       </div>
     </>

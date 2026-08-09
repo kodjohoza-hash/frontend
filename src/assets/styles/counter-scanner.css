@@ -171,6 +171,53 @@
   padding: 0 20px 20px;
 }
 
+/* --- Caméra réelle (html5-qrcode) --- */
+.acv-camera-video {
+  width: 100%;
+  height: 100%;
+}
+
+.acv-camera-error {
+  color: #fff;
+  font-size: 13px;
+  text-align: center;
+  padding: 0 20px;
+  line-height: 1.5;
+}
+
+/* --- Bandeau de résultat de vérification --- */
+.acv-result-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  font-size: 13px;
+  border-bottom: 1px solid;
+}
+
+.acv-result-banner.success {
+  background: #D1FAE5;
+  color: #059669;
+  border-bottom-color: #A7F3D0;
+}
+
+.acv-result-banner.danger {
+  background: #FEE2E2;
+  color: #DC2626;
+  border-bottom-color: #FECACA;
+}
+
+.acv-result-banner-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.acv-result-banner-sub {
+  font-size: 11px;
+  opacity: 0.8;
+  font-family: 'Courier New', monospace;
+}
+
 .acv-camera-btn {
   display: inline-flex;
   align-items: center;
@@ -678,6 +725,102 @@
   transform: translateY(-50%);
   color: #9CA3AF;
   font-size: 16px;
+}
+
+.acv-search-input-spinner {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9CA3AF;
+  animation: acvSpin 0.8s linear infinite;
+}
+
+/* --- Historique détaillé (modal par billet) --- */
+.acv-history-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1060;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: acvFadeIn 0.2s ease;
+}
+
+.acv-history-card {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 760px;
+  width: 100%;
+  max-height: 86vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.acv-history-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.acv-history-card-body {
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.acv-history-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 8px 20px;
+}
+
+.acv-history-timeline li {
+  position: relative;
+  padding: 12px 0 12px 28px;
+  border-left: 2px solid #E5E7EB;
+  margin-left: 10px;
+}
+
+.acv-history-timeline li:last-child {
+  border-left-color: transparent;
+}
+
+.acv-history-timeline .acv-history-dot {
+  position: absolute;
+  left: -9px;
+  top: 16px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #D1D5DB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+}
+
+.acv-history-timeline .acv-history-dot.ok {
+  border-color: #10B981;
+  color: #10B981;
+}
+
+.acv-history-timeline .acv-history-dot.ko {
+  border-color: #EF4444;
+  color: #EF4444;
+}
+
+.acv-history-empty {
+  text-align: center;
+  padding: 40px;
+  color: #9CA3AF;
+  font-size: 14px;
 }
 
 /* --- Stats Grid --- */

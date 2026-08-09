@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import CounterScannerStats from '@components/counter/CounterScannerStats';
 import CounterScannerCamera from '@components/counter/CounterScannerCamera';
 import CounterScannerManual from '@components/counter/CounterScannerManual';
@@ -7,24 +7,45 @@ import CounterTicketResult from '@components/counter/CounterTicketResult';
 import CounterBoardingConfirmation from '@components/counter/CounterBoardingConfirmation';
 import CounterScannerHistory from '@components/counter/CounterScannerHistory';
 import CounterScannerAlerts from '@components/counter/CounterScannerAlerts';
-import CounterScannerSkeleton from '@components/counter/CounterScannerSkeleton';
-import { tickets, findTicket, randomScanResult, playSound, vibrateDevice } from '@data/counterScannerData';
+import CounterScannerHistoryModal from '@components/counter/CounterScannerHistoryModal';
+import ticketService from '@services/ticket.service';
+import useAuthStore from '@store/auth.store';
+import {
+  mapApiTicket,
+  mapCodeToStatus,
+  extractToken,
+  playSound,
+  vibrateDevice,
+} from '@data/ticketScanner';
+
+const STATUS_TO_ALERT = {
+  valid: null,
+  boarded: 'boarded',
+  refused: 'refused',
+  used: 'used',
+  expired: 'expired',
+  cancelled: 'cancelled',
+  refunded: 'refunded',
+  unpaid: 'unpaid',
+  unknown: 'unknown',
+  wrong_company: 'wrong_company',
+};
 
 const CounterScannerPage = () => {
-  const [loading, setLoading] = useState(true);
+  const user = useAuthStore((s) => s.user);
+  const agentName = user?.firstName || user?.lastName
+    ? `${user?.firstName || ''} ${user?.lastName || ''}`.trim()
+    : (user?.email || 'Agent');
+
   const [scanMode, setScanMode] = useState('camera');
   const [scanning, setScanning] = useState(false);
   const [currentTicket, setCurrentTicket] = useState(null);
-  const [showBoarding, setShowBoarding] = useState(null);
-  const [boardingType, setBoardingType] = useState('success');
+  const [currentResult, setCurrentResult] = useState(null);
   const [history, setHistory] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [toasts, setToasts] = useState([]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 600);
-    return () => clearTimeout(timer);
-  }, []);
+  const [boarding, setBoarding] = useState(null); // { type, ticket }
+  const [historyModal, setHistoryModal] = useState(null); // { ticket, entries, loading, error }
 
   const addToast = useCallback((message, type = 'success') => {
     const id = Date.now();
@@ -38,124 +59,201 @@ const CounterScannerPage = () => {
   }, []);
 
   const addHistoryEntry = useCallback((ticket, result) => {
+    if (!ticket) return;
     setHistory((prev) => [
       {
         reference: ticket.reference,
-        passengerName: ticket.passenger.name,
-        phone: ticket.passenger.phone,
-        from: ticket.trip.from,
-        to: ticket.trip.to,
+        passengerName: ticket.passenger?.name || '',
+        phone: ticket.passenger?.phone || '',
+        from: ticket.trip?.from || '',
+        to: ticket.trip?.to || '',
         scannedAt: new Date().toISOString(),
         result,
-        agent: 'Kodjo Jojo',
+        agent: agentName,
       },
       ...prev,
     ]);
-  }, []);
+  }, [agentName]);
 
-  const handleScanResult = useCallback((ticket) => {
-    if (!ticket) {
-      setCurrentTicket(null);
-      addAlert('unknown', 'Aucun billet trouvé. Vérifiez le code scanné.');
-      playSound('error');
-      vibrateDevice(200);
-      addToast('Billet introuvable', 'error');
-      return;
-    }
-
+  const applyResult = useCallback(({ valide, code, raison, billet }) => {
+    const ticket = mapApiTicket(billet);
+    const status = mapCodeToStatus(code);
     setCurrentTicket(ticket);
+    setCurrentResult({ valide: !!valide, code, raison });
 
-    if (ticket.status === 'valid') {
+    if (valide) {
       playSound('success');
       vibrateDevice(50);
       addToast(`Billet ${ticket.reference} — ${ticket.passenger.name}`, 'success');
-    } else if (['cancelled', 'expired', 'unknown'].includes(ticket.status)) {
+    } else {
       playSound('error');
       vibrateDevice(200);
-      addAlert(ticket.status, `${ticket.passenger.name} — ${ticket.reference}`);
-      addToast(`Billet ${ticket.status}`, 'error');
-    } else if (ticket.status === 'used') {
-      playSound('error');
-      vibrateDevice(150);
-      addAlert('used', `${ticket.passenger.name} — billet déjà utilisé`);
-      addToast('Billet déjà utilisé', 'error');
-    } else if (ticket.status === 'refunded') {
-      playSound('error');
-      addAlert('refunded', `${ticket.passenger.name} — billet remboursé`);
-      addToast('Billet remboursé', 'info');
-    } else if (ticket.status === 'unpaid') {
-      playSound('error');
-      addAlert('unpaid', `${ticket.passenger.name} — paiement non effectué`);
-      addToast('Paiement non effectué', 'error');
+      const alertType = STATUS_TO_ALERT[status] || 'unknown';
+      addAlert(alertType, `${ticket?.passenger?.name || ''} — ${raison || 'Billet non valide'}`);
+      addToast(raison || 'Billet non valide', 'error');
     }
-
-    addHistoryEntry(ticket, ticket.status === 'valid' ? 'boarded' : ticket.status);
+    addHistoryEntry(ticket, status);
   }, [addToast, addAlert, addHistoryEntry]);
 
-  const handleScan = useCallback((source) => {
+  const handleVerifyToken = useCallback(async (token) => {
     setScanning(true);
-    setTimeout(() => {
+    try {
+      const data = await ticketService.verifyToken(token);
       setScanning(false);
-      const ticket = randomScanResult();
-      handleScanResult(ticket);
-    }, 1800);
-  }, [handleScanResult]);
+      applyResult(data);
+    } catch (err) {
+      setScanning(false);
+      playSound('error');
+      vibrateDevice(200);
+      addAlert('unknown', err.message || 'Erreur réseau');
+      addToast('Vérification impossible', 'error');
+    }
+  }, [applyResult, addAlert, addToast]);
+
+  const handleLookup = useCallback(async (query) => {
+    setScanning(true);
+    try {
+      const data = await ticketService.search(query, 1, 5);
+      setScanning(false);
+      const items = (data.items || []).map(mapApiTicket);
+      if (!items.length) {
+        setCurrentTicket(null);
+        setCurrentResult(null);
+        playSound('error');
+        vibrateDevice(200);
+        addAlert('unknown', 'Aucun billet trouvé. Vérifiez la référence saisie.');
+        addToast('Billet introuvable', 'error');
+        return;
+      }
+      const ticket = items.find((t) => t.reference.toLowerCase() === query.toLowerCase()) || items[0];
+      setCurrentTicket(ticket);
+      setCurrentResult(null);
+      if (ticket.status === 'valid') {
+        playSound('success');
+        vibrateDevice(50);
+        addToast(`Billet ${ticket.reference} — ${ticket.passenger.name}`, 'success');
+      } else {
+        playSound('error');
+        vibrateDevice(200);
+        addAlert(STATUS_TO_ALERT[ticket.status] || 'unknown', `${ticket.passenger.name} — billet ${ticket.statut || ticket.status}`);
+        addToast(`Billet ${ticket.statut || ticket.status}`, 'error');
+      }
+      addHistoryEntry(ticket, ticket.status);
+    } catch (err) {
+      setScanning(false);
+      playSound('error');
+      vibrateDevice(200);
+      addAlert('unknown', err.message || 'Erreur réseau');
+      addToast('Recherche impossible', 'error');
+    }
+  }, [addToast, addAlert, addHistoryEntry]);
+
+  const handleScanInput = useCallback((input) => {
+    const token = extractToken(input);
+    if (token) {
+      handleVerifyToken(token);
+    } else if (input) {
+      handleLookup(input);
+    }
+  }, [handleVerifyToken, handleLookup]);
+
+  const handleScan = useCallback((decodedText) => {
+    handleScanInput(decodedText);
+  }, [handleScanInput]);
 
   const handleManualLookup = useCallback((value) => {
-    setScanning(true);
-    setTimeout(() => {
-      setScanning(false);
-      const ticket = findTicket(value);
-      handleScanResult(ticket);
-    }, 600);
-  }, [handleScanResult]);
+    handleScanInput(value);
+  }, [handleScanInput]);
 
   const handleTicketSelect = useCallback((ticket) => {
-    handleScanResult(ticket);
-  }, [handleScanResult]);
+    setCurrentTicket(ticket);
+    setCurrentResult(null);
+  }, []);
+
+  const handleBoard = useCallback(async (ticket) => {
+    setScanning(true);
+    try {
+      const data = await ticketService.checkIn(ticket.id);
+      setScanning(false);
+      const updated = mapApiTicket(data.ticket);
+      setCurrentTicket(updated);
+
+      if (data.boarded) {
+        playSound('success');
+        vibrateDevice(50);
+        addToast(`${updated.passenger.name} a embarqué`, 'success');
+        setCurrentResult({ valide: true, code: data.code || 'VALID', raison: null });
+        setBoarding({ type: 'success', ticket: updated });
+        addHistoryEntry(updated, 'boarded');
+      } else {
+        playSound('error');
+        vibrateDevice(200);
+        addAlert(STATUS_TO_ALERT[mapCodeToStatus(data.code)] || 'refused', data.raison || 'Embarquement refusé');
+        addToast(data.raison || 'Embarquement refusé', 'error');
+        setBoarding({ type: 'error', ticket: updated, reason: data.raison });
+        addHistoryEntry(updated, 'refused');
+      }
+    } catch (err) {
+      setScanning(false);
+      playSound('error');
+      vibrateDevice(200);
+      addAlert('refused', err.message || 'Embarquement impossible');
+      addToast(err.message || 'Embarquement impossible', 'error');
+    }
+  }, [addToast, addAlert, addHistoryEntry]);
+
+  const handlePrint = useCallback(async (ticket) => {
+    try {
+      const blob = await ticketService.pdf(ticket.id);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `billet-${ticket.reference}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      addToast(`Billet ${ticket.reference} imprimé`, 'info');
+    } catch {
+      addToast('Impression impossible', 'error');
+    }
+  }, [addToast]);
+
+  const handleHistory = useCallback(async (ticket) => {
+    setHistoryModal({ ticket, entries: [], loading: true, error: null });
+    try {
+      const data = await ticketService.checkInHistory(ticket.id);
+      setHistoryModal({ ticket, entries: data.items || [], loading: false, error: null });
+    } catch (err) {
+      setHistoryModal({ ticket, entries: [], loading: false, error: err.message || 'Erreur réseau' });
+    }
+  }, []);
 
   const handleAction = useCallback((action, ticket) => {
     switch (action) {
       case 'board':
-        setBoardingType('success');
-        setShowBoarding(ticket);
-        playSound('success');
-        vibrateDevice(50);
-        addToast(`${ticket.passenger.name} a embarqué`, 'success');
-        setCurrentTicket((prev) => prev ? { ...prev, status: 'used', verifiedAt: new Date().toISOString(), verifiedBy: 'Kodjo Jojo' } : prev);
-        addHistoryEntry(ticket, 'boarded');
-        break;
-      case 'refuse':
-        setBoardingType('error');
-        setShowBoarding(ticket);
-        playSound('error');
-        vibrateDevice(200);
-        addToast('Embarquement refusé', 'error');
-        addHistoryEntry(ticket, 'refused');
-        break;
-      case 'details':
-        addToast('Détails du billet', 'info');
-        break;
-      case 'print':
-        addToast('Impression en cours', 'info');
+        handleBoard(ticket);
         break;
       case 'history':
-        addToast('Affichage de l\'historique', 'info');
+        handleHistory(ticket);
+        break;
+      case 'print':
+        handlePrint(ticket);
+        break;
+      case 'refuse':
+        addToast('Embarquement refusé', 'info');
         break;
       default:
         break;
     }
-  }, [addToast, addHistoryEntry]);
+  }, [handleBoard, handleHistory, handlePrint, addToast]);
 
   const handleDismissAlert = useCallback((index) => {
     setAlerts((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
-  if (loading) return <CounterScannerSkeleton />;
-
   return (
     <div className="acv-wrapper">
-      {/* Header */}
       <div className="acv-header">
         <div className="acv-header-left">
           <h1 className="acv-title">Contrôle des billets</h1>
@@ -165,24 +263,19 @@ const CounterScannerPage = () => {
         </div>
       </div>
 
-      {/* Alerts */}
       {alerts.length > 0 && (
         <div style={{ marginBottom: 20 }}>
           <CounterScannerAlerts alerts={alerts} onDismiss={handleDismissAlert} />
         </div>
       )}
 
-      {/* Stats */}
       <CounterScannerStats />
 
-      {/* Search */}
       <div style={{ marginBottom: 20, marginTop: 20 }}>
         <CounterTicketSearch onSelect={handleTicketSelect} />
       </div>
 
-      {/* Main Grid */}
       <div className="acv-main-grid">
-        {/* Scanner Panel */}
         <div className="acv-scanner-panel">
           <div className="acv-scanner-tabs">
             <button
@@ -200,32 +293,39 @@ const CounterScannerPage = () => {
           </div>
 
           {scanMode === 'camera' ? (
-            <CounterScannerCamera onScan={handleScan} scanning={scanning} onScanStart={() => setScanning(true)} />
+            <CounterScannerCamera onScan={handleScan} onScanStart={() => setScanning(true)} />
           ) : (
             <CounterScannerManual onLookup={handleManualLookup} scanning={scanning} />
           )}
         </div>
 
-        {/* Ticket Result */}
         <div className="acv-result-panel">
-          <CounterTicketResult ticket={currentTicket} onAction={handleAction} />
+          <CounterTicketResult ticket={currentTicket} result={currentResult} onAction={handleAction} />
         </div>
       </div>
 
-      {/* History */}
       <CounterScannerHistory history={history} onSelect={handleTicketSelect} />
 
-      {/* Boarding Confirmation Modal */}
-      {showBoarding && (
+      {boarding && (
         <CounterBoardingConfirmation
-          type={boardingType}
-          ticket={showBoarding}
-          onClose={() => setShowBoarding(null)}
+          type={boarding.type}
+          ticket={boarding.ticket}
+          reason={boarding.reason}
+          onClose={() => setBoarding(null)}
           onAction={handleAction}
         />
       )}
 
-      {/* Toasts */}
+      {historyModal && (
+        <CounterScannerHistoryModal
+          ticket={historyModal.ticket}
+          entries={historyModal.entries}
+          loading={historyModal.loading}
+          error={historyModal.error}
+          onClose={() => setHistoryModal(null)}
+        />
+      )}
+
       {toasts.length > 0 && (
         <div className="acv-toast-container">
           {toasts.map((toast) => (

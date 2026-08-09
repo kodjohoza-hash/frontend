@@ -1,21 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
-import { searchTickets } from '@data/counterScannerData';
+import ticketService from '@services/ticket.service';
+import { mapApiTicket } from '@data/ticketScanner';
 import CounterTicketStatus from './CounterTicketStatus';
 
-const SEARCH_MODES = [
-  { key: 'all', label: 'Tout', icon: 'bi-search' },
-  { key: 'reference', label: 'Référence', icon: 'bi-upc-scan' },
-  { key: 'name', label: 'Nom', icon: 'bi-person' },
-  { key: 'phone', label: 'Téléphone', icon: 'bi-telephone' },
-  { key: 'seat', label: 'Siège', icon: 'bi-grid-3x3' },
-];
-
+/**
+ * Recherche en temps réel via l'API réelle (GET /tickets?recherche=…).
+ * Recherche : référence, ID, code-barres, nom/téléphone du client,
+ * référence de réservation, code du voyage.
+ */
 const CounterTicketSearch = ({ onSelect }) => {
   const [query, setQuery] = useState('');
-  const [mode, setMode] = useState('all');
   const [results, setResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const [loading, setLoading] = useState(false);
   const ref = useRef(null);
+  const requestRef = useRef(0);
 
   useEffect(() => {
     const handle = (e) => {
@@ -25,26 +24,33 @@ const CounterTicketSearch = ({ onSelect }) => {
     return () => document.removeEventListener('mousedown', handle);
   }, []);
 
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 2) return undefined;
+    const requestId = ++requestRef.current;
+    const timer = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const data = await ticketService.search(q, 1, 8);
+        if (requestRef.current !== requestId) return;
+        setResults((data.items || []).map(mapApiTicket));
+        setShowResults(true);
+      } catch {
+        if (requestRef.current === requestId) setResults([]);
+      } finally {
+        if (requestRef.current === requestId) setLoading(false);
+      }
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [query]);
+
   const handleChange = (e) => {
     const q = e.target.value;
     setQuery(q);
-    if (q.trim().length >= 2) {
-      let res = searchTickets(q);
-      if (mode !== 'all') {
-        res = res.filter((t) => {
-          const lq = q.toLowerCase();
-          if (mode === 'reference') return t.reference.toLowerCase().includes(lq) || t.id.toLowerCase().includes(lq);
-          if (mode === 'name') return t.passenger.name.toLowerCase().includes(lq);
-          if (mode === 'phone') return t.passenger.phone.includes(lq);
-          if (mode === 'seat') return t.bus.seat.toLowerCase().includes(lq);
-          return true;
-        });
-      }
-      setResults(res.slice(0, 10));
-      setShowResults(true);
-    } else {
+    if (q.trim().length < 2) {
       setResults([]);
       setShowResults(false);
+      setLoading(false);
     }
   };
 
@@ -56,23 +62,6 @@ const CounterTicketSearch = ({ onSelect }) => {
 
   return (
     <div ref={ref} style={{ position: 'relative' }}>
-      <div style={{ display: 'flex', gap: 6, marginBottom: 12, flexWrap: 'wrap' }}>
-        {SEARCH_MODES.map((m) => (
-          <button
-            key={m.key}
-            style={{
-              padding: '5px 12px', borderRadius: 6, border: '1px solid #E5E7EB',
-              background: mode === m.key ? '#FF6B35' : '#fff',
-              color: mode === m.key ? '#fff' : '#6B7280',
-              fontWeight: 500, fontSize: 12, cursor: 'pointer', transition: 'all 0.15s',
-            }}
-            onClick={() => setMode(m.key)}
-          >
-            <i className={`bi ${m.icon}`} style={{ marginRight: 4 }} />
-            {m.label}
-          </button>
-        ))}
-      </div>
       <div className="acv-search-input-group">
         <i className="bi bi-search acv-search-input-icon" />
         <input
@@ -82,6 +71,9 @@ const CounterTicketSearch = ({ onSelect }) => {
           onChange={handleChange}
           onFocus={() => results.length > 0 && setShowResults(true)}
         />
+        {loading && (
+          <i className="bi bi-arrow-repeat acv-search-input-spinner" />
+        )}
       </div>
       {showResults && results.length > 0 && (
         <div style={{
@@ -111,7 +103,7 @@ const CounterTicketSearch = ({ onSelect }) => {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#0B1D51' }}>{t.reference}</div>
                 <div style={{ fontSize: 12, color: '#6B7280' }}>{t.passenger.name} — {t.passenger.phone}</div>
-                <div style={{ fontSize: 11, color: '#9CA3AF' }}>{t.trip.from} → {t.trip.to} · {t.bus.seat}</div>
+                <div style={{ fontSize: 11, color: '#9CA3AF' }}>{t.trip.from} → {t.trip.to} · Siège {t.bus.seat}</div>
               </div>
               <CounterTicketStatus status={t.status} size="sm" />
             </div>

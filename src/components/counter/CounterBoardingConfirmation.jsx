@@ -1,4 +1,4 @@
-const CounterBoardingConfirmation = ({ type, ticket, onClose, onAction }) => {
+const CounterBoardingConfirmation = ({ type, ticket, reason, onClose, onAction }) => {
   const isSuccess = type === 'success';
 
   return (
@@ -12,13 +12,13 @@ const CounterBoardingConfirmation = ({ type, ticket, onClose, onAction }) => {
         </div>
         <div className="acv-boarding-text">
           {isSuccess
-            ? `${ticket.passenger.name} a embarqué avec succès sur le trajet ${ticket.trip.from} → ${ticket.trip.to}.`
-            : `L'embarquement de ${ticket.passenger.name} a été refusé.`}
+            ? `${ticket?.passenger?.name || 'Passager'} a embarqué avec succès sur le trajet ${ticket?.trip?.from || ''} → ${ticket?.trip?.to || ''}.`
+            : `L'embarquement de ${ticket?.passenger?.name || 'Passager'} a été refusé.`}
         </div>
         <div className="acv-boarding-detail">
           {isSuccess
-            ? `Bus ${ticket.bus.plate} · Siège ${ticket.bus.seat} · ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`
-            : `Motif : billet ${ticket.status === 'used' ? 'déjà utilisé' : ticket.status === 'expired' ? 'expiré' : ticket.status === 'cancelled' ? 'annulé' : 'non valide'}`}
+            ? `Bus ${ticket?.bus?.plate || '—'} · Siège ${ticket?.bus?.seat || '—'} · ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`
+            : (reason || `Motif : billet non embarquable (${ticket?.statut || ticket?.status || ''})`)}
         </div>
         <div className="acv-boarding-actions">
           <button className="acv-btn acv-btn-primary" onClick={onClose}>

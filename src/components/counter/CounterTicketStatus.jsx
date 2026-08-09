@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ticketStatusLabels } from '@data/counterScannerData';
+import { ticketStatusLabels } from '@data/ticketScanner';
 
 const CounterTicketStatus = ({ status, size = 'md' }) => {
   const config = ticketStatusLabels[status] || { label: status || 'Inconnu', icon: 'bi-question-circle', color: '#6B7280' };

@@ -8,6 +8,9 @@ const ALERT_TYPES = {
   unpaid: { title: 'Paiement non effectué', icon: 'bi-credit-card', type: 'warning' },
   unknown: { title: 'QR Code invalide', icon: 'bi-question-circle', type: 'error' },
   fraud: { title: 'Tentative de fraude', icon: 'bi-shield-exclamation', type: 'error' },
+  wrong_company: { title: 'Billet d\'une autre compagnie', icon: 'bi-building-x', type: 'error' },
+  boarded: { title: 'Embarquement validé', icon: 'bi-check-circle-fill', type: 'success' },
+  refused: { title: 'Embarquement refusé', icon: 'bi-person-x', type: 'error' },
 };
 
 const CounterScannerAlerts = ({ alerts = [], onDismiss }) => {
