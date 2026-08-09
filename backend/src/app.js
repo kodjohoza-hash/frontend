@@ -37,6 +37,13 @@ app.get('/api/v1/health', (_req, res) => {
 /* Routes API */
 app.use('/api/v1', routes);
 
+/* Module Trips (voyages : instances d'itinéraire, CRUD, statuts, recherche publique, KPIs).
+   Monté AVANT les modules à `router.use(authenticate)` racine (bookings, payments, …) pour que
+   les routes publiques GET /trips/available et GET /trips/:id (authOptional) soient atteintes.
+   Le router trips est déclaratif (auth inline) : aucune route non-trips n'est interceptée. */
+const tripsModule = require('./modules/trips');
+app.use('/api/v1', tripsModule.routes);
+
 /* Module Bookings (réservations : CRUD, sièges, paiements, expirations, statistiques)
    Monté en premier : la route publique GET /bookings/availability doit être
    atteinte avant les `router.use(authenticate)` des autres modules. */
