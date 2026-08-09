@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import useAuth from '@hooks/useAuth';
-import { notifications as initialNotifications } from '@data/notificationsData';
+import { useNotificationStore } from '@store';
 
 const DbHeader = ({ onToggleSidebar, onLogout }) => {
   const { user } = useAuth();
@@ -10,10 +10,8 @@ const DbHeader = ({ onToggleSidebar, onLogout }) => {
   const [searchValue, setSearchValue] = useState('');
   const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [notifications, setNotifications] = useState(
-    initialNotifications.sort((a, b) => new Date(b.date) - new Date(a.date))
-  );
   const [bellBounce, setBellBounce] = useState(false);
+  const { items: notifications, unread: unreadCount, markRead, markAllRead, remove } = useNotificationStore();
   const navigate = useNavigate();
   const searchRef = useRef(null);
   const notifRef = useRef(null);
@@ -21,7 +19,6 @@ const DbHeader = ({ onToggleSidebar, onLogout }) => {
 
   const firstName = user?.firstName || '';
   const initials = (user?.firstName?.[0] || '') + (user?.lastName?.[0] || '');
-  const unreadCount = notifications.filter((n) => !n.read).length;
 
   const triggerBellBounce = useCallback(() => {
     setBellBounce(true);
@@ -32,6 +29,12 @@ const DbHeader = ({ onToggleSidebar, onLogout }) => {
     const timer = setTimeout(triggerBellBounce, 1200);
     return () => clearTimeout(timer);
   }, [triggerBellBounce]);
+
+  const prevUnreadRef = useRef(unreadCount);
+  useEffect(() => {
+    if (unreadCount > prevUnreadRef.current) triggerBellBounce();
+    prevUnreadRef.current = unreadCount;
+  }, [unreadCount, triggerBellBounce]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -59,19 +62,17 @@ const DbHeader = ({ onToggleSidebar, onLogout }) => {
 
   const handleMarkAllRead = (e) => {
     e.stopPropagation();
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    markAllRead();
   };
 
   const handleMarkRead = (e, id) => {
     e.stopPropagation();
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-    );
+    markRead(id);
   };
 
   const handleDelete = (e, id) => {
     e.stopPropagation();
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    remove(id);
   };
 
   const handleSearchSubmit = (e) => {

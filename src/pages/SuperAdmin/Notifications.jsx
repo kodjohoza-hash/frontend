@@ -1,173 +1,146 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import '../../../src/assets/styles/admin-notifications.css';
-import useSubscriptionsStore from '../../../src/store/subscriptions.store';
+import { useMemo, useState } from 'react';
 import {
-  AdminNotificationStats,
-  AdminNotificationFilters,
-  AdminNotificationComposer,
-  AdminNotificationTemplates,
-  AdminNotificationHistory,
-  AdminNotificationTimeline,
-  AdminNotificationCharts,
-  AdminNotificationPreview,
-  AdminNotificationRecipients,
-  AdminNotificationSkeleton,
-} from '../../../src/components/admin/notifications';
-import {
-  notifChannels, notifCategories, notifSenders, notifNotifications,
-  notifTemplates, notifDailyData, notifByChannel, notifByCategory,
-  notifTimeline, notifKPI, filterNotifications,
-} from '../../../src/data/adminNotificationData';
+  NotificationsHeader,
+  NotificationsStats,
+  NotificationsSearch,
+  NotificationsFilters,
+  NotificationCard,
+  NotificationDrawer,
+  NotificationEmptyState,
+  NotificationSkeleton,
+  NotificationsPagination,
+} from '@components/notifications';
+import { ROUTES } from '@routes/routeConstants';
+import { useNotificationStore } from '@store';
+import '@assets/styles/notifications.css';
 
-const Notifications = () => {
-  const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState('dashboard');
-  const [cat, setCat] = useState('all');
-  const [ch, setCh] = useState('all');
+const SuperAdminNotificationsPage = () => {
+  const store = useNotificationStore();
   const [search, setSearch] = useState('');
-  const [toast, setToast] = useState(null);
-  const [previewNotif, setPreviewNotif] = useState(null);
-  const [recipientSegment, setRecipientSegment] = useState('all');
-  const [saasNotifs, setSaasNotifs] = useState([]);
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState('all');
+  const [drawerNotification, setDrawerNotification] = useState(null);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const store = useSubscriptionsStore.getState();
-      const res = await store.loadNotifications();
-      if (!cancelled) {
-        const items = (store.notifications || []).map((n) => ({
-          id: String(n.id),
-          title: n.title,
-          category: 'Abonnement',
-          channel: n.canal || 'inapp',
-          status: 'sent',
-          recipients: n.companyName || 'Compagnie',
-          scheduledAt: n.date ? String(n.date).replace('T', ' ').slice(0, 16) : '—',
-          content: n.message,
-          body: n.message,
-          company: n.companyName,
-        }));
-        setSaasNotifs(res.length > 0 ? items : []);
-      }
-    })();
-    return () => { cancelled = true; };
-  }, []);
+  const { items, total, unread, page, totalPages, loading, error } = store;
+
+  const stats = useMemo(() => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const weekAgo = new Date(today);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    return {
+      total,
+      unread,
+      today: items.filter((n) => n.date && new Date(n.date) >= today).length,
+      week: items.filter((n) => n.date && new Date(n.date) >= weekAgo).length,
+    };
+  }, [items, total, unread]);
 
   const filtered = useMemo(() => {
-    if (search || cat !== 'all' || ch !== 'all') {
-      return filterNotifications(notifNotifications, { category: cat, channel: ch, search });
+    let result = items;
+    if (activeFilter === 'unread') result = result.filter((n) => !n.read);
+    else if (activeFilter !== 'all') result = result.filter((n) => n.category === activeFilter);
+    if (dateFilter !== 'all') {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      if (dateFilter === 'today') result = result.filter((n) => n.date && new Date(n.date) >= today);
+      else if (dateFilter === 'week') {
+        const weekAgo = new Date(today);
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        result = result.filter((n) => n.date && new Date(n.date) >= weekAgo);
+      } else if (dateFilter === 'month') {
+        const monthAgo = new Date(today);
+        monthAgo.setMonth(monthAgo.getMonth() - 1);
+        result = result.filter((n) => n.date && new Date(n.date) >= monthAgo);
+      }
     }
-    return notifNotifications;
-  }, [cat, ch, search]);
+    if (priorityFilter !== 'all') result = result.filter((n) => n.priority === priorityFilter);
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter(
+        (n) =>
+          n.title.toLowerCase().includes(q) ||
+          n.message.toLowerCase().includes(q) ||
+          (n.company && n.company.toLowerCase().includes(q)) ||
+          (n.bookingRef && n.bookingRef.toLowerCase().includes(q))
+      );
+    }
+    return result;
+  }, [items, activeFilter, dateFilter, priorityFilter, search]);
 
-  const showToast = (msg, type = 'info') => {
-    setToast({ msg, type });
-    setTimeout(() => setToast(null), 3000);
+  const handleMarkAllRead = () => store.markAllRead();
+  const handleDeleteRead = () => store.removeRead();
+  const handleMarkRead = (id) => store.markRead(id);
+  const handleDelete = (id) => {
+    store.remove(id);
+    if (drawerNotification?.id === id) setDrawerNotification(null);
   };
 
-  const handleSend = (form) => {
-    showToast('Notification envoyée avec succès', 'success');
-  };
+  if (loading && items.length === 0) return <NotificationSkeleton />;
 
-  const totalKPI = Object.entries(notifKPI).reduce((acc, [k, v]) => { acc[k] = v.value; return acc; }, {});
+  if (error && items.length === 0) {
+    return (
+      <div className="nf-error">
+        <div className="nf-error__visual">
+          <i className="bi bi-cloud-slash" />
+        </div>
+        <h3 className="nf-error__title">Impossible de charger les notifications</h3>
+        <p className="nf-error__text">{error}</p>
+        <button type="button" className="nf-btn nf-btn--primary" onClick={() => store.fetchPage(1)}>
+          <i className="bi bi-arrow-clockwise" />
+          Réessayer
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="adn-dashboard">
-      <div className="adn-hero">
-        <div className="adn-hero-content">
-          <h1><i className="fas fa-bell" /> Centre de notifications</h1>
-          <p>Gérez, composez et analysez toutes les notifications de la plateforme</p>
+    <>
+      <NotificationsHeader
+        unreadCount={stats.unread}
+        totalCount={stats.total}
+        onMarkAllRead={handleMarkAllRead}
+        onDeleteRead={handleDeleteRead}
+      />
+      <NotificationsStats stats={stats} />
+      <NotificationsSearch value={search} onChange={setSearch} />
+      <NotificationsFilters
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+        dateFilter={dateFilter}
+        onDateChange={setDateFilter}
+        priorityFilter={priorityFilter}
+        onPriorityChange={setPriorityFilter}
+      />
+      {filtered.length === 0 ? (
+        <NotificationEmptyState
+          isFiltered={activeFilter !== 'all' || search.trim() !== ''}
+          dashboardPath={ROUTES.SUPER_ADMIN_DASHBOARD}
+        />
+      ) : (
+        <div className="nf-list">
+          {filtered.map((notification) => (
+            <NotificationCard
+              key={notification.id}
+              notification={notification}
+              onOpen={setDrawerNotification}
+              onMarkRead={handleMarkRead}
+              onDelete={handleDelete}
+            />
+          ))}
         </div>
-      </div>
-      <AdminNotificationStats loading={loading} />
-      <div className="adn-tabs">
-        {[
-          { id: 'dashboard', label: 'Tableau de bord', icon: 'fa-chart-pie' },
-          { id: 'composer', label: 'Composer', icon: 'fa-pen' },
-          { id: 'history', label: 'Historique', icon: 'fa-clock-rotate' },
-          { id: 'templates', label: 'Gabarits', icon: 'fa-file-lines' },
-          { id: 'recipients', label: 'Segments', icon: 'fa-users' },
-        ].map(t => (
-          <button key={t.id} className={`adn-tab ${tab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>
-            <i className={`fas ${t.icon}`} />{t.label}
-          </button>
-        ))}
-      </div>
-      {tab === 'dashboard' && (
-        <>
-          <AdminNotificationCharts dailyData={notifDailyData} byChannelData={notifByChannel} byCategoryData={notifByCategory} />
-          <div className="adn-section-header"><h3><i className="fas fa-clock" style={{ color: '#8B5CF6' }} /> Activité récente</h3></div>
-          <div style={{ background: '#13132B', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 14, padding: '0.5rem 1.25rem' }}>
-            <AdminNotificationTimeline events={notifTimeline} />
-          </div>
-          <div className="adn-section-header" style={{ marginTop: '1.5rem' }}><h3><i className="fas fa-bolt" style={{ color: '#FBBF24' }} /> Aperçu rapide</h3></div>
-          <AdminNotificationPreview notification={previewNotif || (filtered.length > 0 ? filtered[0] : null)} />
-        </>
       )}
-      {tab === 'composer' && (
-        <>
-          <div className="adn-section-header"><h3><i className="fas fa-pen" style={{ color: '#8B5CF6' }} /> Nouvelle notification</h3></div>
-          <AdminNotificationComposer senders={notifSenders} channels={notifChannels} onSend={handleSend} />
-          <div style={{ marginTop: '1.5rem' }}>
-            <div className="adn-section-header"><h3><i className="fas fa-users" style={{ color: '#3B82F6' }} /> Segment cible</h3></div>
-            <AdminNotificationRecipients selected={recipientSegment} onChange={setRecipientSegment} />
-          </div>
-        </>
+      <NotificationsPagination page={page} totalPages={totalPages} onPageChange={store.fetchPage} />
+      {drawerNotification && (
+        <NotificationDrawer
+          notification={drawerNotification}
+          onClose={() => setDrawerNotification(null)}
+          onMarkRead={handleMarkRead}
+        />
       )}
-      {tab === 'history' && (
-        <>
-          {saasNotifs.length > 0 && (
-            <>
-              <div className="adn-section-header"><h3><i className="fas fa-bell" style={{ color: '#10B981' }} /> Notifications SaaS — rappels d'abonnement</h3></div>
-              <AdminNotificationHistory notifications={saasNotifs} onView={setPreviewNotif} onDelete={(id) => showToast('Notification supprimée', 'info')} />
-              <div className="adn-section-header" style={{ marginTop: '1.5rem' }}><h3><i className="fas fa-clock-rotate" style={{ color: '#3B82F6' }} /> Toutes les notifications</h3></div>
-            </>
-          )}
-          <AdminNotificationFilters cat={cat} setCat={setCat} search={search} setSearch={setSearch} channels={notifChannels} ch={ch} setCh={setCh} />
-          {saasNotifs.length === 0 && <div className="adn-section-header"><h3><i className="fas fa-clock-rotate" style={{ color: '#3B82F6' }} /> Toutes les notifications</h3></div>}
-          {loading ? <AdminNotificationSkeleton rows={5} /> : (
-            <AdminNotificationHistory notifications={filtered} onView={setPreviewNotif} onDelete={(id) => showToast('Notification supprimée', 'info')} />
-          )}
-          {previewNotif && (
-            <div style={{ marginTop: '1rem' }}>
-              <div className="adn-section-header"><h3><i className="fas fa-eye" style={{ color: '#8B5CF6' }} /> Détails</h3></div>
-              <AdminNotificationPreview notification={previewNotif} onClose={() => setPreviewNotif(null)} />
-            </div>
-          )}
-        </>
-      )}
-      {tab === 'templates' && (
-        <>
-          <div className="adn-section-header"><h3><i className="fas fa-file-lines" style={{ color: '#10B981' }} /> Gabarits disponibles</h3></div>
-          <AdminNotificationTemplates templates={notifTemplates} onSelect={(t) => showToast(`Gabarit "${t.name}" sélectionné`, 'info')} onPreview={(t) => setPreviewNotif({ title: t.name, body: t.template, category: t.category, channel: 'inapp', recipients: 0 })} />
-        </>
-      )}
-      {tab === 'recipients' && (
-        <>
-          <div className="adn-section-header"><h3><i className="fas fa-users" style={{ color: '#EC4899' }} /> Segments de destinataires</h3></div>
-          <AdminNotificationRecipients selected={recipientSegment} onChange={setRecipientSegment} />
-          <div style={{ marginTop: '1.5rem', background: '#13132B', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 14, padding: '1.25rem' }}>
-            <div className="adn-chart-title"><i className="fas fa-chart-bar" style={{ color: '#8B5CF6' }} /> Répartition par segment</div>
-            <div className="adn-hbar-list">
-              {[
-                { label: 'Tous', value: 100, color: '#8B5CF6' },
-                { label: 'Clients', value: 72, color: '#3B82F6' },
-                { label: 'Agents', value: 45, color: '#10B981' },
-                { label: 'Partenaires', value: 28, color: '#FBBF24' },
-                { label: 'Premium', value: 12, color: '#EC4899' },
-              ].map((d, i) => (
-                <div key={i} className="adn-hbar-item">
-                  <span className="adn-hbar-label">{d.label}</span>
-                  <div className="adn-hbar-track"><div className="adn-hbar-fill" style={{ width: `${d.value}%`, background: `linear-gradient(90deg, ${d.color}, ${d.color}88)` }}>{d.value}%</div></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-      {toast && <div className={`adn-toast ${toast.type}`}><i className={`fas ${toast.type === 'success' ? 'fa-check-circle' : toast.type === 'error' ? 'fa-times-circle' : 'fa-info-circle'}`} />{toast.msg}</div>}
-    </div>
+    </>
   );
 };
-export default Notifications;
+
+export default SuperAdminNotificationsPage;

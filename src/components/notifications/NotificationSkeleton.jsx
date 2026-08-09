@@ -31,7 +31,7 @@ const NotificationSkeleton = () => {
       <div className="nf-skeleton__filters">
         <div className="nf-skeleton__filter-tabs">
           {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-            <div key={i} className="nf-bar" style={{ width: 70 + Math.random() * 30, height: 36 }} />
+            <div key={i} className="nf-bar" style={{ width: 70 + (i % 4) * 10, height: 36 }} />
           ))}
         </div>
         <div className="nf-skeleton__filter-selects">

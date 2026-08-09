@@ -1,6 +1,4 @@
-import clsx from 'clsx';
-
-const NotificationsHeader = ({ unreadCount, totalCount, onMarkAllRead, onDeleteRead }) => {
+const NotificationsHeader = ({ unreadCount, onMarkAllRead, onDeleteRead }) => {
   return (
     <div className="nf-page__header">
       <div className="nf-page__title-group">

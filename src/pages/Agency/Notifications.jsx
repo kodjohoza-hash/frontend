@@ -1,125 +1,146 @@
-import { useState, useMemo, useCallback } from 'react';
-import { notificationStats, mockNotifications, notificationCategories, notificationDetailExample, notificationFilters as defaultFilters } from '@data/notificationData';
-import AgencyNotificationStats from '@components/agency/AgencyNotificationStats';
-import AgencyNotificationFilters from '@components/agency/AgencyNotificationFilters';
-import AgencyNotificationList from '@components/agency/AgencyNotificationList';
-import AgencyNotificationCard from '@components/agency/AgencyNotificationCard';
-import AgencyNotificationDetails from '@components/agency/AgencyNotificationDetails';
-import AgencyNotificationSkeleton from '@components/agency/AgencyNotificationSkeleton';
+import { useMemo, useState } from 'react';
+import {
+  NotificationsHeader,
+  NotificationsStats,
+  NotificationsSearch,
+  NotificationsFilters,
+  NotificationCard,
+  NotificationDrawer,
+  NotificationEmptyState,
+  NotificationSkeleton,
+  NotificationsPagination,
+} from '@components/notifications';
+import { ROUTES } from '@routes/routeConstants';
+import { useNotificationStore } from '@store';
+import '@assets/styles/notifications.css';
 
-const PAGE_SIZE = 10;
+const AgencyNotificationsPage = () => {
+  const store = useNotificationStore();
+  const [search, setSearch] = useState('');
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState('all');
+  const [drawerNotification, setDrawerNotification] = useState(null);
 
-export default function AgencyNotifications() {
-  const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState(defaultFilters);
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedNotif, setSelectedNotif] = useState(null);
+  const { items, total, unread, page, totalPages, loading, error } = store;
+
+  const stats = useMemo(() => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const weekAgo = new Date(today);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    return {
+      total,
+      unread,
+      today: items.filter((n) => n.date && new Date(n.date) >= today).length,
+      week: items.filter((n) => n.date && new Date(n.date) >= weekAgo).length,
+    };
+  }, [items, total, unread]);
 
   const filtered = useMemo(() => {
-    return mockNotifications.filter((n) => {
-      if (filters.search) {
-        const q = filters.search.toLowerCase();
-        if (!n.title.toLowerCase().includes(q) && !n.description.toLowerCase().includes(q)) return false;
+    let result = items;
+    if (activeFilter === 'unread') result = result.filter((n) => !n.read);
+    else if (activeFilter !== 'all') result = result.filter((n) => n.category === activeFilter);
+    if (dateFilter !== 'all') {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      if (dateFilter === 'today') result = result.filter((n) => n.date && new Date(n.date) >= today);
+      else if (dateFilter === 'week') {
+        const weekAgo = new Date(today);
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        result = result.filter((n) => n.date && new Date(n.date) >= weekAgo);
+      } else if (dateFilter === 'month') {
+        const monthAgo = new Date(today);
+        monthAgo.setMonth(monthAgo.getMonth() - 1);
+        result = result.filter((n) => n.date && new Date(n.date) >= monthAgo);
       }
-      if (filters.category && n.category !== filters.category) return false;
-      if (filters.priority && n.priority !== filters.priority) return false;
-      if (filters.status && n.status !== filters.status) return false;
-      if (filters.branch && n.branch !== filters.branch) return false;
-      if (filters.agent && n.agent !== filters.agent) return false;
-      if (filters.trip && n.trip !== filters.trip) return false;
-      if (filters.dateFrom && new Date(n.date) < new Date(filters.dateFrom)) return false;
-      return true;
-    });
-  }, [filters]);
-
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-
-  const handleAction = useCallback((actionId, notif) => {
-    if (actionId === 'view') {
-      setSelectedNotif({ ...notificationDetailExample, ...notif });
-    } else if (actionId === 'delete') {
-      if (window.confirm(`Supprimer la notification "${notif.title}" ?`)) {
-        console.log('Deleted:', notif.id);
-      }
-    } else if (actionId === 'mark_read' || actionId === 'mark_unread') {
-      console.log(`${actionId}:`, notif.id);
-    } else if (actionId === 'pin') {
-      console.log('Pin toggled:', notif.id);
-    } else if (actionId === 'archive') {
-      console.log('Archived:', notif.id);
-    } else if (actionId === 'share') {
-      console.log('Share:', notif.id);
-    } else if (actionId === 'copy_link') {
-      navigator.clipboard?.writeText?.(`${window.location.origin}/agency/notifications/${notif.id}`);
     }
-  }, []);
+    if (priorityFilter !== 'all') result = result.filter((n) => n.priority === priorityFilter);
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter(
+        (n) =>
+          n.title.toLowerCase().includes(q) ||
+          n.message.toLowerCase().includes(q) ||
+          (n.company && n.company.toLowerCase().includes(q)) ||
+          (n.bookingRef && n.bookingRef.toLowerCase().includes(q))
+      );
+    }
+    return result;
+  }, [items, activeFilter, dateFilter, priorityFilter, search]);
 
-  const handleFilterChange = useCallback((newFilters) => {
-    setFilters(newFilters);
-    setCurrentPage(1);
-  }, []);
+  const handleMarkAllRead = () => store.markAllRead();
+  const handleDeleteRead = () => store.removeRead();
+  const handleMarkRead = (id) => store.markRead(id);
+  const handleDelete = (id) => {
+    store.remove(id);
+    if (drawerNotification?.id === id) setDrawerNotification(null);
+  };
 
-  const handleReset = useCallback(() => {
-    setFilters(defaultFilters);
-    setCurrentPage(1);
-  }, []);
+  if (loading && items.length === 0) return <NotificationSkeleton />;
 
-  if (loading) return <AgencyNotificationSkeleton />;
-
-  if (selectedNotif) {
+  if (error && items.length === 0) {
     return (
-      <div className="anot-page">
-        <AgencyNotificationDetails
-          notification={selectedNotif}
-          onAction={(actionId) => handleAction(actionId, selectedNotif)}
-          onBack={() => setSelectedNotif(null)}
-        />
+      <div className="nf-error">
+        <div className="nf-error__visual">
+          <i className="bi bi-cloud-slash" />
+        </div>
+        <h3 className="nf-error__title">Impossible de charger les notifications</h3>
+        <p className="nf-error__text">{error}</p>
+        <button type="button" className="nf-btn nf-btn--primary" onClick={() => store.fetchPage(1)}>
+          <i className="bi bi-arrow-clockwise" />
+          Réessayer
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="anot-page">
-      <div className="anot-page__header">
-        <div className="anot-page__title-group">
-          <h1 className="anot-page__title">
-            <i className="bi bi-bell" />
-            Centre de notifications
-          </h1>
-          <span className="anot-page__subtitle">
-            {filtered.length} notification{filtered.length !== 1 ? 's' : ''}
-          </span>
+    <>
+      <NotificationsHeader
+        unreadCount={stats.unread}
+        totalCount={stats.total}
+        onMarkAllRead={handleMarkAllRead}
+        onDeleteRead={handleDeleteRead}
+      />
+      <NotificationsStats stats={stats} />
+      <NotificationsSearch value={search} onChange={setSearch} />
+      <NotificationsFilters
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+        dateFilter={dateFilter}
+        onDateChange={setDateFilter}
+        priorityFilter={priorityFilter}
+        onPriorityChange={setPriorityFilter}
+      />
+      {filtered.length === 0 ? (
+        <NotificationEmptyState
+          isFiltered={activeFilter !== 'all' || search.trim() !== ''}
+          dashboardPath={ROUTES.COMPANY_DASHBOARD}
+        />
+      ) : (
+        <div className="nf-list">
+          {filtered.map((notification) => (
+            <NotificationCard
+              key={notification.id}
+              notification={notification}
+              onOpen={setDrawerNotification}
+              onMarkRead={handleMarkRead}
+              onDelete={handleDelete}
+            />
+          ))}
         </div>
-      </div>
-
-      <AgencyNotificationStats stats={notificationStats} />
-
-      <AgencyNotificationFilters
-        categories={notificationCategories}
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        showAdvanced={showAdvanced}
-        onToggleAdvanced={() => setShowAdvanced((p) => !p)}
-        onReset={handleReset}
-      />
-
-      {/* Mobile cards */}
-      <div style={{ display: 'none' }} className="anot-mobile-container">
-        {paginated.map((n) => (
-          <AgencyNotificationCard key={n.id} notification={n} onAction={handleAction} />
-        ))}
-      </div>
-
-      <AgencyNotificationList
-        notifications={paginated}
-        onAction={handleAction}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-        totalCount={filtered.length}
-      />
-    </div>
+      )}
+      <NotificationsPagination page={page} totalPages={totalPages} onPageChange={store.fetchPage} />
+      {drawerNotification && (
+        <NotificationDrawer
+          notification={drawerNotification}
+          onClose={() => setDrawerNotification(null)}
+          onMarkRead={handleMarkRead}
+        />
+      )}
+    </>
   );
-}
+};
+
+export default AgencyNotificationsPage;

@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import useAuth from '@hooks/useAuth';
 import AppLogo from '@components/common/AppLogo';
-import { notifications, conversations } from '@data/adminData';
+import { useNotificationStore } from '@store';
 
 const AdminHeader = ({ onToggleSidebar, onLogout }) => {
   const { user } = useAuth();
@@ -37,7 +37,30 @@ const AdminHeader = ({ onToggleSidebar, onLogout }) => {
   };
 
   const pageName = breadcrumbMap[location.pathname] || 'Tableau de bord';
-  const unreadCount = notifications.filter((n) => n.unread).length;
+  const { items: notifications, unread: unreadCount, markRead } = useNotificationStore();
+  const dropdownNotifs = notifications.slice(0, 5);
+
+  const formatTime = (dateStr) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMin = Math.floor((now - date) / 60000);
+    if (diffMin < 1) return "À l'instant";
+    if (diffMin < 60) return `Il y a ${diffMin}min`;
+    const diffH = Math.floor(diffMin / 60);
+    if (diffH < 24) return `Il y a ${diffH}h`;
+    const diffD = Math.floor(diffH / 24);
+    if (diffD === 1) return 'Hier';
+    if (diffD < 7) return `Il y a ${diffD}j`;
+    return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+  };
+
+  const handleNotifClick = (n) => {
+    if (!n.read) markRead(n.id);
+    if (n.actionPath) {
+      navigate(n.actionPath);
+      setNotifOpen(false);
+    }
+  };
 
   return (
     <header className="adm-header">
@@ -74,18 +97,28 @@ const AdminHeader = ({ onToggleSidebar, onLogout }) => {
                 {unreadCount > 0 && <span className="adm-header__dropdown-count">{unreadCount}</span>}
               </div>
               <div className="adm-header__dropdown-list">
-                {notifications.map((n) => (
-                  <div key={n.id} className={clsx('adm-header__notif-item', n.unread && 'adm-header__notif-item--unread')}>
+                {dropdownNotifs.length === 0 && (
+                  <div className="adm-header__notif-empty">
+                    <i className="bi bi-bell-slash" />
+                    <span>Aucune notification</span>
+                  </div>
+                )}
+                {dropdownNotifs.map((n) => (
+                  <div
+                    key={n.id}
+                    className={clsx('adm-header__notif-item', !n.read && 'adm-header__notif-item--unread')}
+                    onClick={() => handleNotifClick(n)}
+                  >
                     <div className={`adm-header__notif-dot adm-header__notif-dot--${n.color}`} style={{ background: `var(--adm-${n.color})` }} />
                     <div className="adm-header__notif-body">
                       <span className="adm-header__notif-title">{n.title}</span>
                       <span className="adm-header__notif-msg">{n.message}</span>
-                      <span className="adm-header__notif-time">Il y a {n.time}</span>
+                      <span className="adm-header__notif-time">{formatTime(n.date)}</span>
                     </div>
                   </div>
                 ))}
               </div>
-              <button type="button" className="adm-header__dropdown-footer" onClick={() => setNotifOpen(false)}>
+              <button type="button" className="adm-header__dropdown-footer" onClick={() => { navigate('/super-admin/notifications'); setNotifOpen(false); }}>
                 <i className="bi bi-bell" /> Voir toutes les notifications
               </button>
             </div>

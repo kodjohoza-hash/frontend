@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import useAuth from '@hooks/useAuth';
 import AppLogo from '@components/common/AppLogo';
+import { useNotificationStore } from '@store';
 
 const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
   const { user } = useAuth();
@@ -47,13 +48,30 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
 
   const pageName = breadcrumbMap[location.pathname] || 'Tableau de bord';
 
-  const mockNotifs = [
-    { id: 1, title: 'Nouvelle réservation', message: 'BK-2026-1847 — Douala → Yaoundé', time: '5min', unread: true },
-    { id: 2, title: 'Paiement reçu', message: '8 500 XAF — BK-2026-1845', time: '12min', unread: true },
-    { id: 3, title: 'Alerte bus', message: 'Standard-02 en maintenance', time: '3h', unread: false },
-  ];
+  const { items: notifications, unread: unreadCount, markRead } = useNotificationStore();
+  const dropdownNotifs = notifications.slice(0, 5);
 
-  const unreadCount = mockNotifs.filter((n) => n.unread).length;
+  const formatTime = (dateStr) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMin = Math.floor((now - date) / 60000);
+    if (diffMin < 1) return "À l'instant";
+    if (diffMin < 60) return `Il y a ${diffMin}min`;
+    const diffH = Math.floor(diffMin / 60);
+    if (diffH < 24) return `Il y a ${diffH}h`;
+    const diffD = Math.floor(diffH / 24);
+    if (diffD === 1) return 'Hier';
+    if (diffD < 7) return `Il y a ${diffD}j`;
+    return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+  };
+
+  const handleNotifClick = (n) => {
+    if (!n.read) markRead(n.id);
+    if (n.actionPath) {
+      navigate(n.actionPath);
+      setNotifOpen(false);
+    }
+  };
 
   return (
     <header className="ag-header">
@@ -117,12 +135,22 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
                 {unreadCount > 0 && <span className="ag-header__dropdown-count">{unreadCount}</span>}
               </div>
               <div className="ag-header__dropdown-list">
-                {mockNotifs.map((n) => (
-                  <div key={n.id} className={clsx('ag-header__notif-item', n.unread && 'ag-header__notif-item--unread')}>
+                {dropdownNotifs.length === 0 && (
+                  <div className="ag-header__notif-empty">
+                    <i className="bi bi-bell-slash" />
+                    <span>Aucune notification</span>
+                  </div>
+                )}
+                {dropdownNotifs.map((n) => (
+                  <div
+                    key={n.id}
+                    className={clsx('ag-header__notif-item', !n.read && 'ag-header__notif-item--unread')}
+                    onClick={() => handleNotifClick(n)}
+                  >
                     <div className="ag-header__notif-body">
                       <span className="ag-header__notif-title">{n.title}</span>
                       <span className="ag-header__notif-msg">{n.message}</span>
-                      <span className="ag-header__notif-time">Il y a {n.time}</span>
+                      <span className="ag-header__notif-time">{formatTime(n.date)}</span>
                     </div>
                   </div>
                 ))}

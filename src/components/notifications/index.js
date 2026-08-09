@@ -7,3 +7,4 @@ export { default as NotificationDrawer } from './NotificationDrawer';
 export { default as NotificationBadge } from './NotificationBadge';
 export { default as NotificationEmptyState } from './NotificationEmptyState';
 export { default as NotificationSkeleton } from './NotificationSkeleton';
+export { default as NotificationsPagination } from './NotificationsPagination';

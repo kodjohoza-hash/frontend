@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@routes/routeConstants';
 
-const NotificationEmptyState = ({ isFiltered }) => {
+const NotificationEmptyState = ({ isFiltered, dashboardPath = ROUTES.CLIENT_DASHBOARD }) => {
   return (
     <div className="nf-empty">
       <div className="nf-empty__visual">
@@ -22,7 +22,7 @@ const NotificationEmptyState = ({ isFiltered }) => {
           ? 'Aucune notification ne correspond à vos filtres. Essayez de modifier vos critères de recherche.'
           : 'Vous n\'avez pas encore de notifications. Elles apparaîtront ici lorsque vous aurez de l\'activité sur votre compte.'}
       </p>
-      <Link to={ROUTES.CLIENT_DASHBOARD} className="nf-btn nf-btn--primary">
+      <Link to={dashboardPath} className="nf-btn nf-btn--primary">
         <i className="bi bi-arrow-left" />
         Retour au Dashboard
       </Link>

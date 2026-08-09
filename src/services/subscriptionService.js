@@ -30,9 +30,9 @@ const SubscriptionService = {
   revenueByCompany: () => apiClient.get('/payments/revenue/by-company'),
   recordPayment: (payload) => apiClient.post('/payments', payload),
 
-  /* ── Notifications ── */
-  listAllNotifications: (params) => apiClient.get('/notifications', { params }),
-  getMyNotifications: () => apiClient.get('/notifications/mine'),
+  /* ── Notifications (abonnements SaaS, sous /abonnements) ── */
+  listAllNotifications: (params) => apiClient.get('/abonnements/notifications', { params }),
+  getMyNotifications: () => apiClient.get('/abonnements/notifications/mine'),
 
   /* ── Revenus (dashboard financier) ── */
   getRevenue: () => apiClient.get('/revenue'),
