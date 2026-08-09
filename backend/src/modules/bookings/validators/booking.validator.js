@@ -182,10 +182,14 @@ const cancelSchema = Joi.object({
   }),
 });
 
-/** Enregistrement d'un paiement. */
+/** Enregistrement d'un paiement.
+ *  Le montant est optionnel : s'il est omis, le montant facturé est calculé
+ *  côté serveur (reste à payer de la réservation, lui-même issu du montant
+ *  calculé au serveur à la création). Le client ne fournit jamais un montant
+ *  de confiance. */
 const paymentSchema = Joi.object({
-  montant: Joi.number().integer().min(1).required().messages({
-    'any.required': 'Le montant du paiement est requis.',
+  montant: Joi.number().integer().min(1).optional().messages({
+    'number.integer': 'Le montant doit être un entier (XAF).',
     'number.min': 'Le montant doit être supérieur à zéro.',
   }),
   methode: Joi.string().valid(...MODES_PAIEMENT).required().messages({

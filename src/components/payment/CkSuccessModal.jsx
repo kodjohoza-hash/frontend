@@ -4,7 +4,10 @@ import { ROUTES } from '@routes/routeConstants';
 
 const CkSuccessModal = memo(({ transaction }) => {
   const navigate = useNavigate();
-  const goToTicket = useCallback(() => navigate(ROUTES.BOOKING_CONFIRMATION), [navigate]);
+  const goToTicket = useCallback(() => {
+    const state = (transaction && transaction.confirmation) || null;
+    navigate(ROUTES.BOOKING_CONFIRMATION, { state });
+  }, [navigate, transaction]);
   const goHome = useCallback(() => navigate(ROUTES.HOME), [navigate]);
 
   return (

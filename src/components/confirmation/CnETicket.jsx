@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-const CnETicket = memo(({ booking, trip, passengers, payment }) => {
+const CnETicket = memo(({ booking, trip, passengers, payment, qrUrl }) => {
   const date = new Date(trip.schedule.date + 'T00:00:00');
 
   return (
@@ -120,6 +120,13 @@ const CnETicket = memo(({ booking, trip, passengers, payment }) => {
         {/* QR + Barcode */}
         <div className="cn-ticket__codes">
           <div className="cn-ticket__qr" role="img" aria-label="QR Code">
+            {qrUrl ? (
+              <img
+                src={qrUrl}
+                alt="QR Code du billet"
+                style={{ width: 100, height: 100, objectFit: 'contain', background: '#fff', borderRadius: 8 }}
+              />
+            ) : (
             <svg viewBox="0 0 80 80" width="100" height="100">
               <rect x="2" y="2" width="22" height="22" rx="3" fill="#0B1D51" />
               <rect x="6" y="6" width="14" height="14" rx="2" fill="#fff" />
@@ -135,6 +142,7 @@ const CnETicket = memo(({ booking, trip, passengers, payment }) => {
               )))}
               <rect x="36" y="36" width="8" height="8" rx="1" fill="#FF6B35" />
             </svg>
+            )}
           </div>
           <div className="cn-ticket__barcode" role="img" aria-label="Code-barres">
             <svg viewBox="0 0 220 50" width="100%" height="48" preserveAspectRatio="xMidYMid meet">

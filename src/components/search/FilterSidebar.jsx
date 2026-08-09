@@ -193,7 +193,7 @@ const CustomToggle = React.memo(({ checked, onChange, label, sublabel }) => (
 ));
 CustomToggle.displayName = 'CustomToggle';
 
-const FilterSidebar = ({ filters, onFilterChange, onReset }) => {
+const FilterSidebar = ({ filters, onFilterChange, onReset, companies = COMPANIES }) => {
   const [expandedSections, setExpandedSections] = useState({
     company: true,
     price: true,
@@ -332,7 +332,7 @@ const FilterSidebar = ({ filters, onFilterChange, onReset }) => {
         badge={filters.companies?.length}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {COMPANIES.map((company) => (
+          {companies.map((company) => (
             <div key={company.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '6px 0' }}>
               <div
                 style={{

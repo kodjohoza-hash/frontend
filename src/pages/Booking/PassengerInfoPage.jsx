@@ -1,6 +1,8 @@
-import { useState, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useCallback, useMemo } from 'react';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { ROUTES } from '@routes/routeConstants';
+import useAuth from '@hooks/useAuth';
+import bookingService from '@services/booking.service';
 import PiStepper from '@components/booking/PiStepper';
 import PiPassengerCard from '@components/booking/PiPassengerCard';
 import PiTripSummary from '@components/booking/PiTripSummary';
@@ -57,9 +59,10 @@ const validatePassenger = (pax) => {
 const PassengerInfoPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const { selectedSeats = [], tripId, trip } = location.state || {};
 
-  const defaultTrip = trip || {
+  const defaultTrip = useMemo(() => trip || {
     from: 'Douala',
     to: 'Yaoundé',
     date: '2026-07-28',
@@ -67,13 +70,15 @@ const PassengerInfoPage = () => {
     arrival: '09:45',
     company: 'Guillaume Express',
     price: '8 500',
-  };
+  }, [trip]);
 
   const [passengers, setPassengers] = useState([
     { ...EMPTY_PASSENGER },
   ]);
   const [errors, setErrors] = useState([{}]);
   const [validated, setValidated] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const updatePassenger = useCallback((index, field, value) => {
     setPassengers((prev) => {
@@ -113,7 +118,8 @@ const PassengerInfoPage = () => {
   }, []);
 
   const addPassenger = useCallback(() => {
-    if (passengers.length < (selectedSeats.length || 10)) {
+    const max = selectedSeats.length || 1;
+    if (passengers.length < max) {
       setPassengers((prev) => [...prev, { ...EMPTY_PASSENGER }]);
       setErrors((prev) => [...prev, {}]);
     }
@@ -124,16 +130,58 @@ const PassengerInfoPage = () => {
     setErrors((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
-  const handleContinue = useCallback(() => {
+  const handleContinue = useCallback(async () => {
     const allErrors = passengers.map(validatePassenger);
     setErrors(allErrors);
     setValidated(true);
+    setSubmitError('');
 
     const hasError = allErrors.some((e) => e._hasError);
-    if (!hasError) {
+    if (hasError || passengers.length !== (selectedSeats.length || 1)) return;
+
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        departId: tripId,
+        seats: selectedSeats.map((s) => ({
+          siege: String(s.number),
+          tarif: Number(s.price) || null,
+        })),
+        passengers: passengers.map((p) => ({
+          firstName: p.firstName.trim(),
+          lastName: p.lastName.trim(),
+          gender: p.gender,
+          birthDate: p.dateOfBirth || null,
+          phone: p.phone.trim(),
+          email: p.email?.trim() || null,
+          documentType: p.idType || 'cni',
+          documentNumber: p.idNumber.trim(),
+          nationality: null,
+          emergencyContact: {
+            fullName: p.emergencyContact?.fullName?.trim() || null,
+            phone: p.emergencyContact?.phone?.trim() || null,
+            relationship: p.emergencyContact?.relationship?.trim() || null,
+            address: p.emergencyContact?.address?.trim() || null,
+          },
+        })),
+        modeReservation: 'en_ligne',
+        statut: 'en_attente',
+      };
+
+      const booking = await bookingService.createBooking(payload);
       navigate(ROUTES.BOOKING_PAYMENT, {
-        state: { passengers, selectedSeats, tripId, trip: defaultTrip },
+        state: {
+          bookingId: booking.id,
+          reservation: booking,
+          selectedSeats,
+          passengers,
+          trip: defaultTrip,
+        },
       });
+    } catch (err) {
+      setSubmitError(err.message || 'La réservation a échoué. Veuillez réessayer.');
+    } finally {
+      setIsSubmitting(false);
     }
   }, [navigate, passengers, selectedSeats, tripId, defaultTrip]);
 
@@ -144,6 +192,28 @@ const PassengerInfoPage = () => {
   const allValid = passengers.every(
     (p) => p.firstName.trim() && p.lastName.trim() && p.gender && p.dateOfBirth && p.phone.trim() && p.idNumber.trim()
   );
+  const requiredCount = selectedSeats.length || 1;
+  const countOk = passengers.length === requiredCount;
+
+  if (authLoading && !isAuthenticated) {
+    return (
+      <div className="pi-page">
+        <div className="pi-container" style={{ display: 'flex', justifyContent: 'center', padding: '120px 0' }}>
+          <i className="bi bi-arrow-repeat" style={{ fontSize: 36, color: 'var(--text-muted)', animation: 'btcSpin 1s linear infinite' }} />
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{ from: location, checkout: location.state }}
+      />
+    );
+  }
 
   return (
     <div className="pi-page">
@@ -164,11 +234,39 @@ const PassengerInfoPage = () => {
               />
             ))}
 
-            {passengers.length < (selectedSeats.length || 10) && (
+            {passengers.length < requiredCount && (
               <button type="button" className="pi-add-btn" onClick={addPassenger}>
                 <i className="bi bi-plus-circle" />
                 Ajouter un passager
               </button>
+            )}
+
+            {!countOk && (
+              <p className="pi-count-hint">
+                {requiredCount - passengers.length} passager(s) manquant(s) pour {requiredCount} siège(s) sélectionné(s).
+              </p>
+            )}
+
+            {submitError && (
+              <div
+                role="alert"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  padding: '12px 16px',
+                  borderRadius: 10,
+                  background: 'rgba(239,68,68,0.08)',
+                  border: '1px solid rgba(239,68,68,0.2)',
+                  color: '#DC2626',
+                  fontSize: 'var(--font-size-sm)',
+                  fontWeight: 600,
+                  marginBottom: 16,
+                }}
+              >
+                <i className="bi bi-exclamation-triangle-fill" />
+                {submitError}
+              </div>
             )}
 
             <div className="pi-actions">
@@ -180,10 +278,19 @@ const PassengerInfoPage = () => {
                 type="button"
                 className="pi-actions__next"
                 onClick={handleContinue}
-                disabled={!allValid}
+                disabled={!allValid || !countOk || isSubmitting}
               >
-                Continuer vers le paiement
-                <i className="bi bi-arrow-right" />
+                {isSubmitting ? (
+                  <>
+                    <i className="bi bi-arrow-repeat" style={{ animation: 'btcSpin 1s linear infinite' }} />
+                    Création de la réservation…
+                  </>
+                ) : (
+                  <>
+                    Continuer vers le paiement
+                    <i className="bi bi-arrow-right" />
+                  </>
+                )}
               </button>
             </div>
           </div>

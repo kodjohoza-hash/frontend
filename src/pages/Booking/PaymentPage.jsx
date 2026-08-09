@@ -1,6 +1,8 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link, Navigate } from 'react-router-dom';
 import { ROUTES } from '@routes/routeConstants';
+import useAuth from '@hooks/useAuth';
+import bookingService from '@services/booking.service';
 import {
   CkStepper,
   CkMethodGrid,
@@ -21,11 +23,16 @@ import {
   CkSkeleton,
 } from '@components/payment';
 import { BOOKING_STEPS, PAYMENT_METHODS, MOCK_RESERVATION, INSURANCE } from '@data/payment';
-import PaymentService from '@services/paymentService';
+import { buildReservationFromState } from '@utils/booking';
 import '@assets/styles/payment.css';
 
 const PaymentPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const bookingState = location.state;
+  const { bookingId, reservation: backendReservation } = bookingState || {};
+  const isRealBooking = Boolean(bookingId);
   const [loading, setLoading] = useState(true);
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [formValid, setFormValid] = useState(false);
@@ -38,10 +45,24 @@ const PaymentPage = () => {
   const [success, setSuccess] = useState(null);
   const [expired, setExpired] = useState(false);
 
-  const reservation = MOCK_RESERVATION;
+  const reservation = useMemo(
+    () => buildReservationFromState(bookingState || {}, MOCK_RESERVATION),
+    [bookingState]
+  );
+
+  /* Montant facturé : calculé côté serveur à la création de la réservation.
+     Le client ne fournit jamais un montant de confiance. */
+  const serverAmount = backendReservation
+    ? Number(backendReservation.resteAPayer ?? backendReservation.montant ?? 0)
+    : 0;
+
+  const displayReservation = useMemo(
+    () => ({ ...reservation, fees: isRealBooking ? 0 : reservation.fees }),
+    [reservation, isRealBooking]
+  );
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 1100);
+    const t = setTimeout(() => setLoading(false), 600);
     return () => clearTimeout(t);
   }, []);
 
@@ -50,6 +71,8 @@ const PaymentPage = () => {
     const ins = insurance ? INSURANCE.price : 0;
     return subtotal + reservation.fees + ins - promoDiscount;
   }, [reservation, insurance, promoDiscount]);
+
+  const payAmount = isRealBooking && serverAmount > 0 ? serverAmount : total;
 
   const methodData = PAYMENT_METHODS.find((m) => m.id === selectedMethod);
   const canPay = selectedMethod && formValid && acceptedTerms;
@@ -77,25 +100,114 @@ const PaymentPage = () => {
     setProcessing(true);
     setError(null);
     try {
-      const result = await PaymentService.processPayment({
-        method: selectedMethod,
-        amount: total,
-        ...formData,
-        currency: reservation.currency,
+      if (!isRealBooking) {
+        setError('Aucune réservation en cours. Veuillez refaire votre réservation.');
+        setProcessing(false);
+        return;
+      }
+
+      /* Paiement à l'agence : la réservation reste en attente (payable sur place). */
+      if (methodData?.category === 'agency') {
+        const ts = new Date().toISOString();
+        setSuccess({
+          success: true,
+          transactionId: backendReservation?.reference || bookingId,
+          amount: payAmount,
+          currency: reservation.currency,
+          timestamp: ts,
+          confirmation: {
+            bookingId,
+            reservation: backendReservation,
+            pendingAgency: true,
+          },
+        });
+        setProcessing(false);
+        return;
+      }
+
+      const METHOD_MAP = {
+        mtn_momo: 'mtn_money',
+        orange_money: 'orange_money',
+        express_union: 'virement_bancaire',
+        visa: 'carte_bancaire',
+        mastercard: 'carte_bancaire',
+      };
+
+      const updated = await bookingService.payBooking(bookingId, {
+        methode: METHOD_MAP[selectedMethod] || 'carte_bancaire',
       });
-      if (result.success) setSuccess(result);
-      else setError(result.error);
-    } catch {
-      setError('Une erreur inattendue est survenue. Vérifiez votre connexion.');
+
+      const ts = new Date().toISOString();
+      setSuccess({
+        success: true,
+        transactionId: updated?.reference || updated?.id || bookingId,
+        amount: Number(updated?.montant || payAmount),
+        currency: reservation.currency,
+        timestamp: ts,
+        confirmation: { bookingId, reservation: updated },
+      });
+    } catch (err) {
+      setError(err.message || 'Le paiement a échoué. Vérifiez vos informations et réessayez.');
     } finally {
       setProcessing(false);
     }
-  }, [canPay, selectedMethod, total, formData, reservation.currency]);
+  }, [canPay, isRealBooking, methodData, backendReservation, selectedMethod, payAmount, bookingId, reservation.currency]);
+
+  if (isRealBooking && authLoading && !isAuthenticated) {
+    return (
+      <div className="ck-page">
+        <div className="ck-wrap" style={{ display: 'flex', justifyContent: 'center', padding: '120px 0' }}>
+          <i className="bi bi-arrow-repeat" style={{ fontSize: 36, color: 'var(--text-muted)', animation: 'btcSpin 1s linear infinite' }} />
+        </div>
+      </div>
+    );
+  }
+
+  if (isRealBooking && !isAuthenticated) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{ from: location, checkout: location.state }}
+      />
+    );
+  }
 
   if (loading) {
     return (
       <div className="ck-page">
         <div className="ck-wrap"><CkSkeleton /></div>
+      </div>
+    );
+  }
+
+  if (isRealBooking && !backendReservation) {
+    return (
+      <div className="ck-page">
+        <div className="ck-wrap" style={{ textAlign: 'center', padding: '100px 20px' }}>
+          <i className="bi bi-receipt" style={{ fontSize: 44, color: 'var(--text-muted)', marginBottom: 16 }} />
+          <h2 style={{ fontSize: 'var(--font-size-lg)', color: 'var(--text-primary)', margin: '0 0 8px' }}>
+            Aucune réservation en cours
+          </h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: 'var(--font-size-sm)', margin: '0 0 24px' }}>
+            Retrouvez vos réservations depuis votre espace client, ou effectuez une nouvelle recherche.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            style={{
+              padding: '12px 28px',
+              borderRadius: 10,
+              border: 'none',
+              background: 'var(--color-primary, #0B1D51)',
+              color: '#fff',
+              fontWeight: 700,
+              cursor: 'pointer',
+            }}
+          >
+            Rechercher un voyage
+          </button>
+        </div>
       </div>
     );
   }
@@ -163,13 +275,17 @@ const PaymentPage = () => {
                 />
               )}
 
-              <CkPromo onApply={handlePromo} />
-              <CkInsurance insurance={INSURANCE} isSelected={insurance} onToggle={setInsurance} />
+              {!isRealBooking && (
+                <>
+                  <CkPromo onApply={handlePromo} />
+                  <CkInsurance insurance={INSURANCE} isSelected={insurance} onToggle={setInsurance} />
+                </>
+              )}
               <CkTerms reservation={reservation} isAccepted={acceptedTerms} onAccept={setAcceptedTerms} />
               <CkTrustBar />
 
               <div className="ck-actions">
-                <button type="button" className="ck-btn-back" onClick={() => navigate(ROUTES.BOOKING_SEATS)}>
+                <button type="button" className="ck-btn-back" onClick={() => navigate(isRealBooking ? ROUTES.BOOKING_SEATS : ROUTES.BOOKING_SEATS)}>
                   <i className="bi bi-arrow-left" />
                   Retour aux sièges
                 </button>
@@ -177,20 +293,20 @@ const PaymentPage = () => {
                   type="button"
                   className="ck-btn-pay"
                   onClick={handlePay}
-                  disabled={!canPay}
+                  disabled={!canPay || processing}
                 >
                   <i className="bi bi-shield-lock-fill" />
-                  Payer {total.toLocaleString()} FCFA
+                  {processing ? 'Paiement en cours…' : `Payer ${payAmount.toLocaleString()} XAF`}
                 </button>
               </div>
             </div>
 
             <div className="ck-right">
               <CkSummary
-                reservation={reservation}
+                reservation={displayReservation}
                 promoDiscount={promoDiscount}
                 insurance={insurance}
-                total={total}
+                total={payAmount}
               />
             </div>
           </div>

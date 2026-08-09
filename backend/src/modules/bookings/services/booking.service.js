@@ -774,7 +774,16 @@ const pay = async ({ id, data, actor }) => {
 
   const montantPercu = await bookingRepository.sumPaidByReservation(id);
   const reste = Math.max(0, Number(reservation.montant) - montantPercu);
-  if (Number(data.montant) > reste) {
+  /* Montant non fourni : montant facturé calculé côté serveur (reste à payer).
+     En ligne comme au guichet, aucun montant client n'est jamais considéré
+     comme fiable : il est borné au reste calculé sur la base du montant serveur. */
+  const montant = data.montant === undefined || data.montant === null || data.montant === ''
+    ? reste
+    : Number(data.montant);
+  if (montant <= 0) {
+    throw new ApiError(400, 'Le montant à payer doit être supérieur à zéro.');
+  }
+  if (montant > reste) {
     throw new ApiError(400, `Le montant dépasse le reste à payer (${reste} XAF).`);
   }
 
@@ -782,7 +791,7 @@ const pay = async ({ id, data, actor }) => {
   const reference = await generateReference('PAY', bookingRepository.findPaiementByReference);
   const now = new Date();
 
-  const newStatut = montantPercu + Number(data.montant) >= Number(reservation.montant)
+  const newStatut = montantPercu + montant >= Number(reservation.montant)
     ? 'payee'
     : HOLDING_STATUTS.includes(reservation.statut)
       ? 'confirmee'
@@ -797,7 +806,7 @@ const pay = async ({ id, data, actor }) => {
         billet_id: null,
         client_id: reservation.client_id,
         agent_id: actor.role === ROLES.CLIENT ? null : actor.id,
-        montant: Number(data.montant),
+        montant,
         methode: data.methode,
         statut: 'paye',
         cree_le: now,
@@ -818,7 +827,7 @@ const pay = async ({ id, data, actor }) => {
     await bookingRepository.createHistorique(
       {
         reservation_id: id,
-        action: `Paiement de ${Number(data.montant)} XAF reçu (${data.methode}).`,
+        action: `Paiement de ${montant} XAF reçu (${data.methode}).`,
         timestamp: now,
         utilisateur: actorName(actor),
       },
@@ -827,7 +836,7 @@ const pay = async ({ id, data, actor }) => {
   });
 
   const full = await bookingRepository.findByIdFull(id);
-  logger.info(`[bookings] ${reservation.reference} paiement ${data.montant} XAF (${data.methode})`);
+  logger.info(`[bookings] ${reservation.reference} paiement ${montant} XAF (${data.methode})`);
 
   /* Réservation entièrement payée : émission automatique des billets. */
   if (newStatut === 'payee') {
