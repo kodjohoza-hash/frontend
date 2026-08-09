@@ -5,7 +5,17 @@ const { daysRemaining } = require('../../../utils/generators');
 const { subscriptionRepository } = require('../repositories');
 const { subscriptionService } = require('../services');
 const notificationService = require('../services/notification.service');
+const { notificationService: centralNotif } = require('../../notifications/services');
 const { Compagnie } = require('../../../models');
+
+/** Exécute une notification sans jamais casser le traitement du cron. */
+const notifySafe = async (fn) => {
+  try {
+    await fn();
+  } catch (err) {
+    logger.warn(`[notifications] envoi ignoré : ${err.message}`);
+  }
+};
 
 /**
  * Rappels à envoyer selon les jours restants (J-15, J-7, J-3, J-1, J0).
@@ -81,6 +91,25 @@ const runSubscriptionJob = async () => {
         detail: `Votre abonnement arrive à échéance dans ${reste} jour${reste > 1 ? 's' : ''} (${sub.date_fin}).`,
       });
       if (notif) rappels += 1;
+
+      /* Notifications centralisées : échéance proche. */
+      await notifySafe(async () => {
+        await centralNotif.sendToCompanyAdmins({
+          compagnieId: sub.compagnie_id,
+          type: 'abonnement_bientot_expire',
+          title: 'Abonnement arrive à échéance',
+          message: `Votre abonnement arrive à échéance dans ${reste} jour${reste > 1 ? 's' : ''} (${sub.date_fin}).`,
+          data: { compagnieId: sub.compagnie_id, actionPath: '/agency/subscriptions' },
+          referenceKey: `subscription:${sub.id}:${rappel.type}`,
+        });
+        await centralNotif.sendToSuperAdmins({
+          type: 'abonnement_bientot_expire',
+          title: 'Abonnement proche de l\'échéance',
+          message: `L'abonnement de la compagnie ${sub.compagnie?.nom || sub.compagnie_id} expire dans ${reste} jour${reste > 1 ? 's' : ''}.`,
+          data: { compagnieId: sub.compagnie_id, actionPath: '/admin/subscriptions' },
+          referenceKey: `subscription:${sub.id}:${rappel.type}`,
+        });
+      });
     }
   }
 

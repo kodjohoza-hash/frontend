@@ -8,6 +8,16 @@ const { sequelize } = require('../../../models');
 const { sendMail } = require('../../../services/mailer.service');
 const { ticketRepository } = require('../repositories');
 const { buildPdfBuffer, buildTicketEmailHtml } = require('./ticket-pdf.service');
+const { notificationService } = require('../../notifications/services');
+
+/** Exécute une notification sans jamais casser l'émission des billets. */
+const notifySafe = async (fn) => {
+  try {
+    await fn();
+  } catch (err) {
+    logger.warn(`[notifications] envoi ignoré : ${err.message}`);
+  }
+};
 
 /** Statuts d'un billet (alignés sur la table `billet.statut`). */
 const STATUTS = ['valide', 'utilise', 'expire', 'annule', 'rembourse', 'impaye', 'inconnu'];
@@ -344,6 +354,22 @@ const generateForReservation = async ({ reservationId, actor }) => {
   });
 
   logger.info(`[tickets] ${rows.length} billet(s) émis pour ${reservation.reference}`);
+
+  /* Notification automatique : billet disponible → client (une par réservation). */
+  if (rows.length > 0 && reservation.client_id) {
+    await notifySafe(async () => {
+      await notificationService.send({
+        recipientId: reservation.client_id,
+        role: 'client',
+        type: 'ticket_available',
+        title: 'Billet disponible',
+        message: `${rows.length} billet(s) disponible(s) pour la réservation ${reservation.reference}. Retrouvez-les dans Mes billets.`,
+        data: { reservationId: reservation.id, reference: reservation.reference, count: rows.length, actionPath: '/client/tickets' },
+        referenceKey: `booking:${reservation.id}`,
+      });
+    });
+  }
+
   return { created: rows.length, skipped: toCreate.length - rows.length, message: 'Billets émis.' };
 };
 

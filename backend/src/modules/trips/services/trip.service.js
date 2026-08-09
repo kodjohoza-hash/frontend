@@ -4,6 +4,16 @@ const logger = require('../../../utils/logger');
 const { ROLES } = require('../../../middlewares/auth');
 const { tripRepository } = require('../repositories');
 const { STATUT_ALIASES, normalizeStatus } = require('../validators');
+const { notificationService } = require('../../notifications/services');
+
+/** Exécute une notification sans jamais casser l'opération métier principale. */
+const notifySafe = async (fn) => {
+  try {
+    await fn();
+  } catch (err) {
+    logger.warn(`[notifications] envoi ignoré : ${err.message}`);
+  }
+};
 
 /** Tous les prix sont exprimés en XAF (entiers). AUCUN XOF. */
 const CURRENCY = 'XAF';
@@ -618,6 +628,30 @@ const updateStatus = async ({ id, statut, raison, actor }) => {
 
   await tripRepository.updateDepart(depart, { statut: next, date_modification: new Date() });
   if (raison) logger.info(`[trips] ${id} statut → ${next} : ${raison}`);
+
+  /* Notification automatique : voyage annulé → clients concernés + compagnie. */
+  if (next === 'annule') {
+    const compagnieId = depart.compagnie_id ?? depart.agence?.compagnie_id ?? null;
+    await notifySafe(async () => {
+      const titre = `Voyage ${depart.code || id} annulé`;
+      await notificationService.sendToClientsOfDepart({
+        departId: id,
+        type: 'voyage_annule',
+        title: titre,
+        message: raison ? `Le voyage ${depart.code || id} a été annulé : ${raison}.` : `Le voyage ${depart.code || id} a été annulé.`,
+        data: { voyageId: id, voyageCode: depart.code || null, raison: raison || null, actionPath: '/client/bookings' },
+        referenceKey: `voyage:${id}:annule`,
+      });
+      await notificationService.sendToCompanyAdmins({
+        compagnieId,
+        type: 'annulation_voyage',
+        title: titre,
+        message: `Le voyage ${depart.code || id} a été annulé${raison ? ` : ${raison}` : ''}.`,
+        data: { voyageId: id, voyageCode: depart.code || null, raison: raison || null, actionPath: '/agency/trips' },
+        referenceKey: `voyage:${id}:annule`,
+      });
+    });
+  }
 
   return {
     trip: await getById({ id, actor }),

@@ -93,6 +93,12 @@ app.use('/api/v1', routesModule.routes);
 const ticketsModule = require('./modules/tickets');
 app.use('/api/v1', ticketsModule.routes);
 
+/* Module Notifications (système centralisé par utilisateur : lecture, compteur
+   non lues, marquage lu, tout lire, suppression). Le destinataire est toujours
+   déduit de l'utilisateur authentifié — aucun user_id externe n'est accepté. */
+const notificationsModule = require('./modules/notifications');
+app.use('/api/v1', notificationsModule.routes);
+
 /* 404 + gestion centralisée des erreurs */
 app.use(notFoundHandler);
 app.use(errorHandler);

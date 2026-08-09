@@ -5,6 +5,16 @@ const logger = require('../../../utils/logger');
 const { daysRemaining, isoDate } = require('../../../utils/generators');
 const { subscriptionRepository, paymentRepository, historyRepository, planRepository } = require('../repositories');
 const { Compagnie } = require('../../../models');
+const { notificationService: centralNotif } = require('../../notifications/services');
+
+/** Exécute une notification sans jamais casser l'opération métier principale. */
+const notifySafe = async (fn) => {
+  try {
+    await fn();
+  } catch (err) {
+    logger.warn(`[notifications] envoi ignoré : ${err.message}`);
+  }
+};
 
 /** Appose jours restants + date d'expiration sur une ligne d'abonnement. */
 const decorate = (sub) => {
@@ -95,6 +105,25 @@ const create = async (data, auteur = 'systeme') => {
       t
     );
 
+    /* Notifications centralisées : nouvel abonnement → super admins. */
+    await notifySafe(async () => {
+      await centralNotif.sendToSuperAdmins({
+        type: 'nouvel_abonnement',
+        title: 'Nouvel abonnement souscrit',
+        message: `${compagnie.nom} a souscrit au plan ${plan.nom} (${data.date_debut} → ${data.date_fin}).`,
+        data: { compagnieId: data.compagnie_id, actionPath: '/admin/subscriptions' },
+        referenceKey: `subscription:${sub.id}:create`,
+      });
+      await centralNotif.sendToCompanyAdmins({
+        compagnieId: data.compagnie_id,
+        type: 'paiement_abonnement_confirme',
+        title: 'Abonnement activé',
+        message: `Votre abonnement ${plan.nom} est actif du ${data.date_debut} au ${data.date_fin}.`,
+        data: { compagnieId: data.compagnie_id, actionPath: '/agency/subscriptions' },
+        referenceKey: `subscription:${sub.id}:create`,
+      });
+    });
+
     return sub;
   });
 };
@@ -163,6 +192,26 @@ const renew = async (compagnieId, data, auteur = 'compagnie') => {
 
     logger.info(`Abonnement renouvelé pour la compagnie ${compagnieId} (${plan.nom})`);
     return { ...decorate(sub), paiement };
+  }).then(async (result) => {
+    /* Notifications centralisées : renouvellement → compagnie + super admins. */
+    await notifySafe(async () => {
+      await centralNotif.sendToCompanyAdmins({
+        compagnieId,
+        type: 'paiement_abonnement_confirme',
+        title: 'Abonnement renouvelé',
+        message: `Votre abonnement ${plan.nom} est renouvelé jusqu'au ${dateFin}.`,
+        data: { compagnieId, actionPath: '/agency/subscriptions' },
+        referenceKey: `subscription:${sub.id}:renew:${result.paiement.id}`,
+      });
+      await centralNotif.sendToSuperAdmins({
+        type: 'renouvellement_abonnement',
+        title: 'Abonnement renouvelé',
+        message: `La compagnie ${sub.compagnie?.nom || compagnieId} a renouvelé son abonnement ${plan.nom} jusqu'au ${dateFin}.`,
+        data: { compagnieId, actionPath: '/admin/subscriptions' },
+        referenceKey: `subscription:${sub.id}:renew:${result.paiement.id}`,
+      });
+    });
+    return result;
   });
 };
 
@@ -241,6 +290,26 @@ const expire = async (compagnieId, auteur = 'systeme') => {
       t
     );
     return decorate(sub);
+  }).then(async (result) => {
+    /* Notifications centralisées : abonnement expiré → compagnie + super admins. */
+    await notifySafe(async () => {
+      await centralNotif.sendToCompanyAdmins({
+        compagnieId,
+        type: 'abonnement_expire',
+        title: 'Abonnement expiré',
+        message: 'Votre abonnement est arrivé à expiration. Renouvelez-le pour réactiver vos services.',
+        data: { compagnieId, actionPath: '/agency/subscriptions' },
+        referenceKey: `subscription:${sub.id}:expire`,
+      });
+      await centralNotif.sendToSuperAdmins({
+        type: 'abonnement_expire',
+        title: 'Abonnement expiré',
+        message: `L'abonnement de la compagnie ${sub.compagnie?.nom || compagnieId} est expiré.`,
+        data: { compagnieId, actionPath: '/admin/subscriptions' },
+        referenceKey: `subscription:${sub.id}:expire`,
+      });
+    });
+    return result;
   });
 };
 

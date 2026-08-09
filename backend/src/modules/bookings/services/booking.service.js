@@ -5,6 +5,16 @@ const { ROLES } = require('../../../middlewares/auth');
 const { ulid } = require('../../../utils/ulid');
 const { bookingRepository } = require('../repositories');
 const { ticketService } = require('../../tickets/services');
+const { notificationService } = require('../../notifications/services');
+
+/** Exécute une notification sans jamais casser l'opération métier principale. */
+const notifySafe = async (fn) => {
+  try {
+    await fn();
+  } catch (err) {
+    logger.warn(`[notifications] envoi ignoré : ${err.message}`);
+  }
+};
 
 /** Durée de validité d'une réservation non payée (blocage des sièges). */
 const EXPIRATION_MINUTES = 30;
@@ -564,6 +574,29 @@ const create = async ({ data, actor }) => {
 
   const full = await bookingRepository.findByIdFull(id);
   logger.info(`[bookings] ${reference} créée (${statut}) : ${seats.length} place(s) sur ${depart.id}`);
+
+  /* Notification automatique : réservation créée → client + company_admin. */
+  const compagnieId = full.depart?.compagnie?.id ?? full.depart?.agence?.compagnie_id ?? null;
+  await notifySafe(async () => {
+    await notificationService.send({
+      recipientId: clientId,
+      role: 'client',
+      type: 'reservation_created',
+      title: 'Réservation créée',
+      message: `Votre réservation ${reference} (${full.depart?.trajet?.villeDepart?.nom || ''} → ${full.depart?.trajet?.villeArrivee?.nom || ''}) a été enregistrée.`,
+      data: { reservationId: id, reference, actionPath: '/client/bookings' },
+      referenceKey: `booking:${id}`,
+    });
+    await notificationService.sendToCompanyAdmins({
+      compagnieId,
+      type: 'nouvelle_reservation',
+      title: 'Nouvelle réservation',
+      message: `Réservation ${reference} — ${seats.length} place(s) sur le voyage ${full.depart?.code || depart.id}.`,
+      data: { reservationId: id, reference, actionPath: '/agency/bookings' },
+      referenceKey: `booking:${id}`,
+    });
+  });
+
   return serializeReservation(full);
 };
 
@@ -843,6 +876,28 @@ const pay = async ({ id, data, actor }) => {
     await ticketService.generateForReservation({ reservationId: id, actor });
   }
 
+  /* Notification automatique : paiement confirmé → client + company_admin. */
+  const compagnieId = full.depart?.compagnie?.id ?? full.depart?.agence?.compagnie_id ?? null;
+  await notifySafe(async () => {
+    await notificationService.send({
+      recipientId: reservation.client_id,
+      role: 'client',
+      type: 'payment_confirmed',
+      title: 'Paiement confirmé',
+      message: `Paiement de ${montant} XAF reçu pour la réservation ${reservation.reference} (${data.methode}).`,
+      data: { reservationId: id, reference: reservation.reference, montant, actionPath: '/client/bookings' },
+      referenceKey: `payment:${paiementId}`,
+    });
+    await notificationService.sendToCompanyAdmins({
+      compagnieId,
+      type: 'nouveau_paiement',
+      title: 'Nouveau paiement',
+      message: `Paiement de ${montant} XAF reçu pour la réservation ${reservation.reference} (${data.methode}).`,
+      data: { reservationId: id, reference: reservation.reference, montant, actionPath: '/agency/payments' },
+      referenceKey: `payment:${paiementId}`,
+    });
+  });
+
   return { booking: serializeReservation(full), message: 'Paiement enregistré.' };
 };
 
@@ -913,6 +968,19 @@ const refund = async ({ id, data, actor }) => {
   if (fullRefund) {
     await ticketService.annulerBilletsReservation({ reservationId: id, actor, motif: data.motif });
   }
+
+  /* Notification automatique : remboursement → client. */
+  await notifySafe(async () => {
+    await notificationService.send({
+      recipientId: reservation.client_id,
+      role: 'client',
+      type: 'remboursement',
+      title: 'Remboursement effectué',
+      message: `Un remboursement de ${refundAmount} XAF a été effectué sur la réservation ${reservation.reference}.`,
+      data: { reservationId: id, reference: reservation.reference, montant: refundAmount, actionPath: '/client/bookings' },
+      referenceKey: `refund:${paiementId}`,
+    });
+  });
 
   return { booking: serializeReservation(full), message: 'Remboursement effectué.' };
 };

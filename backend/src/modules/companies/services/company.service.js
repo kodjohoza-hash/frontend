@@ -7,6 +7,7 @@ const { companyRepository } = require('../repositories');
 const logoService = require('./logo.service');
 const documentService = require('./document.service');
 const { ROLES } = require('../../../middlewares/auth');
+const { notificationService } = require('../../notifications/services');
 
 /* ══════════════════════════════════════════════════════════════
    Helpers
@@ -329,6 +330,20 @@ const create = async ({ data, actor, req }) => {
   }
 
   logger.info(`Compagnie créée : ${created.id} (${created.nom}) par ${actor.role}`);
+
+  /* Notification centralisée : nouvelle compagnie → super admins. */
+  try {
+    await notificationService.sendToSuperAdmins({
+      type: 'nouvelle_compagnie',
+      title: 'Nouvelle compagnie',
+      message: `La compagnie ${created.nom} vient d'être créée.`,
+      data: { compagnieId: created.id, actionPath: '/admin/companies' },
+      referenceKey: `company:${created.id}:create`,
+    });
+  } catch (err) {
+    logger.warn(`[notifications] envoi ignoré : ${err.message}`);
+  }
+
   return withCounts(serializeCompany(await companyRepository.findByIdFull(id)));
 };
 

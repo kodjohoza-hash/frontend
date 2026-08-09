@@ -61,8 +61,10 @@ router.get('/payments/revenue/by-company', requireRole(ROLES.SUPER_ADMIN), payme
 router.post('/payments', requireRole(ROLES.SUPER_ADMIN), validateZod(paymentCreateSchema), paymentController.record);
 
 /* ── Notifications abonnements ── */
-router.get('/notifications', requireRole(ROLES.SUPER_ADMIN), notificationController.listAll);
-router.get('/notifications/mine', requireRole(ROLES.COMPANY_ADMIN, ROLES.COUNTER_AGENT), notificationController.mine);
+/* Précédées de /abonnements pour ne pas entrer en collision avec le module
+   centralisé Notifications (GET /api/v1/notifications, par utilisateur). */
+router.get('/abonnements/notifications', requireRole(ROLES.SUPER_ADMIN), notificationController.listAll);
+router.get('/abonnements/notifications/mine', requireRole(ROLES.COMPANY_ADMIN, ROLES.COUNTER_AGENT), notificationController.mine);
 
 /* ── Revenus (dashboard financier Super Admin) ── */
 router.get('/revenue', requireRole(ROLES.SUPER_ADMIN), revenueController.dashboard);
