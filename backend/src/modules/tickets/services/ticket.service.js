@@ -19,6 +19,22 @@ const ALLOWED_TRANSITIONS = {
   expire: ['annule'],
 };
 
+/**
+ * Codes de résultat d'un contrôle (Module 15) — alignés sur la spec :
+ *   VALID, ALREADY_USED, CANCELLED, REFUNDED, EXPIRED, INVALID,
+ *   WRONG_COMPANY, UNPAID.
+ * Le code est calculé côté backend à partir de l'état réel en base :
+ * le frontend ne peut jamais imposer un statut.
+ */
+const RAISONS_BY_STATUT = {
+  utilise: { code: 'ALREADY_USED', raison: 'Billet déjà utilisé (double utilisation).' },
+  annule: { code: 'CANCELLED', raison: 'Billet annulé.' },
+  rembourse: { code: 'REFUNDED', raison: 'Billet remboursé.' },
+  expire: { code: 'EXPIRED', raison: 'Billet expiré.' },
+  impaye: { code: 'UNPAID', raison: 'Billet impayé.' },
+  inconnu: { code: 'INVALID', raison: 'Billet au statut inconnu.' },
+};
+
 const randAlnum = (len) => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let out = '';
@@ -153,6 +169,10 @@ const serializeTicket = (t) => {
     clientName: t.client ? `${t.client.prenom} ${t.client.nom}` : null,
     creePar: t.creePar ? { id: t.creePar.id, name: `${t.creePar.prenom} ${t.creePar.nom}` } : null,
     verifiePar: t.verifiePar ? { id: t.verifiePar.id, name: `${t.verifiePar.prenom} ${t.verifiePar.nom}` } : null,
+    passenger: t.passenger
+      ? { id: t.passenger.id, firstName: t.passenger.first_name, lastName: t.passenger.last_name, phone: t.passenger.phone, email: t.passenger.email }
+      : null,
+    passengerName: t.passenger ? `${t.passenger.first_name} ${t.passenger.last_name}`.trim() : (t.nom_passager || null),
     reservation: reservation
       ? {
           id: reservation.id,
@@ -461,6 +481,31 @@ const getQrCode = async ({ id, actor }) => {
 };
 
 /**
+ * Périmètre de contrôle (Module 15) — l'accès à un billet est toujours
+ * borné à la compagnie / à l'agence de l'agent authentifié :
+ *   - counter_agent : billet de SA propre agence uniquement.
+ *   - company_admin : billet de SA compagnie uniquement.
+ *   - super_admin   : tous les billets.
+ *   - client        : ne peut jamais contrôler/valider un billet.
+ * Retourne un message de refus (null si autorisé).
+ */
+const scopeIssueFor = (actor, ticket) => {
+  if (actor.role === ROLES.SUPER_ADMIN) return null;
+  if (actor.role === ROLES.CLIENT) return 'Accès refusé : le client ne peut pas contrôler son propre billet.';
+  const reservation = ticket.reservation;
+  if (actor.role === ROLES.COUNTER_AGENT) {
+    if (!reservation || reservation.agence_id !== actor.agenceId) return 'Billet hors de votre agence.';
+    return null;
+  }
+  if (actor.role === ROLES.COMPANY_ADMIN) {
+    const compagnieId = reservation?.agence?.compagnie_id ?? ticket.depart?.compagnie?.id ?? null;
+    if (compagnieId !== actor.compagnieId) return 'Billet d\'une autre compagnie.';
+    return null;
+  }
+  return null;
+};
+
+/**
  * GET /tickets/verify/:token — vérification sécurisée d'un QR scanné.
  * Contrôles anti-fraude :
  *   1. Billet existant (résolution par empreinte SHA-256 du jeton).
@@ -468,48 +513,202 @@ const getQrCode = async ({ id, actor }) => {
  *   3. Billet non expiré (validite_jusqua / fenêtre configurable).
  *   4. Billet non annulé / non remboursé / non inconnu.
  *   5. Anti double-utilisation (un billet « utilise » est refusé).
- * Chaque scan est journalisé dans `scan_billet`.
+ *   6. Périmètre compagnie/agence de l'agent (le QR ne sert qu'à
+ *      retrouver le billet : jamais de confiance envers le QR).
+ * Chaque scan est journalisé dans `scan_billet` avec un code de résultat
+ * explicite (VALID, ALREADY_USED, CANCELLED, REFUNDED, EXPIRED, UNPAID,
+ * INVALID, WRONG_COMPANY).
  */
 const verify = async ({ token, actor, ip }) => {
   const ticket = await ticketRepository.findFullByTokenHash(sha256hex(token));
 
   if (!ticket) {
-    return { valide: false, raison: 'Billet introuvable ou QR invalide.', billet: null };
+    return { valide: false, code: 'INVALID', raison: 'Billet introuvable ou QR invalide.', billet: null };
+  }
+
+  const scopeIssue = scopeIssueFor(actor, ticket);
+  if (scopeIssue) {
+    await logScan({ ticket, actor, ip, statut: 'refuse', raison: scopeIssue });
+    logger.warn(`[tickets] contrôle hors périmètre rejeté (${ticket.reference})`);
+    return { valide: false, code: 'WRONG_COMPANY', raison: scopeIssue, billet: serializeTicket(ticket) };
   }
 
   const expected = signPayload(buildQrPayload(ticket));
   if (ticket.signature && expected !== ticket.signature) {
     await logScan({ ticket, actor, ip, statut: 'refuse', raison: 'QR falsifié (signature invalide).' });
     logger.warn(`[tickets] QR falsifié rejeté (${ticket.reference})`);
-    return { valide: false, raison: 'QR falsifié (signature invalide).', billet: serializeTicket(ticket) };
+    return { valide: false, code: 'INVALID', raison: 'QR falsifié (signature invalide).', billet: serializeTicket(ticket) };
   }
 
   let valide = false;
   let raison = null;
+  let code = 'INVALID';
 
   if (isTicketExpired(ticket)) {
-    raison = 'Billet expiré.';
+    raison = RAISONS_BY_STATUT.expire.raison;
+    code = RAISONS_BY_STATUT.expire.code;
     if (ticket.statut === 'valide') {
       await ticketRepository.updateBillet(ticket, { statut: 'expire' });
       ticket.statut = 'expire';
     }
   } else if (ticket.statut === 'valide') {
     valide = true;
+    code = 'VALID';
   } else {
-    const raisons = {
-      utilise: 'Billet déjà utilisé (double utilisation).',
-      annule: 'Billet annulé.',
-      rembourse: 'Billet remboursé.',
-      expire: 'Billet expiré.',
-      impaye: 'Billet impayé.',
-      inconnu: 'Billet au statut inconnu.',
-    };
-    raison = raisons[ticket.statut] || 'Billet non valide.';
+    const conf = RAISONS_BY_STATUT[ticket.statut];
+    raison = conf ? conf.raison : 'Billet non valide.';
+    code = conf ? conf.code : 'INVALID';
   }
 
   await logScan({ ticket, actor, ip, statut: valide ? 'valide' : 'refuse', raison });
-  logger.info(`[tickets] scan ${ticket.reference} → ${valide ? 'valide' : 'refusé'}${raison ? ` (${raison})` : ''}`);
-  return { valide, raison, billet: serializeTicket(ticket) };
+  logger.info(`[tickets] scan ${ticket.reference} → ${valide ? 'valide' : 'refusé'} (${code})${raison ? ` — ${raison}` : ''}`);
+  return { valide, code, raison, billet: serializeTicket(ticket) };
+};
+
+const generateCheckInId = async () => {
+  for (let i = 0; i < 6; i += 1) {
+    const id = `CHK${randAlnum(12)}`;
+    const rows = await sequelize.query('SELECT id FROM checkin_billet WHERE id = :id LIMIT 1', {
+      replacements: { id },
+      type: sequelize.QueryTypes.SELECT,
+    });
+    if (!rows.length) return id;
+  }
+  throw new ApiError(500, 'Impossible de générer un identifiant de contrôle unique.');
+};
+
+/**
+ * POST /tickets/:id/check-in — embarquement réel.
+ * Garanties backend (jamais de confiance envers le client) :
+ *   - Verrouillage pessimiste SELECT ... FOR UPDATE dans une transaction :
+ *     deux requêtes simultanées sur le même billet ne peuvent PAS toutes
+ *     deux valider (anti-double-embarquement garanti côté base).
+ *   - Re-vérification intégrale : paiement confirmé, billet valide,
+ *     non expiré, non annulé/remboursé, périmètre compagnie/agence.
+ *   - Passage du billet à « utilise » uniquement si TOUS les contrôles
+ *     passent. Chaque tentative (succès ou refus) est journalisée dans
+ *     `checkin_billet` avec date/heure, agent, guichet et résultat.
+ */
+const checkIn = async ({ id, actor, ip }) => {
+  if (actor.role === ROLES.CLIENT) {
+    throw new ApiError(403, 'Accès refusé : le client ne peut pas valider son propre billet.');
+  }
+
+  let outcome = null;
+  await sequelize.transaction(async (t) => {
+    const ticket = await ticketRepository.findByIdFullLocked(id, t);
+    if (!ticket) throw new ApiError(404, 'Billet introuvable.');
+
+    const scopeIssue = scopeIssueFor(actor, ticket);
+    if (scopeIssue) throw new ApiError(403, scopeIssue);
+
+    if (!ticket.reservation) {
+      throw new ApiError(400, 'Réservation introuvable pour ce billet.');
+    }
+    if (ticket.reservation.statut !== 'payee') {
+      throw new ApiError(400, `Paiement non confirmé (réservation « ${ticket.reservation.statut} ») : embarquement refusé.`);
+    }
+
+    let refused = null;
+    if (isTicketExpired(ticket)) {
+      if (ticket.statut === 'valide') {
+        await ticketRepository.updateBillet(ticket, { statut: 'expire' }, { transaction: t });
+        ticket.statut = 'expire';
+      }
+      refused = { code: RAISONS_BY_STATUT.expire.code, raison: RAISONS_BY_STATUT.expire.raison };
+    } else if (ticket.statut !== 'valide') {
+      const conf = RAISONS_BY_STATUT[ticket.statut] || { code: 'INVALID', raison: 'Billet non valide.' };
+      refused = { code: conf.code, raison: conf.raison };
+    }
+
+    const compagnieId = actor.compagnieId ?? ticket.reservation?.agence?.compagnie_id ?? ticket.depart?.compagnie?.id ?? null;
+    const agenceId = actor.agenceId ?? ticket.reservation?.agence_id ?? null;
+    const base = {
+      billet_id: ticket.id,
+      agent_id: actor.id,
+      compagnie_id: compagnieId,
+      agence_id: agenceId,
+      guichet_id: actor.guichetId ?? null,
+      action: 'checkin',
+      adresse_ip: ip || null,
+      cree_le: new Date(),
+    };
+
+    if (refused) {
+      await ticketRepository.createCheckIn(
+        { id: await generateCheckInId(), ...base, resultat: 'refuse', raison: refused.raison.slice(0, 120) },
+        { transaction: t }
+      );
+      outcome = { boarded: false, resultat: 'refuse', code: refused.code, raison: refused.raison, ticket: serializeTicket(ticket) };
+      return;
+    }
+
+    await ticketRepository.updateBillet(
+      ticket,
+      { statut: 'utilise', verifie_le: new Date(), verifie_par: actor.id },
+      { transaction: t }
+    );
+    ticket.statut = 'utilise';
+    ticket.verifie_le = new Date();
+    await ticketRepository.createCheckIn(
+      { id: await generateCheckInId(), ...base, resultat: 'embarque', raison: null },
+      { transaction: t }
+    );
+    outcome = { boarded: true, resultat: 'embarque', code: 'VALID', raison: null, ticket: serializeTicket(ticket) };
+  });
+
+  logger.info(
+    `[tickets] check-in ${outcome.ticket.reference} → ${outcome.resultat}${outcome.raison ? ` (${outcome.raison})` : ''} par ${actor.email}`
+  );
+  return outcome;
+};
+
+/**
+ * GET /tickets/:id/check-in-history — journal complet du billet
+ * (scans `scan_billet` + contrôles d'embarquement `checkin_billet`),
+ * du plus récent au plus ancien. Périmètre d'accès standard.
+ */
+const getCheckInHistory = async ({ id, actor }) => {
+  const ticket = await ticketRepository.findByIdFull(id);
+  if (!ticket) throw new ApiError(404, 'Billet introuvable.');
+  assertCanAccess(actor, ticket);
+
+  const [checkins, scans] = await Promise.all([
+    ticketRepository.findCheckInsByTicket(id),
+    ticketRepository.findScansByTicket(id),
+  ]);
+
+  const items = [
+    ...scans.map((s) => ({
+      id: s.id,
+      type: 'scan',
+      action: 'scan',
+      statut: s.statut,
+      raison: s.raison,
+      agent: s.scannerAgent ? { id: s.scannerAgent.id, nom: `${s.scannerAgent.prenom} ${s.scannerAgent.nom}` } : null,
+      compagnieId: s.compagnie_id,
+      agenceId: s.agence_id,
+      date: s.cree_le,
+    })),
+    ...checkins.map((c) => ({
+      id: c.id,
+      type: 'checkin',
+      action: c.action,
+      statut: c.resultat,
+      raison: c.raison,
+      agent: c.agent ? { id: c.agent.id, nom: `${c.agent.prenom} ${c.agent.nom}` } : null,
+      compagnieId: c.compagnie_id,
+      agenceId: c.agence_id,
+      guichetId: c.guichet_id,
+      date: c.cree_le,
+    })),
+  ].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  return {
+    billet: { id: ticket.id, reference: ticket.reference, statut: ticket.statut, siege: ticket.siege },
+    total: items.length,
+    items,
+  };
 };
 
 /**
@@ -611,6 +810,8 @@ module.exports = {
   updateStatus,
   getQrCode,
   verify,
+  checkIn,
+  getCheckInHistory,
   regenerateQrCode,
   getPdf,
   envoyerBilletParEmail,

@@ -20,6 +20,7 @@ const buildTokenPayload = (agent) => ({
   role: agent.role,
   agenceId: agent.agence_id,
   compagnieId: agent.agence?.compagnie_id ?? undefined,
+  guichetId: agent.guichet_id ?? undefined,
 });
 
 /** Recharge un agent depuis la base (vérifie qu'il existe encore et est actif). */

@@ -42,6 +42,8 @@ router.get('/tickets/:id/qrcode', ticketRoles, validate(idSchema, 'params'), tic
 router.get('/tickets/:id/pdf', ticketRoles, validate(idSchema, 'params'), ticketController.getPdf);
 router.post('/tickets/:id/send-email', ticketRoles, writeLimiter, validate(idSchema, 'params'), validate(sendEmailSchema), ticketController.sendEmail);
 router.patch('/tickets/:id/status', ticketRoles, writeLimiter, validate(idSchema, 'params'), validate(statusSchema), ticketController.updateStatus);
+router.post('/tickets/:id/check-in', staffRoles, writeLimiter, validate(idSchema, 'params'), ticketController.checkIn);
+router.get('/tickets/:id/check-in-history', ticketRoles, validate(idSchema, 'params'), ticketController.getCheckInHistory);
 router.post('/tickets/:id/regenerate-qrcode', adminOnly, writeLimiter, validate(idSchema, 'params'), ticketController.regenerateQrCode);
 
 module.exports = router;

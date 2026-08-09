@@ -3,6 +3,7 @@ const {
   sequelize,
   Billet,
   ScanBillet,
+  CheckInBillet,
   Reservation,
   PlaceReservee,
   Client,
@@ -12,6 +13,7 @@ const {
   Trajet,
   Agence,
   Compagnie,
+  Guichet,
   Ville,
   HistoriqueReservation,
   Passenger,
@@ -56,6 +58,7 @@ const detailInclude = [
     attributes: ['id', 'code', 'date_depart', 'heure_depart', 'date_arrivee', 'heure_arrivee', 'prix_base', 'quai', 'statut'],
     include: departInclude,
   },
+  { model: Passenger, as: 'passenger', attributes: ['id', 'first_name', 'last_name', 'phone', 'email'] },
 ];
 
 /* ══════════════════════════════════════════════════════════════
@@ -134,6 +137,10 @@ const findPage = async ({ where = {}, page = 1, limit = 20, sort = 'newest' } = 
 
 const findByIdFull = (id) => Billet.findOne({ where: { id }, include: detailInclude });
 
+/** Verrouillage pessimiste (SELECT ... FOR UPDATE) : garanti anti-double-embarquement. */
+const findByIdFullLocked = (id, transaction) =>
+  Billet.findOne({ where: { id }, include: detailInclude, lock: transaction.LOCK.UPDATE, transaction });
+
 const findById = (id) => Billet.findByPk(id);
 
 const findBilletByReference = (reference) => Billet.findOne({ where: { reference } });
@@ -145,6 +152,34 @@ const findBilletByTokenHash = (hash) => Billet.findOne({ where: { token_hash: ha
 const findFullByTokenHash = (hash) => Billet.findOne({ where: { token_hash: hash }, include: detailInclude });
 
 const createScanBillet = (data, options = {}) => ScanBillet.create(data, options);
+
+/** Historique d'embarquement (Module 15). */
+const createCheckIn = (data, options = {}) => CheckInBillet.create(data, options);
+
+const findCheckInsByTicket = (ticketId, options = {}) =>
+  CheckInBillet.findAll({
+    where: { billet_id: ticketId },
+    include: [
+      { model: Agent, as: 'agent', attributes: ['id', 'prenom', 'nom', 'matricule'] },
+      { model: Compagnie, as: 'compagnie', attributes: ['id', 'nom'] },
+      { model: Agence, as: 'agence', attributes: ['id', 'nom'] },
+      { model: Guichet, as: 'guichet', attributes: ['id', 'code', 'nom'] },
+    ],
+    order: [['cree_le', 'DESC']],
+    ...options,
+  });
+
+const findScansByTicket = (ticketId, options = {}) =>
+  ScanBillet.findAll({
+    where: { billet_id: ticketId },
+    include: [
+      { model: Agent, as: 'scannerAgent', attributes: ['id', 'prenom', 'nom', 'matricule'] },
+      { model: Compagnie, as: 'compagnie', attributes: ['id', 'nom'] },
+      { model: Agence, as: 'agence', attributes: ['id', 'nom'] },
+    ],
+    order: [['cree_le', 'DESC']],
+    ...options,
+  });
 
 const createBillet = (data, options = {}) => Billet.create(data, options);
 
@@ -323,12 +358,16 @@ module.exports = {
   buildOrder,
   findPage,
   findByIdFull,
+  findByIdFullLocked,
   findById,
   findBilletByReference,
   findBilletByToken,
   findBilletByTokenHash,
   findFullByTokenHash,
   createScanBillet,
+  createCheckIn,
+  findCheckInsByTicket,
+  findScansByTicket,
   createBillet,
   updateBillet,
   findBilletsByReservation,

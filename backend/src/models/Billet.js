@@ -71,6 +71,7 @@ module.exports = (sequelize, DataTypes) => {
     Billet.belongsTo(db.Agent, { foreignKey: 'verifie_par', as: 'verifiePar' });
     Billet.hasMany(db.Paiement, { foreignKey: 'billet_id', as: 'paiements' });
     Billet.hasMany(db.ScanBillet, { foreignKey: 'billet_id', as: 'scans' });
+    Billet.hasMany(db.CheckInBillet, { foreignKey: 'billet_id', as: 'checkins' });
   };
 
   return Billet;

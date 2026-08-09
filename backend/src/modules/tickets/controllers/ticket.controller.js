@@ -80,6 +80,24 @@ const sendEmail = asyncHandler(async (req, res) => {
   res.json({ success: true, data });
 });
 
+/**
+ * POST /tickets/:id/check-in — contrôle d'embarquement (Module 15).
+ * Transaction + verrouillage pessimiste : anti-double-embarquement garanti.
+ */
+const checkIn = asyncHandler(async (req, res) => {
+  const data = await ticketService.checkIn({ id: req.params.id, actor: req.user, ip: req.ip });
+  res.json({ success: true, data });
+});
+
+/**
+ * GET /tickets/:id/check-in-history — journal des contrôles du billet
+ * (scans + check-ins), du plus récent au plus ancien.
+ */
+const getCheckInHistory = asyncHandler(async (req, res) => {
+  const data = await ticketService.getCheckInHistory({ id: req.params.id, actor: req.user });
+  res.json({ success: true, data });
+});
+
 module.exports = {
   list,
   stats,
@@ -87,6 +105,8 @@ module.exports = {
   updateStatus,
   getQrCode,
   verify,
+  checkIn,
+  getCheckInHistory,
   regenerateQrCode,
   getPdf,
   sendEmail,
