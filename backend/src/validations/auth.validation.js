@@ -37,6 +37,33 @@ const registerAgentSchema = Joi.object({
   motDePasse: nouveauMotDePasse,
 });
 
+const registerClientSchema = Joi.object({
+  prenom: Joi.string().max(60).required(),
+  nom: Joi.string().max(60).required(),
+  telephone: Joi.string().max(20).required(),
+  email,
+  motDePasse: nouveauMotDePasse,
+  pays: Joi.string().max(60).required(),
+  ville: Joi.string().max(60).required(),
+  adresse: Joi.string().max(255).optional().allow('', null),
+});
+
+const registerCompanySchema = Joi.object({
+  companyName: Joi.string().max(120).required(),
+  address: Joi.string().max(255).optional().allow('', null),
+  city: Joi.string().max(120).required(),
+  country: Joi.string().max(60).required(),
+  website: Joi.string().max(255).optional().allow('', null),
+  description: Joi.string().max(1000).optional().allow('', null),
+  rccm: Joi.string().max(60).required(),
+  taxpayerNumber: Joi.string().max(60).required(),
+  managerLastName: Joi.string().max(60).required(),
+  managerFirstName: Joi.string().max(60).required(),
+  phone: Joi.string().max(20).required(),
+  email,
+  motDePasse: nouveauMotDePasse,
+});
+
 const refreshTokenSchema = Joi.object({
   refreshToken: Joi.string().required().messages({
     'any.required': 'Le refresh token est requis.',
@@ -82,6 +109,8 @@ const resendVerificationSchema = Joi.object({ email });
 module.exports = {
   loginSchema,
   registerAgentSchema,
+  registerClientSchema,
+  registerCompanySchema,
   refreshTokenSchema,
   logoutSchema,
   forgotPasswordSchema,

@@ -30,4 +30,28 @@ const serializeUser = (agent) => ({
   statut: agent.statut,
 });
 
-module.exports = { serializeUser };
+/**
+ * Sérialise un client (passager) en profil utilisateur API.
+ * Role = 'client', sans agence ni compagnie.
+ */
+const serializeClient = (client) => ({
+  id: client.id,
+  email: client.email,
+  firstName: client.prenom,
+  lastName: client.nom,
+  phone: client.telephone,
+  photo: null,
+  adresse: client.adresse ?? null,
+  ville: client.ville?.nom ?? client.ville_id ?? null,
+  villeId: client.ville_id ?? null,
+  pays: client.pays ?? null,
+  role: 'client',
+  agenceId: null,
+  compagnieId: null,
+  dateCreation: client.date_inscription ?? null,
+  derniereConnexion: null,
+  emailVerified: Boolean(client.email),
+  statut: client.statut,
+});
+
+module.exports = { serializeUser, serializeClient };

@@ -11,6 +11,20 @@ const registerAgent = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, data: user, message: 'Agent créé avec succès.' });
 });
 
+const registerClient = asyncHandler(async (req, res) => {
+  const result = await authService.registerClient(req.body, req);
+  res.status(201).json({ success: true, data: result, message: 'Compte client créé avec succès.' });
+});
+
+const registerCompany = asyncHandler(async (req, res) => {
+  const result = await authService.registerCompany(req.body);
+  res.status(201).json({
+    success: true,
+    data: result,
+    message: 'Demande de création de compagnie enregistrée.',
+  });
+});
+
 const logout = asyncHandler(async (req, res) => {
   const result = await authService.logout(req.body, req);
   res.json({ success: true, data: result, message: 'Déconnexion réussie.' });
@@ -58,6 +72,8 @@ const me = asyncHandler(async (req, res) => {
 module.exports = {
   login,
   registerAgent,
+  registerClient,
+  registerCompany,
   logout,
   refreshToken,
   forgotPassword,

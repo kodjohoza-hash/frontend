@@ -44,6 +44,34 @@ router.post('/login', loginLimiter, validate(authValidation.loginSchema), authCo
 
 /**
  * @swagger
+ * /auth/register-client:
+ *   post:
+ *     summary: Inscription client (publique)
+ *     tags: [Auth]
+ */
+router.post(
+  '/register-client',
+  loginLimiter,
+  validate(authValidation.registerClientSchema),
+  authController.registerClient
+);
+
+/**
+ * @swagger
+ * /auth/register-company:
+ *   post:
+ *     summary: Inscription compagnie (publique — validation requise)
+ *     tags: [Auth]
+ */
+router.post(
+  '/register-company',
+  loginLimiter,
+  validate(authValidation.registerCompanySchema),
+  authController.registerCompany
+);
+
+/**
+ * @swagger
  * /auth/register:
  *   post:
  *     summary: Créer un agent + compte (réservé au Super Admin)
