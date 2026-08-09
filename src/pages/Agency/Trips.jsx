@@ -1,24 +1,31 @@
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
 import AgencyTripStats from '../../components/agency/AgencyTripStats';
 import AgencyTripFilters from '../../components/agency/AgencyTripFilters';
 import AgencyTripsTable from '../../components/agency/AgencyTripsTable';
 import AgencyTripModal from '../../components/agency/AgencyTripModal';
 import AgencyTripSkeleton from '../../components/agency/AgencyTripSkeleton';
-import { mockTrips, tripStats } from '../../data/agencyTripsData';
+import useTripStore from '../../store/trip.store';
+import useRouteStore from '../../store/route.store';
 
 export default function Trips() {
-  const navigate = useNavigate();
-  const [trips, setTrips] = useState(mockTrips);
+  const { trips, stats, loading, error, clearError, fetchTrips, fetchStats, createTrip, updateTrip } = useTripStore();
+  const routes = useRouteStore((s) => s.routes);
   const [filters, setFilters] = useState({ search: '', from: '', to: '', status: '', type: '', dateFrom: '', dateTo: '' });
   const [activeStatFilter, setActiveStatFilter] = useState('all');
-  const [sortField, setSortField] = useState('date');
+  const sortField = 'date';
   const [sortDir, setSortDir] = useState('desc');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTrip, setEditingTrip] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [page, setPage] = useState(1);
   const perPage = 10;
+
+  useEffect(() => {
+    fetchTrips();
+    fetchStats();
+    const routeStore = useRouteStore.getState();
+    if (!routeStore.routes.length) routeStore.fetchRoutes().catch(() => {});
+  }, [fetchTrips, fetchStats]);
 
   const filteredTrips = useMemo(() => {
     let result = [...trips];
@@ -71,35 +78,27 @@ export default function Trips() {
     setPage(1);
   };
 
-  const handleSave = (formData) => {
-    if (editingTrip) {
-      setTrips((prev) => prev.map((t) => t.id === editingTrip.id ? { ...t, ...formData } : t));
-    } else {
-      const newTrip = {
-        id: `VYG-2026-${String(trips.length + 1).padStart(3, '0')}`,
-        company: 'Guillaume Express',
-        bus: formData.bus,
-        driver: formData.driver,
-        from: formData.from,
-        to: formData.to,
-        date: formData.date,
-        departure: formData.departure,
-        arrival: formData.arrival || '--:--',
-        price: formData.price,
-        totalSeats: 45,
-        soldSeats: 0,
-        status: 'programmee',
-        type: formData.type,
-        luggage: formData.luggage,
-        notes: formData.notes,
-        fromPoint: formData.fromPoint,
-        toPoint: formData.toPoint,
-        createdAt: new Date().toISOString(),
-      };
-      setTrips((prev) => [newTrip, ...prev]);
+  const handleSave = async (formData) => {
+    setSaving(true);
+    clearError();
+    try {
+      const options = { routes };
+      if (editingTrip) {
+        await updateTrip(
+          editingTrip.id,
+          { ...formData, routeId: editingTrip.routeId },
+          { ...options, existing: editingTrip }
+        );
+      } else {
+        await createTrip(formData, options);
+      }
+      setModalOpen(false);
+      setEditingTrip(null);
+    } catch {
+      // L'erreur est propagée par le store (message backend).
+    } finally {
+      setSaving(false);
     }
-    setModalOpen(false);
-    setEditingTrip(null);
   };
 
   const handleOpenCreate = () => {
@@ -107,21 +106,7 @@ export default function Trips() {
     setModalOpen(true);
   };
 
-  const handleEdit = (trip) => {
-    setEditingTrip(trip);
-    setModalOpen(true);
-  };
-
-  const currentStats = useMemo(() => ({
-    total: trips.length,
-    today: trips.filter((t) => t.date === '2026-07-25').length,
-    active: trips.filter((t) => t.status === 'en_cours').length,
-    completed: trips.filter((t) => t.status === 'terminee').length,
-    cancelled: trips.filter((t) => t.status === 'annulee').length,
-    occupancy: Math.round(trips.reduce((acc, t) => acc + (t.soldSeats / t.totalSeats) * 100, 0) / trips.length),
-  }), [trips]);
-
-  if (loading) return <AgencyTripSkeleton />;
+  if (loading && !trips.length) return <AgencyTripSkeleton />;
 
   return (
     <div className="at-page">
@@ -135,13 +120,23 @@ export default function Trips() {
             {filteredTrips.length} voyage{filteredTrips.length > 1 ? 's' : ''} trouvé{filteredTrips.length > 1 ? 's' : ''}
           </p>
         </div>
-        <button className="at-btn at-btn--primary at-btn--lg" onClick={handleOpenCreate}>
+        <button className="at-btn at-btn--primary at-btn--lg" onClick={handleOpenCreate} disabled={saving}>
           <i className="bi bi-plus-lg" />
           <span>Nouveau voyage</span>
         </button>
       </div>
 
-      <AgencyTripStats stats={currentStats} activeFilter={activeStatFilter} onFilterChange={handleStatFilter} />
+      {error && (
+        <div className="at-alert at-alert--danger">
+          <i className="bi bi-exclamation-triangle" />
+          <span>{error}</span>
+          <button className="at-alert__close" onClick={clearError}>
+            <i className="bi bi-x-lg" />
+          </button>
+        </div>
+      )}
+
+      <AgencyTripStats stats={stats} activeFilter={activeStatFilter} onFilterChange={handleStatFilter} />
 
       <AgencyTripFilters
         filters={filters}
