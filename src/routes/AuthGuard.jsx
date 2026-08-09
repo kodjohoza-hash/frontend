@@ -1,7 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import useAuth from '@hooks/useAuth';
 import LoadingAuth from '@components/auth/LoadingAuth';
-import { DEV_MODE } from '@config/devMode';
 
 /**
  * AuthGuard — Lightweight authentication check
@@ -11,8 +10,6 @@ import { DEV_MODE } from '@config/devMode';
 const AuthGuard = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
-
-  if (DEV_MODE) return children;
 
   if (loading && !isAuthenticated) {
     return <LoadingAuth />;

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { ROLES } from '@utils/roles';
-import { PERMISSIONS, hasAllPermissions as checkAllPermissions, hasAnyPermission as checkAnyPermission } from '@utils/permissions';
+import { hasAllPermissions as checkAllPermissions, hasAnyPermission as checkAnyPermission } from '@utils/permissions';
 
 /**
  * BUS TIX CONNECT — Auth Store (Zustand + Persist)
@@ -148,7 +148,7 @@ const useAuthStore = create(
       isCounterAgent: () => get().role === ROLES.COUNTER_AGENT,
     }),
     {
-      name: 'btc-auth',
+      name: 'btc-auth-v2',
       partialize: (state) => ({
         token: state.token,
         refreshToken: state.refreshToken,

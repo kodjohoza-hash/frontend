@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { clientLoginSchema } from '@schemas/auth.schema';
@@ -12,6 +12,7 @@ import AppLogo from '@components/common/AppLogo';
 
 const LoginClient = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, isLoggingIn, loginError } = useAuth();
   const [showAlert, setShowAlert] = useState(false);
 
@@ -27,7 +28,16 @@ const LoginClient = () => {
   const onSubmit = (data) => {
     setShowAlert(false);
     login({ ...data, roleHint: 'client' }, {
-      onSuccess: () => navigate(getRoleDashboard('client'), { replace: true }),
+      onSuccess: () => {
+        /* Retour au parcours interrompu (checkout) après connexion. */
+        const from = location.state?.from;
+        if (from?.pathname) {
+          const checkoutState = location.state?.checkout || from.state;
+          navigate(`${from.pathname}${from.search || ''}`, { replace: true, state: checkoutState });
+          return;
+        }
+        navigate(getRoleDashboard('client'), { replace: true });
+      },
       onError: () => setShowAlert(true),
     });
   };

@@ -2,7 +2,6 @@ import { ROLES } from '@utils/roles';
 import { ROLE_PERMISSIONS } from '@utils/permissions';
 import useAuthStore from '../store/auth.store';
 import apiClient from './apiClient';
-import { mockRegister, mockRegisterCompany } from '@mock/authService';
 
 /**
  * BUS TIX CONNECT — Auth Service (API réelle)
@@ -16,9 +15,7 @@ import { mockRegister, mockRegisterCompany } from '@mock/authService';
  *   POST /auth/forgot-password · POST /auth/reset-password
  *   POST /auth/verify-email · GET /auth/me · PATCH /auth/profile
  *   PATCH /auth/change-password
- *
- * L'inscription (client / compagnie) reste sur le mock en attendant
- * l'endpoint backend dédié (migration progressive).
+ *   POST /auth/register-client · POST /auth/register-company
  */
 
 /* Correspondance espace d'authentification → rôle backend */
@@ -53,9 +50,54 @@ const authService = {
     return { data: { ...data, user: buildUser(data.user) } };
   },
 
-  /* Inscription client / compagnie — encore mockée (migration progressive). */
-  register: (data) => mockRegister(data),
-  registerCompany: (data) => mockRegisterCompany(data),
+  /** Inscription client : crée un vrai enregistrement `client` côté backend. */
+  register: async ({ lastName, firstName, phone, email, password, country, city, adresse }) => {
+    const data = await apiClient.post('/auth/register-client', {
+      prenom: firstName,
+      nom: lastName,
+      telephone: phone,
+      email,
+      motDePasse: password,
+      pays: country,
+      ville: city,
+      adresse: adresse || null,
+    });
+    return { data: { ...data, user: buildUser(data.user) } };
+  },
+
+  /** Inscription compagnie : demande en attente de validation côté backend. */
+  registerCompany: async ({
+    companyName,
+    address,
+    city,
+    country,
+    website,
+    description,
+    rccm,
+    taxpayerNumber,
+    managerLastName,
+    managerFirstName,
+    phone,
+    email,
+    password,
+  }) => {
+    const data = await apiClient.post('/auth/register-company', {
+      companyName,
+      address,
+      city,
+      country,
+      website,
+      description,
+      rccm,
+      taxpayerNumber,
+      managerLastName,
+      managerFirstName,
+      phone,
+      email,
+      motDePasse: password,
+    });
+    return { data };
+  },
 
   /** Déconnexion sécurisée : révoque le refresh token côté serveur. */
   logout: async (variable) => {

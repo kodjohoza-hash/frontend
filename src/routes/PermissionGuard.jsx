@@ -1,7 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import useAuth from '@hooks/useAuth';
 import AccessDenied from '@components/auth/AccessDenied';
-import { DEV_MODE } from '@config/devMode';
 
 /**
  * PermissionGuard — Guard for permission-based routes
@@ -10,10 +9,8 @@ import { DEV_MODE } from '@config/devMode';
  * Shows AccessDenied page (not redirect) when permissions fail
  */
 const PermissionGuard = ({ children, permissions = [], fallback }) => {
-  const { isAuthenticated, role, permissions: userPermissions, isSuperAdmin } = useAuth();
+  const { isAuthenticated, permissions: userPermissions, isSuperAdmin } = useAuth();
   const location = useLocation();
-
-  if (DEV_MODE) return children;
 
   /* Not authenticated → redirect to login */
   if (!isAuthenticated) {
