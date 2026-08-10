@@ -5,3 +5,4 @@ export { default as MessageBubble, MessageDateDivider } from './MessageBubble';
 export { default as MessageInput } from './MessageInput';
 export { default as EmptyConversation } from './EmptyConversation';
 export { default as ChatSkeleton } from './ChatSkeleton';
+export { default as MessagesPage } from './MessagesPage';

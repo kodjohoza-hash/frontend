@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 const ChatHeader = ({ contact, onBack }) => {
   if (!contact) return null;
 

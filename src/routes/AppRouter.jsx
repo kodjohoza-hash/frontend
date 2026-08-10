@@ -98,6 +98,7 @@ const SuperAdminReports = lazy(() => import('@pages/SuperAdmin/Reports'));
 const SuperAdminAudit = lazy(() => import('@pages/SuperAdmin/Audit'));
 const SuperAdminSettings = lazy(() => import('@pages/SuperAdmin/Settings'));
 const SuperAdminNotifications = lazy(() => import('@pages/SuperAdmin/Notifications'));
+const SuperAdminMessages = lazy(() => import('@pages/SuperAdmin/Messages'));
 const SuperAdminSupport = lazy(() => import('@pages/SuperAdmin/Support'));
 const SuperAdminIntegrations = lazy(() => import('@pages/SuperAdmin/Integrations'));
 const SuperAdminBackup = lazy(() => import('@pages/SuperAdmin/Backup'));
@@ -272,6 +273,7 @@ const AppRouter = () => {
           <Route path={ROUTES.SUPER_ADMIN_AUDIT} element={<SuperAdminAudit />} />
           <Route path={ROUTES.SUPER_ADMIN_SETTINGS} element={<SuperAdminSettings />} />
           <Route path={ROUTES.SUPER_ADMIN_NOTIFICATIONS} element={<SuperAdminNotifications />} />
+          <Route path={ROUTES.SUPER_ADMIN_MESSAGES} element={<SuperAdminMessages />} />
           <Route path={ROUTES.SUPER_ADMIN_SUPPORT} element={<SuperAdminSupport />} />
           <Route path={ROUTES.SUPER_ADMIN_INTEGRATIONS} element={<SuperAdminIntegrations />} />
           <Route path={ROUTES.SUPER_ADMIN_BACKUP} element={<SuperAdminBackup />} />

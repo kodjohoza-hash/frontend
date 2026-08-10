@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import useAuth from '@hooks/useAuth';
 import AppLogo from '@components/common/AppLogo';
-import { useNotificationStore } from '@store';
+import { useNotificationStore, useMessageStore } from '@store';
 
 const AdminHeader = ({ onToggleSidebar, onLogout }) => {
   const { user } = useAuth();
@@ -38,6 +38,7 @@ const AdminHeader = ({ onToggleSidebar, onLogout }) => {
 
   const pageName = breadcrumbMap[location.pathname] || 'Tableau de bord';
   const { items: notifications, unread: unreadCount, markRead } = useNotificationStore();
+  const { unread: messageUnread } = useMessageStore();
   const dropdownNotifs = notifications.slice(0, 5);
 
   const formatTime = (dateStr) => {
@@ -81,6 +82,11 @@ const AdminHeader = ({ onToggleSidebar, onLogout }) => {
       </div>
 
       <div className="adm-header__right">
+        <Link to="/super-admin/messages" className="adm-header__icon-btn" title="Messagerie">
+          <i className="bi bi-chat-dots" />
+          {messageUnread > 0 && <span className="adm-header__badge">{messageUnread}</span>}
+        </Link>
+
         <div className="adm-header__profile-wrapper" ref={notifRef}>
           <button
             type="button"

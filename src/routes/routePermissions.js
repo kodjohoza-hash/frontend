@@ -57,6 +57,7 @@ export const ROUTE_PERMISSIONS = {
   [ROUTES.SUPER_ADMIN_ROLES]: { roles: ['super_admin'], permissions: [PERMISSIONS.ROLES_VIEW] },
   [ROUTES.SUPER_ADMIN_REPORTS]: { roles: ['super_admin'], permissions: [PERMISSIONS.REPORTS_VIEW] },
   [ROUTES.SUPER_ADMIN_SETTINGS]: { roles: ['super_admin'], permissions: [PERMISSIONS.SETTINGS_VIEW] },
+  [ROUTES.SUPER_ADMIN_MESSAGES]: { roles: ['super_admin'], permissions: [PERMISSIONS.MESSAGES_VIEW] },
 };
 
 /**

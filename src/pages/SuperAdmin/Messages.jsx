@@ -3,7 +3,7 @@ import { MessagesPage, ChatSkeleton } from '@components/messages';
 
 const Messages = () => (
   <Suspense fallback={<ChatSkeleton />}>
-    <MessagesPage basePath="/agency/messages" />
+    <MessagesPage basePath="/super-admin/messages" />
   </Suspense>
 );
 

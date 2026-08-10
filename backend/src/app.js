@@ -99,6 +99,13 @@ app.use('/api/v1', ticketsModule.routes);
 const notificationsModule = require('./modules/notifications');
 app.use('/api/v1', notificationsModule.routes);
 
+/* Module Messagerie interne (Module 17 : conversations, messages, participants).
+   L'accès est strictement contrôlé par la table `conversation_participant` :
+   un utilisateur ne peut jamais consulter/écrire dans une conversation dont il
+   n'est pas participant, quel que soit l'id transmis. */
+const messagesModule = require('./modules/messages');
+app.use('/api/v1', messagesModule.routes);
+
 /* 404 + gestion centralisée des erreurs */
 app.use(notFoundHandler);
 app.use(errorHandler);

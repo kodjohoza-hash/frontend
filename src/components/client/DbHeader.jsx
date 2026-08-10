@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import useAuth from '@hooks/useAuth';
-import { useNotificationStore } from '@store';
+import { useNotificationStore, useMessageStore } from '@store';
 
 const DbHeader = ({ onToggleSidebar, onLogout }) => {
   const { user } = useAuth();
@@ -12,6 +12,7 @@ const DbHeader = ({ onToggleSidebar, onLogout }) => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [bellBounce, setBellBounce] = useState(false);
   const { items: notifications, unread: unreadCount, markRead, markAllRead, remove } = useNotificationStore();
+  const { unread: messageUnread } = useMessageStore();
   const navigate = useNavigate();
   const searchRef = useRef(null);
   const notifRef = useRef(null);
@@ -156,6 +157,11 @@ const DbHeader = ({ onToggleSidebar, onLogout }) => {
           title="Messages"
         >
           <i className="bi bi-chat-dots" />
+          {messageUnread > 0 && (
+            <span className="db-header__badge">
+              {messageUnread > 99 ? '99+' : messageUnread}
+            </span>
+          )}
         </button>
 
         <div className="db-header__notif-wrapper" ref={notifRef}>

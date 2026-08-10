@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import useAuth from '@hooks/useAuth';
 import AppLogo from '@components/common/AppLogo';
-import { useNotificationStore } from '@store';
+import { useNotificationStore, useMessageStore } from '@store';
 
 const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
   const { user } = useAuth();
@@ -49,6 +49,7 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
   const pageName = breadcrumbMap[location.pathname] || 'Tableau de bord';
 
   const { items: notifications, unread: unreadCount, markRead } = useNotificationStore();
+  const { unread: messageUnread } = useMessageStore();
   const dropdownNotifs = notifications.slice(0, 5);
 
   const formatTime = (dateStr) => {
@@ -116,7 +117,7 @@ const AgencyHeader = ({ onToggleSidebar, onLogout }) => {
 
         <Link to="/agency/messages" className="ag-header__icon-btn" title="Messagerie">
           <i className="bi bi-chat-dots" />
-          <span className="ag-header__badge">2</span>
+          {messageUnread > 0 && <span className="ag-header__badge">{messageUnread}</span>}
         </Link>
 
         <div className="ag-header__notif-wrapper" ref={notifRef}>
