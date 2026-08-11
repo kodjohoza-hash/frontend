@@ -23,6 +23,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 'available',
       },
+      date_creation: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      date_modification: { type: DataTypes.DATE, allowNull: true },
     },
     {
       tableName: 'chauffeur',

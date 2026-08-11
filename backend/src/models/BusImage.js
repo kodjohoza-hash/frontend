@@ -10,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
       bus_id: { type: DataTypes.CHAR(10), allowNull: false },
       url: { type: DataTypes.STRING(255), allowNull: false },
       is_primary: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+      date_creation: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
     },
     {
       tableName: 'bus_image',

@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       url: { type: DataTypes.STRING(255), allowNull: false },
       notes: { type: DataTypes.STRING(255), allowNull: true },
+      date_creation: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
     },
     {
       tableName: 'chauffeur_document',
