@@ -106,6 +106,18 @@ app.use('/api/v1', notificationsModule.routes);
 const messagesModule = require('./modules/messages');
 app.use('/api/v1', messagesModule.routes);
 
+/* Module Statistiques & Rapports (Module 18 : dashboards par rôle, revenus,
+   réservations, voyages, billets, abonnements, performances agence/guichet).
+   Le périmètre de chaque requête est déduit du token (req.user) ; l'isolation
+   est appliquée en SQL, jamais côté frontend. */
+const statisticsModule = require('./modules/statistics');
+app.use('/api/v1', statisticsModule.routes);
+
+/* Module Admin (Module 19 : journal d'audit + paiements opérationnels globaux).
+   Réservé au super admin — le journal ne contient jamais de donnée sensible. */
+const adminModule = require('./modules/admin');
+app.use('/api/v1', adminModule.routes);
+
 /* 404 + gestion centralisée des erreurs */
 app.use(notFoundHandler);
 app.use(errorHandler);
