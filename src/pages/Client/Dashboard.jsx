@@ -7,26 +7,77 @@ import DbQuickActions from '@components/client/DbQuickActions';
 import DbNotifications from '@components/client/DbNotifications';
 import DbActivityTimeline from '@components/client/DbActivityTimeline';
 import DbSkeleton from '@components/client/DbSkeleton';
-import { stats } from '@data/clientDashboard';
+import { StatisticsLoading, StatisticsError } from '@components/statistics/StatisticsStates';
+import useStatisticsStore from '../../store/statistics.store';
 
-const TOAST_DURATION = 4000;
+const formatProchain = (prochain) => {
+  if (!prochain) return '—';
+  const d = new Date(`${prochain}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return prochain;
+  return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+};
 
 const DashboardPage = () => {
   const [toasts, setToasts] = useState([]);
   const [visible, setVisible] = useState(false);
+  const data = useStatisticsStore((s) => s.data);
+  const loading = useStatisticsStore((s) => s.loading);
+  const error = useStatisticsStore((s) => s.error);
+  const fetch = useStatisticsStore((s) => s.fetch);
+
+  const dash = data.dashboard?.data;
+  const isLoading = loading.dashboard;
+
+  useEffect(() => {
+    fetch('dashboard').catch(() => {});
+  }, [fetch]);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 100);
     return () => clearTimeout(t);
   }, []);
 
-  const addToast = useCallback((message, type = 'info') => {
-    const id = Date.now() + Math.random();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, TOAST_DURATION);
-  }, []);
+  const stats = dash
+    ? [
+        {
+          id: 'bookings',
+          label: 'Réservations',
+          value: dash.reservations?.total ?? 0,
+          change: `${dash.reservations?.aVenir ?? 0} à venir`,
+          trend: 'up',
+          icon: 'bi-ticket-perforated',
+          color: 'primary',
+        },
+        {
+          id: 'trips',
+          label: 'Voyages à venir',
+          value: dash.voyages?.aVenir ?? 0,
+          change: `${dash.billets?.effectues ?? 0} effectués`,
+          trend: 'up',
+          icon: 'bi-bus-front-fill',
+          color: 'accent',
+        },
+        {
+          id: 'spent',
+          label: 'Dépensé',
+          value: (dash.depenses ?? 0).toLocaleString('fr-FR'),
+          suffix: 'XAF',
+          change: 'Montant cumulé',
+          trend: 'up',
+          icon: 'bi-wallet2',
+          color: 'success',
+        },
+        {
+          id: 'next',
+          label: 'Prochain voyage',
+          value: formatProchain(dash.voyages?.prochain),
+          change: dash.voyages?.prochain ? 'Programmé' : '',
+          trend: 'up',
+          icon: 'bi-calendar2-check',
+          color: 'info',
+        },
+      ]
+    : [];
 
   const removeToast = useCallback((id) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -35,6 +86,8 @@ const DashboardPage = () => {
   return (
     <>
       <DbWelcomeCard />
+      {isLoading && !dash ? <StatisticsLoading label="Chargement de vos statistiques…" /> : null}
+      {error && !dash ? <StatisticsError message={error} /> : null}
       <div className={`db-stats-row ${visible ? 'db-stats-row--visible' : ''}`}>
         {stats.map((s, i) => (
           <div key={s.id} className="db-stats-anim" style={{ animationDelay: `${i * 0.08}s` }}>

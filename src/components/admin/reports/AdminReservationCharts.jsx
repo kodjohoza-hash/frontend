@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { bookingData } from '../../../data/adminReportData';
 
-const ReservationCharts = ({ filters }) => {
+const ReservationCharts = ({ bookings }) => {
   const [activeView, setActiveView] = useState('byDay');
   const [fullscreen, setFullscreen] = useState(null);
 
@@ -12,10 +12,14 @@ const ReservationCharts = ({ filters }) => {
     { key: 'byRoute', label: 'Par ligne', icon: 'fa-route' },
   ];
 
-  const data = bookingData[activeView];
+  const source = bookings && (bookings.byDay || bookings.byCompany)
+    ? bookings
+    : bookingData;
+
+  const data = source[activeView];
   const isByDay = activeView === 'byDay';
   const isHorizontal = !isByDay;
-  const maxValue = isByDay ? Math.max(...data.map(d => d.bookings)) : 100;
+  const maxValue = isByDay ? Math.max(...(data.map(d => d.bookings) || [0])) : 100;
 
   const toggleFullscreen = () => setFullscreen(fullscreen === 'reservations' ? null : 'reservations');
 
@@ -42,7 +46,7 @@ const ReservationCharts = ({ filters }) => {
         </div>
       </div>
 
-      {data && (
+      {data ? (
         isHorizontal ? (
           <div className="adbi-hbar-list">
             {data.map((d, i) => (
@@ -78,6 +82,10 @@ const ReservationCharts = ({ filters }) => {
             })}
           </div>
         )
+      ) : (
+        <div style={{ padding: '2rem', textAlign: 'center', color: 'rgba(255,255,255,0.35)' }}>
+          Donnée indisponible pour cette vue sur la période.
+        </div>
       )}
     </div>
   );

@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { revenueData, formatCurrency } from '../../../data/adminReportData';
 
-const RevenueCharts = ({ filters }) => {
+const RevenueCharts = ({ revenue }) => {
   const [activeView, setActiveView] = useState('daily');
   const [fullscreen, setFullscreen] = useState(null);
 
-  const data = activeView === 'daily' ? revenueData.daily :
-              activeView === 'monthly' ? revenueData.monthly :
-              revenueData.yearly;
+  const source = revenue && revenue.daily && revenue.monthly && revenue.yearly
+    ? revenue
+    : revenueData;
 
-  const maxRevenue = Math.max(...data.map(d => d.revenue));
+  const data = activeView === 'daily' ? source.daily :
+              activeView === 'monthly' ? source.monthly :
+              source.yearly;
+
+  const maxRevenue = Math.max(...(data.map(d => d.revenue) || [0]));
   const labelKey = activeView === 'daily' ? 'date' : activeView === 'monthly' ? 'month' : 'year';
   const valueKey = 'revenue';
 
@@ -60,6 +64,11 @@ const RevenueCharts = ({ filters }) => {
           </div>
         </div>
         {renderBarChart(data, labelKey, valueKey, '#10B981')}
+        {data.length === 0 && (
+          <div style={{ padding: '2rem', textAlign: 'center', color: 'rgba(255,255,255,0.35)' }}>
+            Aucune donnée sur la période sélectionnée.
+          </div>
+        )}
       </div>
 
       <div className={`adbi-chart-card ${fullscreen === 'commissions2' ? 'full' : ''}`}>
@@ -76,7 +85,7 @@ const RevenueCharts = ({ filters }) => {
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: 8 }}>Commissions</div>
-            {renderBarChart(data, labelKey, 'commissions' in data[0] ? 'commissions' : 'revenue', '#10B981')}
+            {renderBarChart(data, labelKey, data[0] && 'commissions' in data[0] ? 'commissions' : 'revenue', '#10B981')}
           </div>
         </div>
       </div>

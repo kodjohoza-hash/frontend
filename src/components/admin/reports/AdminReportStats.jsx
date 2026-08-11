@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { reportKPI, formatValue, getTrendIcon } from '../../../data/adminReportData';
 
 const iconColors = {
@@ -25,12 +25,11 @@ const iconMap = {
   'fa-gauge-high': 'faGaugeHigh', 'fa-star': 'faStar',
 };
 
-const AdminReportStats = ({ period, loading, animate }) => {
+const AdminReportStats = ({ period, loading, stats }) => {
   const [visible, setVisible] = useState(false);
-  const items = Object.entries(reportKPI);
+  const items = stats && stats.length > 0 ? stats.map((s) => [s.id, s]) : Object.entries(reportKPI);
 
   useEffect(() => {
-    setVisible(false);
     const t = setTimeout(() => setVisible(true), 100);
     return () => clearTimeout(t);
   }, [period]);
