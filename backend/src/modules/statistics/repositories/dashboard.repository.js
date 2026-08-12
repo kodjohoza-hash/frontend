@@ -99,7 +99,7 @@ const platformDashboard = async ({ filters = {} } = {}) => {
         const { where, params } = buildWhere([dc, { sql: "pa.statut = 'paye'" }]);
         return q(
           `SELECT COUNT(*) AS nb, COALESCE(SUM(pa.montant), 0) AS montant
-           FROM paiement_abonnement pa ${where}`,
+           FROM paiement_abonnement_compagnie pa ${where}`,
           params
         );
       })(),

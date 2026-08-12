@@ -117,16 +117,16 @@ const revenueSummary = async ({ scope = {}, filters = {} } = {}) => {
     const sub = buildWhere([dcSub, payeClause]);
     const [subTotals, subParMois, subParCompagnie] = await Promise.all([
       q(`SELECT COUNT(*) AS nb, COALESCE(SUM(pa.montant), 0) AS montant
-         FROM paiement_abonnement pa ${sub.where}`, sub.params),
+         FROM paiement_abonnement_compagnie pa ${sub.where}`, sub.params),
       qall(
         `SELECT DATE_FORMAT(pa.date, '%Y-%m') AS mois, COUNT(*) AS nb, COALESCE(SUM(pa.montant), 0) AS total
-         FROM paiement_abonnement pa ${sub.where}
+         FROM paiement_abonnement_compagnie pa ${sub.where}
          GROUP BY mois ORDER BY mois`,
         sub.params
       ),
       qall(
         `SELECT pa.compagnie_id, c.nom, COUNT(*) AS nb, COALESCE(SUM(pa.montant), 0) AS total
-         FROM paiement_abonnement pa LEFT JOIN compagnie c ON c.id = pa.compagnie_id
+         FROM paiement_abonnement_compagnie pa LEFT JOIN compagnie c ON c.id = pa.compagnie_id
           ${sub.where}
          GROUP BY pa.compagnie_id, c.nom ORDER BY total DESC LIMIT 10`,
         sub.params
