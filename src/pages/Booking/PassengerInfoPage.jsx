@@ -52,7 +52,7 @@ const validatePassenger = (pax) => {
   if (!pax.idNumber.trim()) errs.idNumber = 'Numéro requis';
   const ecErrs = validateEmergencyContact(pax.emergencyContact);
   if (ecErrs._hasError) errs.emergencyContact = ecErrs;
-  errs._hasError = Object.keys(errs).length > 1;
+  errs._hasError = Object.keys(errs).length > 0;
   return errs;
 };
 

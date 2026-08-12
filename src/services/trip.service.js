@@ -69,6 +69,7 @@ export const mapTrip = (t) => ({
     plate: t.bus?.plate || '',
     model: t.bus?.model || '',
     type: t.bus?.type || '',
+    classe: t.bus?.classe || '',
     capacity: Number(t.bus?.capacity) || 0,
     status: t.bus?.status || '',
   },

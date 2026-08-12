@@ -49,6 +49,42 @@ const bookingService = {
     const blob = await apiClient.get(`/tickets/${id}/qrcode`, { responseType: 'blob' });
     return blob;
   },
+
+  /** GET /bookings — liste paginée (scope par rôle, client = ses réservations). */
+  listBookings: async (params = {}) => {
+    const data = await apiClient.get('/bookings', { params });
+    return data;
+  },
+
+  /** GET /bookings/stats — KPIs du portail client. */
+  getBookingStats: async () => {
+    const data = await apiClient.get('/bookings/stats');
+    return data;
+  },
+
+  /** PATCH /bookings/:id/cancel — annulation (libère les sièges). */
+  cancelBooking: async (id, payload = {}) => {
+    const data = await apiClient.patch(`/bookings/${id}/cancel`, payload);
+    return data;
+  },
+
+  /** GET /tickets — billets émis pour le client connecté (liste paginée). */
+  listMyTickets: async (params = {}) => {
+    const data = await apiClient.get('/tickets', { params });
+    return data;
+  },
+
+  /** GET /tickets/stats — KPIs des billets du client connecté. */
+  getMyTicketStats: async () => {
+    const data = await apiClient.get('/tickets/stats');
+    return data;
+  },
+
+  /** GET /tickets/:id/pdf — billet PDF (Blob). */
+  getTicketPdf: async (id) => {
+    const blob = await apiClient.get(`/tickets/${id}/pdf`, { responseType: 'blob' });
+    return blob;
+  },
 };
 
 export default bookingService;

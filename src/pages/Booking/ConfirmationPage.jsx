@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   CnStepper,
   CnSuccessCard,
@@ -12,18 +12,11 @@ import {
   CnActions,
   CnSkeleton,
 } from '@components/confirmation';
-import {
-  CONFIRMATION_STEPS,
-  BOOKING,
-  TRIP,
-  PASSENGERS,
-  PAYMENT,
-  TRAVEL_ADVICE,
-  SUPPORT_CONTACTS,
-} from '@data/bookingConfirmation';
-import { buildReservationFromState, buildPassengersWithSeats } from '@utils/booking';
+import { CONFIRMATION_STEPS, TRAVEL_ADVICE, SUPPORT_CONTACTS } from '@data/bookingConfirmation';
 import bookingService from '@services/booking.service';
 import '@assets/styles/confirmation.css';
+
+const BOOKING_STORAGE_KEY = 'btc-last-booking';
 
 const METHOD_LABEL = {
   mtn_money: 'MTN Mobile Money',
@@ -137,64 +130,25 @@ const buildFromBooking = (booking) => {
 const ConfirmationPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const state = useMemo(() => location.state || {}, [location.state]);
-  const bookingId = state.bookingId || null;
+  const bookingId = searchParams.get('id') || state.bookingId || sessionStorage.getItem(BOOKING_STORAGE_KEY) || null;
   const isReal = Boolean(bookingId);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(isReal);
   const [error, setError] = useState(null);
   const [realData, setRealData] = useState(null);
   const [qrUrl, setQrUrl] = useState(null);
   const [retryKey, setRetryKey] = useState(0);
-  const [fallbackTxnId] = useState(() => `TXN-${Date.now()}`);
 
-  const { reservation, passengers: paxList, payment } = useMemo(() => {
-    if (isReal && realData) {
-      return realData;
-    }
-    if (!state || Object.keys(state).length === 0) {
-      return { reservation: null, passengers: PASSENGERS, payment: PAYMENT };
-    }
-    const built = buildReservationFromState(state, {
-      company: TRIP.company,
-      bus: TRIP.bus,
-      tripNumber: TRIP.tripNumber,
-      route: TRIP.route,
-      schedule: TRIP.schedule,
-      boarding: TRIP.boarding,
-      arrivalPoint: TRIP.arrivalPoint,
-      baggage: '2 bagages (23 kg + 7 kg)',
-      currency: 'XAF',
-      fees: PAYMENT.fees,
-      seats: [],
-      policies: { cancellation: 'Annulation gratuite jusqu\'à 24h avant le départ', refund: 'Remboursement intégral sous 7 jours' },
-    });
-    const seats = built.seats || [];
-    const formPassengers = Array.isArray(state.passengers) ? state.passengers : [];
-    return {
-      reservation: built,
-      passengers: buildPassengersWithSeats(formPassengers, seats),
-      payment: {
-        method: state.method || PAYMENT.method,
-        methodIcon: 'bi-phone-fill',
-        amount: state.amount || built.seats.reduce((a, s) => a + Number(s.price) || 0, 0) + (built.fees || 0),
-        fees: built.fees || PAYMENT.fees,
-        insurance: state.insurance || 0,
-        subtotal: built.seats.reduce((a, s) => a + Number(s.price) || 0, 0),
-        discount: 0,
-        paidAt: new Date().toISOString(),
-        status: 'paid',
-        transactionId: state.transactionId || fallbackTxnId,
-      },
-    };
-  }, [state, fallbackTxnId, isReal, realData]);
+  /* Persiste l'id pour survivre au rafraîchissement de la page. */
+  useEffect(() => {
+    if (bookingId) sessionStorage.setItem(BOOKING_STORAGE_KEY, bookingId);
+  }, [bookingId]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (!isReal) {
-      const t = setTimeout(() => setLoading(false), 900);
-      return () => clearTimeout(t);
-    }
+    if (!isReal) return undefined;
     let active = true;
     let objUrl = null;
     (async () => {
@@ -228,6 +182,37 @@ const ConfirmationPage = () => {
       if (objUrl) URL.revokeObjectURL(objUrl);
     };
   }, [isReal, bookingId, retryKey]);
+
+  if (!isReal) {
+    return (
+      <div className="cn-page">
+        <div className="cn-wrap" style={{ textAlign: 'center', padding: '100px 20px' }}>
+          <i className="bi bi-receipt" style={{ fontSize: 44, color: 'var(--text-muted)', marginBottom: 16 }} />
+          <h2 style={{ fontSize: 'var(--font-size-lg)', color: 'var(--text-primary)', margin: '0 0 8px' }}>
+            Aucune réservation à afficher
+          </h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: 'var(--font-size-sm)', margin: '0 0 24px' }}>
+            Retrouvez vos réservations depuis votre espace client, ou effectuez une nouvelle recherche.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            style={{
+              padding: '12px 28px',
+              borderRadius: 10,
+              border: 'none',
+              background: 'var(--color-primary, #0B1D51)',
+              color: '#fff',
+              fontWeight: 700,
+              cursor: 'pointer',
+            }}
+          >
+            Rechercher un voyage
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -285,10 +270,10 @@ const ConfirmationPage = () => {
     );
   }
 
-  const trip = isReal && realData ? realData.trip : reservation || TRIP;
-  const booking = isReal && realData
-    ? realData.booking
-    : reservation ? { ...BOOKING, id: `BK-${reservation.tripId}`, reference: `BTC-${reservation.tripId}` } : BOOKING;
+  const trip = realData?.trip || null;
+  const booking = realData?.booking || null;
+  const paxList = realData?.passengers || [];
+  const payment = realData?.payment || null;
 
   return (
     <div className="cn-page">

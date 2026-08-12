@@ -7,11 +7,9 @@ const ReservationSummary = React.memo(function ReservationSummary({
   onContinue,
   onBack,
 }) {
-  const SERVICE_FEE = 500;
   const selectedSeatObjects = allSeats.filter((s) => selectedSeats.includes(s.number));
   const subtotal = selectedSeatObjects.reduce((sum, s) => sum + (s.price || 0), 0);
-  const serviceFee = selectedSeats.length > 0 ? SERVICE_FEE : 0;
-  const total = subtotal + serviceFee;
+  const total = subtotal;
 
   const containerStyle = {
     backgroundColor: '#FFFFFF',
@@ -253,10 +251,6 @@ const ReservationSummary = React.memo(function ReservationSummary({
           ))}
           {selectedSeats.length > 0 && (
             <>
-              <div style={priceRowStyle}>
-                <span style={priceLabelStyle}>Frais de service</span>
-                <span style={priceValueStyle}>{SERVICE_FEE.toLocaleString()} XAF</span>
-              </div>
               <div style={totalRowStyle}>
                 <span style={totalLabelStyle}>Total</span>
                 <span style={totalValueStyle}>{total.toLocaleString()} XAF</span>

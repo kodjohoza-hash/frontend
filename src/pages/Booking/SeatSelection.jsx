@@ -22,6 +22,10 @@ const LAYOUT_BY_TYPE = {
   economique: 'standard',
   minibus: 'mini',
   double_deck: 'premium',
+  /* Libellés de classe produits par SearchResults.mapTripToCard. */
+  VIP: 'vip',
+  Business: 'standard',
+  Economique: 'standard',
 };
 
 const ONBOARD_SERVICES = {
@@ -85,8 +89,8 @@ const SeatSelection = () => {
 
   const tripId = trip?.id || routeTrip || '';
 
-  const layoutKey = trip?.busType ? LAYOUT_BY_TYPE[trip.busType] : null;
-  const layout = layoutKey ? BUS_LAYOUTS[layoutKey] : null;
+  const layoutKey = LAYOUT_BY_TYPE[trip?.busType] || 'standard';
+  const layout = BUS_LAYOUTS[layoutKey];
 
   useEffect(() => {
     if (!tripId) return;
@@ -291,7 +295,7 @@ const SeatSelection = () => {
                   Plan du bus
                 </h3>
                 <span style={{ fontSize: 'var(--font-size-2xs)', fontWeight: 600, color: 'var(--color-primary, #0B1D51)', background: 'var(--color-primary-50, #EEF2FF)', padding: '3px 10px', borderRadius: 20 }}>
-                  {layout.label} · {allSeats.length} places
+                  {layout?.label ?? 'Plan du bus'} · {allSeats.length} places
                 </span>
               </div>
               <div style={{ padding: '8px 16px 20px' }}>
