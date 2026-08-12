@@ -94,6 +94,11 @@ const updateProfileSchema = Joi.object({
   prenom: Joi.string().max(60).optional().allow(''),
   nom: Joi.string().max(60).optional().allow(''),
   telephone: Joi.string().max(20).optional().allow(''),
+  adresse: Joi.string().max(255).optional().allow('', null),
+  pays: Joi.string().max(60).optional().allow('', null),
+  ville: Joi.alternatives().try(Joi.number().integer(), Joi.string().max(60)).optional().allow(null),
+  typePiece: Joi.string().max(40).optional().allow('', null),
+  numeroPiece: Joi.string().max(60).optional().allow('', null),
   langue: Joi.string().max(40).optional().allow('', null),
   theme: Joi.string().valid('sombre', 'clair', 'systeme').optional().allow(null),
 }).min(1);

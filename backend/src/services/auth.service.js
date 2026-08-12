@@ -20,6 +20,7 @@ const { signAccessToken, signRefreshToken } = require('../utils/jwt');
 const { hashToken } = require('../utils/token');
 const { serializeUser, serializeClient } = require('../utils/serializeUser');
 const { sendMail } = require('./mailer.service');
+const { auditWriter } = require('../modules/admin/services');
 const env = require('../config/env');
 
 const MINUTES = 60 * 1000;
@@ -147,6 +148,18 @@ const login = async ({ email, motDePasse }, req) => {
         { nb_echecs_connexion: echecs, bloque_jusque: bloqueJusque },
         { where: { agent_id: compte.agent_id } }
       );
+      /* Journal d'audit : échec de connexion d'un super admin. */
+      const failedAgent = await Agent.findByPk(compte.agent_id);
+      if (failedAgent?.role === 'super_admin') {
+        await auditWriter.audit({
+          actor: { role: 'super_admin', email: loginEmail, id: failedAgent.id },
+          action: 'login_failed',
+          entite: 'auth',
+          entiteId: failedAgent.id,
+          details: { email: loginEmail, type: 'echec' },
+          req,
+        });
+      }
       throw new ApiError(401, 'Identifiants invalides.');
     }
 
@@ -165,6 +178,18 @@ const login = async ({ email, motDePasse }, req) => {
       { where: { agent_id: agent.id } }
     );
     await logSession({ agentId: agent.id, type: 'connexion', req });
+
+    /* Journal d'audit : connexion d'un super admin. */
+    if (agent.role === 'super_admin') {
+      await auditWriter.audit({
+        actor: { role: 'super_admin', email: agent.email, id: agent.id },
+        action: 'login',
+        entite: 'auth',
+        entiteId: agent.id,
+        details: { email: agent.email, type: 'connexion' },
+        req,
+      });
+    }
 
     const token = signAccessToken(buildAccessPayload(agent));
     const refreshToken = await issueRefreshToken(agent, req);
@@ -294,6 +319,20 @@ const logout = async ({ refreshToken: raw }, req) => {
         type: 'deconnexion',
         req,
       });
+      /* Journal d'audit : déconnexion d'un super admin. */
+      if (row.agent_id) {
+        const agent = await Agent.findByPk(row.agent_id);
+        if (agent?.role === 'super_admin') {
+          await auditWriter.audit({
+            actor: { role: 'super_admin', email: agent.email, id: agent.id },
+            action: 'logout',
+            entite: 'auth',
+            entiteId: agent.id,
+            details: { email: agent.email, type: 'deconnexion' },
+            req,
+          });
+        }
+      }
     }
   }
   return { message: 'Déconnexion réussie.' };
@@ -355,6 +394,28 @@ const resetPassword = async ({ token, motDePasse }) => {
    ══════════════════════════════════════════════════════════════ */
 
 const updateProfile = async (data, req) => {
+  /* Client : profil client (sans agence ni compte agent). */
+  if (req.user?.role === 'client') {
+    const clientPatch = {};
+    if (data.prenom !== undefined) clientPatch.prenom = data.prenom;
+    if (data.nom !== undefined) clientPatch.nom = data.nom;
+    if (data.telephone !== undefined) clientPatch.telephone = data.telephone;
+    if (data.adresse !== undefined) clientPatch.adresse = data.adresse;
+    if (data.pays !== undefined) clientPatch.pays = data.pays;
+    if (data.ville !== undefined && !Number.isNaN(Number(data.ville))) {
+      clientPatch.ville_id = data.ville;
+    }
+    if (data.typePiece !== undefined) clientPatch.type_piece = data.typePiece;
+    if (data.numeroPiece !== undefined) clientPatch.numero_piece = data.numeroPiece;
+
+    if (Object.keys(clientPatch).length > 0) {
+      await Client.update(clientPatch, { where: { id: req.client.id } });
+    }
+
+    const client = await loadClientFull(req.client.id);
+    return serializeClient(client);
+  }
+
   const agentId = req.agent.id;
   const agentPatch = {};
   if (data.prenom !== undefined) agentPatch.prenom = data.prenom;
@@ -378,6 +439,25 @@ const updateProfile = async (data, req) => {
 };
 
 const changePassword = async ({ motDePasseActuel, nouveauMotDePasse }, req) => {
+  /* Client : mot de passe stocké dans `client.mot_de_passe_hash`. */
+  if (req.user?.role === 'client') {
+    const compte = await Client.findByPk(req.client.id);
+    const valide = compte && (await comparePassword(motDePasseActuel, compte.mot_de_passe_hash));
+    if (!valide) {
+      throw new ApiError(401, 'Mot de passe actuel incorrect.');
+    }
+
+    await Client.update(
+      { mot_de_passe_hash: await hashPassword(nouveauMotDePasse) },
+      { where: { id: req.client.id } }
+    );
+    /* Révocation de toutes les sessions (y compris les autres appareils) */
+    await revokeAllClientRefreshTokens(req.client.id);
+    await logSession({ clientId: req.client.id, type: 'suspect', req });
+
+    return { message: 'Mot de passe modifié avec succès.' };
+  }
+
   const compte = await CompteAgent.findByPk(req.agent.id);
   const valide = compte && (await comparePassword(motDePasseActuel, compte.mot_de_passe_hash));
   if (!valide) {
