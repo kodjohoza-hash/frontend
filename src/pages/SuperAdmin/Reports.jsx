@@ -46,6 +46,15 @@ const Reports = () => {
 
   const isLoading = Object.keys(loading).some((k) => loading[k]);
 
+  /* Performances = par agence/guichet d'une compagnie : ne sont chargées
+     que lorsqu'une compagnie est sélectionnée (super admin : compagnieId requis). */
+  const selectedCompagnieId = (() => {
+    const subsData = data.subscriptions?.data;
+    const companies = subsData?.compagnies || [];
+    if (!filters.company || !companies.length) return null;
+    return companies.find((c) => c.nom === filters.company)?.compagnieId || null;
+  })();
+
   const refetch = useCallback(() => {
     const params = { periode: PERIOD_TO_PARAM[filters.period] || 'year' };
     if (filters.period === 'custom') {
@@ -55,7 +64,9 @@ const Reports = () => {
       fetch('bookings', { periode: 'custom', dateDebut, dateFin }).catch(() => {});
       fetch('tickets', { periode: 'custom', dateDebut, dateFin }).catch(() => {});
       fetch('trips', { periode: 'custom', dateDebut, dateFin }).catch(() => {});
-      fetch('performances', { periode: 'custom', dateDebut, dateFin }).catch(() => {});
+      if (selectedCompagnieId) {
+        fetch('performances', { periode: 'custom', dateDebut, dateFin, compagnieId: selectedCompagnieId }).catch(() => {});
+      }
       fetch('subscriptions').catch(() => {});
       return;
     }
@@ -64,9 +75,11 @@ const Reports = () => {
     fetch('bookings', params).catch(() => {});
     fetch('tickets', params).catch(() => {});
     fetch('trips', params).catch(() => {});
-    fetch('performances', params).catch(() => {});
+    if (selectedCompagnieId) {
+      fetch('performances', { ...params, compagnieId: selectedCompagnieId }).catch(() => {});
+    }
     fetch('subscriptions').catch(() => {});
-  }, [fetch, filters.period]);
+  }, [fetch, filters.period, selectedCompagnieId]);
 
   useEffect(() => {
     if (filters.period !== 'custom') {

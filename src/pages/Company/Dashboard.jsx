@@ -53,7 +53,7 @@ const CompanyDashboard = () => {
       {dash && (
         <>
           <div className="stats-kpi-grid">
-            <StatisticsKpiCard label="Revenu net" value={dash.revenu?.net} format={formatCurrency} icon="bi-coin" color="#10B981" />
+            <StatisticsKpiCard label="Revenu net" value={dash.paiements?.net} format={formatCurrency} icon="bi-coin" color="#10B981" />
             <StatisticsKpiCard label="Réservations" value={dash.reservations?.total} icon="bi-ticket-perforated" color="#3B82F6" />
             <StatisticsKpiCard label="Billets émis" value={dash.billets?.total} icon="bi-receipt" color="#8B5CF6" />
             <StatisticsKpiCard label="Taux de remplissage" value={dash.voyages?.tauxRemplissage ? `${Math.round(dash.voyages.tauxRemplissage * 100)}` : '0'} suffix="%" icon="bi-people-fill" color="#F59E0B" />
@@ -93,7 +93,7 @@ const CompanyDashboard = () => {
                 <li><i className="bi bi-check-circle text-success" /> Confirées : <strong>{bk?.confirmees ?? 0}</strong></li>
                 <li><i className="bi bi-x-circle text-danger" /> Annulées : <strong>{bk?.annulees ?? 0}</strong></li>
                 <li><i className="bi bi-clock text-warning" /> En attente : <strong>{bk?.enAttente ?? 0}</strong></li>
-                <li><i className="bi bi-arrow-left-right text-danger" /> Remboursements : <strong>{formatCurrency(dash.revenu?.remboursements?.montant)}</strong></li>
+                <li><i className="bi bi-arrow-left-right text-danger" /> Remboursements : <strong>{formatCurrency(dash.paiements?.remboursements?.montant)}</strong></li>
                 <li><i className="bi bi-geo-alt text-primary" /> Guichets : <strong>{dash.guichets?.total ?? 0}</strong></li>
               </ul>
             </div>

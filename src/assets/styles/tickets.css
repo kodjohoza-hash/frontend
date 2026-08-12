@@ -1236,3 +1236,36 @@
     grid-template-columns: 1fr;
   }
 }
+
+.tk-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 56px 24px;
+  text-align: center;
+  color: var(--tk-accent);
+  background: var(--tk-accent-50);
+  border: 1px dashed var(--tk-accent);
+  border-radius: 14px;
+  margin-bottom: 24px;
+}
+
+.tk-error i {
+  font-size: 2.4rem;
+}
+
+.tk-error p {
+  margin: 0;
+  color: var(--tk-text);
+}
+
+.tk-modal__qr-img {
+  width: 108px;
+  height: 108px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #fff;
+  padding: 6px;
+}

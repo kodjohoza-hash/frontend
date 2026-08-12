@@ -6,7 +6,8 @@ const CkSuccessModal = memo(({ transaction }) => {
   const navigate = useNavigate();
   const goToTicket = useCallback(() => {
     const state = (transaction && transaction.confirmation) || null;
-    navigate(ROUTES.BOOKING_CONFIRMATION, { state });
+    const bookingId = state?.bookingId;
+    navigate(bookingId ? `${ROUTES.BOOKING_CONFIRMATION}?id=${encodeURIComponent(bookingId)}` : ROUTES.BOOKING_CONFIRMATION, { state });
   }, [navigate, transaction]);
   const goHome = useCallback(() => navigate(ROUTES.HOME), [navigate]);
 

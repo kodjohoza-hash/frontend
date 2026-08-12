@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import AdminAuditStats from '../../components/admin/audit/AdminAuditStats';
 import AdminAuditFilters from '../../components/admin/audit/AdminAuditFilters';
 import AdminAuditTable from '../../components/admin/audit/AdminAuditTable';
@@ -9,7 +9,8 @@ import AdminAuditSessions from '../../components/admin/audit/AdminAuditSessions'
 import AdminAuditExport from '../../components/admin/audit/AdminAuditExport';
 import AdminAuditCards from '../../components/admin/audit/AdminAuditCards';
 import AdminAuditSkeleton from '../../components/admin/audit/AdminAuditSkeleton';
-import { auditEvents, filterEvents, paginateEvents, defaultFilters } from '../../data/adminAuditData';
+import useAdminStore from '../../store/admin.store';
+import { filterEvents, paginateEvents, defaultFilters, toAuditQuery } from '../../utils/adminAuditAdapter';
 
 const tabs = [
   { id: 'journal', label: 'Journal d\'audit', icon: 'fa-list' },
@@ -23,12 +24,35 @@ const Reports = () => {
   const [filters, setFilters] = useState(defaultFilters);
   const [page, setPage] = useState(1);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState({ show: false, type: '', message: '' });
   const perPage = 25;
 
-  const filtered = useMemo(() => filterEvents(auditEvents, filters), [filters]);
+  const { logs, stats, loading, error, fetchLogs, fetchStats } = useAdminStore();
+
+  /* Charge le journal d'audit + les KPIs sur l'API réelle (module 19). */
+  const load = useCallback(async (f) => {
+    await fetchLogs(toAuditQuery(f));
+  }, [fetchLogs]);
+
+  useEffect(() => {
+    fetchStats().catch(() => {});
+  }, [fetchStats]);
+
+  useEffect(() => {
+    load(filters);
+  }, [filters, load]);
+
+  const handleFilterChange = useCallback((next) => {
+    setFilters(next);
+    setPage(1);
+  }, []);
+
+  const filtered = useMemo(() => filterEvents(logs, filters), [logs, filters]);
   const paginated = useMemo(() => paginateEvents(filtered, page, perPage), [filtered, page]);
+  const critical = useMemo(
+    () => logs.filter((e) => e.severity === 'critical' || e.severity === 'high').slice(0, 15),
+    [logs]
+  );
 
   const handleReset = useCallback(() => {
     setFilters(defaultFilters);
@@ -38,11 +62,15 @@ const Reports = () => {
 
   const handleSelectEvent = useCallback((e) => setSelectedEvent(e), []);
 
-  const handleRefresh = useCallback(() => {
-    setLoading(true);
-    setTimeout(() => setLoading(false), 800);
-    setToast({ show: true, type: 'info', message: 'Données actualisées' });
-  }, []);
+  const handleRefresh = useCallback(async () => {
+    setToast({ show: true, type: 'info', message: 'Actualisation…' });
+    try {
+      await Promise.all([load(filters), fetchStats()]);
+      setToast({ show: true, type: 'success', message: 'Données actualisées' });
+    } catch {
+      setToast({ show: true, type: 'error', message: 'Échec de l\'actualisation' });
+    }
+  }, [load, filters, fetchStats]);
 
   const renderPagination = () => {
     if (paginated.totalPages <= 1) return null;
@@ -84,10 +112,21 @@ const Reports = () => {
             <i className="fas fa-circle live" />
             Surveillance en temps réel
             <i className="fas fa-circle" style={{ fontSize: 6, marginLeft: 4 }} />
-            <span>200 événements historisés</span>
+            <span>{stats ? stats.totalEvents.value.toLocaleString('fr-FR') : '—'} événements historisés</span>
           </div>
         </div>
       </div>
+
+      {error && activeTab === 'journal' && (
+        <div className="ada-toast error" style={{ marginBottom: 12 }}>
+          <i className="fas fa-exclamation-circle" />
+          {error}
+          <button onClick={() => setToast({ ...toast, show: false })}
+            style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', marginLeft: 8 }}>
+            <i className="fas fa-times" />
+          </button>
+        </div>
+      )}
 
       <div className="ada-tabs">
         {tabs.map(tab => (
@@ -110,8 +149,8 @@ const Reports = () => {
         <>
           {activeTab === 'journal' && (
             <>
-              <AdminAuditStats loading={false} />
-              <AdminAuditFilters filters={filters} setFilters={setFilters} onReset={handleReset} />
+              <AdminAuditStats loading={false} stats={stats} />
+              <AdminAuditFilters filters={filters} setFilters={handleFilterChange} onReset={handleReset} />
               <AdminAuditTable events={paginated.items} loading={false} onSelect={handleSelectEvent} selectedId={selectedEvent?.id} />
               {renderPagination()}
               <div className="ada-section-header">
@@ -127,7 +166,7 @@ const Reports = () => {
               <div className="ada-section-header">
                 <h2><i className="fas fa-clock-rotate-left" style={{ color: '#3B82F6' }} /> Événements critiques récents</h2>
               </div>
-              <AdminAuditTable events={auditEvents.filter(e => e.severity === 'critical' || e.severity === 'high').slice(0, 15)} onSelect={handleSelectEvent} selectedId={selectedEvent?.id} />
+              <AdminAuditTable events={critical} onSelect={handleSelectEvent} selectedId={selectedEvent?.id} />
             </>
           )}
 

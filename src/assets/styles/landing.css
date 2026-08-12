@@ -245,7 +245,8 @@
   right: 0;
   width: 320px;
   max-width: 85vw;
-  height: 100vh;
+  height: 100vh; /* fallback navigateurs sans dvh */
+  height: 100dvh; /* mobile : vue dynamique (barres d'outils du navigateur) */
   background: var(--color-white);
   box-shadow: var(--shadow-2xl);
   z-index: calc(var(--z-modal) + 1);
@@ -311,6 +312,7 @@
 
 .btc-offcanvas-footer {
   padding: 1.25rem 1rem;
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
   border-top: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
@@ -3586,6 +3588,46 @@ select.btc-search-input {
   background: var(--color-accent);
   transform: translateY(-3px);
   box-shadow: 0 8px 24px rgba(255, 107, 53, 0.35);
+}
+
+/* ================================================
+   HOME HEADER — RESPONSIVE AFFICHAGE / MASQUAGE
+   Breakpoint unique : 992px.
+   - Mobile / tablette portrait (< 992px) : [LOGO] [☰], menu offcanvas.
+   - Desktop (>= 992px) : [LOGO] [NAVIGATION] [ACTIONS].
+   ================================================ */
+
+@media (max-width: 991.98px) {
+  .btc-header-nav,
+  .btc-header-actions {
+    display: none;
+  }
+  .btc-home-hamburger {
+    display: flex;
+  }
+}
+
+@media (min-width: 992px) {
+  .btc-header-nav,
+  .btc-header-actions {
+    display: flex;
+  }
+  .btc-home-hamburger {
+    display: none;
+  }
+}
+
+/* Boutons du menu mobile : empilés, pleine largeur, jamais hors écran */
+.btc-offcanvas-footer .btc-btn-solid-orange,
+.btc-offcanvas-footer .btc-btn-outline-orange {
+  width: 100%;
+}
+
+/* Logo : conservé visible et proportionné, texte jamais tronqué/chevauche */
+.btc-home-brand-text {
+  max-width: 55vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ================================================

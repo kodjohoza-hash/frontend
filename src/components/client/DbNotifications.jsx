@@ -1,6 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { notifications as allNotifications } from '@data/clientDashboard';
+import useNotificationStore from '@store/notification.store';
+
+const colorToType = {
+  success: 'success',
+  info: 'info',
+  warning: 'warning',
+  accent: 'accent',
+  danger: 'danger',
+  primary: 'info',
+  muted: 'info',
+};
 
 const typeColorMap = {
   success: 'db-notif--success',
@@ -12,8 +22,16 @@ const typeColorMap = {
 
 const DbNotifications = () => {
   const [visibleCount, setVisibleCount] = useState(4);
+  const items = useNotificationStore((s) => s.items);
+  const fetchPage = useNotificationStore((s) => s.fetchPage);
+  const markAllRead = useNotificationStore((s) => s.markAllRead);
+
+  useEffect(() => {
+    fetchPage(1, { quiet: true }).catch(() => {});
+  }, [fetchPage]);
 
   const formatTime = (dateStr) => {
+    if (!dateStr) return '';
     const date = new Date(dateStr);
     const now = new Date();
     const diffMs = now - date;
@@ -25,8 +43,8 @@ const DbNotifications = () => {
     return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
   };
 
-  const visible = allNotifications.slice(0, visibleCount);
-  const hasMore = visibleCount < allNotifications.length;
+  const visible = items.slice(0, visibleCount);
+  const hasMore = visibleCount < items.length;
 
   return (
     <section className="db-card db-notifs">
@@ -35,15 +53,15 @@ const DbNotifications = () => {
           <i className="bi bi-bell" />
           Notifications
         </h3>
-        <button type="button" className="db-card__link db-notifs__mark-read">
+        <button type="button" className="db-card__link db-notifs__mark-read" onClick={() => markAllRead()}>
           Tout marquer lu
         </button>
       </div>
       <div className="db-notifs__list">
         {visible.map((n) => (
           <div key={n.id} className={clsx('db-notifs__item', !n.read && 'db-notifs__item--unread')}>
-            <div className={clsx('db-notifs__icon', typeColorMap[n.type] || 'db-notifs--info')}>
-              <i className={clsx('bi', n.icon)} />
+            <div className={clsx('db-notifs__icon', typeColorMap[colorToType[n.color]] || 'db-notifs--info')}>
+              <i className={clsx('bi', n.icon || 'bi-bell-fill')} />
             </div>
             <div className="db-notifs__body">
               <span className="db-notifs__title">{n.title}</span>
@@ -60,9 +78,9 @@ const DbNotifications = () => {
         <button
           type="button"
           className="db-notifs__show-more"
-          onClick={() => setVisibleCount(allNotifications.length)}
+          onClick={() => setVisibleCount(items.length)}
         >
-          Voir plus ({allNotifications.length - visibleCount} restantes)
+          Voir plus ({items.length - visibleCount} restantes)
         </button>
       )}
     </section>

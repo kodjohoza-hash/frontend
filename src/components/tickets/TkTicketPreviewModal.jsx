@@ -6,7 +6,7 @@ const statusMap = {
   expired: { label: 'Expiré', color: 'muted' },
 };
 
-const TkTicketPreviewModal = ({ ticket, onClose }) => {
+const TkTicketPreviewModal = ({ ticket, onClose, onDownloadPdf }) => {
   const handleKeyDown = useCallback((e) => {
     if (e.key === 'Escape') onClose();
   }, [onClose]);
@@ -115,9 +115,13 @@ const TkTicketPreviewModal = ({ ticket, onClose }) => {
 
           <div className="tk-modal__bottom">
             <div className="tk-modal__qr">
-              <div className="tk-modal__qr-box">
-                <i className="bi bi-qr-code" />
-              </div>
+              {ticket.qrCode ? (
+                <img src={ticket.qrCode} alt="QR code du billet" className="tk-modal__qr-img" />
+              ) : (
+                <div className="tk-modal__qr-box">
+                  <i className="bi bi-qr-code" />
+                </div>
+              )}
               <div className="tk-modal__barcode">
                 {[...Array(30)].map((_, i) => (
                   <div
@@ -137,7 +141,7 @@ const TkTicketPreviewModal = ({ ticket, onClose }) => {
         </div>
 
         <div className="tk-modal__footer">
-          <button type="button" className="tk-modal__footer-btn tk-modal__footer-btn--primary">
+          <button type="button" className="tk-modal__footer-btn tk-modal__footer-btn--primary" onClick={() => onDownloadPdf && onDownloadPdf()}>
             <i className="bi bi-download" /> Télécharger PDF
           </button>
           <button type="button" className="tk-modal__footer-btn">

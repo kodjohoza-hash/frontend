@@ -105,6 +105,44 @@ export const buildFilterOptions = (users) => ({
   branches: [...new Set(users.map((u) => u.branch).filter(Boolean))],
 });
 
+/* ── Filtres / tri (helpers purs) ───────────────────────────────── */
+export const defaultFilters = {
+  search: '', role: 'all', status: 'all', company: 'all', branch: 'all',
+  city: 'all', country: 'all', dateFrom: '', dateTo: '', lastLoginFrom: '', lastLoginTo: '',
+};
+
+export const filterUsers = (list, filters) => {
+  return list.filter((u) => {
+    if (filters.search) {
+      const q = filters.search.toLowerCase();
+      const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
+      if (!fullName.includes(q) && !u.email.toLowerCase().includes(q) && !u.phone.includes(q)) return false;
+    }
+    if (filters.role && filters.role !== 'all' && u.role !== filters.role) return false;
+    if (filters.status && filters.status !== 'all' && u.status !== filters.status) return false;
+    if (filters.company && filters.company !== 'all' && u.company !== filters.company) return false;
+    if (filters.branch && filters.branch !== 'all' && u.branch !== filters.branch) return false;
+    if (filters.city && filters.city !== 'all' && u.city !== filters.city) return false;
+    if (filters.country && filters.country !== 'all' && u.country !== filters.country) return false;
+    return true;
+  });
+};
+
+export const sortUsers = (list, sortBy) => {
+  const sorted = [...list];
+  switch (sortBy) {
+    case 'newest': return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    case 'oldest': return sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    case 'name_asc': return sorted.sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`));
+    case 'name_desc': return sorted.sort((a, b) => `${b.firstName} ${b.lastName}`.localeCompare(`${a.firstName} ${a.lastName}`));
+    case 'lastLogin_desc': return sorted.sort((a, b) => {
+      if (!a.lastLogin) return 1; if (!b.lastLogin) return -1;
+      return new Date(b.lastLogin) - new Date(a.lastLogin);
+    });
+    default: return sorted;
+  }
+};
+
 /** Mot de passe temporaire (≥ 8 caractères, conforme à la validation backend). */
 export const generateTempPassword = () => {
   const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';

@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect } from 'react';
-import { companyActivityTimeline, companyDocuments, companyChartData } from '../../data/adminCompanyData';
 import { filterCompanies, sortCompanies, buildFilterOptions } from '../../services/companies.service';
 import useCompaniesStore from '../../store/companies.store';
 import AdminCompanyStats from '../../components/admin/AdminCompanyStats';
@@ -7,7 +6,6 @@ import AdminCompanyFilters from '../../components/admin/AdminCompanyFilters';
 import AdminCompanyTable from '../../components/admin/AdminCompanyTable';
 import AdminCompanyCards from '../../components/admin/AdminCompanyCards';
 import AdminCompanyProfile from '../../components/admin/AdminCompanyProfile';
-import AdminCompanyCharts from '../../components/admin/AdminCompanyCharts';
 import AdminCompanyTimeline from '../../components/admin/AdminCompanyTimeline';
 import AdminCompanyDocuments from '../../components/admin/AdminCompanyDocuments';
 import AdminCompanyValidation from '../../components/admin/AdminCompanyValidation';
@@ -50,6 +48,23 @@ const Companies = () => {
   const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
   const paginated = sorted.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
   const filterOptions = useMemo(() => buildFilterOptions(companies), [companies]);
+
+  /* Activité récente dérivée des compagnies réelles (timeline sans mock). */
+  const timelineEvents = useMemo(
+    () =>
+      [...companies]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 8)
+        .map((c) => ({
+          id: `tl-${c.id}`,
+          action: 'Nouvelle compagnie',
+          detail: `${c.name} a rejoint la plateforme`,
+          time: c.createdAt ? new Date(c.createdAt).toLocaleDateString('fr-FR') : '',
+          icon: 'bi-building-add',
+          color: 'success',
+        })),
+    [companies]
+  );
 
   const handleFilterChange = (nextFilters) => {
     setFilters(nextFilters);
@@ -231,16 +246,13 @@ const Companies = () => {
         </div>
       )}
 
-      {/* Charts */}
-      <AdminCompanyCharts chartData={companyChartData} />
-
       {/* Timeline + Documents side by side (desktop) */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
         <div className="admc-drawer-section">
-          <AdminCompanyTimeline events={companyActivityTimeline} />
+          <AdminCompanyTimeline events={timelineEvents} />
         </div>
         <div>
-          <AdminCompanyDocuments documents={companyDocuments} />
+          <AdminCompanyDocuments documents={[]} />
         </div>
       </div>
 

@@ -21,8 +21,9 @@ const iconMap = {
   'fa-shield': 'faShield',
 };
 
-const AdminAuditStats = ({ loading }) => {
-  const items = Object.entries(auditKPI);
+/* KPIs réels (GET /admin/audit-logs/stats) ou valeurs mock par défaut. */
+const AdminAuditStats = ({ loading, stats = null }) => {
+  const items = Object.entries(stats || auditKPI);
   if (loading) {
     return (
       <div className="ada-kpi-grid">
@@ -39,7 +40,7 @@ const AdminAuditStats = ({ loading }) => {
       {items.map(([key, kpi], idx) => {
         const iconKey = iconMap[kpi.icon] || 'faList';
         const colors = iconColors[iconKey] || { bg: 'rgba(59,130,246,0.12)', color: '#3B82F6' };
-        const isUp = kpi.trend >= 0;
+        const isUp = (kpi.trend ?? 0) >= 0;
         return (
           <div key={key} className="ada-kpi-card" style={{
             animation: `ada-fade-in 0.3s ease-out ${idx * 0.04}s both`,
@@ -48,10 +49,10 @@ const AdminAuditStats = ({ loading }) => {
               <i className={`fas ${kpi.icon}`} />
             </div>
             <div className="ada-kpi-label">{kpi.label}</div>
-            <div className="ada-kpi-value">{kpi.value.toLocaleString('fr-FR')}</div>
+            <div className="ada-kpi-value">{(kpi.value ?? 0).toLocaleString('fr-FR')}</div>
             <div className={`ada-kpi-trend ${isUp ? 'up' : 'down'}`}>
               <i className={`fas ${isUp ? 'fa-arrow-up' : 'fa-arrow-down'}`} />
-              {Math.abs(kpi.trend)}%
+              {Math.abs(kpi.trend ?? 0)}%
             </div>
           </div>
         );

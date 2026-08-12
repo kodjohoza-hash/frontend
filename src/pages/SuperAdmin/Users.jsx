@@ -1,10 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import {
-  defaultFilters, filterUsers, sortUsers, userPermissions, userActivityTimeline,
-  userSessions, userActivityLog,
-} from '../../data/adminUserData';
+import { buildFilterOptions, defaultFilters, filterUsers, sortUsers } from '../../services/users.service';
 import useUsersStore from '../../store/users.store';
-import { buildFilterOptions } from '../../services/users.service';
 import AdminUserStats from '../../components/admin/AdminUserStats';
 import AdminUserFilters from '../../components/admin/AdminUserFilters';
 import AdminUserTable from '../../components/admin/AdminUserTable';
@@ -47,6 +43,25 @@ const Users = () => {
   const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
   const paginated = sorted.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
   const filterOptions = useMemo(() => buildFilterOptions(users), [users]);
+
+  /* Historique dérivé de l'utilisateur sélectionné (données réelles). */
+  const selectedUserTimeline = useMemo(() => {
+    const u = selectedUser;
+    if (!u) return [];
+    const events = [
+      { id: 'created', type: 'created', icon: 'bi-person-plus', color: 'info', action: 'Compte créé', detail: 'Inscription sur la plateforme', time: u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : '—' },
+    ];
+    if (u.lastLogin) {
+      events.push({ id: 'login', type: 'login', icon: 'bi-shield-check', color: 'success', action: 'Dernière connexion', detail: 'Authentification réussie', time: new Date(u.lastLogin).toLocaleString('fr-FR') });
+    }
+    if (u.status === 'suspended') {
+      events.push({ id: 'suspended', type: 'suspended', icon: 'bi-pause-circle', color: 'danger', action: 'Compte suspendu', detail: 'Compte actuellement suspendu', time: '—' });
+    }
+    if (u.status === 'blocked') {
+      events.push({ id: 'blocked', type: 'blocked', icon: 'bi-shield-exclamation', color: 'danger', action: 'Compte banni', detail: 'Accès révoqué par l\'administrateur', time: '—' });
+    }
+    return events;
+  }, [selectedUser]);
 
   const handleFilterChange = (nextFilters) => {
     setFilters(nextFilters);
@@ -209,19 +224,19 @@ const Users = () => {
       {/* Activity & Sessions side by side (desktop) */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
         <div className="admu-drawer-section">
-          <AdminUserTimeline events={userActivityTimeline} />
+          <AdminUserTimeline events={selectedUserTimeline} />
         </div>
         <div>
-          <AdminUserSessions sessions={userSessions} />
+          <AdminUserSessions sessions={[]} />
         </div>
       </div>
 
       {/* Permissions section */}
-      <AdminUserPermissions permissions={userPermissions} />
+      <AdminUserPermissions permissions={[]} />
 
       {/* Activity log */}
       <div className="admu-drawer-section">
-        <AdminUserActivity activity={userActivityLog} />
+        <AdminUserActivity activity={[]} />
       </div>
 
       {/* Drawer — User Profile */}

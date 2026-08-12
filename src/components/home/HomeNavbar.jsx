@@ -54,8 +54,8 @@ const HomeNavbar = () => {
             </Link>
           </div>
 
-          {/* Center nav — Center column */}
-          <div className="btc-header-nav d-none d-lg-flex">
+          {/* Center nav — Center column (affiché ≥ 992px, voir landing.css) */}
+          <div className="btc-header-nav">
             <nav className="btc-home-nav" aria-label="Navigation principale">
               {NAV_LINKS.map((link) => (
                 <button
@@ -69,8 +69,8 @@ const HomeNavbar = () => {
             </nav>
           </div>
 
-          {/* Auth buttons — Right column */}
-          <div className="btc-header-actions d-none d-lg-flex">
+          {/* Auth buttons — Right column (affichés ≥ 992px, voir landing.css) */}
+          <div className="btc-header-actions">
             <Link to="/login" className="btc-btn-outline-orange">
               Connexion
             </Link>
@@ -79,11 +79,13 @@ const HomeNavbar = () => {
             </Link>
           </div>
 
-          {/* Mobile hamburger */}
+          {/* Mobile hamburger (affiché < 992px, voir landing.css) */}
           <button
-            className="btc-home-hamburger d-lg-none"
+            className="btc-home-hamburger"
             onClick={() => setMobileOpen(true)}
-            aria-label="Ouvrir le menu de navigation"
+            aria-expanded={mobileOpen}
+            aria-controls="btc-home-mobile-menu"
+            aria-label={mobileOpen ? 'Fermer le menu de navigation' : 'Ouvrir le menu de navigation'}
           >
             <i className="bi bi-list fs-4" />
           </button>
@@ -97,6 +99,7 @@ const HomeNavbar = () => {
         aria-hidden={!mobileOpen}
       />
       <aside
+        id="btc-home-mobile-menu"
         className={clsx('btc-offcanvas-panel', mobileOpen && 'is-open')}
         role="dialog"
         aria-modal="true"

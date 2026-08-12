@@ -166,6 +166,9 @@ export const adminSidebarMenus = [
       { id: 'agency-subscriptions', label: 'Abonnements agences', icon: 'bi-card-checklist', to: '/super-admin/agency-subscriptions' },
       { id: 'revenue', label: 'Revenus', icon: 'bi-coin', to: '/super-admin/revenue' },
       { id: 'commissions', label: 'Commissions', icon: 'bi-percent', to: '/super-admin/commissions' },
+      { id: 'payments', label: 'Paiements', icon: 'bi-credit-card', to: '/super-admin/payments' },
+      { id: 'trips', label: 'Voyages', icon: 'bi-bus-front', to: '/super-admin/trips' },
+      { id: 'tickets', label: 'Billets', icon: 'bi-ticket-perforated', to: '/super-admin/tickets' },
     ],
   },
   {

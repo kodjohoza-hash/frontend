@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import {
   AdminSubscriptionStats, AdminSubscriptionFilters, AdminSubscriptionTable,
   AdminSubscriptionCards, AdminSubscriptionProfile, AdminSubscriptionFeatures,
@@ -6,7 +6,6 @@ import {
   AdminSubscriptionSkeleton, AdminPlanFormModal,
 } from '../../components/admin';
 import {
-  subscriptions as mockSubscriptions,
   filterPlans, sortPlans,
   formatCurrency, durationLabels,
 } from '../../data/adminSubscriptionData';
@@ -42,7 +41,7 @@ export default function Subscriptions() {
   const [formOpen, setFormOpen] = useState(false);
   const [editingPlan, setEditingPlan] = useState(null);
   const [saving, setSaving] = useState(false);
-  const [subscriptions, setSubscriptions] = useState(mockSubscriptions);
+  const [subscriptions, setSubscriptions] = useState([]);
   const [usingMock, setUsingMock] = useState(true);
   const perPage = 10;
 

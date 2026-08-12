@@ -34,7 +34,7 @@ const AgencyDashboard = () => {
           icon: 'bi-ticket-perforated', color: 'accent',
         },
         {
-          id: 'revenue', label: 'Chiffre d’affaires (net)', value: (dash.revenu?.net ?? 0).toLocaleString('fr-FR'),
+          id: 'revenue', label: 'Chiffre d’affaires (net)', value: (dash.paiements?.net ?? 0).toLocaleString('fr-FR'),
           suffix: ' XAF', icon: 'bi-cash-stack', color: 'success',
         },
         {
