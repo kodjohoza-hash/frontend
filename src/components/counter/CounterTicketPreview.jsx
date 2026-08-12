@@ -1,12 +1,10 @@
 import AppLogo from '@components/common/AppLogo';
-import { companies } from '@data/counterSaleData';
 
 const barcodeBars = [4, 2, 3, 5, 2, 4, 3, 2, 5, 3, 2, 4, 2, 3, 4, 2, 5, 3, 2, 4];
 
 const CounterTicketPreview = ({ ticket }) => {
   if (!ticket) return null;
   const { ref, passenger, trip, seats, date } = ticket;
-  const company = companies.find((c) => trip.company.startsWith(c.name.split(' ')[0])) || companies[0];
 
   return (
     <div className="acs-ticket" style={{ marginTop: 20 }}>

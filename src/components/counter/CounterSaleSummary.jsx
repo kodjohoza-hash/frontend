@@ -3,9 +3,9 @@ import { paymentMethods } from '@data/counterSaleData';
 const methodLabels = {};
 paymentMethods.forEach((pm) => { methodLabels[pm.id] = pm.label; });
 
-const CounterSaleSummary = ({ state, onConfirm, onBack }) => {
+const CounterSaleSummary = ({ state, onConfirm, onBack, confirming }) => {
   const { search, selectedTrip, selectedSeats, passenger, payment } = state;
-  const client = passenger.isExisting && passenger.existingClient ? passenger.existingClient : passenger;
+  const client = passenger.existingClient || passenger;
   const payMethod = methodLabels[payment.method] || payment.method;
 
   const formatPrice = (v) => (v || 0).toLocaleString('fr-FR');
@@ -32,14 +32,14 @@ const CounterSaleSummary = ({ state, onConfirm, onBack }) => {
           <div className="acs-confirm__row"><span className="acs-confirm__label">Nom</span><span className="acs-confirm__value">{client.firstName} {client.lastName}</span></div>
           <div className="acs-confirm__row"><span className="acs-confirm__label">Téléphone</span><span className="acs-confirm__value">{client.phone || '—'}</span></div>
           <div className="acs-confirm__row"><span className="acs-confirm__label">Email</span><span className="acs-confirm__value">{client.email || '—'}</span></div>
-          {client.idType && client.idType !== 'none' && (
-            <div className="acs-confirm__row"><span className="acs-confirm__label">Pièce</span><span className="acs-confirm__value">{client.idNumber || '—'}</span></div>
+          {client.typePiece && client.typePiece !== 'aucune' && (
+            <div className="acs-confirm__row"><span className="acs-confirm__label">Pièce</span><span className="acs-confirm__value">{client.numeroPiece || '—'}</span></div>
           )}
         </div>
 
         <div className="acs-confirm__section">
           <div className="acs-confirm__section-title"><i className="bi bi-grid-3x3-gap" /> Sièges</div>
-          <div className="acs-confirm__row"><span className="acs-confirm__label">Nombre</span><span className="acs-confirm__value">{search.passengers} passager{search.passengers > 1 ? 's' : ''}</span></div>
+          <div className="acs-confirm__row"><span className="acs-confirm__label">Nombre</span><span className="acs-confirm__value">{selectedSeats.length} passager{selectedSeats.length > 1 ? 's' : ''}</span></div>
           <div className="acs-confirm__row"><span className="acs-confirm__label">Sièges</span><span className="acs-confirm__value">{selectedSeats.length > 0 ? selectedSeats.join(', ') : '—'}</span></div>
           <div className="acs-confirm__row"><span className="acs-confirm__label">Classe</span><span className="acs-confirm__value">{search.busClass}</span></div>
         </div>
@@ -63,8 +63,16 @@ const CounterSaleSummary = ({ state, onConfirm, onBack }) => {
           <button type="button" className="acs-btn acs-btn--ghost" onClick={onBack}>
             <i className="bi bi-arrow-left" /> Retour
           </button>
-          <button type="button" className="acs-btn acs-btn--success" onClick={onConfirm}>
-            <i className="bi bi-check-lg" /> Confirmer et finaliser
+          <button type="button" className="acs-btn acs-btn--success" disabled={confirming} onClick={onConfirm}>
+            {confirming ? (
+              <>
+                <i className="bi bi-arrow-repeat" style={{ animation: 'btcSpin 1s linear infinite' }} /> Finalisation…
+              </>
+            ) : (
+              <>
+                <i className="bi bi-check-lg" /> Confirmer et finaliser
+              </>
+            )}
           </button>
         </div>
       </div>

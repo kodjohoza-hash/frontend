@@ -7,9 +7,19 @@ import CounterPaymentForm from './CounterPaymentForm';
 import CounterSaleSummary from './CounterSaleSummary';
 import CounterTicketPreview from './CounterTicketPreview';
 import CounterSaleSuccess from './CounterSaleSuccess';
-import { mockTrips, generateSeatMap } from '@data/counterSaleData';
+import {
+  getAgentContext,
+  searchAgentTrips,
+  buildSeatMap,
+  createCounterBooking,
+  payCounterBooking,
+  getTicketsForReservation,
+  downloadTicketPdf,
+  PAYMENT_METHOD_MAP,
+} from '@services/counter.sale.service';
+import bookingService from '@services/booking.service';
 
-const STORAGE_KEY = 'btc_counter_sale';
+const STORAGE_KEY = 'btc_counter_sale_v2';
 const STEPS = [
   { id: 1, label: 'Recherche' },
   { id: 2, label: 'Sièges' },
@@ -21,13 +31,14 @@ const STEPS = [
 
 const initialState = {
   step: 1,
-  search: { from: '', to: '', date: '', time: '', company: '', passengers: 1, busClass: 'standard' },
+  search: { from: '', to: '', date: '', passengers: 1, busClass: 'standard' },
   searchResults: [],
   selectedTrip: null,
   seatMap: [],
   selectedSeats: [],
-  passenger: { isExisting: false, existingClient: null, firstName: '', lastName: '', phone: '', email: '', idType: 'none', idNumber: '', notes: '' },
-  payment: { method: '', amount: 0, discount: 0, taxes: 0, total: 0, cashGiven: 0, change: 0 },
+  passenger: { isExisting: false, clientId: null, existingClient: null, firstName: '', lastName: '', phone: '', email: '', typePiece: 'aucune', numeroPiece: '' },
+  payment: { method: '', amount: 0, taxes: 0, total: 0, cashGiven: 0, change: 0 },
+  booking: null,
   ticket: null,
   saleComplete: false,
 };
@@ -42,12 +53,26 @@ const loadDraft = () => {
 const CounterSaleWizard = () => {
   const [state, setState] = useState(() => loadDraft() || initialState);
   const [toast, setToast] = useState(null);
+  const [agent, setAgent] = useState({ agenceId: null, guichetId: null });
+  const [searching, setSearching] = useState(false);
+  const [searchError, setSearchError] = useState('');
+  const [seatLoading, setSeatLoading] = useState(false);
+  const [seatError, setSeatError] = useState('');
+  const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
     try {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch { /* ignore */ }
   }, [state]);
+
+  useEffect(() => {
+    let active = true;
+    getAgentContext().then((ctx) => {
+      if (active) setAgent(ctx);
+    });
+    return () => { active = false; };
+  }, []);
 
   const update = useCallback((partial) => {
     setState((prev) => ({ ...prev, ...partial }));
@@ -63,21 +88,42 @@ const CounterSaleWizard = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [update]);
 
-  const handleSearch = useCallback((searchData) => {
-    const { from, to } = searchData;
-    if (from && to) {
-      const results = mockTrips.filter((t) =>
-        t.from.toLowerCase().includes(from.toLowerCase()) &&
-        t.to.toLowerCase().includes(to.toLowerCase())
-      );
-      update({ search: searchData, searchResults: results, step: 1 });
+  const handleSearch = useCallback(async (searchData) => {
+    if (!searchData.from || !searchData.to) return;
+    setSearching(true);
+    setSearchError('');
+    try {
+      const { items } = await searchAgentTrips({
+        from: searchData.from,
+        to: searchData.to,
+        date: searchData.date || undefined,
+        agenceId: agent.agenceId,
+      });
+      update({ search: searchData, searchResults: items, step: 1 });
+    } catch (err) {
+      setSearchError(err.message || 'La recherche de voyages a échoué.');
+      update({ search: searchData, searchResults: [] });
+    } finally {
+      setSearching(false);
     }
-  }, [update]);
+  }, [agent.agenceId, update]);
 
-  const handleSelectTrip = useCallback((trip) => {
-    const reserved = [];
-    const seatMap = generateSeatMap(trip.seats.total, reserved, []);
-    update({ selectedTrip: trip, seatMap, selectedSeats: [], step: 2 });
+  const handleSelectTrip = useCallback(async (trip) => {
+    setSeatLoading(true);
+    setSeatError('');
+    update({ selectedTrip: trip, selectedSeats: [], step: 2 });
+    try {
+      const availability = await bookingService.getAvailability(trip.id);
+      const seatMap = buildSeatMap(availability);
+      if (seatMap.length === 0) {
+        throw new Error('Ce voyage ne présente aucun siège à la vente.');
+      }
+      update({ seatMap, selectedSeats: [] });
+    } catch (err) {
+      setSeatError(err.message || 'Impossible de charger le plan du bus.');
+    } finally {
+      setSeatLoading(false);
+    }
   }, [update]);
 
   const handleSelectSeats = useCallback((seats) => {
@@ -89,34 +135,92 @@ const CounterSaleWizard = () => {
   }, [update]);
 
   const handlePaymentComplete = useCallback((payment) => {
-    const { selectedTrip, selectedSeats, search } = state;
-    const basePrice = selectedTrip.basePrice * search.passengers;
-    const discount = 0;
-    const subtotal = basePrice - discount;
-    const taxes = Math.round(subtotal * 0.05);
-    const serviceFee = 500;
-    const total = subtotal + taxes + serviceFee;
-    update({ payment: { ...payment, amount: basePrice, discount, taxes, total }, step: 5 });
-  }, [update, state.selectedTrip, state.selectedSeats, state.search]);
+    const { selectedTrip, selectedSeats } = state;
+    const nbSeats = Math.max(1, selectedSeats.length);
+    const basePrice = selectedTrip.basePrice * nbSeats;
+    const taxes = Math.round(basePrice * 0.05);
+    const total = basePrice + taxes;
+    update({ payment: { ...payment, amount: basePrice, taxes, total }, step: 5 });
+  }, [state, update]);
 
-  const handleConfirm = useCallback(() => {
-    const { selectedTrip, selectedSeats, passenger, search, payment } = state;
-    const ref = `BT-${String(Date.now()).slice(-8)}`;
-    const ticket = {
-      ref,
-      passenger: passenger.isExisting && passenger.existingClient
-        ? passenger.existingClient
-        : { firstName: passenger.firstName, lastName: passenger.lastName, phone: passenger.phone, email: passenger.email },
-      trip: selectedTrip,
-      seats: selectedSeats,
-      passengers: search.passengers,
-      payment: { ...payment, total: payment.total },
-      date: new Date().toISOString(),
-    };
-    update({ ticket, step: 6, saleComplete: true });
-    showToast(`Vente ${ref} confirmée avec succès !`);
-    try { sessionStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
-  }, [state, showToast, update]);
+  const handleConfirm = useCallback(async () => {
+    const { selectedTrip, selectedSeats, passenger, payment } = state;
+    const clientId = passenger.clientId || passenger.existingClient?.id;
+    if (!selectedTrip) { showToast('Voyage manquant.', 'error'); return; }
+    if (!clientId) { showToast('Sélectionnez ou créez un client.', 'error'); goToStep(3); return; }
+    if (selectedSeats.length === 0) { showToast('Sélectionnez au moins un siège.', 'error'); goToStep(2); return; }
+    if (!payment.method) { showToast('Choisissez un mode de paiement.', 'error'); goToStep(4); return; }
+
+    const client = passenger.existingClient || passenger;
+    const siegeNumbers = selectedSeats.map((s) => String(s));
+    const seats = siegeNumbers.map((siege) => ({ siege, tarif: selectedTrip.basePrice }));
+    const passengers = siegeNumbers.map(() => ({
+      firstName: client.firstName || passenger.firstName,
+      lastName: client.lastName || passenger.lastName,
+      phone: client.phone || passenger.phone,
+      email: client.email || passenger.email || null,
+      gender: null,
+      birthDate: null,
+      documentType: client.typePiece && client.typePiece !== 'aucune' ? client.typePiece : null,
+      documentNumber: client.numeroPiece || null,
+      nationality: null,
+      emergencyContact: null,
+    }));
+
+    const methode = PAYMENT_METHOD_MAP[payment.method] || payment.method;
+    const taxes = Math.round(selectedTrip.basePrice * siegeNumbers.length * 0.05);
+
+    setConfirming(true);
+    try {
+      const booking = await createCounterBooking({
+        departId: selectedTrip.id,
+        clientId,
+        guichetId: agent.guichetId || null,
+        seats,
+        passengers,
+        modeReservation: 'guichet',
+        modePaiement: methode,
+        taxes,
+        statut: 'en_attente',
+      });
+
+      await payCounterBooking(booking.id, methode);
+
+      const billet = await getTicketsForReservation(booking.id);
+
+      const ticket = {
+        id: billet?.id || null,
+        ref: billet?.reference || booking.reference,
+        passenger: {
+          firstName: client.firstName || passenger.firstName,
+          lastName: client.lastName || passenger.lastName,
+          phone: client.phone || passenger.phone,
+          email: client.email || passenger.email || '',
+        },
+        trip: {
+          company: selectedTrip.company,
+          bus: selectedTrip.bus,
+          from: selectedTrip.from,
+          to: selectedTrip.to,
+          departure: selectedTrip.departure,
+          arrival: selectedTrip.arrival,
+          duration: selectedTrip.duration,
+        },
+        seats: siegeNumbers,
+        payment: { ...payment, total: payment.total },
+        date: new Date().toISOString(),
+        reservationId: booking.id,
+      };
+
+      update({ booking, ticket, step: 6, saleComplete: true });
+      showToast(`Vente ${ticket.ref} confirmée — billet émis !`);
+      try { sessionStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+    } catch (err) {
+      showToast(err.message || 'La vente a échoué. Veuillez réessayer.', 'error');
+    } finally {
+      setConfirming(false);
+    }
+  }, [state, agent.guichetId, update, showToast, goToStep]);
 
   const handleNewSale = useCallback(() => {
     setState(initialState);
@@ -129,19 +233,30 @@ const CounterSaleWizard = () => {
   const renderStep = () => {
     switch (state.step) {
       case 1:
-        return <CounterTripSearch search={state.search} results={state.searchResults} selectedTrip={state.selectedTrip} onSearch={handleSearch} onSelect={handleSelectTrip} />;
+        return <CounterTripSearch search={state.search} results={state.searchResults} selectedTrip={state.selectedTrip} onSearch={handleSearch} onSelect={handleSelectTrip} loading={searching} error={searchError} />;
       case 2:
-        return <CounterSeatMap trip={state.selectedTrip} seatMap={state.seatMap} selectedSeats={state.selectedSeats} onSelect={handleSelectSeats} onBack={() => goToStep(1)} />;
+        return (
+          <CounterSeatMap
+            trip={state.selectedTrip}
+            seatMap={state.seatMap}
+            selectedSeats={state.selectedSeats}
+            maxSeats={state.search.passengers}
+            loading={seatLoading}
+            error={seatError}
+            onSelect={handleSelectSeats}
+            onBack={() => goToStep(1)}
+          />
+        );
       case 3:
         return <CounterPassengerForm passenger={state.passenger} onComplete={handlePassengerComplete} onBack={() => goToStep(2)} />;
       case 4:
-        return <CounterPaymentForm trip={state.selectedTrip} search={state.search} onComplete={handlePaymentComplete} onBack={() => goToStep(3)} />;
+        return <CounterPaymentForm trip={state.selectedTrip} seatsCount={state.selectedSeats.length} onComplete={handlePaymentComplete} onBack={() => goToStep(3)} />;
       case 5:
-        return <CounterSaleSummary state={state} onConfirm={handleConfirm} onBack={() => goToStep(4)} />;
+        return <CounterSaleSummary state={state} onConfirm={handleConfirm} onBack={() => goToStep(4)} confirming={confirming} />;
       case 6:
         return (
           <div>
-            <CounterSaleSuccess ticket={state.ticket} onNewSale={handleNewSale} />
+            <CounterSaleSuccess ticket={state.ticket} onNewSale={handleNewSale} onDownloadPdf={downloadTicketPdf} />
             {state.ticket && <CounterTicketPreview ticket={state.ticket} />}
           </div>
         );

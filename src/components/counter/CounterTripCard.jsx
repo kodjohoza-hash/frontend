@@ -1,8 +1,9 @@
 import clsx from 'clsx';
-import { companies } from '@data/counterSaleData';
 
 const CounterTripCard = ({ trip, selected, onSelect, disabled }) => {
-  const company = companies.find((c) => trip.company.startsWith(c.name.split(' ')[0])) || companies[0];
+  const company = trip.company || 'Bus Tix Connect';
+  const companyColor = trip.companyColor || '#0B1D51';
+  const badge = company.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase() || 'BT';
 
   const seatsLabel = () => {
     if (trip.seats.available === 0) return { label: 'Complet', className: 'full' };
@@ -15,8 +16,8 @@ const CounterTripCard = ({ trip, selected, onSelect, disabled }) => {
   return (
     <div className={clsx('acs-trip-card', selected && 'acs-trip-card--selected', disabled && 'acs-trip-card--disabled')} onClick={() => !disabled && onSelect?.(trip)}>
       <div className="acs-trip-card__company">
-        <div className="acs-trip-card__company-badge" style={{ background: company.color }}>
-          {company.id}
+        <div className="acs-trip-card__company-badge" style={{ background: companyColor }}>
+          {badge}
         </div>
         <div>
           <div className="acs-trip-card__company-name">{trip.company}</div>

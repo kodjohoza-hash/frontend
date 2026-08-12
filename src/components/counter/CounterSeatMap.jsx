@@ -1,15 +1,46 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-const CounterSeatMap = ({ trip, seatMap, selectedSeats, onSelect, onBack }) => {
+const CounterSeatMap = ({ trip, seatMap, selectedSeats, maxSeats = 1, loading, error, onSelect, onBack }) => {
   const [localSelected, setLocalSelected] = useState(selectedSeats);
 
   const toggleSeat = (seat) => {
     if (seat.isReserved) return;
-    setLocalSelected((prev) =>
-      prev.includes(seat.id) ? prev.filter((s) => s !== seat.id) : [...prev, seat.id]
-    );
+    setLocalSelected((prev) => {
+      if (prev.includes(seat.id)) return prev.filter((s) => s !== seat.id);
+      if (prev.length >= maxSeats) return prev;
+      return [...prev, seat.id];
+    });
   };
+
+  if (loading) {
+    return (
+      <div className="acs-step__header">
+        <h2 className="acs-step__title">Choix des sièges</h2>
+        <div className="acs-empty" style={{ padding: '40px' }}>
+          <i className="bi bi-arrow-repeat" style={{ fontSize: 28, animation: 'btcSpin 1s linear infinite', color: 'var(--act-text-muted)' }} />
+          <p className="acs-empty__desc">Chargement du plan du bus…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="acs-step__header">
+        <h2 className="acs-step__title">Choix des sièges</h2>
+        <div className="acs-empty" style={{ padding: '40px' }}>
+          <div className="acs-empty__icon"><i className="bi bi-exclamation-triangle" /></div>
+          <p className="acs-empty__desc">{error}</p>
+        </div>
+        <div className="acs-step__nav">
+          <button type="button" className="acs-btn acs-btn--ghost" onClick={onBack}>
+            <i className="bi bi-arrow-left" /> Retour
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -75,7 +106,10 @@ const CounterSeatMap = ({ trip, seatMap, selectedSeats, onSelect, onBack }) => {
 
         <div className="acs-seatmap__footer">
           <span className="acs-seatmap__count">
-            <strong>{localSelected.length}</strong> siège{localSelected.length > 1 ? 's' : ''} sélectionné{localSelected.length > 1 ? 's' : ''}
+            <strong>{localSelected.length}</strong>/{maxSeats} siège{maxSeats > 1 ? 's' : ''} sélectionné{maxSeats > 1 ? 's' : ''}
+            {maxSeats > 1 && localSelected.length >= maxSeats && (
+              <span style={{ color: 'var(--act-text-muted)' }}> — maximum atteint</span>
+            )}
           </span>
           <div style={{ display: 'flex', gap: 10 }}>
             <button type="button" className="acs-btn acs-btn--ghost" onClick={onBack}>

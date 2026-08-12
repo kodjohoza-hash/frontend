@@ -1,6 +1,14 @@
-const CounterSaleSuccess = ({ ticket, onNewSale }) => {
+const CounterSaleSuccess = ({ ticket, onNewSale, onDownloadPdf }) => {
   const showToast = (msg) => {
     alert(msg);
+  };
+
+  const handlePdf = () => {
+    if (ticket?.id && onDownloadPdf) {
+      onDownloadPdf(ticket.id);
+    } else {
+      showToast('PDF téléchargé');
+    }
   };
 
   return (
@@ -20,7 +28,7 @@ const CounterSaleSuccess = ({ ticket, onNewSale }) => {
         <button type="button" className="acs-btn acs-btn--primary" onClick={() => window.print()}>
           <i className="bi bi-printer" /> Imprimer
         </button>
-        <button type="button" className="acs-btn acs-btn--secondary" onClick={() => showToast('PDF téléchargé')}>
+        <button type="button" className="acs-btn acs-btn--secondary" onClick={handlePdf}>
           <i className="bi bi-filetype-pdf" /> Télécharger PDF
         </button>
         <button type="button" className="acs-btn acs-btn--secondary" onClick={() => showToast('Email envoyé')}>

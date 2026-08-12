@@ -1,46 +1,95 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import clsx from 'clsx';
-import { mockClients, idTypes } from '@data/counterSaleData';
+import counterClientService, { PIECES } from '@services/counter.client.service';
+
+const MIN_QUERY = 2;
 
 const CounterPassengerForm = ({ passenger, onComplete, onBack }) => {
   const [mode, setMode] = useState(passenger.isExisting ? 'existing' : 'new');
   const [form, setForm] = useState(passenger);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedClient, setSelectedClient] = useState(passenger.existingClient);
+  const [results, setResults] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const [selectedClient, setSelectedClient] = useState(passenger.existingClient || null);
   const [errors, setErrors] = useState({});
+  const [formError, setFormError] = useState('');
+  const [creating, setCreating] = useState(false);
+  const searchSeq = useRef(0);
 
-  const filteredClients = searchQuery
-    ? mockClients.filter((c) =>
-        `${c.firstName} ${c.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.phone.includes(searchQuery) ||
-        c.email.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
+  const runSearch = useCallback(async (q) => {
+    const seq = ++searchSeq.current;
+    setSearching(true);
+    setFormError('');
+    try {
+      const data = await counterClientService.searchClients({ recherche: q, limite: 20 });
+      if (seq === searchSeq.current) setResults(data.items || []);
+    } catch (err) {
+      if (seq === searchSeq.current) {
+        setResults([]);
+        setFormError(err.message || 'Recherche impossible.');
+      }
+    } finally {
+      if (seq === searchSeq.current) setSearching(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (q.length < MIN_QUERY) {
+      return undefined;
+    }
+    const timer = setTimeout(() => runSearch(q), 350);
+    return () => clearTimeout(timer);
+  }, [searchQuery, runSearch]);
 
   const validate = () => {
     const errs = {};
-    if (mode === 'new') {
-      if (!form.firstName.trim()) errs.firstName = 'Requis';
-      if (!form.lastName.trim()) errs.lastName = 'Requis';
-      if (!form.phone.trim()) errs.phone = 'Requis';
-    }
+    if (!form.firstName.trim()) errs.firstName = 'Requis';
+    if (!form.lastName.trim()) errs.lastName = 'Requis';
+    if (!form.phone.trim()) errs.phone = 'Requis';
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = () => {
-    if (mode === 'existing' && selectedClient) {
-      onComplete({ isExisting: true, existingClient: selectedClient, ...form });
-    } else if (mode === 'new' && validate()) {
-      onComplete({ isExisting: false, existingClient: null, ...form });
+  const handleCreateNew = async () => {
+    if (!validate() || creating) return;
+    setCreating(true);
+    setFormError('');
+    try {
+      const client = await counterClientService.createClient({
+        prenom: form.firstName.trim(),
+        nom: form.lastName.trim(),
+        telephone: form.phone.trim(),
+        email: form.email?.trim() || null,
+        adresse: form.adresse?.trim() || null,
+        typePiece: form.typePiece || 'aucune',
+        numeroPiece: form.typePiece && form.typePiece !== 'aucune' ? (form.numeroPiece?.trim() || null) : null,
+      });
+      onComplete({ isExisting: false, clientId: client.id, existingClient: client, ...form });
+    } catch (err) {
+      setFormError(err.message || 'La création du client a échoué.');
+    } finally {
+      setCreating(false);
     }
   };
+
+  const handleSubmit = () => {
+    if (mode === 'existing') {
+      if (!selectedClient) return;
+      onComplete({ isExisting: true, clientId: selectedClient.id, existingClient: selectedClient, ...form });
+      return;
+    }
+    handleCreateNew();
+  };
+
+  const canContinue = mode === 'existing' ? !!selectedClient : !creating;
+  const minMet = searchQuery.trim().length >= MIN_QUERY;
 
   return (
     <div>
       <div className="acs-step__header">
         <h2 className="acs-step__title">Informations du passager</h2>
-        <p className="acs-step__desc">Saisissez les coordonnées du voyageur</p>
+        <p className="acs-step__desc">Recherchez un client existant ou créez un dossier au guichet</p>
       </div>
 
       <div className="acs-passenger">
@@ -53,19 +102,45 @@ const CounterPassengerForm = ({ passenger, onComplete, onBack }) => {
           </button>
         </div>
 
+        {formError && (
+          <div className="acs-passenger__error" style={{ color: 'var(--act-danger)', fontSize: '0.85rem', marginBottom: 12 }}>
+            <i className="bi bi-exclamation-triangle-fill" style={{ marginRight: 6 }} />
+            {formError}
+          </div>
+        )}
+
         {mode === 'existing' && (
           <div>
             <div className="acs-passenger__client-search">
               <div className="acs-field" style={{ flex: 1 }}>
-                <input className="acs-field__input" placeholder="Rechercher par nom, téléphone ou email..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                <input
+                  className="acs-field__input"
+                  placeholder="Rechercher par nom, téléphone ou email (2 caractères min.)"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
             </div>
-            {filteredClients.map((client) => (
+
+            {searching && (
+              <div className="acs-empty" style={{ padding: '20px' }}>
+                <i className="bi bi-arrow-repeat" style={{ fontSize: 20, animation: 'btcSpin 1s linear infinite', color: 'var(--act-text-muted)' }} />
+                <p className="acs-empty__desc">Recherche en cours…</p>
+              </div>
+            )}
+
+            {!searching && minMet && results.length === 0 && !formError && (
+              <div className="acs-empty" style={{ padding: '20px' }}>
+                <p className="acs-empty__desc">Aucun client trouvé — basculez sur « Nouveau client » pour le créer.</p>
+              </div>
+            )}
+
+            {minMet && results.map((client) => (
               <div key={client.id} className={clsx('acs-passenger__client-item', selectedClient?.id === client.id && 'acs-passenger__client-item--selected')} onClick={() => setSelectedClient(client)}>
                 <div className="acs-passenger__client-avatar">{client.firstName[0]}{client.lastName[0]}</div>
                 <div className="acs-passenger__client-info">
                   <div className="acs-passenger__client-name">{client.firstName} {client.lastName}</div>
-                  <div className="acs-passenger__client-detail">{client.phone} · {client.email}</div>
+                  <div className="acs-passenger__client-detail">{client.phone} · {client.email || '—'}</div>
                 </div>
                 {selectedClient?.id !== client.id && (
                   <button type="button" className="acs-passenger__client-select" onClick={(e) => { e.stopPropagation(); setSelectedClient(client); }}>
@@ -77,11 +152,6 @@ const CounterPassengerForm = ({ passenger, onComplete, onBack }) => {
                 )}
               </div>
             ))}
-            {searchQuery && filteredClients.length === 0 && (
-              <div className="acs-empty" style={{ padding: '20px' }}>
-                <p className="acs-empty__desc">Aucun client trouvé</p>
-              </div>
-            )}
           </div>
         )}
 
@@ -108,17 +178,17 @@ const CounterPassengerForm = ({ passenger, onComplete, onBack }) => {
             </div>
             <div className="acs-field">
               <label className="acs-field__label">Pièce d'identité</label>
-              <select className="acs-field__select" value={form.idType} onChange={(e) => setForm({ ...form, idType: e.target.value })}>
-                {idTypes.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
+              <select className="acs-field__select" value={form.typePiece} onChange={(e) => setForm({ ...form, typePiece: e.target.value })}>
+                {PIECES.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
               </select>
             </div>
             <div className="acs-field">
               <label className="acs-field__label">Numéro pièce</label>
-              <input className="acs-field__input" value={form.idNumber} onChange={(e) => setForm({ ...form, idNumber: e.target.value })} placeholder="Numéro" disabled={form.idType === 'none'} />
+              <input className="acs-field__input" value={form.numeroPiece} onChange={(e) => setForm({ ...form, numeroPiece: e.target.value })} placeholder="Numéro" disabled={!form.typePiece || form.typePiece === 'aucune'} />
             </div>
             <div className="acs-field acs-field--full">
-              <label className="acs-field__label">Observations</label>
-              <input className="acs-field__input" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Notes optionnelles..." />
+              <label className="acs-field__label">Adresse</label>
+              <input className="acs-field__input" value={form.adresse} onChange={(e) => setForm({ ...form, adresse: e.target.value })} placeholder="Adresse (optionnel)" />
             </div>
           </div>
         )}
@@ -127,8 +197,16 @@ const CounterPassengerForm = ({ passenger, onComplete, onBack }) => {
           <button type="button" className="acs-btn acs-btn--ghost" onClick={onBack}>
             <i className="bi bi-arrow-left" /> Retour
           </button>
-          <button type="button" className="acs-btn acs-btn--primary" onClick={handleSubmit}>
-            Continuer <i className="bi bi-arrow-right" />
+          <button type="button" className="acs-btn acs-btn--primary" disabled={!canContinue || creating} onClick={handleSubmit}>
+            {creating ? (
+              <>
+                <i className="bi bi-arrow-repeat" style={{ animation: 'btcSpin 1s linear infinite' }} /> Création du client…
+              </>
+            ) : (
+              <>
+                Continuer <i className="bi bi-arrow-right" />
+              </>
+            )}
           </button>
         </div>
       </div>

@@ -2,13 +2,12 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import { paymentMethods } from '@data/counterSaleData';
 
-const CounterPaymentForm = ({ trip, search, onComplete, onBack }) => {
-  const basePrice = trip.basePrice * search.passengers;
+const CounterPaymentForm = ({ trip, seatsCount = 1, onComplete, onBack }) => {
+  const basePrice = trip.basePrice * seatsCount;
   const discount = 0;
   const subtotal = basePrice - discount;
   const taxes = Math.round(subtotal * 0.05);
-  const serviceFee = 500;
-  const total = subtotal + taxes + serviceFee;
+  const total = subtotal + taxes;
   const [method, setMethod] = useState('');
   const [cashGiven, setCashGiven] = useState('');
   const change = method === 'cash' && cashGiven ? Math.max(0, Number(cashGiven) - total) : 0;
@@ -61,7 +60,7 @@ const CounterPaymentForm = ({ trip, search, onComplete, onBack }) => {
         <div className="acs-payment__summary">
           <div className="acs-payment__summary-title">Récapitulatif</div>
           <div className="acs-payment__summary-row">
-            <span>Prix de base ({search.passengers} passager{search.passengers > 1 ? 's' : ''})</span>
+            <span>Prix de base ({seatsCount} passager{seatsCount > 1 ? 's' : ''})</span>
             <span className="acs-payment__summary-value">{basePrice.toLocaleString('fr-FR')} XAF</span>
           </div>
           <div className="acs-payment__summary-row">
@@ -71,10 +70,6 @@ const CounterPaymentForm = ({ trip, search, onComplete, onBack }) => {
           <div className="acs-payment__summary-row">
             <span>Taxes (5%)</span>
             <span className="acs-payment__summary-value">{taxes.toLocaleString('fr-FR')} XAF</span>
-          </div>
-          <div className="acs-payment__summary-row">
-            <span>Frais de service</span>
-            <span className="acs-payment__summary-value">{serviceFee.toLocaleString('fr-FR')} XAF</span>
           </div>
           <div className="acs-payment__summary-row acs-payment__summary-row--total">
             <span>Total</span>

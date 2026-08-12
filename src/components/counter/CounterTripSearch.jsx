@@ -2,7 +2,7 @@ import { useState } from 'react';
 import CounterTripCard from './CounterTripCard';
 import { cities, busClasses, passengerCounts } from '@data/counterSaleData';
 
-const CounterTripSearch = ({ search, results, selectedTrip, onSearch, onSelect }) => {
+const CounterTripSearch = ({ search, results, selectedTrip, onSearch, onSelect, loading, error }) => {
   const [form, setForm] = useState(search);
 
   const handleSubmit = (e) => {
@@ -37,10 +37,6 @@ const CounterTripSearch = ({ search, results, selectedTrip, onSearch, onSelect }
           <input type="date" className="acs-field__input" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
         </div>
         <div className="acs-field">
-          <label className="acs-field__label">Heure</label>
-          <input type="time" className="acs-field__input" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} />
-        </div>
-        <div className="acs-field">
           <label className="acs-field__label">Passagers</label>
           <select className="acs-field__select" value={form.passengers} onChange={(e) => setForm({ ...form, passengers: Number(e.target.value) })}>
             {passengerCounts.map((n) => <option key={n} value={n}>{n} {n > 1 ? 'passagers' : 'passager'}</option>)}
@@ -52,20 +48,23 @@ const CounterTripSearch = ({ search, results, selectedTrip, onSearch, onSelect }
             {busClasses.map((bc) => <option key={bc.id} value={bc.id}>{bc.label}</option>)}
           </select>
         </div>
-        <div className="acs-field">
-          <label className="acs-field__label">Compagnie</label>
-          <select className="acs-field__select" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })}>
-            <option value="">Toutes</option>
-            <option value="Express Bus Cameroun">Express Bus Cameroun</option>
-            <option value="Guillaume Express">Guillaume Express</option>
-            <option value="Sécurité Transport">Sécurité Transport</option>
-            <option value="Royal Coach">Royal Coach</option>
-          </select>
-        </div>
-        <button type="submit" className="acs-btn acs-btn--primary">
-          <i className="bi bi-search" /> Rechercher
+        <button type="submit" className="acs-btn acs-btn--primary" disabled={loading}>
+          {loading ? (
+            <i className="bi bi-arrow-repeat" style={{ animation: 'btcSpin 1s linear infinite' }} />
+          ) : (
+            <i className="bi bi-search" />
+          )}{' '}
+          {loading ? 'Recherche…' : 'Rechercher'}
         </button>
       </form>
+
+      {error && (
+        <div className="acs-empty" style={{ padding: '20px' }}>
+          <div className="acs-empty__icon"><i className="bi bi-exclamation-triangle" /></div>
+          <h3 className="acs-empty__title">Erreur</h3>
+          <p className="acs-empty__desc">{error}</p>
+        </div>
+      )}
 
       {results.length > 0 && (
         <div className="acs-results">
@@ -78,7 +77,7 @@ const CounterTripSearch = ({ search, results, selectedTrip, onSearch, onSelect }
         </div>
       )}
 
-      {form.from && form.to && results.length === 0 && (
+      {form.from && form.to && !loading && !error && results.length === 0 && (
         <div className="acs-empty">
           <div className="acs-empty__icon"><i className="bi bi-search" /></div>
           <h3 className="acs-empty__title">Aucun voyage trouvé</h3>
