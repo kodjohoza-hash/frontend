@@ -8,10 +8,40 @@ const { errorHandler } = require('./middlewares/errorHandler');
 
 const app = express();
 
+/**
+ * Résout dynamiquement si une origine est autorisée (aucune IP en dur) :
+ *  - origines sans en-tête Origin (curl, Postman, appels serveur) → autorisées ;
+ *  - allowlist CORS_ORIGINS (config) → autorisées ;
+ *  - localhost / 127.0.0.1 (tout port) → autorisés (dev local) ;
+ *  - adresses IPv4 privées du LAN (10.x, 172.16-31.x, 192.168.x) → autorisées,
+ *    pour que le téléphone/tablette atteigne l'app sans reconfigurer à chaque
+ *    changement d'IP du PC.
+ */
+const isPrivateIpv4 = (hostname) => {
+  const parts = hostname.split('.').map(Number);
+  if (parts.length !== 4 || parts.some((n) => !Number.isInteger(n) || n < 0 || n > 255)) return false;
+  if (parts[0] === 10) return true;
+  if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true;
+  if (parts[0] === 192 && parts[1] === 168) return true;
+  return false;
+};
+
+const isAllowedOrigin = (origin, callback) => {
+  if (!origin) return callback(null, true);
+  if (env.app.allowedOrigins.includes(origin)) return callback(null, true);
+  if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return callback(null, true);
+  try {
+    const hostname = new URL(origin).hostname;
+    return callback(null, isPrivateIpv4(hostname));
+  } catch {
+    return callback(null, false);
+  }
+};
+
 /* Middlewares globaux */
 app.use(
   cors({
-    origin: env.app.allowedOrigins.length ? env.app.allowedOrigins : env.clientUrl,
+    origin: isAllowedOrigin,
     credentials: true,
   })
 );
@@ -59,6 +89,11 @@ app.use('/api/v1', paymentsModule.routes);
 /* Module SaaS Subscriptions (plans, abonnements compagnie, paiements, notifications, revenus) */
 const subscriptionsModule = require('./modules/subscriptions');
 app.use('/api/v1', subscriptionsModule.routes);
+
+/* Abonnements legacy (MCD) : montés APRÈS Subscriptions pour que
+   /abonnements/notifications et /abonnements/notifications/mine soient
+   gérés par le module, pas par la route legacy `/:id`. */
+app.use('/api/v1/abonnements', require('./routes/abonnement.routes'));
 
 /* Module Users (gestion des utilisateurs : profil, CRUD, statuts, photo, permissions) */
 const usersModule = require('./modules/users');
