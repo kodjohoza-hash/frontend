@@ -1,9 +1,12 @@
 import axios from 'axios';
 import useAuthStore from '../store/auth.store';
+import { config } from '../config/app';
 
 /**
  * BUS TIX CONNECT — API Client (axios)
- * Base URL par défaut : http://localhost:5000/api/v1 (backend Express).
+ * Base URL déduite de l'hôte qui sert l'app (voir config/app.js) :
+ *   - accès local  → http://localhost:5000/api/v1
+ *   - accès réseau → http://<IP_LAN>:5000/api/v1 (téléphone, tablette)
  * - Le token JWT est injecté depuis le store auth à chaque requête.
  * - Les réponses { success, data, message } sont dépaquetées : on résout `data`.
  * - En cas de 401, un refresh automatique est tenté (rotation du refresh token),
@@ -11,7 +14,7 @@ import useAuthStore from '../store/auth.store';
  * - Les erreurs sont rejetées avec la forme { message, status, response } pour
  *   rester compatible avec les interfaces existantes.
  */
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1';
+const API_BASE = config.apiBaseUrl;
 
 const apiClient = axios.create({
   baseURL: API_BASE,

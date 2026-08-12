@@ -23,9 +23,9 @@ const ProtectedRoute = ({ children, allowedRoles = [], redirectTo }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  /* Role check — if allowedRoles specified, verify user role */
-  if (allowedRoles.length > 0 && user?.role && !allowedRoles.includes(user.role)) {
-    const fallback = redirectTo || getRoleDashboard(user.role);
+  /* Role check — missing or unauthorized role is rejected */
+  if (allowedRoles.length > 0 && (!user?.role || !allowedRoles.includes(user.role))) {
+    const fallback = redirectTo || getRoleDashboard(user?.role);
     return <Navigate to={fallback} replace />;
   }
 

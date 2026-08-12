@@ -96,6 +96,9 @@ const SuperAdminRevenue = lazy(() => import('@pages/SuperAdmin/Revenue'));
 const SuperAdminCommissions = lazy(() => import('@pages/SuperAdmin/Commissions'));
 const SuperAdminReports = lazy(() => import('@pages/SuperAdmin/Reports'));
 const SuperAdminAudit = lazy(() => import('@pages/SuperAdmin/Audit'));
+const SuperAdminPayments = lazy(() => import('@pages/SuperAdmin/Payments'));
+const SuperAdminTrips = lazy(() => import('@pages/SuperAdmin/Trips'));
+const SuperAdminTickets = lazy(() => import('@pages/SuperAdmin/Tickets'));
 const SuperAdminSettings = lazy(() => import('@pages/SuperAdmin/Settings'));
 const SuperAdminNotifications = lazy(() => import('@pages/SuperAdmin/Notifications'));
 const SuperAdminMessages = lazy(() => import('@pages/SuperAdmin/Messages'));
@@ -271,6 +274,9 @@ const AppRouter = () => {
           <Route path={ROUTES.SUPER_ADMIN_COMMISSIONS} element={<SuperAdminCommissions />} />
           <Route path={ROUTES.SUPER_ADMIN_REPORTS} element={<SuperAdminReports />} />
           <Route path={ROUTES.SUPER_ADMIN_AUDIT} element={<SuperAdminAudit />} />
+          <Route path={ROUTES.SUPER_ADMIN_PAYMENTS} element={<SuperAdminPayments />} />
+          <Route path={ROUTES.SUPER_ADMIN_TRIPS} element={<SuperAdminTrips />} />
+          <Route path={ROUTES.SUPER_ADMIN_TICKETS} element={<SuperAdminTickets />} />
           <Route path={ROUTES.SUPER_ADMIN_SETTINGS} element={<SuperAdminSettings />} />
           <Route path={ROUTES.SUPER_ADMIN_NOTIFICATIONS} element={<SuperAdminNotifications />} />
           <Route path={ROUTES.SUPER_ADMIN_MESSAGES} element={<SuperAdminMessages />} />

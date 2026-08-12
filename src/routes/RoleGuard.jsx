@@ -22,9 +22,9 @@ const RoleGuard = ({ children, allowedRoles = [], redirectTo }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  /* Role check */
-  if (allowedRoles.length > 0 && user?.role && !allowedRoles.includes(user.role)) {
-    const to = redirectTo || getRoleDashboard(user.role);
+  /* Role check — missing or unauthorized role is rejected */
+  if (allowedRoles.length > 0 && (!user?.role || !allowedRoles.includes(user.role))) {
+    const to = redirectTo || getRoleDashboard(user?.role);
     return <Navigate to={to} replace />;
   }
 
