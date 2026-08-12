@@ -58,6 +58,17 @@ export const useAuth = () => {
     mutationFn: (email) => authService.resendVerification(email),
   });
 
+  const updateProfileMutation = useMutation({
+    mutationFn: authService.updateProfile,
+    onSuccess: (response) => {
+      store.setUser(response.data);
+    },
+  });
+
+  const changePasswordMutation = useMutation({
+    mutationFn: authService.changePassword,
+  });
+
   /* ================================================
      QUERIES
      ================================================ */
@@ -131,6 +142,18 @@ export const useAuth = () => {
     /* Profile */
     profile: profileQuery.data?.data,
     isProfileLoading: profileQuery.isLoading,
+
+    /* Update Profile */
+    updateProfile: updateProfileMutation.mutate,
+    updateProfileAsync: updateProfileMutation.mutateAsync,
+    isUpdatingProfile: updateProfileMutation.isPending,
+    updateProfileError: updateProfileMutation.error,
+
+    /* Change Password */
+    changePassword: changePasswordMutation.mutate,
+    changePasswordAsync: changePasswordMutation.mutateAsync,
+    isChangingPassword: changePasswordMutation.isPending,
+    changePasswordError: changePasswordMutation.error,
 
     /* Helpers */
     hasRole: store.hasRole,

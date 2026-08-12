@@ -18,15 +18,15 @@ export default function AgencyProfile() {
   const [loading, setLoading] = useState(false);
 
   const handleEditProfile = () => {
-    console.log('Edit profile');
+    // TODO: brancher sur PATCH /companies/profile
   };
 
   const handleDownload = (docId) => {
-    console.log('Download document', docId);
+    // TODO: brancher sur le téléchargement réel du document
   };
 
   const handleQuickAction = (actionId) => {
-    console.log('Quick action', actionId);
+    // TODO: brancher sur l'action réelle
   };
 
   if (loading) {

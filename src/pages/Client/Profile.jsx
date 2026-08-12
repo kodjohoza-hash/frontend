@@ -15,7 +15,7 @@ import { defaultPreferences } from '@data/profileData';
 import '@assets/styles/profile.css';
 
 const ProfilePage = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfileAsync, changePasswordAsync } = useAuth();
   const [formData, setFormData] = useState(() => ({ ...user }));
   const [preferences, setPreferences] = useState(defaultPreferences);
   const [hasChanges, setHasChanges] = useState(false);
@@ -26,8 +26,16 @@ const ProfilePage = () => {
 
   const handleSave = async () => {
     setSaving(true);
-    try { updateProfile(formData); await new Promise((r) => setTimeout(r, 800)); setHasChanges(false); }
-    finally { setSaving(false); }
+    try {
+      await updateProfileAsync(formData);
+      setHasChanges(false);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleChangePassword = async ({ currentPassword, newPassword }) => {
+    await changePasswordAsync({ currentPassword, newPassword });
   };
 
   const handleCancel = () => { setFormData({ ...user }); setPreferences(defaultPreferences); setHasChanges(false); };
@@ -45,7 +53,7 @@ const ProfilePage = () => {
           <ContactInformationForm user={formData} onChange={handleProfileChange} />
           <AddressForm user={formData} onChange={handleProfileChange} />
           <PreferencesCard preferences={preferences} onChange={handlePreferenceChange} />
-          <SecurityCard user={user} />
+          <SecurityCard user={user} onChangePassword={handleChangePassword} />
           <div className="pf-card">
             <div className="pf-actions">
               <div className="pf-actions__left">

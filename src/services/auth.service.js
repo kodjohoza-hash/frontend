@@ -146,6 +146,8 @@ const authService = {
       prenom: profile.firstName,
       nom: profile.lastName,
       telephone: profile.phone,
+      adresse: profile.adresse,
+      pays: profile.pays ?? profile.country,
       langue: profile.langue,
     });
     return { data: buildUser(data) };

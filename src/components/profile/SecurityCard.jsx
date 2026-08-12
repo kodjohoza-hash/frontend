@@ -2,11 +2,12 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import { securityInfo } from '@data/profileData';
 
-const SecurityCard = ({ user }) => {
+const SecurityCard = ({ user, onChangePassword }) => {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [passwords, setPasswords] = useState({ current: '', new: '', confirm: '' });
   const [passwordErrors, setPasswordErrors] = useState({});
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState('');
+  const [savingPassword, setSavingPassword] = useState(false);
 
   const formatDateTime = (dateStr) => {
     if (!dateStr) return '—';
@@ -30,11 +31,24 @@ const SecurityCard = ({ user }) => {
     return Object.keys(errs).length === 0;
   };
 
-  const handlePasswordSubmit = () => {
-    if (validatePassword()) {
+  const handlePasswordSubmit = async () => {
+    if (!validatePassword()) return;
+    setPasswordMessage('');
+    setSavingPassword(true);
+    try {
+      if (onChangePassword) {
+        await onChangePassword({
+          currentPassword: passwords.current,
+          newPassword: passwords.new,
+        });
+      }
+      setPasswordMessage('Mot de passe modifié avec succès.');
       setShowChangePassword(false);
       setPasswords({ current: '', new: '', confirm: '' });
-      setPasswordErrors({});
+    } catch (error) {
+      setPasswordMessage(error?.response?.data?.message || error?.message || 'Erreur lors du changement de mot de passe.');
+    } finally {
+      setSavingPassword(false);
     }
   };
 
@@ -124,10 +138,13 @@ const SecurityCard = ({ user }) => {
               <button type="button" className="pf-btn pf-btn--secondary" onClick={() => setShowChangePassword(false)}>
                 Annuler
               </button>
-              <button type="button" className="pf-btn pf-btn--primary" onClick={handlePasswordSubmit}>
-                Mettre à jour
+              <button type="button" className="pf-btn pf-btn--primary" onClick={handlePasswordSubmit} disabled={savingPassword}>
+                {savingPassword ? 'Mise à jour...' : 'Mettre à jour'}
               </button>
             </div>
+            {passwordMessage && (
+              <span className="pf-security__password-message">{passwordMessage}</span>
+            )}
           </div>
         )}
 
