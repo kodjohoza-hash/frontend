@@ -5,6 +5,8 @@ const {
   Agence,
   Agent,
   Ville,
+  Client,
+  Reservation,
 } = require('../../../models');
 
 /** Associations de liste (agence + ville). */
@@ -197,6 +199,62 @@ const findAgentWithGuichet = (agentId) =>
     ],
   });
 
+/* ══════════════════════════════════════════════════════════════
+   Clients (contexte guichet — API métier dédiée)
+   Recherche + création de clients SANS compte (vente au guichet).
+   Le périmètre d'un agent de guichet est la compagnie de son agence :
+   on ne voit que les clients ayant réservé dans une agence de la compagnie.
+   ══════════════════════════════════════════════════════════════ */
+
+/** Ids des agences d'une compagnie. */
+const findAgenceIdsByCompagnie = async (compagnieId) => {
+  const agences = await Agence.findAll({
+    where: { compagnie_id: compagnieId },
+    attributes: ['id'],
+  });
+  return agences.map((a) => a.id);
+};
+
+/** Recherche de clients ayant réservé dans les agences de la compagnie. */
+const searchClientsByCompagnie = async ({ compagnieId, agenceIds, recherche = '', limite = 20 }) => {
+  const where = {};
+  const q = String(recherche || '').trim();
+  if (q) {
+    const like = `%${q}%`;
+    where[Op.or] = [
+      { prenom: { [Op.like]: like } },
+      { nom: { [Op.like]: like } },
+      { telephone: { [Op.like]: like } },
+      { email: { [Op.like]: like } },
+    ];
+  }
+  const reservationScope = { agence_id: { [Op.in]: agenceIds } };
+  return Client.findAll({
+    where,
+    include: [
+      { model: Reservation, as: 'reservations', required: true, where: reservationScope, attributes: [] },
+      { model: Ville, as: 'ville' },
+    ],
+    distinct: true,
+    order: [['date_inscription', 'DESC']],
+    limit: limite,
+  });
+};
+
+/** Client par email (insensible à la casse, normalisé). */
+const findClientByEmail = (email) =>
+  Client.findOne({ where: { email: String(email || '').trim().toLowerCase() }, include: [{ model: Ville, as: 'ville' }] });
+
+/** Client par téléphone (premier trouvé). */
+const findClientByTelephone = (telephone) =>
+  Client.findOne({ where: { telephone: String(telephone || '').trim() }, include: [{ model: Ville, as: 'ville' }] });
+
+/** Client par id (avec ville). */
+const findClientById = (id) => Client.findByPk(id, { include: [{ model: Ville, as: 'ville' }] });
+
+/** Création d'un client (pas de compte : aucun mot de passe). */
+const createClient = (data, options = {}) => Client.create(data, options);
+
 module.exports = {
   listInclude,
   detailInclude,
@@ -217,6 +275,12 @@ module.exports = {
   unassignAgentsFromGuichet,
   transferAgentsToGuichet,
   findAgentWithGuichet,
+  findAgenceIdsByCompagnie,
+  searchClientsByCompagnie,
+  findClientByEmail,
+  findClientByTelephone,
+  findClientById,
+  createClient,
   Agence,
   Agent,
   Ville,

@@ -1,6 +1,7 @@
-const { sequelize } = require('../../../models');
+const { sequelize, CompteAgent } = require('../../../models');
 const ApiError = require('../../../utils/ApiError');
 const logger = require('../../../utils/logger');
+const { serializeClient } = require('../../../utils/serializeUser');
 const { ROLES } = require('../../../middlewares/auth');
 const { counterRepository } = require('../repositories');
 
@@ -26,6 +27,22 @@ const generateCode = async () => {
     if (!exists) return code;
   }
   throw new ApiError(500, "Impossible de générer un code guichet unique.");
+};
+
+/** Caractères alphanumériques pour les identifiants clients. */
+const CLIENT_ID_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+/** Génère un identifiant client CHAR(12) unique (ex: CLT9FK2XQ7RA). */
+const generateClientId = async () => {
+  for (let i = 0; i < 6; i += 1) {
+    const id = `CLT${Array.from(
+      { length: 9 },
+      () => CLIENT_ID_CHARS[Math.floor(Math.random() * CLIENT_ID_CHARS.length)]
+    ).join('')}`;
+    const exists = await counterRepository.findClientById(id);
+    if (!exists) return id;
+  }
+  throw new ApiError(500, "Impossible de générer un identifiant client unique.");
 };
 
 /** Périmètre d'accès selon le rôle de l'acteur. */
@@ -437,6 +454,84 @@ const stats = async ({ actor }) => {
   };
 };
 
+/* ══════════════════════════════════════════════════════════════
+   Clients au guichet (API métier dédiée au contexte guichet)
+   Un counter_agent peut rechercher / créer un client SANS compte
+   (vente au guichet), récupérer son clientId, puis l'utiliser dans
+   POST /bookings. L'accès générique POST /users reste interdit.
+   ══════════════════════════════════════════════════════════════ */
+
+/** Sérialise un client du répertoire guichet (base serializeClient + pièce). */
+const serializeCounterClient = (client) => ({
+  ...serializeClient(client),
+  typePiece: client.type_piece ?? 'aucune',
+  numeroPiece: client.numero_piece ?? null,
+});
+
+/** Recherche de clients existants (scope compagnie de l'agence du guichetier). */
+const searchClients = async ({ query, actor }) => {
+  const agenceIds = await counterRepository.findAgenceIdsByCompagnie(actor.compagnieId);
+  const items = await counterRepository.searchClientsByCompagnie({
+    compagnieId: actor.compagnieId,
+    agenceIds,
+    recherche: query.recherche,
+    limite: query.limite,
+  });
+  return {
+    items: items.map(serializeCounterClient),
+    total: items.length,
+  };
+};
+
+/** Création d'un client au guichet (sans compte, sans mot de passe). */
+const createClient = async ({ data, actor }) => {
+  const email = data.email ? String(data.email).trim().toLowerCase() : null;
+  const telephone = String(data.telephone || '').trim();
+
+  /* Unicité : email (client + compte agent) puis téléphone. */
+  if (email) {
+    const [existingClient, existingCompte] = await Promise.all([
+      counterRepository.findClientByEmail(email),
+      CompteAgent.findOne({ where: { email } }),
+    ]);
+    if (existingClient || existingCompte) {
+      throw new ApiError(409, 'Un compte existe déjà avec cet email.');
+    }
+  }
+  if (telephone) {
+    const byPhone = await counterRepository.findClientByTelephone(telephone);
+    if (byPhone) {
+      throw new ApiError(409, 'Ce numéro de téléphone est déjà utilisé par un client existant.');
+    }
+  }
+
+  /* Rattache la ville si elle existe. */
+  let villeId = null;
+  if (data.villeId) {
+    const ville = await counterRepository.Ville.findByPk(data.villeId);
+    villeId = ville ? ville.id : null;
+  }
+
+  const id = await generateClientId();
+  const client = await counterRepository.createClient({
+    id,
+    prenom: data.prenom.trim(),
+    nom: data.nom.trim(),
+    telephone,
+    email,
+    adresse: data.adresse || null,
+    ville_id: villeId,
+    pays: data.pays || 'Cameroun',
+    type_piece: data.typePiece || 'aucune',
+    numero_piece: data.numeroPiece || null,
+    date_inscription: new Date(),
+    statut: 'nouveau',
+  });
+
+  logger.info(`Client créé au guichet : ${client.id} (${client.prenom} ${client.nom}) par ${actor.role}`);
+  return serializeCounterClient(await counterRepository.findClientById(client.id));
+};
+
 module.exports = {
   list,
   getById,
@@ -449,6 +544,8 @@ module.exports = {
   transferAgents,
   getMine,
   stats,
+  searchClients,
+  createClient,
   assertCanManage,
   serializeGuichet,
   ROLES,

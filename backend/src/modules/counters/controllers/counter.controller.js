@@ -85,6 +85,18 @@ const remove = asyncHandler(async (req, res) => {
   res.json({ success: true, data: result, message: result.message });
 });
 
+/** GET /guichets/clients/search — recherche de clients au guichet (counter_agent). */
+const searchClients = asyncHandler(async (req, res) => {
+  const result = await counterService.searchClients({ query: req.query, actor: req.user });
+  res.json({ success: true, data: result });
+});
+
+/** POST /guichets/clients — création d'un client au guichet (counter_agent). */
+const createClient = asyncHandler(async (req, res) => {
+  const client = await counterService.createClient({ data: req.body, actor: req.user });
+  res.status(201).json({ success: true, data: client, message: 'Client créé.' });
+});
+
 module.exports = {
   list,
   getMine,
@@ -97,4 +109,6 @@ module.exports = {
   removeAgents,
   transferAgents,
   remove,
+  searchClients,
+  createClient,
 };

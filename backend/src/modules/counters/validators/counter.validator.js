@@ -10,6 +10,9 @@ const STATUTS = ['ouvert', 'ferme', 'maintenance'];
 /** Types de guichet. */
 const TYPES = ['vente_billets', 'reservation', 'caisse', 'renseignement', 'autre'];
 
+/** Types de pièce d'identité client (alignés sur `client.type_piece`). */
+const PIECES = ['cni', 'passeport', 'permis', 'aucune', 'autre'];
+
 const idSchema = Joi.object({
   id: Joi.string().max(10).required().messages({
     'any.required': "L'identifiant guichet est requis.",
@@ -72,9 +75,35 @@ const transferSchema = Joi.object({
   }),
 });
 
+/** Recherche de client au guichet (nom / téléphone / email, scope compagnie). */
+const clientSearchSchema = Joi.object({
+  recherche: Joi.string().max(120).optional().allow('').default(''),
+  limite: Joi.number().integer().min(1).max(50).default(20),
+});
+
+/** Création d'un client au guichet (sans compte : pas de mot de passe). */
+const clientCreateSchema = Joi.object({
+  prenom: Joi.string().max(60).required().messages({
+    'any.required': 'Le prénom du client est requis.',
+  }),
+  nom: Joi.string().max(60).required().messages({
+    'any.required': 'Le nom du client est requis.',
+  }),
+  telephone: Joi.string().max(20).required().messages({
+    'any.required': 'Le téléphone du client est requis.',
+  }),
+  email: Joi.string().email().max(120).optional().allow('', null),
+  adresse: Joi.string().max(255).optional().allow('', null),
+  villeId: Joi.string().max(3).optional().allow('', null),
+  pays: Joi.string().max(60).optional().default('Cameroun'),
+  typePiece: Joi.string().valid(...PIECES).optional().default('aucune'),
+  numeroPiece: Joi.string().max(40).optional().allow('', null),
+});
+
 module.exports = {
   STATUTS,
   TYPES,
+  PIECES,
   idSchema,
   listQuerySchema,
   createSchema,
@@ -82,4 +111,6 @@ module.exports = {
   statusSchema,
   assignSchema,
   transferSchema,
+  clientSearchSchema,
+  clientCreateSchema,
 };

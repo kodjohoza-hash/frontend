@@ -1,6 +1,7 @@
 const {
   STATUTS,
   TYPES,
+  PIECES,
   idSchema,
   listQuerySchema,
   createSchema,
@@ -8,11 +9,14 @@ const {
   statusSchema,
   assignSchema,
   transferSchema,
+  clientSearchSchema,
+  clientCreateSchema,
 } = require('./counter.validator');
 
 module.exports = {
   STATUTS,
   TYPES,
+  PIECES,
   idSchema,
   listQuerySchema,
   createSchema,
@@ -20,4 +24,6 @@ module.exports = {
   statusSchema,
   assignSchema,
   transferSchema,
+  clientSearchSchema,
+  clientCreateSchema,
 };

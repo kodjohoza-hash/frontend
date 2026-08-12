@@ -14,6 +14,8 @@ const {
   statusSchema,
   assignSchema,
   transferSchema,
+  clientSearchSchema,
+  clientCreateSchema,
 } = require('./validators');
 
 const writeLimiter = rateLimit(30, 15 * 60 * 1000);
@@ -37,6 +39,10 @@ router.get('/guichets/stats', requireRole(ROLES.SUPER_ADMIN, ROLES.COMPANY_ADMIN
 /* ── Liste + création ───────────────────────────────────────────── */
 router.get('/guichets', requireRole(ROLES.SUPER_ADMIN, ROLES.COMPANY_ADMIN), validate(listQuerySchema, 'query'), counterController.list);
 router.post('/guichets', requireRole(ROLES.SUPER_ADMIN, ROLES.COMPANY_ADMIN), writeLimiter, validate(createSchema), counterController.create);
+
+/* ── Clients au guichet (API métier dédiée — counter_agent) ─────── */
+router.get('/guichets/clients/search', requireRole(ROLES.COUNTER_AGENT), validate(clientSearchSchema, 'query'), counterController.searchClients);
+router.post('/guichets/clients', requireRole(ROLES.COUNTER_AGENT), writeLimiter, validate(clientCreateSchema), counterController.createClient);
 
 /* ── Affectation / retrait / transfert d'agents ─────────────────── */
 router.patch('/guichets/:id/agents', requireRole(ROLES.SUPER_ADMIN, ROLES.COMPANY_ADMIN), validate(idSchema, 'params'), validate(assignSchema), counterController.assignAgents);
