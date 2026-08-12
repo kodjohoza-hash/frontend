@@ -1,5 +1,6 @@
 const asyncHandler = require('../../../utils/asyncHandler');
 const { userService } = require('../services');
+const { auditWriter } = require('../../admin/services');
 
 /** GET /users — liste paginée, filtrable, triée (scope par rôle). */
 const list = asyncHandler(async (req, res) => {
@@ -40,6 +41,14 @@ const updateStatus = asyncHandler(async (req, res) => {
     actor: req.user,
     req,
   });
+  await auditWriter.audit({
+    actor: req.user,
+    action: req.body.statut === 'actif' ? 'reactivate' : req.body.statut === 'suspendu' ? 'suspend' : req.body.statut === 'banni' ? 'delete' : 'status',
+    entite: 'utilisateur',
+    entiteId: req.body.id,
+    details: { statut: req.body.statut, raison: req.body.raison || null },
+    req,
+  });
   res.json({ success: true, data: result });
 });
 
@@ -69,18 +78,42 @@ const getById = asyncHandler(async (req, res) => {
 /** POST /users — création (super admin / company admin). */
 const create = asyncHandler(async (req, res) => {
   const user = await userService.create({ data: req.body, actor: req.user, req });
+  await auditWriter.audit({
+    actor: req.user,
+    action: 'create',
+    entite: 'utilisateur',
+    entiteId: user.id,
+    details: { email: user.email, role: user.role },
+    req,
+  });
   res.status(201).json({ success: true, data: user, message: 'Utilisateur créé.' });
 });
 
 /** PATCH /users/:id — mise à jour. */
 const update = asyncHandler(async (req, res) => {
   const user = await userService.update({ id: req.params.id, data: req.body, actor: req.user, req });
+  await auditWriter.audit({
+    actor: req.user,
+    action: 'update',
+    entite: 'utilisateur',
+    entiteId: user.id,
+    details: { email: user.email, role: user.role },
+    req,
+  });
   res.json({ success: true, data: user, message: 'Utilisateur mis à jour.' });
 });
 
 /** DELETE /users/:id — suppression (soft delete). */
 const remove = asyncHandler(async (req, res) => {
   const result = await userService.remove({ id: req.params.id, actor: req.user, req });
+  await auditWriter.audit({
+    actor: req.user,
+    action: 'delete',
+    entite: 'utilisateur',
+    entiteId: req.params.id,
+    details: { statut: result?.statut || 'supprime' },
+    req,
+  });
   res.json({ success: true, data: result });
 });
 

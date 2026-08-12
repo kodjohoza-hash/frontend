@@ -1,5 +1,6 @@
 const asyncHandler = require('../../../utils/asyncHandler');
 const { companyService } = require('../services');
+const { auditWriter } = require('../../admin/services');
 
 /** GET /companies — liste paginée, filtrable, triée (scope par rôle). */
 const list = asyncHandler(async (req, res) => {
@@ -64,12 +65,28 @@ const getById = asyncHandler(async (req, res) => {
 /** POST /companies — création (super admin). */
 const create = asyncHandler(async (req, res) => {
   const company = await companyService.create({ data: req.body, actor: req.user, req });
+  await auditWriter.audit({
+    actor: req.user,
+    action: 'create',
+    entite: 'compagnie',
+    entiteId: company.id,
+    details: { nom: company.name, plan: company.subscription },
+    req,
+  });
   res.status(201).json({ success: true, data: company, message: 'Compagnie créée.' });
 });
 
 /** PATCH /companies/:id — mise à jour. */
 const update = asyncHandler(async (req, res) => {
   const company = await companyService.update({ id: req.params.id, data: req.body, actor: req.user, req });
+  await auditWriter.audit({
+    actor: req.user,
+    action: 'update',
+    entite: 'compagnie',
+    entiteId: company.id,
+    details: { nom: company.name },
+    req,
+  });
   res.json({ success: true, data: company, message: 'Compagnie mise à jour.' });
 });
 
@@ -80,6 +97,14 @@ const updateStatus = asyncHandler(async (req, res) => {
     statut: req.body.statut,
     raison: req.body.raison,
     actor: req.user,
+    req,
+  });
+  await auditWriter.audit({
+    actor: req.user,
+    action: req.body.statut === 'actif' ? 'validate' : req.body.statut === 'banni' ? 'delete' : 'status',
+    entite: 'compagnie',
+    entiteId: result.id,
+    details: { statut: result.statut, raison: req.body.raison || null },
     req,
   });
   res.json({ success: true, data: result, message: result.message });
@@ -118,6 +143,14 @@ const removeCompanyDocument = asyncHandler(async (req, res) => {
 /** DELETE /companies/:id — suppression (soft delete, super admin). */
 const remove = asyncHandler(async (req, res) => {
   const result = await companyService.remove({ id: req.params.id, actor: req.user, req });
+  await auditWriter.audit({
+    actor: req.user,
+    action: 'delete',
+    entite: 'compagnie',
+    entiteId: result.id,
+    details: { statut: 'banni' },
+    req,
+  });
   res.json({ success: true, data: result, message: result.message });
 });
 
